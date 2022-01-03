@@ -1,0 +1,480 @@
+type Query{
+	ordersForRegion(
+		region_id : Int
+		order_type : ordertype = all
+		type_id : Int
+	) : [Order]
+	systemById(id : Int) : System
+	stationById(id : Int) : Station
+}
+
+enum ordertype {
+	buy
+	sell
+	all
+}
+
+type Order{
+	duration : Int
+	isBuyOrder : Boolean
+	issued : String
+	location : Station
+	minVolume : Int
+	orderId : ID
+	price : Float
+	range : Range
+	system : System
+	itemType : ItemType
+	volumeRemain : Int
+	volumeTotal : Int
+}
+
+type Station{
+	maxDockableShipVolume : Float
+	name : String
+	officeRentalCost : Float
+	owningCorporation : Corporation
+	position : Position
+	race: Race
+	reprocessingEfficiency : Float
+	reprocessingStationsTake : Float
+	services : [Services]
+	stationId : ID
+	system : System
+	stationType : ItemType
+}
+
+type Corporation{
+	alliance : Alliance
+	ceo : Character
+	creator : Character
+	dateFounded : String
+	description : String
+	faction : Faction
+	homeStation : Station
+	memberCount : Int
+	name : String
+	shares : Int
+	taxRate : Float
+	ticker : String
+	url : String
+	warEligible : Boolean
+}
+
+type Alliance{
+	creatorCorporation : Corporation
+	creator : Character
+	dateFounded : String
+	executorCorporation : Corporation
+	faction : Faction
+	name : String
+	ticker : String
+}
+
+type Character{
+	alliance : Alliance
+	ancestry : Ancestry
+	birthday : String
+	bloodline : Bloodline
+	corporation : Corporation
+	description : String
+	faction : Faction
+	gender : Gender
+	name : String
+	race : Race
+	securityStatus : Float
+	title : String
+}
+
+type Ancestry{
+	bloodline : Bloodline
+	description : String
+	icon : Icon
+	id : ID
+	name : String
+	shortDescription : String
+}
+
+type Bloodline{
+	id : ID
+	charisma : Int
+	corporation : Corporation
+	description : String
+	intelligence : Int
+	memory : Int
+	name : String
+	perception : Int
+	race : Race
+	shipType : ItemType
+	willpower : Int
+}
+
+type Race{
+	alliance : Alliance
+	description : String
+	name : String
+	raceId : ID
+}
+
+type ItemType{
+	typeId : ID
+	capacity : Float
+	description : String
+	dogmaAttributes : [DogmaAttribute]
+	dogmaEffects : [DogmaEffect]
+	graphic : Graphic
+	group : Group
+	icon : Icon
+	marketGroup : MarketGroup
+	mass : Float
+	name : String
+	packagedVolume : Float
+	portionSize : Int
+	published : Boolean
+	radius : Float
+	volume : Float
+}
+
+type DogmaAttribute{
+	attribute : DogmaAttributeDetail
+	value : Float
+}
+
+type DogmaAttributeDetail{
+	attributeId : ID
+	defaultValue : Float
+	description : String
+	displayName : String
+	highIsGood : Boolean
+	icon : Icon
+	name : String
+	published : Boolean
+	stackable : Boolean
+	unit : Unit
+}
+
+type Icon{
+	id : ID
+}
+
+type Unit{
+	id : ID
+}
+
+type DogmaEffect{
+	effect : DogmaEffectDetail
+	isDefault : Boolean
+}
+
+type DogmaEffectDetail{
+	description : String
+	disallowAutoRepeat : Boolean
+	dischargeAttribute : DogmaAttribute
+	displayName : String
+	durationAttribute : DogmaAttribute
+	effectCategory : Int
+	effectId : Int
+	electronicChance : Boolean
+	falloffAttributeId : Int
+	icon : Icon
+	isAssistance : Boolean
+	isOffensive : Boolean
+	isWarpSafe : Boolean
+	modifiers : [Modifier]
+	name : String
+	postExpression : Int
+	preExpression : Int
+	published : Boolean
+	rangeAttributeId : Int
+	rangeChange : Boolean
+	trackingSpeedAttributeId : Int
+}
+
+type Modifier{
+	domain : String
+	effectId : Int
+	func : String
+	modifiedAttributeId : Int
+	modifyingAttributeId : Int
+	operator : Int
+}
+
+type Graphic{
+	collisionFile : String
+	graphicFile : String
+	graphicId : ID
+	iconFolder : String
+	sofDna : String
+	sofFactionName : String
+	sofHullName : String
+	sofRaceName : String
+}
+
+type Group{
+	category : Category
+	groupId : ID
+	name : String
+	published : Boolean
+	itemTypes : [ItemType]
+}
+
+type Category{
+	categoryId : ID
+	categoryGroups : [Group]
+	name : String
+	published : Boolean
+}
+
+type MarketGroup{
+	description : String
+	id : ID
+	name : String
+	parent_group : Group
+	types : [ItemType]
+}
+
+type Faction{
+	corporation : Corporation
+	description : String
+	factionId : Int
+	isUnique : Boolean
+	militiaCorporation : Corporation
+	name : String
+	sizeFactor : Float
+	solarSystem : System
+	stationCount : Int
+	stationSystemCount : Int
+}
+
+type System{
+	constellation : Constellation
+	name : String
+	planets : [SystemPlanet]
+	position : Position
+	securityClass : String
+	star : Star
+	stargateList : [Stargate]
+	stationList : [Station]
+	stationIds: [Int]
+	systemId : ID
+}
+
+type Constellation{
+	constellationId : ID
+	name : String
+	position : Position
+	region : Region
+	solarSystems : [System]
+}
+
+type Position{
+	x : Float
+	y : Float
+	z : Float
+}
+
+type Region{
+	constellationList : [Constellation]
+	description : String
+	name : String
+	regionId : ID
+}
+
+type Planet{
+	name : String
+	planetId : ID
+	position : Position
+	system : System
+	itemType : ItemType
+}
+
+type SystemPlanet{
+	asteroidBelts : [AsteroidBelt]
+	moonList : [Moon]
+	planetProperties : Planet
+}
+
+type AsteroidBelt{
+	name : String
+	position : Position
+	system : System
+}
+
+type Moon{
+	moonId : ID
+	name : String
+	position : Position
+	system : System
+}
+
+type Star{
+	age : Int
+	luminosity : Float
+	name : String
+	radius : Int
+	solarSystem : System
+	spectralClass : SpectralClass
+	starId : ID
+	temperature : Int
+	itemType : ItemType
+}
+
+enum SpectralClass{
+	K2_V
+	K4_V
+	G2_V
+	G8_V
+	M7_V
+	K7_V
+	M2_V
+	K5_V
+	M3_V
+	G0_V
+	G7_V
+	G3_V
+	F9_V
+	G5_V
+	F6_V
+	K8_V
+	K9_V
+	K6_V
+	G9_V
+	G6_V
+	G4_VI
+	G4_V
+	F8_V
+	F2_V
+	F1_V
+	K3_V
+	F0_VI
+	G1_VI
+	G0_VI
+	K1_V
+	M4_V
+	M1_V
+	M6_V
+	M0_V
+	K2_IV
+	G2_VI
+	K0_V
+	K5_IV
+	F5_VI
+	G6_VI
+	F6_VI
+	F2_IV
+	G3_VI
+	M8_V
+	F1_VI
+	K1_IV
+	F7_V
+	G5_VI
+	M5_V
+	G7_VI
+	F5_V
+	F4_VI
+	F8_VI
+	K3_IV
+	F4_IV
+	F0_V
+	G7_IV
+	G8_VI
+	F2_VI
+	F4_V
+	F7_VI
+	F3_V
+	G1_V
+	G9_VI
+	F3_IV
+	F9_VI
+	M9_V
+	K0_IV
+	F1_IV
+	G4_IV
+	F3_VI
+	K4_IV
+	G5_IV
+	G3_IV
+	G1_IV
+	K7_IV
+	G0_IV
+	K6_IV
+	K9_IV
+	G2_IV
+	F9_IV
+	F0_IV
+	K8_IV
+	G8_IV
+	F6_IV
+	F5_IV
+	A0
+	A0IV
+	A0IV2
+}
+
+type Stargate{
+	destination : StargateDestination
+	name : String
+	position : Position
+	stargateId : ID
+	system : System
+	itemType : ItemType
+}
+
+type StargateDestination{
+	stargate : Stargate
+	system : System
+}
+
+enum Gender{
+	male
+	female
+}
+
+enum Services{
+	bounty_missions
+	assasination_missions
+	courier_missions
+	interbus
+	reprocessing_plant
+	refinery
+	market
+	black_market
+	stock_exchange
+	cloning
+	surgery
+	dna_therapy
+	repair_facilities
+	factory
+	labratory
+	gambling
+	fitting
+	paintshop
+	news
+	storage
+	insurance
+	docking
+	office_rental
+	jump_clone_facility
+	loyalty_point_store
+	navy_offices
+	security_offices
+}
+
+enum Range{
+	station
+	region
+	solarsystem
+	range_1
+	range_2
+	range_3
+	range_4
+	range_5
+	range_10
+	range_20
+	range_30
+	range_40
+}
+
+schema{
+	query: Query
+}
