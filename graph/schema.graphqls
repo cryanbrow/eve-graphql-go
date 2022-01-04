@@ -3,9 +3,9 @@ type Query{
 		region_id : Int
 		order_type : ordertype = all
 		type_id : Int
-	) : [Order]
-	systemById(id : Int) : System
-	stationById(id : Int) : Station
+	) : [order]
+	systemById(id : Int) : system
+	stationById(id : Int) : station
 }
 
 enum ordertype {
@@ -14,312 +14,312 @@ enum ordertype {
 	all
 }
 
-type Order{
+type order{
 	duration : Int
-	isBuyOrder : Boolean
+	is_buy_order : Boolean
 	issued : String
-	location : Station
-	minVolume : Int
-	orderId : ID
+	location : station
+	min_volume : Int
+	order_id : Int
 	price : Float
-	range : Range
-	system : System
-	itemType : ItemType
-	volumeRemain : Int
-	volumeTotal : Int
+	range : range
+	system : system
+	item_type : item_type
+	volume_remain : Int
+	volume_total : Int
 }
 
-type Station{
-	maxDockableShipVolume : Float
+type station{
+	max_dockable_ship_volume : Float
 	name : String
-	officeRentalCost : Float
-	owningCorporation : Corporation
-	position : Position
-	race: Race
-	reprocessingEfficiency : Float
-	reprocessingStationsTake : Float
-	services : [Services]
-	stationId : ID
-	system : System
-	stationType : ItemType
+	office_rental_cost : Float
+	owning_corporation : corporation
+	position : position
+	race: race
+	reprocessing_efficiency : Float
+	reprocessing_stations_take : Float
+	services : [services]
+	station_id : Int
+	system : system
+	station_type : item_type
 }
 
-type Corporation{
-	alliance : Alliance
-	ceo : Character
-	creator : Character
-	dateFounded : String
+type corporation{
+	alliance : alliance
+	ceo : character
+	creator : character
+	date_founded : String
 	description : String
-	faction : Faction
-	homeStation : Station
-	memberCount : Int
+	faction : faction
+	home_station : station
+	member_count : Int
 	name : String
 	shares : Int
-	taxRate : Float
+	tax_rate : Float
 	ticker : String
 	url : String
-	warEligible : Boolean
+	war_eligible : Boolean
 }
 
-type Alliance{
-	creatorCorporation : Corporation
-	creator : Character
-	dateFounded : String
-	executorCorporation : Corporation
-	faction : Faction
+type alliance{
+	creator_corporation : corporation
+	creator : character
+	date_founded : String
+	executor_corporation : corporation
+	faction : faction
 	name : String
 	ticker : String
 }
 
-type Character{
-	alliance : Alliance
-	ancestry : Ancestry
+type character{
+	alliance : alliance
+	ancestry : ancestry
 	birthday : String
-	bloodline : Bloodline
-	corporation : Corporation
+	bloodline : bloodline
+	corporation : corporation
 	description : String
-	faction : Faction
-	gender : Gender
+	faction : faction
+	gender : gender
 	name : String
-	race : Race
-	securityStatus : Float
+	race : race
+	security_status : Float
 	title : String
 }
 
-type Ancestry{
-	bloodline : Bloodline
+type ancestry{
+	bloodline : bloodline
 	description : String
-	icon : Icon
-	id : ID
+	icon : icon
+	id : Int
 	name : String
-	shortDescription : String
+	short_description : String
 }
 
-type Bloodline{
-	id : ID
+type bloodline{
+	id : Int
 	charisma : Int
-	corporation : Corporation
+	corporation : corporation
 	description : String
 	intelligence : Int
 	memory : Int
 	name : String
 	perception : Int
-	race : Race
-	shipType : ItemType
+	race : race
+	ship_type : item_type
 	willpower : Int
 }
 
-type Race{
-	alliance : Alliance
+type race{
+	alliance : alliance
 	description : String
 	name : String
-	raceId : ID
+	race_id : Int
 }
 
-type ItemType{
-	typeId : ID
+type item_type{
+	type_id : Int
 	capacity : Float
 	description : String
-	dogmaAttributes : [DogmaAttribute]
-	dogmaEffects : [DogmaEffect]
-	graphic : Graphic
-	group : Group
-	icon : Icon
-	marketGroup : MarketGroup
+	dogma_attributes : [Dogma_attribute]
+	dogma_effects : [dogma_effect]
+	graphic : graphic
+	group : group
+	icon : icon
+	market_group : market_group
 	mass : Float
 	name : String
-	packagedVolume : Float
-	portionSize : Int
+	packaged_volume : Float
+	portion_size : Int
 	published : Boolean
 	radius : Float
 	volume : Float
 }
 
-type DogmaAttribute{
-	attribute : DogmaAttributeDetail
+type Dogma_attribute{
+	attribute : dogma_attribute_detail
 	value : Float
 }
 
-type DogmaAttributeDetail{
-	attributeId : ID
-	defaultValue : Float
+type dogma_attribute_detail{
+	attribute_id : Int
+	default_value : Float
 	description : String
-	displayName : String
-	highIsGood : Boolean
-	icon : Icon
+	display_name : String
+	high_is_good : Boolean
+	icon : icon
 	name : String
 	published : Boolean
 	stackable : Boolean
-	unit : Unit
+	unit : unit
 }
 
-type Icon{
-	id : ID
+type icon{
+	id : Int
 }
 
-type Unit{
-	id : ID
+type unit{
+	id : Int
 }
 
-type DogmaEffect{
-	effect : DogmaEffectDetail
-	isDefault : Boolean
+type dogma_effect{
+	effect : dogma_effect_detail
+	is_default : Boolean
 }
 
-type DogmaEffectDetail{
+type dogma_effect_detail{
 	description : String
-	disallowAutoRepeat : Boolean
-	dischargeAttribute : DogmaAttribute
-	displayName : String
-	durationAttribute : DogmaAttribute
-	effectCategory : Int
-	effectId : Int
-	electronicChance : Boolean
-	falloffAttributeId : Int
-	icon : Icon
-	isAssistance : Boolean
-	isOffensive : Boolean
-	isWarpSafe : Boolean
-	modifiers : [Modifier]
+	disallow_auto_repeat : Boolean
+	discharge_attribute : Dogma_attribute
+	display_name : String
+	duration_attribute : Dogma_attribute
+	effect_category : Int
+	effect_id : Int
+	electronic_chance : Boolean
+	falloff_attribute_id : Int
+	icon : icon
+	is_assistance : Boolean
+	is_offensive : Boolean
+	is_warp_safe : Boolean
+	modifiers : [modifier]
 	name : String
-	postExpression : Int
-	preExpression : Int
+	post_expression : Int
+	pre_expression : Int
 	published : Boolean
-	rangeAttributeId : Int
-	rangeChange : Boolean
-	trackingSpeedAttributeId : Int
+	range_attribute_id : Int
+	range_change : Boolean
+	tracking_speed_attribute_id : Int
 }
 
-type Modifier{
+type modifier{
 	domain : String
-	effectId : Int
+	effect_id : Int
 	func : String
-	modifiedAttributeId : Int
-	modifyingAttributeId : Int
+	modified_attribute_id : Int
+	modifying_attribute_id : Int
 	operator : Int
 }
 
-type Graphic{
-	collisionFile : String
-	graphicFile : String
-	graphicId : ID
-	iconFolder : String
-	sofDna : String
-	sofFactionName : String
-	sofHullName : String
-	sofRaceName : String
+type graphic{
+	collision_file : String
+	graphic_file : String
+	graphic_id : Int
+	icon_folder : String
+	sof_dna : String
+	sof_faction_name : String
+	sof_hull_name : String
+	sof_race_name : String
 }
 
-type Group{
-	category : Category
-	groupId : ID
+type group{
+	category : category
+	group_id : Int
 	name : String
 	published : Boolean
-	itemTypes : [ItemType]
+	item_types : [item_type]
 }
 
-type Category{
-	categoryId : ID
-	categoryGroups : [Group]
+type category{
+	category_id : Int
+	category_groups : [group]
 	name : String
 	published : Boolean
 }
 
-type MarketGroup{
+type market_group{
 	description : String
-	id : ID
+	id : Int
 	name : String
-	parent_group : Group
-	types : [ItemType]
+	parent_group : group
+	types : [item_type]
 }
 
-type Faction{
-	corporation : Corporation
+type faction{
+	corporation : corporation
 	description : String
-	factionId : Int
-	isUnique : Boolean
-	militiaCorporation : Corporation
+	faction_id : Int
+	is_unique : Boolean
+	militia_corporation : corporation
 	name : String
-	sizeFactor : Float
-	solarSystem : System
-	stationCount : Int
-	stationSystemCount : Int
+	size_factor : Float
+	solar_system : system
+	station_count : Int
+	station_system_count : Int
 }
 
-type System{
-	constellation : Constellation
+type system{
+	constellation : constellation
 	name : String
-	planets : [SystemPlanet]
-	position : Position
-	securityClass : String
-	star : Star
-	stargateList : [Stargate]
-	stationList : [Station]
-	stationIds: [Int]
-	systemId : ID
+	planets : [system_planet]
+	position : position
+	security_class : String
+	star : star
+	stargate_list : [stargate]
+	station_list : [station]
+	station_ids: [Int]
+	system_id : Int
 }
 
-type Constellation{
-	constellationId : ID
+type constellation{
+	constellation_id : Int
 	name : String
-	position : Position
-	region : Region
-	solarSystems : [System]
+	position : position
+	region : region
+	solar_systems : [system]
 }
 
-type Position{
+type position{
 	x : Float
 	y : Float
 	z : Float
 }
 
-type Region{
-	constellationList : [Constellation]
+type region{
+	constellation_list : [constellation]
 	description : String
 	name : String
-	regionId : ID
+	region_id : Int
 }
 
-type Planet{
+type planet{
 	name : String
-	planetId : ID
-	position : Position
-	system : System
-	itemType : ItemType
+	planet_id : Int
+	position : position
+	system : system
+	item_type : item_type
 }
 
-type SystemPlanet{
-	asteroidBelts : [AsteroidBelt]
-	moonList : [Moon]
-	planetProperties : Planet
+type system_planet{
+	asteroid_belts : [Asteroid_belt]
+	moon_list : [moon]
+	planet_properties : planet
 }
 
-type AsteroidBelt{
+type Asteroid_belt{
 	name : String
-	position : Position
-	system : System
+	position : position
+	system : system
 }
 
-type Moon{
-	moonId : ID
+type moon{
+	moon_id : Int
 	name : String
-	position : Position
-	system : System
+	position : position
+	system : system
 }
 
-type Star{
+type star{
 	age : Int
 	luminosity : Float
 	name : String
 	radius : Int
-	solarSystem : System
-	spectralClass : SpectralClass
-	starId : ID
+	solar_system : system
+	spectral_class : spectral_class
+	star_id : Int
 	temperature : Int
-	itemType : ItemType
+	item_type : item_type
 }
 
-enum SpectralClass{
+enum spectral_class{
 	K2_V
 	K4_V
 	G2_V
@@ -411,26 +411,26 @@ enum SpectralClass{
 	A0IV2
 }
 
-type Stargate{
-	destination : StargateDestination
+type stargate{
+	destination : stargateDestination
 	name : String
-	position : Position
-	stargateId : ID
-	system : System
-	itemType : ItemType
+	position : position
+	stargate_id : Int
+	system : system
+	item_type : item_type
 }
 
-type StargateDestination{
-	stargate : Stargate
-	system : System
+type stargateDestination{
+	stargate : stargate
+	system : system
 }
 
-enum Gender{
+enum gender{
 	male
 	female
 }
 
-enum Services{
+enum services{
 	bounty_missions
 	assasination_missions
 	courier_missions
@@ -460,7 +460,7 @@ enum Services{
 	security_offices
 }
 
-enum Range{
+enum range{
 	station
 	region
 	solarsystem

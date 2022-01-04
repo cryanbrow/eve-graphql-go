@@ -8,11 +8,22 @@ import (
 	"strconv"
 )
 
+type AsteroidBelt struct {
+	Name     *string   `json:"name"`
+	Position *Position `json:"position"`
+	System   *System   `json:"system"`
+}
+
+type DogmaAttribute struct {
+	Attribute *DogmaAttributeDetail `json:"attribute"`
+	Value     *float64              `json:"value"`
+}
+
 type Alliance struct {
-	CreatorCorporation  *Corporation `json:"creatorCorporation"`
+	CreatorCorporation  *Corporation `json:"creator_corporation"`
 	Creator             *Character   `json:"creator"`
-	DateFounded         *string      `json:"dateFounded"`
-	ExecutorCorporation *Corporation `json:"executorCorporation"`
+	DateFounded         *string      `json:"date_founded"`
+	ExecutorCorporation *Corporation `json:"executor_corporation"`
 	Faction             *Faction     `json:"faction"`
 	Name                *string      `json:"name"`
 	Ticker              *string      `json:"ticker"`
@@ -22,19 +33,13 @@ type Ancestry struct {
 	Bloodline        *Bloodline `json:"bloodline"`
 	Description      *string    `json:"description"`
 	Icon             *Icon      `json:"icon"`
-	ID               *string    `json:"id"`
+	ID               *int       `json:"id"`
 	Name             *string    `json:"name"`
-	ShortDescription *string    `json:"shortDescription"`
-}
-
-type AsteroidBelt struct {
-	Name     *string   `json:"name"`
-	Position *Position `json:"position"`
-	System   *System   `json:"system"`
+	ShortDescription *string    `json:"short_description"`
 }
 
 type Bloodline struct {
-	ID           *string      `json:"id"`
+	ID           *int         `json:"id"`
 	Charisma     *int         `json:"charisma"`
 	Corporation  *Corporation `json:"corporation"`
 	Description  *string      `json:"description"`
@@ -43,13 +48,13 @@ type Bloodline struct {
 	Name         *string      `json:"name"`
 	Perception   *int         `json:"perception"`
 	Race         *Race        `json:"race"`
-	ShipType     *ItemType    `json:"shipType"`
+	ShipType     *ItemType    `json:"ship_type"`
 	Willpower    *int         `json:"willpower"`
 }
 
 type Category struct {
-	CategoryID     *string  `json:"categoryId"`
-	CategoryGroups []*Group `json:"categoryGroups"`
+	CategoryID     *int     `json:"category_id"`
+	CategoryGroups []*Group `json:"category_groups"`
 	Name           *string  `json:"name"`
 	Published      *bool    `json:"published"`
 }
@@ -65,46 +70,41 @@ type Character struct {
 	Gender         *Gender      `json:"gender"`
 	Name           *string      `json:"name"`
 	Race           *Race        `json:"race"`
-	SecurityStatus *float64     `json:"securityStatus"`
+	SecurityStatus *float64     `json:"security_status"`
 	Title          *string      `json:"title"`
 }
 
 type Constellation struct {
-	ConstellationID *string   `json:"constellationId"`
+	ConstellationID *int      `json:"constellation_id"`
 	Name            *string   `json:"name"`
 	Position        *Position `json:"position"`
 	Region          *Region   `json:"region"`
-	SolarSystems    []*System `json:"solarSystems"`
+	SolarSystems    []*System `json:"solar_systems"`
 }
 
 type Corporation struct {
 	Alliance    *Alliance  `json:"alliance"`
 	Ceo         *Character `json:"ceo"`
 	Creator     *Character `json:"creator"`
-	DateFounded *string    `json:"dateFounded"`
+	DateFounded *string    `json:"date_founded"`
 	Description *string    `json:"description"`
 	Faction     *Faction   `json:"faction"`
-	HomeStation *Station   `json:"homeStation"`
-	MemberCount *int       `json:"memberCount"`
+	HomeStation *Station   `json:"home_station"`
+	MemberCount *int       `json:"member_count"`
 	Name        *string    `json:"name"`
 	Shares      *int       `json:"shares"`
-	TaxRate     *float64   `json:"taxRate"`
+	TaxRate     *float64   `json:"tax_rate"`
 	Ticker      *string    `json:"ticker"`
 	URL         *string    `json:"url"`
-	WarEligible *bool      `json:"warEligible"`
-}
-
-type DogmaAttribute struct {
-	Attribute *DogmaAttributeDetail `json:"attribute"`
-	Value     *float64              `json:"value"`
+	WarEligible *bool      `json:"war_eligible"`
 }
 
 type DogmaAttributeDetail struct {
-	AttributeID  *string  `json:"attributeId"`
-	DefaultValue *float64 `json:"defaultValue"`
+	AttributeID  *int     `json:"attribute_id"`
+	DefaultValue *float64 `json:"default_value"`
 	Description  *string  `json:"description"`
-	DisplayName  *string  `json:"displayName"`
-	HighIsGood   *bool    `json:"highIsGood"`
+	DisplayName  *string  `json:"display_name"`
+	HighIsGood   *bool    `json:"high_is_good"`
 	Icon         *Icon    `json:"icon"`
 	Name         *string  `json:"name"`
 	Published    *bool    `json:"published"`
@@ -114,83 +114,83 @@ type DogmaAttributeDetail struct {
 
 type DogmaEffect struct {
 	Effect    *DogmaEffectDetail `json:"effect"`
-	IsDefault *bool              `json:"isDefault"`
+	IsDefault *bool              `json:"is_default"`
 }
 
 type DogmaEffectDetail struct {
 	Description              *string         `json:"description"`
-	DisallowAutoRepeat       *bool           `json:"disallowAutoRepeat"`
-	DischargeAttribute       *DogmaAttribute `json:"dischargeAttribute"`
-	DisplayName              *string         `json:"displayName"`
-	DurationAttribute        *DogmaAttribute `json:"durationAttribute"`
-	EffectCategory           *int            `json:"effectCategory"`
-	EffectID                 *int            `json:"effectId"`
-	ElectronicChance         *bool           `json:"electronicChance"`
-	FalloffAttributeID       *int            `json:"falloffAttributeId"`
+	DisallowAutoRepeat       *bool           `json:"disallow_auto_repeat"`
+	DischargeAttribute       *DogmaAttribute `json:"discharge_attribute"`
+	DisplayName              *string         `json:"display_name"`
+	DurationAttribute        *DogmaAttribute `json:"duration_attribute"`
+	EffectCategory           *int            `json:"effect_category"`
+	EffectID                 *int            `json:"effect_id"`
+	ElectronicChance         *bool           `json:"electronic_chance"`
+	FalloffAttributeID       *int            `json:"falloff_attribute_id"`
 	Icon                     *Icon           `json:"icon"`
-	IsAssistance             *bool           `json:"isAssistance"`
-	IsOffensive              *bool           `json:"isOffensive"`
-	IsWarpSafe               *bool           `json:"isWarpSafe"`
+	IsAssistance             *bool           `json:"is_assistance"`
+	IsOffensive              *bool           `json:"is_offensive"`
+	IsWarpSafe               *bool           `json:"is_warp_safe"`
 	Modifiers                []*Modifier     `json:"modifiers"`
 	Name                     *string         `json:"name"`
-	PostExpression           *int            `json:"postExpression"`
-	PreExpression            *int            `json:"preExpression"`
+	PostExpression           *int            `json:"post_expression"`
+	PreExpression            *int            `json:"pre_expression"`
 	Published                *bool           `json:"published"`
-	RangeAttributeID         *int            `json:"rangeAttributeId"`
-	RangeChange              *bool           `json:"rangeChange"`
-	TrackingSpeedAttributeID *int            `json:"trackingSpeedAttributeId"`
+	RangeAttributeID         *int            `json:"range_attribute_id"`
+	RangeChange              *bool           `json:"range_change"`
+	TrackingSpeedAttributeID *int            `json:"tracking_speed_attribute_id"`
 }
 
 type Faction struct {
 	Corporation        *Corporation `json:"corporation"`
 	Description        *string      `json:"description"`
-	FactionID          *int         `json:"factionId"`
-	IsUnique           *bool        `json:"isUnique"`
-	MilitiaCorporation *Corporation `json:"militiaCorporation"`
+	FactionID          *int         `json:"faction_id"`
+	IsUnique           *bool        `json:"is_unique"`
+	MilitiaCorporation *Corporation `json:"militia_corporation"`
 	Name               *string      `json:"name"`
-	SizeFactor         *float64     `json:"sizeFactor"`
-	SolarSystem        *System      `json:"solarSystem"`
-	StationCount       *int         `json:"stationCount"`
-	StationSystemCount *int         `json:"stationSystemCount"`
+	SizeFactor         *float64     `json:"size_factor"`
+	SolarSystem        *System      `json:"solar_system"`
+	StationCount       *int         `json:"station_count"`
+	StationSystemCount *int         `json:"station_system_count"`
 }
 
 type Graphic struct {
-	CollisionFile  *string `json:"collisionFile"`
-	GraphicFile    *string `json:"graphicFile"`
-	GraphicID      *string `json:"graphicId"`
-	IconFolder     *string `json:"iconFolder"`
-	SofDna         *string `json:"sofDna"`
-	SofFactionName *string `json:"sofFactionName"`
-	SofHullName    *string `json:"sofHullName"`
-	SofRaceName    *string `json:"sofRaceName"`
+	CollisionFile  *string `json:"collision_file"`
+	GraphicFile    *string `json:"graphic_file"`
+	GraphicID      *int    `json:"graphic_id"`
+	IconFolder     *string `json:"icon_folder"`
+	SofDna         *string `json:"sof_dna"`
+	SofFactionName *string `json:"sof_faction_name"`
+	SofHullName    *string `json:"sof_hull_name"`
+	SofRaceName    *string `json:"sof_race_name"`
 }
 
 type Group struct {
 	Category  *Category   `json:"category"`
-	GroupID   *string     `json:"groupId"`
+	GroupID   *int        `json:"group_id"`
 	Name      *string     `json:"name"`
 	Published *bool       `json:"published"`
-	ItemTypes []*ItemType `json:"itemTypes"`
+	ItemTypes []*ItemType `json:"item_types"`
 }
 
 type Icon struct {
-	ID *string `json:"id"`
+	ID *int `json:"id"`
 }
 
 type ItemType struct {
-	TypeID          *string           `json:"typeId"`
+	TypeID          *int              `json:"type_id"`
 	Capacity        *float64          `json:"capacity"`
 	Description     *string           `json:"description"`
-	DogmaAttributes []*DogmaAttribute `json:"dogmaAttributes"`
-	DogmaEffects    []*DogmaEffect    `json:"dogmaEffects"`
+	DogmaAttributes []*DogmaAttribute `json:"dogma_attributes"`
+	DogmaEffects    []*DogmaEffect    `json:"dogma_effects"`
 	Graphic         *Graphic          `json:"graphic"`
 	Group           *Group            `json:"group"`
 	Icon            *Icon             `json:"icon"`
-	MarketGroup     *MarketGroup      `json:"marketGroup"`
+	MarketGroup     *MarketGroup      `json:"market_group"`
 	Mass            *float64          `json:"mass"`
 	Name            *string           `json:"name"`
-	PackagedVolume  *float64          `json:"packagedVolume"`
-	PortionSize     *int              `json:"portionSize"`
+	PackagedVolume  *float64          `json:"packaged_volume"`
+	PortionSize     *int              `json:"portion_size"`
 	Published       *bool             `json:"published"`
 	Radius          *float64          `json:"radius"`
 	Volume          *float64          `json:"volume"`
@@ -198,7 +198,7 @@ type ItemType struct {
 
 type MarketGroup struct {
 	Description *string     `json:"description"`
-	ID          *string     `json:"id"`
+	ID          *int        `json:"id"`
 	Name        *string     `json:"name"`
 	ParentGroup *Group      `json:"parent_group"`
 	Types       []*ItemType `json:"types"`
@@ -206,15 +206,15 @@ type MarketGroup struct {
 
 type Modifier struct {
 	Domain               *string `json:"domain"`
-	EffectID             *int    `json:"effectId"`
+	EffectID             *int    `json:"effect_id"`
 	Func                 *string `json:"func"`
-	ModifiedAttributeID  *int    `json:"modifiedAttributeId"`
-	ModifyingAttributeID *int    `json:"modifyingAttributeId"`
+	ModifiedAttributeID  *int    `json:"modified_attribute_id"`
+	ModifyingAttributeID *int    `json:"modifying_attribute_id"`
 	Operator             *int    `json:"operator"`
 }
 
 type Moon struct {
-	MoonID   *string   `json:"moonId"`
+	MoonID   *int      `json:"moon_id"`
 	Name     *string   `json:"name"`
 	Position *Position `json:"position"`
 	System   *System   `json:"system"`
@@ -222,25 +222,25 @@ type Moon struct {
 
 type Order struct {
 	Duration     *int      `json:"duration"`
-	IsBuyOrder   *bool     `json:"isBuyOrder"`
+	IsBuyOrder   *bool     `json:"is_buy_order"`
 	Issued       *string   `json:"issued"`
 	Location     *Station  `json:"location"`
-	MinVolume    *int      `json:"minVolume"`
-	OrderID      *string   `json:"orderId"`
+	MinVolume    *int      `json:"min_volume"`
+	OrderID      *int      `json:"order_id"`
 	Price        *float64  `json:"price"`
 	Range        *Range    `json:"range"`
 	System       *System   `json:"system"`
-	ItemType     *ItemType `json:"itemType"`
-	VolumeRemain *int      `json:"volumeRemain"`
-	VolumeTotal  *int      `json:"volumeTotal"`
+	ItemType     *ItemType `json:"item_type"`
+	VolumeRemain *int      `json:"volume_remain"`
+	VolumeTotal  *int      `json:"volume_total"`
 }
 
 type Planet struct {
 	Name     *string   `json:"name"`
-	PlanetID *string   `json:"planetId"`
+	PlanetID *int      `json:"planet_id"`
 	Position *Position `json:"position"`
 	System   *System   `json:"system"`
-	ItemType *ItemType `json:"itemType"`
+	ItemType *ItemType `json:"item_type"`
 }
 
 type Position struct {
@@ -253,14 +253,14 @@ type Race struct {
 	Alliance    *Alliance `json:"alliance"`
 	Description *string   `json:"description"`
 	Name        *string   `json:"name"`
-	RaceID      *string   `json:"raceId"`
+	RaceID      *int      `json:"race_id"`
 }
 
 type Region struct {
-	ConstellationList []*Constellation `json:"constellationList"`
+	ConstellationList []*Constellation `json:"constellation_list"`
 	Description       *string          `json:"description"`
 	Name              *string          `json:"name"`
-	RegionID          *string          `json:"regionId"`
+	RegionID          *int             `json:"region_id"`
 }
 
 type Star struct {
@@ -268,20 +268,20 @@ type Star struct {
 	Luminosity    *float64       `json:"luminosity"`
 	Name          *string        `json:"name"`
 	Radius        *int           `json:"radius"`
-	SolarSystem   *System        `json:"solarSystem"`
-	SpectralClass *SpectralClass `json:"spectralClass"`
-	StarID        *string        `json:"starId"`
+	SolarSystem   *System        `json:"solar_system"`
+	SpectralClass *SpectralClass `json:"spectral_class"`
+	StarID        *int           `json:"star_id"`
 	Temperature   *int           `json:"temperature"`
-	ItemType      *ItemType      `json:"itemType"`
+	ItemType      *ItemType      `json:"item_type"`
 }
 
 type Stargate struct {
 	Destination *StargateDestination `json:"destination"`
 	Name        *string              `json:"name"`
 	Position    *Position            `json:"position"`
-	StargateID  *string              `json:"stargateId"`
+	StargateID  *int                 `json:"stargate_id"`
 	System      *System              `json:"system"`
-	ItemType    *ItemType            `json:"itemType"`
+	ItemType    *ItemType            `json:"item_type"`
 }
 
 type StargateDestination struct {
@@ -290,18 +290,18 @@ type StargateDestination struct {
 }
 
 type Station struct {
-	MaxDockableShipVolume    *float64     `json:"maxDockableShipVolume"`
+	MaxDockableShipVolume    *float64     `json:"max_dockable_ship_volume"`
 	Name                     *string      `json:"name"`
-	OfficeRentalCost         *float64     `json:"officeRentalCost"`
-	OwningCorporation        *Corporation `json:"owningCorporation"`
+	OfficeRentalCost         *float64     `json:"office_rental_cost"`
+	OwningCorporation        *Corporation `json:"owning_corporation"`
 	Position                 *Position    `json:"position"`
 	Race                     *Race        `json:"race"`
-	ReprocessingEfficiency   *float64     `json:"reprocessingEfficiency"`
-	ReprocessingStationsTake *float64     `json:"reprocessingStationsTake"`
+	ReprocessingEfficiency   *float64     `json:"reprocessing_efficiency"`
+	ReprocessingStationsTake *float64     `json:"reprocessing_stations_take"`
 	Services                 []*Services  `json:"services"`
-	StationID                *string      `json:"stationId"`
+	StationID                *int         `json:"station_id"`
 	System                   *System      `json:"system"`
-	StationType              *ItemType    `json:"stationType"`
+	StationType              *ItemType    `json:"station_type"`
 }
 
 type System struct {
@@ -309,22 +309,22 @@ type System struct {
 	Name          *string         `json:"name"`
 	Planets       []*SystemPlanet `json:"planets"`
 	Position      *Position       `json:"position"`
-	SecurityClass *string         `json:"securityClass"`
+	SecurityClass *string         `json:"security_class"`
 	Star          *Star           `json:"star"`
-	StargateList  []*Stargate     `json:"stargateList"`
-	StationList   []*Station      `json:"stationList"`
-	StationIds    []*int          `json:"stationIds"`
-	SystemID      *string         `json:"systemId"`
+	StargateList  []*Stargate     `json:"stargate_list"`
+	StationList   []*Station      `json:"station_list"`
+	StationIds    []*int          `json:"station_ids"`
+	SystemID      *int            `json:"system_id"`
 }
 
 type SystemPlanet struct {
-	AsteroidBelts    []*AsteroidBelt `json:"asteroidBelts"`
-	MoonList         []*Moon         `json:"moonList"`
-	PlanetProperties *Planet         `json:"planetProperties"`
+	AsteroidBelts    []*AsteroidBelt `json:"asteroid_belts"`
+	MoonList         []*Moon         `json:"moon_list"`
+	PlanetProperties *Planet         `json:"planet_properties"`
 }
 
 type Unit struct {
-	ID *string `json:"id"`
+	ID *int `json:"id"`
 }
 
 type Gender string
@@ -359,12 +359,55 @@ func (e *Gender) UnmarshalGQL(v interface{}) error {
 
 	*e = Gender(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid Gender", str)
+		return fmt.Errorf("%s is not a valid gender", str)
 	}
 	return nil
 }
 
 func (e Gender) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type Ordertype string
+
+const (
+	OrdertypeBuy  Ordertype = "buy"
+	OrdertypeSell Ordertype = "sell"
+	OrdertypeAll  Ordertype = "all"
+)
+
+var AllOrdertype = []Ordertype{
+	OrdertypeBuy,
+	OrdertypeSell,
+	OrdertypeAll,
+}
+
+func (e Ordertype) IsValid() bool {
+	switch e {
+	case OrdertypeBuy, OrdertypeSell, OrdertypeAll:
+		return true
+	}
+	return false
+}
+
+func (e Ordertype) String() string {
+	return string(e)
+}
+
+func (e *Ordertype) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Ordertype(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ordertype", str)
+	}
+	return nil
+}
+
+func (e Ordertype) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
@@ -420,7 +463,7 @@ func (e *Range) UnmarshalGQL(v interface{}) error {
 
 	*e = Range(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid Range", str)
+		return fmt.Errorf("%s is not a valid range", str)
 	}
 	return nil
 }
@@ -511,7 +554,7 @@ func (e *Services) UnmarshalGQL(v interface{}) error {
 
 	*e = Services(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid Services", str)
+		return fmt.Errorf("%s is not a valid services", str)
 	}
 	return nil
 }
@@ -726,54 +769,11 @@ func (e *SpectralClass) UnmarshalGQL(v interface{}) error {
 
 	*e = SpectralClass(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid SpectralClass", str)
+		return fmt.Errorf("%s is not a valid spectral_class", str)
 	}
 	return nil
 }
 
 func (e SpectralClass) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-type Ordertype string
-
-const (
-	OrdertypeBuy  Ordertype = "buy"
-	OrdertypeSell Ordertype = "sell"
-	OrdertypeAll  Ordertype = "all"
-)
-
-var AllOrdertype = []Ordertype{
-	OrdertypeBuy,
-	OrdertypeSell,
-	OrdertypeAll,
-}
-
-func (e Ordertype) IsValid() bool {
-	switch e {
-	case OrdertypeBuy, OrdertypeSell, OrdertypeAll:
-		return true
-	}
-	return false
-}
-
-func (e Ordertype) String() string {
-	return string(e)
-}
-
-func (e *Ordertype) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = Ordertype(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid ordertype", str)
-	}
-	return nil
-}
-
-func (e Ordertype) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
