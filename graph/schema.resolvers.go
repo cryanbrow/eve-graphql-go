@@ -17,7 +17,7 @@ func (r *queryResolver) OrdersForRegion(ctx context.Context, regionID *int, orde
 }
 
 func (r *queryResolver) SystemByID(ctx context.Context, id *int) (*model.System, error) {
-	panic(fmt.Errorf("not implemented"))
+	return dao.SystemByID(id)
 }
 
 func (r *queryResolver) StationByID(ctx context.Context, id *int) (*model.Station, error) {

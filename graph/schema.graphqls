@@ -7,24 +7,25 @@ type Query{
 	systemById(id : Int) : system
 	stationById(id : Int) : station
 }
-
 enum ordertype {
 	buy
 	sell
 	all
 }
-
-type order{
+type order {
 	duration : Int
 	is_buy_order : Boolean
 	issued : String
 	location : station
+	location_id: Int
 	min_volume : Int
-	order_id : Int
+	order_id : Int!
 	price : Float
 	range : range
 	system : system
+	system_id: Int
 	item_type : item_type
+	type_id : Int
 	volume_remain : Int
 	volume_total : Int
 }

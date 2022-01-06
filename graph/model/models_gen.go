@@ -222,17 +222,20 @@ type Moon struct {
 
 type Order struct {
 	Duration     *int      `json:"duration"`
-	IsBuyOrder   *bool     `json:"is_buy_order"`
+	Isbuyorder   *bool     `json:"isbuyorder"`
 	Issued       *string   `json:"issued"`
 	Location     *Station  `json:"location"`
-	MinVolume    *int      `json:"min_volume"`
-	OrderID      *int      `json:"order_id"`
+	Locationid   *int      `json:"locationid"`
+	Minvolume    *int      `json:"minvolume"`
+	Orderid      int       `json:"orderid"`
 	Price        *float64  `json:"price"`
 	Range        *Range    `json:"range"`
 	System       *System   `json:"system"`
-	ItemType     *ItemType `json:"item_type"`
-	VolumeRemain *int      `json:"volume_remain"`
-	VolumeTotal  *int      `json:"volume_total"`
+	Systemid     *int      `json:"systemid"`
+	Itemtype     *ItemType `json:"itemtype"`
+	Typeid       *int      `json:"typeid"`
+	Volumeremain *int      `json:"volumeremain"`
+	Volumetotal  *int      `json:"volumetotal"`
 }
 
 type Planet struct {

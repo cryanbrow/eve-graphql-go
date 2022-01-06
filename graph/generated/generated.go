@@ -261,17 +261,20 @@ type ComplexityRoot struct {
 
 	Order struct {
 		Duration     func(childComplexity int) int
-		IsBuyOrder   func(childComplexity int) int
+		Isbuyorder   func(childComplexity int) int
 		Issued       func(childComplexity int) int
-		ItemType     func(childComplexity int) int
+		Itemtype     func(childComplexity int) int
 		Location     func(childComplexity int) int
-		MinVolume    func(childComplexity int) int
-		OrderID      func(childComplexity int) int
+		Locationid   func(childComplexity int) int
+		Minvolume    func(childComplexity int) int
+		Orderid      func(childComplexity int) int
 		Price        func(childComplexity int) int
 		Range        func(childComplexity int) int
 		System       func(childComplexity int) int
-		VolumeRemain func(childComplexity int) int
-		VolumeTotal  func(childComplexity int) int
+		Systemid     func(childComplexity int) int
+		Typeid       func(childComplexity int) int
+		Volumeremain func(childComplexity int) int
+		Volumetotal  func(childComplexity int) int
 	}
 
 	Planet struct {
@@ -1495,12 +1498,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Order.Duration(childComplexity), true
 
-	case "order.is_buy_order":
-		if e.complexity.Order.IsBuyOrder == nil {
+	case "order.isbuyorder":
+		if e.complexity.Order.Isbuyorder == nil {
 			break
 		}
 
-		return e.complexity.Order.IsBuyOrder(childComplexity), true
+		return e.complexity.Order.Isbuyorder(childComplexity), true
 
 	case "order.issued":
 		if e.complexity.Order.Issued == nil {
@@ -1509,12 +1512,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Order.Issued(childComplexity), true
 
-	case "order.item_type":
-		if e.complexity.Order.ItemType == nil {
+	case "order.itemtype":
+		if e.complexity.Order.Itemtype == nil {
 			break
 		}
 
-		return e.complexity.Order.ItemType(childComplexity), true
+		return e.complexity.Order.Itemtype(childComplexity), true
 
 	case "order.location":
 		if e.complexity.Order.Location == nil {
@@ -1523,19 +1526,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Order.Location(childComplexity), true
 
-	case "order.min_volume":
-		if e.complexity.Order.MinVolume == nil {
+	case "order.locationid":
+		if e.complexity.Order.Locationid == nil {
 			break
 		}
 
-		return e.complexity.Order.MinVolume(childComplexity), true
+		return e.complexity.Order.Locationid(childComplexity), true
 
-	case "order.order_id":
-		if e.complexity.Order.OrderID == nil {
+	case "order.minvolume":
+		if e.complexity.Order.Minvolume == nil {
 			break
 		}
 
-		return e.complexity.Order.OrderID(childComplexity), true
+		return e.complexity.Order.Minvolume(childComplexity), true
+
+	case "order.orderid":
+		if e.complexity.Order.Orderid == nil {
+			break
+		}
+
+		return e.complexity.Order.Orderid(childComplexity), true
 
 	case "order.price":
 		if e.complexity.Order.Price == nil {
@@ -1558,19 +1568,33 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Order.System(childComplexity), true
 
-	case "order.volume_remain":
-		if e.complexity.Order.VolumeRemain == nil {
+	case "order.systemid":
+		if e.complexity.Order.Systemid == nil {
 			break
 		}
 
-		return e.complexity.Order.VolumeRemain(childComplexity), true
+		return e.complexity.Order.Systemid(childComplexity), true
 
-	case "order.volume_total":
-		if e.complexity.Order.VolumeTotal == nil {
+	case "order.typeid":
+		if e.complexity.Order.Typeid == nil {
 			break
 		}
 
-		return e.complexity.Order.VolumeTotal(childComplexity), true
+		return e.complexity.Order.Typeid(childComplexity), true
+
+	case "order.volumeremain":
+		if e.complexity.Order.Volumeremain == nil {
+			break
+		}
+
+		return e.complexity.Order.Volumeremain(childComplexity), true
+
+	case "order.volumetotal":
+		if e.complexity.Order.Volumetotal == nil {
+			break
+		}
+
+		return e.complexity.Order.Volumetotal(childComplexity), true
 
 	case "planet.item_type":
 		if e.complexity.Planet.ItemType == nil {
@@ -2044,26 +2068,27 @@ var sources = []*ast.Source{
 	systemById(id : Int) : system
 	stationById(id : Int) : station
 }
-
 enum ordertype {
 	buy
 	sell
 	all
 }
-
-type order{
+type order {
 	duration : Int
-	is_buy_order : Boolean
+	isbuyorder : Boolean
 	issued : String
 	location : station
-	min_volume : Int
-	order_id : Int
+	locationid: Int
+	minvolume : Int
+	orderid : Int!
 	price : Float
 	range : range
 	system : system
-	item_type : item_type
-	volume_remain : Int
-	volume_total : Int
+	systemid: Int
+	itemtype : item_type
+	typeid : Int
+	volumeremain : Int
+	volumetotal : Int
 }
 
 type station{
@@ -8840,7 +8865,7 @@ func (ec *executionContext) _order_duration(ctx context.Context, field graphql.C
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _order_is_buy_order(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
+func (ec *executionContext) _order_isbuyorder(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8858,7 +8883,7 @@ func (ec *executionContext) _order_is_buy_order(ctx context.Context, field graph
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.IsBuyOrder, nil
+		return obj.Isbuyorder, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8936,7 +8961,7 @@ func (ec *executionContext) _order_location(ctx context.Context, field graphql.C
 	return ec.marshalOstation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStation(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _order_min_volume(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
+func (ec *executionContext) _order_locationid(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8954,7 +8979,7 @@ func (ec *executionContext) _order_min_volume(ctx context.Context, field graphql
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.MinVolume, nil
+		return obj.Locationid, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8968,7 +8993,7 @@ func (ec *executionContext) _order_min_volume(ctx context.Context, field graphql
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _order_order_id(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
+func (ec *executionContext) _order_minvolume(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8986,7 +9011,7 @@ func (ec *executionContext) _order_order_id(ctx context.Context, field graphql.C
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.OrderID, nil
+		return obj.Minvolume, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8998,6 +9023,41 @@ func (ec *executionContext) _order_order_id(ctx context.Context, field graphql.C
 	res := resTmp.(*int)
 	fc.Result = res
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _order_orderid(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "order",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Orderid, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _order_price(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
@@ -9096,7 +9156,7 @@ func (ec *executionContext) _order_system(ctx context.Context, field graphql.Col
 	return ec.marshalOsystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystem(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _order_item_type(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
+func (ec *executionContext) _order_systemid(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9114,39 +9174,7 @@ func (ec *executionContext) _order_item_type(ctx context.Context, field graphql.
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ItemType, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.ItemType)
-	fc.Result = res
-	return ec.marshalOitem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐItemType(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _order_volume_remain(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "order",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.VolumeRemain, nil
+		return obj.Systemid, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9160,7 +9188,7 @@ func (ec *executionContext) _order_volume_remain(ctx context.Context, field grap
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _order_volume_total(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
+func (ec *executionContext) _order_itemtype(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9178,7 +9206,103 @@ func (ec *executionContext) _order_volume_total(ctx context.Context, field graph
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.VolumeTotal, nil
+		return obj.Itemtype, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.ItemType)
+	fc.Result = res
+	return ec.marshalOitem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐItemType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _order_typeid(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "order",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Typeid, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _order_volumeremain(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "order",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Volumeremain, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _order_volumetotal(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "order",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Volumetotal, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12158,28 +12282,37 @@ func (ec *executionContext) _order(ctx context.Context, sel ast.SelectionSet, ob
 			out.Values[i] = graphql.MarshalString("order")
 		case "duration":
 			out.Values[i] = ec._order_duration(ctx, field, obj)
-		case "is_buy_order":
-			out.Values[i] = ec._order_is_buy_order(ctx, field, obj)
+		case "isbuyorder":
+			out.Values[i] = ec._order_isbuyorder(ctx, field, obj)
 		case "issued":
 			out.Values[i] = ec._order_issued(ctx, field, obj)
 		case "location":
 			out.Values[i] = ec._order_location(ctx, field, obj)
-		case "min_volume":
-			out.Values[i] = ec._order_min_volume(ctx, field, obj)
-		case "order_id":
-			out.Values[i] = ec._order_order_id(ctx, field, obj)
+		case "locationid":
+			out.Values[i] = ec._order_locationid(ctx, field, obj)
+		case "minvolume":
+			out.Values[i] = ec._order_minvolume(ctx, field, obj)
+		case "orderid":
+			out.Values[i] = ec._order_orderid(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "price":
 			out.Values[i] = ec._order_price(ctx, field, obj)
 		case "range":
 			out.Values[i] = ec._order_range(ctx, field, obj)
 		case "system":
 			out.Values[i] = ec._order_system(ctx, field, obj)
-		case "item_type":
-			out.Values[i] = ec._order_item_type(ctx, field, obj)
-		case "volume_remain":
-			out.Values[i] = ec._order_volume_remain(ctx, field, obj)
-		case "volume_total":
-			out.Values[i] = ec._order_volume_total(ctx, field, obj)
+		case "systemid":
+			out.Values[i] = ec._order_systemid(ctx, field, obj)
+		case "itemtype":
+			out.Values[i] = ec._order_itemtype(ctx, field, obj)
+		case "typeid":
+			out.Values[i] = ec._order_typeid(ctx, field, obj)
+		case "volumeremain":
+			out.Values[i] = ec._order_volumeremain(ctx, field, obj)
+		case "volumetotal":
+			out.Values[i] = ec._order_volumetotal(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12562,6 +12695,21 @@ func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interf
 
 func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.SelectionSet, v bool) graphql.Marshaler {
 	res := graphql.MarshalBoolean(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
+	res, err := graphql.UnmarshalInt(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
+	res := graphql.MarshalInt(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
