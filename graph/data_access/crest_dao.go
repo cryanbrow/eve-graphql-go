@@ -30,7 +30,6 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int) ([]
 
 	orderResult, pages, err := ordersForRegionREST(crest_url.String())
 
-	println(strconv.Itoa(pages))
 	if err == nil && pages > 0 {
 		orders = append(orders, orderResult...)
 	} else {
@@ -47,7 +46,6 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int) ([]
 		}
 	}
 
-	println(len(orders))
 	return orders, nil
 }
 
@@ -121,6 +119,82 @@ func SystemByID(id *int) (*model.System, error) {
 	}
 
 	return system, nil
+}
+
+func PlanetByID(id *int) (*model.Planet, error) {
+	var planet *model.Planet = new(model.Planet)
+
+	crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/planets/%s/", strconv.Itoa(*id)))
+	if err != nil {
+		return planet, nil
+	}
+
+	queryParameters := crest_url.Query()
+	queryParameters.Add("datasource", "tranquility")
+	queryParameters.Add("language", "en")
+
+	crest_url.RawQuery = queryParameters.Encode()
+
+	request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+	if err != nil {
+		log.Printf("Could not request orders by region. %v", err)
+	}
+	response, err := Client.Do(request)
+	if err != nil {
+		log.Printf("Could not make request. %v", err)
+		return planet, err
+	}
+
+	responseBytes, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Printf("Could not read response for body. %v", err)
+		return planet, err
+	}
+
+	if err := json.Unmarshal(responseBytes, &planet); err != nil {
+		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		return planet, err
+	}
+
+	return planet, nil
+}
+
+func MoonByID(id *int) (*model.Moon, error) {
+	var moon *model.Moon = new(model.Moon)
+
+	crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/moons/%s/", strconv.Itoa(*id)))
+	if err != nil {
+		return moon, nil
+	}
+
+	queryParameters := crest_url.Query()
+	queryParameters.Add("datasource", "tranquility")
+	queryParameters.Add("language", "en")
+
+	crest_url.RawQuery = queryParameters.Encode()
+
+	request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+	if err != nil {
+		log.Printf("Could not request orders by region. %v", err)
+	}
+	response, err := Client.Do(request)
+	if err != nil {
+		log.Printf("Could not make request. %v", err)
+		return moon, err
+	}
+
+	responseBytes, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Printf("Could not read response for body. %v", err)
+		return moon, err
+	}
+
+	if err := json.Unmarshal(responseBytes, &moon); err != nil {
+		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		return moon, err
+	}
+
+	return moon, nil
 }
 
 type HTTPClient interface {

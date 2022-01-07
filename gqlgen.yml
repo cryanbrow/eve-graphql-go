@@ -49,6 +49,12 @@ models:
         resolver: true
       system:
         resolver: true
+  System_planet:
+    fields:
+      planet_properties:
+        resolver: true
+      moon_details:
+        resolver: true
   ID:
     model:
       - github.com/99designs/gqlgen/graphql.ID

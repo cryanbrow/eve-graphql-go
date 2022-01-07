@@ -323,8 +323,10 @@ type System struct {
 type SystemPlanet struct {
 	AsteroidBelsProperties []*AsteroidBelt `json:"asteroid_bels_properties"`
 	AsteroidBelts          []*int          `json:"asteroid_belts"`
-	MoonList               []*Moon         `json:"moon_list"`
+	Moons                  []*int          `json:"moons"`
+	MoonDetails            []*Moon         `json:"moon_details"`
 	PlanetProperties       *Planet         `json:"planet_properties"`
+	PlanetID               *int            `json:"planet_id"`
 }
 
 type Unit struct {

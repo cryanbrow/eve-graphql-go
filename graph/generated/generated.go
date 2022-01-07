@@ -37,6 +37,7 @@ type Config struct {
 type ResolverRoot interface {
 	Order() OrderResolver
 	Query() QueryResolver
+	System_planet() System_planetResolver
 }
 
 type DirectiveRoot struct {
@@ -364,7 +365,9 @@ type ComplexityRoot struct {
 	SystemPlanet struct {
 		AsteroidBelsProperties func(childComplexity int) int
 		AsteroidBelts          func(childComplexity int) int
-		MoonList               func(childComplexity int) int
+		MoonDetails            func(childComplexity int) int
+		Moons                  func(childComplexity int) int
+		PlanetID               func(childComplexity int) int
 		PlanetProperties       func(childComplexity int) int
 	}
 
@@ -382,6 +385,10 @@ type QueryResolver interface {
 	OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordertype, typeID *int) ([]*model.Order, error)
 	SystemByID(ctx context.Context, id *int) (*model.System, error)
 	StationByID(ctx context.Context, id *int) (*model.Station, error)
+}
+type System_planetResolver interface {
+	MoonDetails(ctx context.Context, obj *model.SystemPlanet) ([]*model.Moon, error)
+	PlanetProperties(ctx context.Context, obj *model.SystemPlanet) (*model.Planet, error)
 }
 
 type executableSchema struct {
@@ -2003,12 +2010,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemPlanet.AsteroidBelts(childComplexity), true
 
-	case "System_planet.moon_list":
-		if e.complexity.SystemPlanet.MoonList == nil {
+	case "System_planet.moon_details":
+		if e.complexity.SystemPlanet.MoonDetails == nil {
 			break
 		}
 
-		return e.complexity.SystemPlanet.MoonList(childComplexity), true
+		return e.complexity.SystemPlanet.MoonDetails(childComplexity), true
+
+	case "System_planet.moons":
+		if e.complexity.SystemPlanet.Moons == nil {
+			break
+		}
+
+		return e.complexity.SystemPlanet.Moons(childComplexity), true
+
+	case "System_planet.planet_id":
+		if e.complexity.SystemPlanet.PlanetID == nil {
+			break
+		}
+
+		return e.complexity.SystemPlanet.PlanetID(childComplexity), true
 
 	case "System_planet.planet_properties":
 		if e.complexity.SystemPlanet.PlanetProperties == nil {
@@ -2368,8 +2389,10 @@ type Planet{
 type System_planet{
 	asteroid_bels_properties : [Asteroid_belt]
 	asteroid_belts : [Int]
-	moon_list : [Moon]
+	moons : [Int]
+	moon_details : [Moon]
 	planet_properties : Planet
+	planet_id: Int
 }
 
 type Asteroid_belt{
@@ -10038,7 +10061,7 @@ func (ec *executionContext) _System_planet_asteroid_belts(ctx context.Context, f
 	return ec.marshalOInt2ᚕᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _System_planet_moon_list(ctx context.Context, field graphql.CollectedField, obj *model.SystemPlanet) (ret graphql.Marshaler) {
+func (ec *executionContext) _System_planet_moons(ctx context.Context, field graphql.CollectedField, obj *model.SystemPlanet) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10056,7 +10079,39 @@ func (ec *executionContext) _System_planet_moon_list(ctx context.Context, field 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.MoonList, nil
+		return obj.Moons, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚕᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _System_planet_moon_details(ctx context.Context, field graphql.CollectedField, obj *model.SystemPlanet) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "System_planet",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.System_planet().MoonDetails(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10081,14 +10136,14 @@ func (ec *executionContext) _System_planet_planet_properties(ctx context.Context
 		Object:     "System_planet",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PlanetProperties, nil
+		return ec.resolvers.System_planet().PlanetProperties(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10100,6 +10155,38 @@ func (ec *executionContext) _System_planet_planet_properties(ctx context.Context
 	res := resTmp.(*model.Planet)
 	fc.Result = res
 	return ec.marshalOPlanet2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐPlanet(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _System_planet_planet_id(ctx context.Context, field graphql.CollectedField, obj *model.SystemPlanet) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "System_planet",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PlanetID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Unit_id(ctx context.Context, field graphql.CollectedField, obj *model.Unit) (ret graphql.Marshaler) {
@@ -12467,10 +12554,32 @@ func (ec *executionContext) _System_planet(ctx context.Context, sel ast.Selectio
 			out.Values[i] = ec._System_planet_asteroid_bels_properties(ctx, field, obj)
 		case "asteroid_belts":
 			out.Values[i] = ec._System_planet_asteroid_belts(ctx, field, obj)
-		case "moon_list":
-			out.Values[i] = ec._System_planet_moon_list(ctx, field, obj)
+		case "moons":
+			out.Values[i] = ec._System_planet_moons(ctx, field, obj)
+		case "moon_details":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._System_planet_moon_details(ctx, field, obj)
+				return res
+			})
 		case "planet_properties":
-			out.Values[i] = ec._System_planet_planet_properties(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._System_planet_planet_properties(ctx, field, obj)
+				return res
+			})
+		case "planet_id":
+			out.Values[i] = ec._System_planet_planet_id(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

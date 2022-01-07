@@ -32,11 +32,23 @@ func (r *queryResolver) StationByID(ctx context.Context, id *int) (*model.Statio
 	panic(fmt.Errorf("not implemented"))
 }
 
+func (r *system_planetResolver) MoonDetails(ctx context.Context, obj *model.SystemPlanet) ([]*model.Moon, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *system_planetResolver) PlanetProperties(ctx context.Context, obj *model.SystemPlanet) (*model.Planet, error) {
+	return dao.PlanetByID(obj.PlanetID)
+}
+
 // Order returns generated.OrderResolver implementation.
 func (r *Resolver) Order() generated.OrderResolver { return &orderResolver{r} }
 
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+// System_planet returns generated.System_planetResolver implementation.
+func (r *Resolver) System_planet() generated.System_planetResolver { return &system_planetResolver{r} }
+
 type orderResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type system_planetResolver struct{ *Resolver }

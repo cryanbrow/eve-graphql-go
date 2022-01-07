@@ -292,8 +292,10 @@ type Planet{
 type System_planet{
 	asteroid_bels_properties : [Asteroid_belt]
 	asteroid_belts : [Int]
-	moon_list : [Moon]
+	moons : [Int]
+	moon_details : [Moon]
 	planet_properties : Planet
+	planet_id: Int
 }
 
 type Asteroid_belt{
