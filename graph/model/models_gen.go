@@ -8,17 +8,6 @@ import (
 	"strconv"
 )
 
-type AsteroidBelt struct {
-	Name     *string   `json:"name"`
-	Position *Position `json:"position"`
-	System   *System   `json:"system"`
-}
-
-type DogmaAttribute struct {
-	Attribute *DogmaAttributeDetail `json:"attribute"`
-	Value     *float64              `json:"value"`
-}
-
 type Alliance struct {
 	CreatorCorporation  *Corporation `json:"creator_corporation"`
 	Creator             *Character   `json:"creator"`
@@ -36,6 +25,12 @@ type Ancestry struct {
 	ID               *int       `json:"id"`
 	Name             *string    `json:"name"`
 	ShortDescription *string    `json:"short_description"`
+}
+
+type AsteroidBelt struct {
+	Name     *string   `json:"name"`
+	Position *Position `json:"position"`
+	System   *System   `json:"system"`
 }
 
 type Bloodline struct {
@@ -97,6 +92,11 @@ type Corporation struct {
 	Ticker      *string    `json:"ticker"`
 	URL         *string    `json:"url"`
 	WarEligible *bool      `json:"war_eligible"`
+}
+
+type DogmaAttribute struct {
+	Attribute *DogmaAttributeDetail `json:"attribute"`
+	Value     *float64              `json:"value"`
 }
 
 type DogmaAttributeDetail struct {
@@ -222,20 +222,20 @@ type Moon struct {
 
 type Order struct {
 	Duration     *int      `json:"duration"`
-	Isbuyorder   *bool     `json:"isbuyorder"`
+	IsBuyOrder   *bool     `json:"is_buy_order"`
 	Issued       *string   `json:"issued"`
 	Location     *Station  `json:"location"`
-	Locationid   *int      `json:"locationid"`
-	Minvolume    *int      `json:"minvolume"`
-	Orderid      int       `json:"orderid"`
+	LocationID   *int      `json:"location_id"`
+	MinVolume    *int      `json:"min_volume"`
+	OrderID      int       `json:"order_id"`
 	Price        *float64  `json:"price"`
 	Range        *Range    `json:"range"`
 	System       *System   `json:"system"`
-	Systemid     *int      `json:"systemid"`
-	Itemtype     *ItemType `json:"itemtype"`
-	Typeid       *int      `json:"typeid"`
-	Volumeremain *int      `json:"volumeremain"`
-	Volumetotal  *int      `json:"volumetotal"`
+	SystemID     *int      `json:"system_id"`
+	ItemType     *ItemType `json:"item_type"`
+	TypeID       *int      `json:"type_id"`
+	VolumeRemain *int      `json:"volume_remain"`
+	VolumeTotal  *int      `json:"volume_total"`
 }
 
 type Planet struct {
@@ -321,9 +321,10 @@ type System struct {
 }
 
 type SystemPlanet struct {
-	AsteroidBelts    []*AsteroidBelt `json:"asteroid_belts"`
-	MoonList         []*Moon         `json:"moon_list"`
-	PlanetProperties *Planet         `json:"planet_properties"`
+	AsteroidBelsProperties []*AsteroidBelt `json:"asteroid_bels_properties"`
+	AsteroidBelts          []*int          `json:"asteroid_belts"`
+	MoonList               []*Moon         `json:"moon_list"`
+	PlanetProperties       *Planet         `json:"planet_properties"`
 }
 
 type Unit struct {
@@ -362,7 +363,7 @@ func (e *Gender) UnmarshalGQL(v interface{}) error {
 
 	*e = Gender(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid gender", str)
+		return fmt.Errorf("%s is not a valid Gender", str)
 	}
 	return nil
 }
@@ -405,7 +406,7 @@ func (e *Ordertype) UnmarshalGQL(v interface{}) error {
 
 	*e = Ordertype(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid ordertype", str)
+		return fmt.Errorf("%s is not a valid Ordertype", str)
 	}
 	return nil
 }
@@ -466,7 +467,7 @@ func (e *Range) UnmarshalGQL(v interface{}) error {
 
 	*e = Range(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid range", str)
+		return fmt.Errorf("%s is not a valid Range", str)
 	}
 	return nil
 }
@@ -557,7 +558,7 @@ func (e *Services) UnmarshalGQL(v interface{}) error {
 
 	*e = Services(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid services", str)
+		return fmt.Errorf("%s is not a valid Services", str)
 	}
 	return nil
 }
@@ -772,7 +773,7 @@ func (e *SpectralClass) UnmarshalGQL(v interface{}) error {
 
 	*e = SpectralClass(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid spectral_class", str)
+		return fmt.Errorf("%s is not a valid Spectral_class", str)
 	}
 	return nil
 }

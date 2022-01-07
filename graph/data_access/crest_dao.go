@@ -88,7 +88,7 @@ func ordersForRegionREST(url string) ([]*model.Order, int, error) {
 func SystemByID(id *int) (*model.System, error) {
 	var system *model.System = new(model.System)
 
-	crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/systems/%s/?datasource=tranquility&language=en", strconv.Itoa(*id)))
+	crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/systems/%s/", strconv.Itoa(*id)))
 	if err != nil {
 		return system, nil
 	}
