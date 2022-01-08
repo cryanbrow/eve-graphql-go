@@ -31,6 +31,7 @@ type AsteroidBelt struct {
 	Name     *string   `json:"name"`
 	Position *Position `json:"position"`
 	System   *System   `json:"system"`
+	SystemID *int      `json:"system_id"`
 }
 
 type Bloodline struct {
@@ -186,6 +187,7 @@ type ItemType struct {
 	Graphic         *Graphic          `json:"graphic"`
 	Group           *Group            `json:"group"`
 	Icon            *Icon             `json:"icon"`
+	MarketGroupID   *int              `json:"market_group_id"`
 	MarketGroup     *MarketGroup      `json:"market_group"`
 	Mass            *float64          `json:"mass"`
 	Name            *string           `json:"name"`
@@ -197,11 +199,13 @@ type ItemType struct {
 }
 
 type MarketGroup struct {
-	Description *string     `json:"description"`
-	ID          *int        `json:"id"`
-	Name        *string     `json:"name"`
-	ParentGroup *Group      `json:"parent_group"`
-	Types       []*ItemType `json:"types"`
+	Description   *string     `json:"description"`
+	ID            *int        `json:"id"`
+	Name          *string     `json:"name"`
+	ParentGroupID *int        `json:"parent_group_id"`
+	ParentGroup   *Group      `json:"parent_group"`
+	Types         []*int      `json:"types"`
+	TypesDetails  []*ItemType `json:"types_details"`
 }
 
 type Modifier struct {
@@ -321,12 +325,12 @@ type System struct {
 }
 
 type SystemPlanet struct {
-	AsteroidBelsProperties []*AsteroidBelt `json:"asteroid_bels_properties"`
-	AsteroidBelts          []*int          `json:"asteroid_belts"`
-	Moons                  []*int          `json:"moons"`
-	MoonDetails            []*Moon         `json:"moon_details"`
-	PlanetProperties       *Planet         `json:"planet_properties"`
-	PlanetID               *int            `json:"planet_id"`
+	AsteroidBeltsProperties []*AsteroidBelt `json:"asteroid_belts_properties"`
+	AsteroidBelts           []*int          `json:"asteroid_belts"`
+	Moons                   []*int          `json:"moons"`
+	MoonDetails             []*Moon         `json:"moon_details"`
+	PlanetProperties        *Planet         `json:"planet_properties"`
+	PlanetID                *int            `json:"planet_id"`
 }
 
 type Unit struct {

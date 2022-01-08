@@ -49,11 +49,29 @@ models:
         resolver: true
       system:
         resolver: true
+      item_type:
+        resolver: true
   System_planet:
     fields:
+      asteroid_belts_properties:
+        resolver: true
       planet_properties:
         resolver: true
       moon_details:
+        resolver: true
+  Item_type:
+    fields:
+      market_group:
+        resolver: true
+  Asteroid_belt:
+    fields:
+      system:
+        resolver: true
+  Market_group:
+    fields:
+      parent_group:
+        resolver: true
+      types_details:
         resolver: true
   ID:
     model:

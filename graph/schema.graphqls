@@ -126,6 +126,7 @@ type Item_type{
 	graphic : Graphic
 	group : Group
 	icon : Icon
+	market_group_id : Int
 	market_group : Market_group
 	mass : Float
 	name : String
@@ -230,8 +231,10 @@ type Market_group{
 	description : String
 	id : Int
 	name : String
+	parent_group_id : Int
 	parent_group : Group
-	types : [Item_type]
+	types : [Int]
+	types_details : [Item_type]
 }
 
 type Faction{
@@ -290,7 +293,7 @@ type Planet{
 }
 
 type System_planet{
-	asteroid_bels_properties : [Asteroid_belt]
+	asteroid_belts_properties : [Asteroid_belt]
 	asteroid_belts : [Int]
 	moons : [Int]
 	moon_details : [Moon]
@@ -302,6 +305,7 @@ type Asteroid_belt{
 	name : String
 	position : Position
 	system : System
+	system_id : Int
 }
 
 type Moon{

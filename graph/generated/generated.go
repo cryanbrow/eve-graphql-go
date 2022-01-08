@@ -35,6 +35,9 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	Asteroid_belt() Asteroid_beltResolver
+	Item_type() Item_typeResolver
+	Market_group() Market_groupResolver
 	Order() OrderResolver
 	Query() QueryResolver
 	System_planet() System_planetResolver
@@ -67,6 +70,7 @@ type ComplexityRoot struct {
 		Name     func(childComplexity int) int
 		Position func(childComplexity int) int
 		System   func(childComplexity int) int
+		SystemID func(childComplexity int) int
 	}
 
 	Bloodline struct {
@@ -222,6 +226,7 @@ type ComplexityRoot struct {
 		Group           func(childComplexity int) int
 		Icon            func(childComplexity int) int
 		MarketGroup     func(childComplexity int) int
+		MarketGroupID   func(childComplexity int) int
 		Mass            func(childComplexity int) int
 		Name            func(childComplexity int) int
 		PackagedVolume  func(childComplexity int) int
@@ -233,11 +238,13 @@ type ComplexityRoot struct {
 	}
 
 	MarketGroup struct {
-		Description func(childComplexity int) int
-		ID          func(childComplexity int) int
-		Name        func(childComplexity int) int
-		ParentGroup func(childComplexity int) int
-		Types       func(childComplexity int) int
+		Description   func(childComplexity int) int
+		ID            func(childComplexity int) int
+		Name          func(childComplexity int) int
+		ParentGroup   func(childComplexity int) int
+		ParentGroupID func(childComplexity int) int
+		Types         func(childComplexity int) int
+		TypesDetails  func(childComplexity int) int
 	}
 
 	Modifier struct {
@@ -363,12 +370,12 @@ type ComplexityRoot struct {
 	}
 
 	SystemPlanet struct {
-		AsteroidBelsProperties func(childComplexity int) int
-		AsteroidBelts          func(childComplexity int) int
-		MoonDetails            func(childComplexity int) int
-		Moons                  func(childComplexity int) int
-		PlanetID               func(childComplexity int) int
-		PlanetProperties       func(childComplexity int) int
+		AsteroidBelts           func(childComplexity int) int
+		AsteroidBeltsProperties func(childComplexity int) int
+		MoonDetails             func(childComplexity int) int
+		Moons                   func(childComplexity int) int
+		PlanetID                func(childComplexity int) int
+		PlanetProperties        func(childComplexity int) int
 	}
 
 	Unit struct {
@@ -376,10 +383,23 @@ type ComplexityRoot struct {
 	}
 }
 
+type Asteroid_beltResolver interface {
+	System(ctx context.Context, obj *model.AsteroidBelt) (*model.System, error)
+}
+type Item_typeResolver interface {
+	MarketGroup(ctx context.Context, obj *model.ItemType) (*model.MarketGroup, error)
+}
+type Market_groupResolver interface {
+	ParentGroup(ctx context.Context, obj *model.MarketGroup) (*model.Group, error)
+
+	TypesDetails(ctx context.Context, obj *model.MarketGroup) ([]*model.ItemType, error)
+}
 type OrderResolver interface {
 	Location(ctx context.Context, obj *model.Order) (*model.Station, error)
 
 	System(ctx context.Context, obj *model.Order) (*model.System, error)
+
+	ItemType(ctx context.Context, obj *model.Order) (*model.ItemType, error)
 }
 type QueryResolver interface {
 	OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordertype, typeID *int) ([]*model.Order, error)
@@ -387,6 +407,8 @@ type QueryResolver interface {
 	StationByID(ctx context.Context, id *int) (*model.Station, error)
 }
 type System_planetResolver interface {
+	AsteroidBeltsProperties(ctx context.Context, obj *model.SystemPlanet) ([]*model.AsteroidBelt, error)
+
 	MoonDetails(ctx context.Context, obj *model.SystemPlanet) ([]*model.Moon, error)
 	PlanetProperties(ctx context.Context, obj *model.SystemPlanet) (*model.Planet, error)
 }
@@ -517,6 +539,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AsteroidBelt.System(childComplexity), true
+
+	case "Asteroid_belt.system_id":
+		if e.complexity.AsteroidBelt.SystemID == nil {
+			break
+		}
+
+		return e.complexity.AsteroidBelt.SystemID(childComplexity), true
 
 	case "Bloodline.charisma":
 		if e.complexity.Bloodline.Charisma == nil {
@@ -1309,6 +1338,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ItemType.MarketGroup(childComplexity), true
 
+	case "Item_type.market_group_id":
+		if e.complexity.ItemType.MarketGroupID == nil {
+			break
+		}
+
+		return e.complexity.ItemType.MarketGroupID(childComplexity), true
+
 	case "Item_type.mass":
 		if e.complexity.ItemType.Mass == nil {
 			break
@@ -1393,12 +1429,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.MarketGroup.ParentGroup(childComplexity), true
 
+	case "Market_group.parent_group_id":
+		if e.complexity.MarketGroup.ParentGroupID == nil {
+			break
+		}
+
+		return e.complexity.MarketGroup.ParentGroupID(childComplexity), true
+
 	case "Market_group.types":
 		if e.complexity.MarketGroup.Types == nil {
 			break
 		}
 
 		return e.complexity.MarketGroup.Types(childComplexity), true
+
+	case "Market_group.types_details":
+		if e.complexity.MarketGroup.TypesDetails == nil {
+			break
+		}
+
+		return e.complexity.MarketGroup.TypesDetails(childComplexity), true
 
 	case "Modifier.domain":
 		if e.complexity.Modifier.Domain == nil {
@@ -1996,19 +2046,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.System.SystemID(childComplexity), true
 
-	case "System_planet.asteroid_bels_properties":
-		if e.complexity.SystemPlanet.AsteroidBelsProperties == nil {
-			break
-		}
-
-		return e.complexity.SystemPlanet.AsteroidBelsProperties(childComplexity), true
-
 	case "System_planet.asteroid_belts":
 		if e.complexity.SystemPlanet.AsteroidBelts == nil {
 			break
 		}
 
 		return e.complexity.SystemPlanet.AsteroidBelts(childComplexity), true
+
+	case "System_planet.asteroid_belts_properties":
+		if e.complexity.SystemPlanet.AsteroidBeltsProperties == nil {
+			break
+		}
+
+		return e.complexity.SystemPlanet.AsteroidBeltsProperties(childComplexity), true
 
 	case "System_planet.moon_details":
 		if e.complexity.SystemPlanet.MoonDetails == nil {
@@ -2223,6 +2273,7 @@ type Item_type{
 	graphic : Graphic
 	group : Group
 	icon : Icon
+	market_group_id : Int
 	market_group : Market_group
 	mass : Float
 	name : String
@@ -2327,8 +2378,10 @@ type Market_group{
 	description : String
 	id : Int
 	name : String
+	parent_group_id : Int
 	parent_group : Group
-	types : [Item_type]
+	types : [Int]
+	types_details : [Item_type]
 }
 
 type Faction{
@@ -2387,7 +2440,7 @@ type Planet{
 }
 
 type System_planet{
-	asteroid_bels_properties : [Asteroid_belt]
+	asteroid_belts_properties : [Asteroid_belt]
 	asteroid_belts : [Int]
 	moons : [Int]
 	moon_details : [Moon]
@@ -2399,6 +2452,7 @@ type Asteroid_belt{
 	name : String
 	position : Position
 	system : System
+	system_id : Int
 }
 
 type Moon{
@@ -3193,14 +3247,14 @@ func (ec *executionContext) _Asteroid_belt_system(ctx context.Context, field gra
 		Object:     "Asteroid_belt",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.System, nil
+		return ec.resolvers.Asteroid_belt().System(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3212,6 +3266,38 @@ func (ec *executionContext) _Asteroid_belt_system(ctx context.Context, field gra
 	res := resTmp.(*model.System)
 	fc.Result = res
 	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Asteroid_belt_system_id(ctx context.Context, field graphql.CollectedField, obj *model.AsteroidBelt) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Asteroid_belt",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SystemID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Bloodline_id(ctx context.Context, field graphql.CollectedField, obj *model.Bloodline) (ret graphql.Marshaler) {
@@ -6830,7 +6916,7 @@ func (ec *executionContext) _Item_type_icon(ctx context.Context, field graphql.C
 	return ec.marshalOIcon2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐIcon(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Item_type_market_group(ctx context.Context, field graphql.CollectedField, obj *model.ItemType) (ret graphql.Marshaler) {
+func (ec *executionContext) _Item_type_market_group_id(ctx context.Context, field graphql.CollectedField, obj *model.ItemType) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6848,7 +6934,39 @@ func (ec *executionContext) _Item_type_market_group(ctx context.Context, field g
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.MarketGroup, nil
+		return obj.MarketGroupID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Item_type_market_group(ctx context.Context, field graphql.CollectedField, obj *model.ItemType) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Item_type",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Item_type().MarketGroup(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7182,7 +7300,7 @@ func (ec *executionContext) _Market_group_name(ctx context.Context, field graphq
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Market_group_parent_group(ctx context.Context, field graphql.CollectedField, obj *model.MarketGroup) (ret graphql.Marshaler) {
+func (ec *executionContext) _Market_group_parent_group_id(ctx context.Context, field graphql.CollectedField, obj *model.MarketGroup) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7200,7 +7318,39 @@ func (ec *executionContext) _Market_group_parent_group(ctx context.Context, fiel
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ParentGroup, nil
+		return obj.ParentGroupID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Market_group_parent_group(ctx context.Context, field graphql.CollectedField, obj *model.MarketGroup) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Market_group",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Market_group().ParentGroup(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7233,6 +7383,38 @@ func (ec *executionContext) _Market_group_types(ctx context.Context, field graph
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Types, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚕᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Market_group_types_details(ctx context.Context, field graphql.CollectedField, obj *model.MarketGroup) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Market_group",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Market_group().TypesDetails(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7932,14 +8114,14 @@ func (ec *executionContext) _Order_item_type(ctx context.Context, field graphql.
 		Object:     "Order",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ItemType, nil
+		return ec.resolvers.Order().ItemType(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9997,7 +10179,7 @@ func (ec *executionContext) _System_system_id(ctx context.Context, field graphql
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _System_planet_asteroid_bels_properties(ctx context.Context, field graphql.CollectedField, obj *model.SystemPlanet) (ret graphql.Marshaler) {
+func (ec *executionContext) _System_planet_asteroid_belts_properties(ctx context.Context, field graphql.CollectedField, obj *model.SystemPlanet) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10008,14 +10190,14 @@ func (ec *executionContext) _System_planet_asteroid_bels_properties(ctx context.
 		Object:     "System_planet",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.AsteroidBelsProperties, nil
+		return ec.resolvers.System_planet().AsteroidBeltsProperties(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11437,7 +11619,18 @@ func (ec *executionContext) _Asteroid_belt(ctx context.Context, sel ast.Selectio
 		case "position":
 			out.Values[i] = ec._Asteroid_belt_position(ctx, field, obj)
 		case "system":
-			out.Values[i] = ec._Asteroid_belt_system(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Asteroid_belt_system(ctx, field, obj)
+				return res
+			})
+		case "system_id":
+			out.Values[i] = ec._Asteroid_belt_system_id(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11972,8 +12165,19 @@ func (ec *executionContext) _Item_type(ctx context.Context, sel ast.SelectionSet
 			out.Values[i] = ec._Item_type_group(ctx, field, obj)
 		case "icon":
 			out.Values[i] = ec._Item_type_icon(ctx, field, obj)
+		case "market_group_id":
+			out.Values[i] = ec._Item_type_market_group_id(ctx, field, obj)
 		case "market_group":
-			out.Values[i] = ec._Item_type_market_group(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Item_type_market_group(ctx, field, obj)
+				return res
+			})
 		case "mass":
 			out.Values[i] = ec._Item_type_mass(ctx, field, obj)
 		case "name":
@@ -12016,10 +12220,32 @@ func (ec *executionContext) _Market_group(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._Market_group_id(ctx, field, obj)
 		case "name":
 			out.Values[i] = ec._Market_group_name(ctx, field, obj)
+		case "parent_group_id":
+			out.Values[i] = ec._Market_group_parent_group_id(ctx, field, obj)
 		case "parent_group":
-			out.Values[i] = ec._Market_group_parent_group(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Market_group_parent_group(ctx, field, obj)
+				return res
+			})
 		case "types":
 			out.Values[i] = ec._Market_group_types(ctx, field, obj)
+		case "types_details":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Market_group_types_details(ctx, field, obj)
+				return res
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12150,7 +12376,16 @@ func (ec *executionContext) _Order(ctx context.Context, sel ast.SelectionSet, ob
 		case "system_id":
 			out.Values[i] = ec._Order_system_id(ctx, field, obj)
 		case "item_type":
-			out.Values[i] = ec._Order_item_type(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Order_item_type(ctx, field, obj)
+				return res
+			})
 		case "type_id":
 			out.Values[i] = ec._Order_type_id(ctx, field, obj)
 		case "volume_remain":
@@ -12550,8 +12785,17 @@ func (ec *executionContext) _System_planet(ctx context.Context, sel ast.Selectio
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("System_planet")
-		case "asteroid_bels_properties":
-			out.Values[i] = ec._System_planet_asteroid_bels_properties(ctx, field, obj)
+		case "asteroid_belts_properties":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._System_planet_asteroid_belts_properties(ctx, field, obj)
+				return res
+			})
 		case "asteroid_belts":
 			out.Values[i] = ec._System_planet_asteroid_belts(ctx, field, obj)
 		case "moons":
