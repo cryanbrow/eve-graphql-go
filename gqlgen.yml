@@ -63,6 +63,36 @@ models:
     fields:
       market_group:
         resolver: true
+      graphic:
+        resolver: true
+      group:
+        resolver: true
+  Dogma_attribute:
+    fields:
+      attribute:
+        resolver: true
+  Dogma_effect:
+    fields:
+      effect:
+        resolver: true
+  Dogma_effect_detail:
+    fields:
+      discharge_attribute:
+        resolver: true
+      duration_attribute:
+        resolver: true
+      falloff_attribute:
+        resolver: true
+      range_attribute:
+        resolver: true
+      tracking_speed_attribute:
+        resolver: true
+  Modifier:
+    fields:
+      modified_attribute:
+        resolver: true
+      modifying_attribute:
+        resolver: true
   Asteroid_belt:
     fields:
       system:

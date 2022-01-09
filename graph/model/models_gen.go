@@ -96,8 +96,9 @@ type Corporation struct {
 }
 
 type DogmaAttribute struct {
-	Attribute *DogmaAttributeDetail `json:"attribute"`
-	Value     *float64              `json:"value"`
+	Attribute   *DogmaAttributeDetail `json:"attribute"`
+	AttributeID *int                  `json:"attribute_id"`
+	Value       *float64              `json:"value"`
 }
 
 type DogmaAttributeDetail struct {
@@ -114,32 +115,38 @@ type DogmaAttributeDetail struct {
 }
 
 type DogmaEffect struct {
+	EffectID  *int               `json:"effect_id"`
 	Effect    *DogmaEffectDetail `json:"effect"`
 	IsDefault *bool              `json:"is_default"`
 }
 
 type DogmaEffectDetail struct {
-	Description              *string         `json:"description"`
-	DisallowAutoRepeat       *bool           `json:"disallow_auto_repeat"`
-	DischargeAttribute       *DogmaAttribute `json:"discharge_attribute"`
-	DisplayName              *string         `json:"display_name"`
-	DurationAttribute        *DogmaAttribute `json:"duration_attribute"`
-	EffectCategory           *int            `json:"effect_category"`
-	EffectID                 *int            `json:"effect_id"`
-	ElectronicChance         *bool           `json:"electronic_chance"`
-	FalloffAttributeID       *int            `json:"falloff_attribute_id"`
-	Icon                     *Icon           `json:"icon"`
-	IsAssistance             *bool           `json:"is_assistance"`
-	IsOffensive              *bool           `json:"is_offensive"`
-	IsWarpSafe               *bool           `json:"is_warp_safe"`
-	Modifiers                []*Modifier     `json:"modifiers"`
-	Name                     *string         `json:"name"`
-	PostExpression           *int            `json:"post_expression"`
-	PreExpression            *int            `json:"pre_expression"`
-	Published                *bool           `json:"published"`
-	RangeAttributeID         *int            `json:"range_attribute_id"`
-	RangeChange              *bool           `json:"range_change"`
-	TrackingSpeedAttributeID *int            `json:"tracking_speed_attribute_id"`
+	Description              *string               `json:"description"`
+	DisallowAutoRepeat       *bool                 `json:"disallow_auto_repeat"`
+	DischargeAttributeID     *int                  `json:"discharge_attribute_id"`
+	DischargeAttribute       *DogmaAttributeDetail `json:"discharge_attribute"`
+	DisplayName              *string               `json:"display_name"`
+	DurationAttributeID      *int                  `json:"duration_attribute_id"`
+	DurationAttribute        *DogmaAttributeDetail `json:"duration_attribute"`
+	EffectCategory           *int                  `json:"effect_category"`
+	EffectID                 *int                  `json:"effect_id"`
+	ElectronicChance         *bool                 `json:"electronic_chance"`
+	FalloffAttributeID       *int                  `json:"falloff_attribute_id"`
+	FalloffAttribute         *DogmaAttributeDetail `json:"falloff_attribute"`
+	Icon                     *Icon                 `json:"icon"`
+	IsAssistance             *bool                 `json:"is_assistance"`
+	IsOffensive              *bool                 `json:"is_offensive"`
+	IsWarpSafe               *bool                 `json:"is_warp_safe"`
+	Modifiers                []*Modifier           `json:"modifiers"`
+	Name                     *string               `json:"name"`
+	PostExpression           *int                  `json:"post_expression"`
+	PreExpression            *int                  `json:"pre_expression"`
+	Published                *bool                 `json:"published"`
+	RangeAttributeID         *int                  `json:"range_attribute_id"`
+	RangeAttribute           *DogmaAttributeDetail `json:"range_attribute"`
+	RangeChange              *bool                 `json:"range_change"`
+	TrackingSpeedAttributeID *int                  `json:"tracking_speed_attribute_id"`
+	TrackingSpeedAttribute   *DogmaAttributeDetail `json:"tracking_speed_attribute"`
 }
 
 type Faction struct {
@@ -184,9 +191,11 @@ type ItemType struct {
 	Description     *string           `json:"description"`
 	DogmaAttributes []*DogmaAttribute `json:"dogma_attributes"`
 	DogmaEffects    []*DogmaEffect    `json:"dogma_effects"`
+	GraphicID       *int              `json:"graphic_id"`
 	Graphic         *Graphic          `json:"graphic"`
+	GroupID         *int              `json:"group_id"`
 	Group           *Group            `json:"group"`
-	Icon            *Icon             `json:"icon"`
+	IconID          *int              `json:"icon_id"`
 	MarketGroupID   *int              `json:"market_group_id"`
 	MarketGroup     *MarketGroup      `json:"market_group"`
 	Mass            *float64          `json:"mass"`
@@ -209,12 +218,14 @@ type MarketGroup struct {
 }
 
 type Modifier struct {
-	Domain               *string `json:"domain"`
-	EffectID             *int    `json:"effect_id"`
-	Func                 *string `json:"func"`
-	ModifiedAttributeID  *int    `json:"modified_attribute_id"`
-	ModifyingAttributeID *int    `json:"modifying_attribute_id"`
-	Operator             *int    `json:"operator"`
+	Domain               *string               `json:"domain"`
+	EffectID             *int                  `json:"effect_id"`
+	Func                 *string               `json:"func"`
+	ModifiedAttributeID  *int                  `json:"modified_attribute_id"`
+	ModifiedAttribute    *DogmaAttributeDetail `json:"modified_attribute"`
+	ModifyingAttributeID *int                  `json:"modifying_attribute_id"`
+	ModifyingAttribute   *DogmaAttributeDetail `json:"modifying_attribute"`
+	Operator             *int                  `json:"operator"`
 }
 
 type Moon struct {

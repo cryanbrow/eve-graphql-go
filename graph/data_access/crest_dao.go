@@ -2,6 +2,7 @@ package data_access
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -84,6 +85,9 @@ func ordersForRegionREST(url string) ([]*model.Order, int, error) {
 }
 
 func SystemByID(id *int) (*model.System, error) {
+	if id == nil {
+		return nil, errors.New("nil id")
+	}
 	var system *model.System = new(model.System)
 
 	crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/systems/%s/", strconv.Itoa(*id)))
@@ -122,6 +126,9 @@ func SystemByID(id *int) (*model.System, error) {
 }
 
 func StationByID(id *int) (*model.Station, error) {
+	if id == nil {
+		return nil, errors.New("nil id")
+	}
 	fmt.Println("Querying for station: ", id)
 	var station *model.Station = new(model.Station)
 
@@ -162,6 +169,9 @@ func StationByID(id *int) (*model.Station, error) {
 
 func PlanetByID(id *int) (*model.Planet, error) {
 	var planet *model.Planet = new(model.Planet)
+	if id == nil {
+		return nil, errors.New("nil id")
+	}
 
 	crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/planets/%s/", strconv.Itoa(*id)))
 	if err != nil {
@@ -213,6 +223,9 @@ func MoonDetails(moons []*int) ([]*model.Moon, error) {
 
 func MoonByID(id *int) (*model.Moon, error) {
 	var moon *model.Moon = new(model.Moon)
+	if id == nil {
+		return nil, errors.New("nil id")
+	}
 
 	crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/moons/%s/", strconv.Itoa(*id)))
 	if err != nil {
@@ -264,6 +277,9 @@ func ItemTypesByIDs(itemTypes []*int) ([]*model.ItemType, error) {
 
 func ItemTypeByID(id *int) (*model.ItemType, error) {
 	var itemType *model.ItemType = new(model.ItemType)
+	if id == nil {
+		return nil, errors.New("nil id")
+	}
 
 	crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/types/%s/", strconv.Itoa(*id)))
 	if err != nil {
@@ -315,6 +331,9 @@ func AsteroidBeltDetails(asteroidBelts []*int) ([]*model.AsteroidBelt, error) {
 
 func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
 	var asteroidBelt *model.AsteroidBelt = new(model.AsteroidBelt)
+	if id == nil {
+		return nil, errors.New("nil id")
+	}
 
 	crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/asteroid_belts/%s/", strconv.Itoa(*id)))
 	if err != nil {
@@ -353,6 +372,9 @@ func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
 
 func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 	var marketGroup *model.MarketGroup = new(model.MarketGroup)
+	if id == nil {
+		return nil, errors.New("nil id")
+	}
 
 	crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/markets/groups/%s/", strconv.Itoa(*id)))
 	if err != nil {
@@ -387,6 +409,170 @@ func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 	}
 
 	return marketGroup, nil
+}
+
+func GroupByID(id *int) (*model.Group, error) {
+	var group *model.Group = new(model.Group)
+	if id == nil {
+		return nil, errors.New("nil id")
+	}
+
+	crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/groups/%s/", strconv.Itoa(*id)))
+	if err != nil {
+		return nil, err
+	}
+
+	queryParameters := crest_url.Query()
+	queryParameters.Add("datasource", "tranquility")
+	queryParameters.Add("language", "en")
+
+	crest_url.RawQuery = queryParameters.Encode()
+
+	request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+	if err != nil {
+		log.Printf("Could not request orders by region. %v", err)
+	}
+	response, err := Client.Do(request)
+	if err != nil {
+		log.Printf("Could not make request. %v", err)
+		return group, err
+	}
+
+	responseBytes, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Printf("Could not read response for body. %v", err)
+		return group, err
+	}
+
+	if err := json.Unmarshal(responseBytes, &group); err != nil {
+		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		return group, err
+	}
+
+	return group, nil
+}
+
+func GraphicByID(id *int) (*model.Graphic, error) {
+	var graphic *model.Graphic = new(model.Graphic)
+	if id == nil {
+		return nil, errors.New("nil id")
+	}
+
+	crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/graphics/%s/", strconv.Itoa(*id)))
+	if err != nil {
+		return nil, err
+	}
+
+	queryParameters := crest_url.Query()
+	queryParameters.Add("datasource", "tranquility")
+	queryParameters.Add("language", "en")
+
+	crest_url.RawQuery = queryParameters.Encode()
+
+	request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+	if err != nil {
+		log.Printf("Could not request orders by region. %v", err)
+	}
+	response, err := Client.Do(request)
+	if err != nil {
+		log.Printf("Could not make request. %v", err)
+		return graphic, err
+	}
+
+	responseBytes, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Printf("Could not read response for body. %v", err)
+		return graphic, err
+	}
+
+	if err := json.Unmarshal(responseBytes, &graphic); err != nil {
+		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		return graphic, err
+	}
+
+	return graphic, nil
+}
+
+func DogmaAttributeByID(id *int) (*model.DogmaAttributeDetail, error) {
+	var dogmaAttribute *model.DogmaAttributeDetail = new(model.DogmaAttributeDetail)
+	if id == nil {
+		return nil, nil
+	}
+
+	crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/dogma/attributes/%s/", strconv.Itoa(*id)))
+	if err != nil {
+		return nil, err
+	}
+
+	queryParameters := crest_url.Query()
+	queryParameters.Add("datasource", "tranquility")
+	queryParameters.Add("language", "en")
+
+	crest_url.RawQuery = queryParameters.Encode()
+
+	request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+	if err != nil {
+		log.Printf("Could not request orders by region. %v", err)
+	}
+	response, err := Client.Do(request)
+	if err != nil {
+		log.Printf("Could not make request. %v", err)
+		return dogmaAttribute, err
+	}
+
+	responseBytes, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Printf("Could not read response for body. %v", err)
+		return dogmaAttribute, err
+	}
+
+	if err := json.Unmarshal(responseBytes, &dogmaAttribute); err != nil {
+		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		return dogmaAttribute, err
+	}
+
+	return dogmaAttribute, nil
+}
+
+func DogmaEffectByID(id *int) (*model.DogmaEffectDetail, error) {
+	var dogmaEffect *model.DogmaEffectDetail = new(model.DogmaEffectDetail)
+	if id == nil {
+		return nil, nil
+	}
+
+	crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/dogma/effects/%s/", strconv.Itoa(*id)))
+	if err != nil {
+		return nil, err
+	}
+
+	queryParameters := crest_url.Query()
+	queryParameters.Add("datasource", "tranquility")
+	queryParameters.Add("language", "en")
+
+	crest_url.RawQuery = queryParameters.Encode()
+
+	request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+	if err != nil {
+		log.Printf("Could not request orders by region. %v", err)
+	}
+	response, err := Client.Do(request)
+	if err != nil {
+		log.Printf("Could not make request. %v", err)
+		return dogmaEffect, err
+	}
+
+	responseBytes, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Printf("Could not read response for body. %v", err)
+		return dogmaEffect, err
+	}
+
+	if err := json.Unmarshal(responseBytes, &dogmaEffect); err != nil {
+		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		return dogmaEffect, err
+	}
+
+	return dogmaEffect, nil
 }
 
 type HTTPClient interface {

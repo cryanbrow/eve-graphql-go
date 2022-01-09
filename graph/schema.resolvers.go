@@ -16,17 +16,60 @@ func (r *asteroid_beltResolver) System(ctx context.Context, obj *model.AsteroidB
 	return dao.SystemByID(obj.SystemID)
 }
 
+func (r *dogma_attributeResolver) Attribute(ctx context.Context, obj *model.DogmaAttribute) (*model.DogmaAttributeDetail, error) {
+	return dao.DogmaAttributeByID(obj.AttributeID)
+}
+
+func (r *dogma_effectResolver) Effect(ctx context.Context, obj *model.DogmaEffect) (*model.DogmaEffectDetail, error) {
+	return dao.DogmaEffectByID(obj.EffectID)
+}
+
+func (r *dogma_effect_detailResolver) DischargeAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
+	return dao.DogmaAttributeByID(obj.DischargeAttributeID)
+}
+
+func (r *dogma_effect_detailResolver) DurationAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
+	return dao.DogmaAttributeByID(obj.DurationAttributeID)
+}
+
+func (r *dogma_effect_detailResolver) FalloffAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
+	return dao.DogmaAttributeByID(obj.FalloffAttributeID)
+}
+
+func (r *dogma_effect_detailResolver) RangeAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
+	return dao.DogmaAttributeByID(obj.RangeAttributeID)
+}
+
+func (r *dogma_effect_detailResolver) TrackingSpeedAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
+	return dao.DogmaAttributeByID(obj.TrackingSpeedAttributeID)
+}
+
+func (r *item_typeResolver) Graphic(ctx context.Context, obj *model.ItemType) (*model.Graphic, error) {
+	return dao.GraphicByID(obj.GraphicID)
+}
+
+func (r *item_typeResolver) Group(ctx context.Context, obj *model.ItemType) (*model.Group, error) {
+	return dao.GroupByID(obj.GroupID)
+}
+
 func (r *item_typeResolver) MarketGroup(ctx context.Context, obj *model.ItemType) (*model.MarketGroup, error) {
 	return dao.MarketGroupByID(obj.MarketGroupID)
 }
 
 func (r *market_groupResolver) ParentGroup(ctx context.Context, obj *model.MarketGroup) (*model.Group, error) {
-
-	panic(fmt.Errorf("not implemented"))
+	return dao.GroupByID(obj.ParentGroupID)
 }
 
 func (r *market_groupResolver) TypesDetails(ctx context.Context, obj *model.MarketGroup) ([]*model.ItemType, error) {
 	return dao.ItemTypesByIDs(obj.Types)
+}
+
+func (r *modifierResolver) ModifiedAttribute(ctx context.Context, obj *model.Modifier) (*model.DogmaAttributeDetail, error) {
+	return dao.DogmaAttributeByID(obj.ModifiedAttributeID)
+}
+
+func (r *modifierResolver) ModifyingAttribute(ctx context.Context, obj *model.Modifier) (*model.DogmaAttributeDetail, error) {
+	return dao.DogmaAttributeByID(obj.ModifyingAttributeID)
 }
 
 func (r *orderResolver) Location(ctx context.Context, obj *model.Order) (*model.Station, error) {
@@ -68,11 +111,27 @@ func (r *system_planetResolver) PlanetProperties(ctx context.Context, obj *model
 // Asteroid_belt returns generated.Asteroid_beltResolver implementation.
 func (r *Resolver) Asteroid_belt() generated.Asteroid_beltResolver { return &asteroid_beltResolver{r} }
 
+// Dogma_attribute returns generated.Dogma_attributeResolver implementation.
+func (r *Resolver) Dogma_attribute() generated.Dogma_attributeResolver {
+	return &dogma_attributeResolver{r}
+}
+
+// Dogma_effect returns generated.Dogma_effectResolver implementation.
+func (r *Resolver) Dogma_effect() generated.Dogma_effectResolver { return &dogma_effectResolver{r} }
+
+// Dogma_effect_detail returns generated.Dogma_effect_detailResolver implementation.
+func (r *Resolver) Dogma_effect_detail() generated.Dogma_effect_detailResolver {
+	return &dogma_effect_detailResolver{r}
+}
+
 // Item_type returns generated.Item_typeResolver implementation.
 func (r *Resolver) Item_type() generated.Item_typeResolver { return &item_typeResolver{r} }
 
 // Market_group returns generated.Market_groupResolver implementation.
 func (r *Resolver) Market_group() generated.Market_groupResolver { return &market_groupResolver{r} }
+
+// Modifier returns generated.ModifierResolver implementation.
+func (r *Resolver) Modifier() generated.ModifierResolver { return &modifierResolver{r} }
 
 // Order returns generated.OrderResolver implementation.
 func (r *Resolver) Order() generated.OrderResolver { return &orderResolver{r} }
@@ -84,8 +143,22 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 func (r *Resolver) System_planet() generated.System_planetResolver { return &system_planetResolver{r} }
 
 type asteroid_beltResolver struct{ *Resolver }
+type dogma_attributeResolver struct{ *Resolver }
+type dogma_effectResolver struct{ *Resolver }
+type dogma_effect_detailResolver struct{ *Resolver }
 type item_typeResolver struct{ *Resolver }
 type market_groupResolver struct{ *Resolver }
+type modifierResolver struct{ *Resolver }
 type orderResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type system_planetResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *item_typeResolver) Icon(ctx context.Context, obj *model.ItemType) (*model.Icon, error) {
+	panic(fmt.Errorf("not implemented"))
+}

@@ -123,9 +123,11 @@ type Item_type{
 	description : String
 	dogma_attributes : [Dogma_attribute]
 	dogma_effects : [Dogma_effect]
+	graphic_id : Int
 	graphic : Graphic
+	group_id : Int
 	group : Group
-	icon : Icon
+	icon_id : Int
 	market_group_id : Int
 	market_group : Market_group
 	mass : Float
@@ -139,6 +141,7 @@ type Item_type{
 
 type Dogma_attribute{
 	attribute : Dogma_attribute_detail
+	attribute_id : Int
 	value : Float
 }
 
@@ -164,6 +167,7 @@ type Unit{
 }
 
 type Dogma_effect{
+	effect_id : Int
 	effect : Dogma_effect_detail
 	is_default : Boolean
 }
@@ -171,13 +175,16 @@ type Dogma_effect{
 type Dogma_effect_detail{
 	description : String
 	disallow_auto_repeat : Boolean
-	discharge_attribute : Dogma_attribute
+	discharge_attribute_id : Int
+	discharge_attribute : Dogma_attribute_detail
 	display_name : String
-	duration_attribute : Dogma_attribute
+	duration_attribute_id : Int
+	duration_attribute : Dogma_attribute_detail
 	effect_category : Int
 	effect_id : Int
 	electronic_chance : Boolean
 	falloff_attribute_id : Int
+	falloff_attribute : Dogma_attribute_detail
 	icon : Icon
 	is_assistance : Boolean
 	is_offensive : Boolean
@@ -188,8 +195,10 @@ type Dogma_effect_detail{
 	pre_expression : Int
 	published : Boolean
 	range_attribute_id : Int
+	range_attribute : Dogma_attribute_detail
 	range_change : Boolean
 	tracking_speed_attribute_id : Int
+	tracking_speed_attribute : Dogma_attribute_detail
 }
 
 type Modifier{
@@ -197,7 +206,9 @@ type Modifier{
 	effect_id : Int
 	func : String
 	modified_attribute_id : Int
+	modified_attribute : Dogma_attribute_detail
 	modifying_attribute_id : Int
+	modifying_attribute : Dogma_attribute_detail
 	operator : Int
 }
 

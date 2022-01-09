@@ -36,8 +36,12 @@ type Config struct {
 
 type ResolverRoot interface {
 	Asteroid_belt() Asteroid_beltResolver
+	Dogma_attribute() Dogma_attributeResolver
+	Dogma_effect() Dogma_effectResolver
+	Dogma_effect_detail() Dogma_effect_detailResolver
 	Item_type() Item_typeResolver
 	Market_group() Market_groupResolver
+	Modifier() ModifierResolver
 	Order() OrderResolver
 	Query() QueryResolver
 	System_planet() System_planetResolver
@@ -135,8 +139,9 @@ type ComplexityRoot struct {
 	}
 
 	DogmaAttribute struct {
-		Attribute func(childComplexity int) int
-		Value     func(childComplexity int) int
+		Attribute   func(childComplexity int) int
+		AttributeID func(childComplexity int) int
+		Value       func(childComplexity int) int
 	}
 
 	DogmaAttributeDetail struct {
@@ -154,6 +159,7 @@ type ComplexityRoot struct {
 
 	DogmaEffect struct {
 		Effect    func(childComplexity int) int
+		EffectID  func(childComplexity int) int
 		IsDefault func(childComplexity int) int
 	}
 
@@ -161,11 +167,14 @@ type ComplexityRoot struct {
 		Description              func(childComplexity int) int
 		DisallowAutoRepeat       func(childComplexity int) int
 		DischargeAttribute       func(childComplexity int) int
+		DischargeAttributeID     func(childComplexity int) int
 		DisplayName              func(childComplexity int) int
 		DurationAttribute        func(childComplexity int) int
+		DurationAttributeID      func(childComplexity int) int
 		EffectCategory           func(childComplexity int) int
 		EffectID                 func(childComplexity int) int
 		ElectronicChance         func(childComplexity int) int
+		FalloffAttribute         func(childComplexity int) int
 		FalloffAttributeID       func(childComplexity int) int
 		Icon                     func(childComplexity int) int
 		IsAssistance             func(childComplexity int) int
@@ -176,8 +185,10 @@ type ComplexityRoot struct {
 		PostExpression           func(childComplexity int) int
 		PreExpression            func(childComplexity int) int
 		Published                func(childComplexity int) int
+		RangeAttribute           func(childComplexity int) int
 		RangeAttributeID         func(childComplexity int) int
 		RangeChange              func(childComplexity int) int
+		TrackingSpeedAttribute   func(childComplexity int) int
 		TrackingSpeedAttributeID func(childComplexity int) int
 	}
 
@@ -223,8 +234,10 @@ type ComplexityRoot struct {
 		DogmaAttributes func(childComplexity int) int
 		DogmaEffects    func(childComplexity int) int
 		Graphic         func(childComplexity int) int
+		GraphicID       func(childComplexity int) int
 		Group           func(childComplexity int) int
-		Icon            func(childComplexity int) int
+		GroupID         func(childComplexity int) int
+		IconID          func(childComplexity int) int
 		MarketGroup     func(childComplexity int) int
 		MarketGroupID   func(childComplexity int) int
 		Mass            func(childComplexity int) int
@@ -251,7 +264,9 @@ type ComplexityRoot struct {
 		Domain               func(childComplexity int) int
 		EffectID             func(childComplexity int) int
 		Func                 func(childComplexity int) int
+		ModifiedAttribute    func(childComplexity int) int
 		ModifiedAttributeID  func(childComplexity int) int
+		ModifyingAttribute   func(childComplexity int) int
 		ModifyingAttributeID func(childComplexity int) int
 		Operator             func(childComplexity int) int
 	}
@@ -386,13 +401,39 @@ type ComplexityRoot struct {
 type Asteroid_beltResolver interface {
 	System(ctx context.Context, obj *model.AsteroidBelt) (*model.System, error)
 }
+type Dogma_attributeResolver interface {
+	Attribute(ctx context.Context, obj *model.DogmaAttribute) (*model.DogmaAttributeDetail, error)
+}
+type Dogma_effectResolver interface {
+	Effect(ctx context.Context, obj *model.DogmaEffect) (*model.DogmaEffectDetail, error)
+}
+type Dogma_effect_detailResolver interface {
+	DischargeAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error)
+
+	DurationAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error)
+
+	FalloffAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error)
+
+	RangeAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error)
+
+	TrackingSpeedAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error)
+}
 type Item_typeResolver interface {
+	Graphic(ctx context.Context, obj *model.ItemType) (*model.Graphic, error)
+
+	Group(ctx context.Context, obj *model.ItemType) (*model.Group, error)
+
 	MarketGroup(ctx context.Context, obj *model.ItemType) (*model.MarketGroup, error)
 }
 type Market_groupResolver interface {
 	ParentGroup(ctx context.Context, obj *model.MarketGroup) (*model.Group, error)
 
 	TypesDetails(ctx context.Context, obj *model.MarketGroup) ([]*model.ItemType, error)
+}
+type ModifierResolver interface {
+	ModifiedAttribute(ctx context.Context, obj *model.Modifier) (*model.DogmaAttributeDetail, error)
+
+	ModifyingAttribute(ctx context.Context, obj *model.Modifier) (*model.DogmaAttributeDetail, error)
 }
 type OrderResolver interface {
 	Location(ctx context.Context, obj *model.Order) (*model.Station, error)
@@ -876,6 +917,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.DogmaAttribute.Attribute(childComplexity), true
 
+	case "Dogma_attribute.attribute_id":
+		if e.complexity.DogmaAttribute.AttributeID == nil {
+			break
+		}
+
+		return e.complexity.DogmaAttribute.AttributeID(childComplexity), true
+
 	case "Dogma_attribute.value":
 		if e.complexity.DogmaAttribute.Value == nil {
 			break
@@ -960,6 +1008,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.DogmaEffect.Effect(childComplexity), true
 
+	case "Dogma_effect.effect_id":
+		if e.complexity.DogmaEffect.EffectID == nil {
+			break
+		}
+
+		return e.complexity.DogmaEffect.EffectID(childComplexity), true
+
 	case "Dogma_effect.is_default":
 		if e.complexity.DogmaEffect.IsDefault == nil {
 			break
@@ -988,6 +1043,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.DogmaEffectDetail.DischargeAttribute(childComplexity), true
 
+	case "Dogma_effect_detail.discharge_attribute_id":
+		if e.complexity.DogmaEffectDetail.DischargeAttributeID == nil {
+			break
+		}
+
+		return e.complexity.DogmaEffectDetail.DischargeAttributeID(childComplexity), true
+
 	case "Dogma_effect_detail.display_name":
 		if e.complexity.DogmaEffectDetail.DisplayName == nil {
 			break
@@ -1001,6 +1063,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.DogmaEffectDetail.DurationAttribute(childComplexity), true
+
+	case "Dogma_effect_detail.duration_attribute_id":
+		if e.complexity.DogmaEffectDetail.DurationAttributeID == nil {
+			break
+		}
+
+		return e.complexity.DogmaEffectDetail.DurationAttributeID(childComplexity), true
 
 	case "Dogma_effect_detail.effect_category":
 		if e.complexity.DogmaEffectDetail.EffectCategory == nil {
@@ -1022,6 +1091,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.DogmaEffectDetail.ElectronicChance(childComplexity), true
+
+	case "Dogma_effect_detail.falloff_attribute":
+		if e.complexity.DogmaEffectDetail.FalloffAttribute == nil {
+			break
+		}
+
+		return e.complexity.DogmaEffectDetail.FalloffAttribute(childComplexity), true
 
 	case "Dogma_effect_detail.falloff_attribute_id":
 		if e.complexity.DogmaEffectDetail.FalloffAttributeID == nil {
@@ -1093,6 +1169,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.DogmaEffectDetail.Published(childComplexity), true
 
+	case "Dogma_effect_detail.range_attribute":
+		if e.complexity.DogmaEffectDetail.RangeAttribute == nil {
+			break
+		}
+
+		return e.complexity.DogmaEffectDetail.RangeAttribute(childComplexity), true
+
 	case "Dogma_effect_detail.range_attribute_id":
 		if e.complexity.DogmaEffectDetail.RangeAttributeID == nil {
 			break
@@ -1106,6 +1189,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.DogmaEffectDetail.RangeChange(childComplexity), true
+
+	case "Dogma_effect_detail.tracking_speed_attribute":
+		if e.complexity.DogmaEffectDetail.TrackingSpeedAttribute == nil {
+			break
+		}
+
+		return e.complexity.DogmaEffectDetail.TrackingSpeedAttribute(childComplexity), true
 
 	case "Dogma_effect_detail.tracking_speed_attribute_id":
 		if e.complexity.DogmaEffectDetail.TrackingSpeedAttributeID == nil {
@@ -1317,6 +1407,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ItemType.Graphic(childComplexity), true
 
+	case "Item_type.graphic_id":
+		if e.complexity.ItemType.GraphicID == nil {
+			break
+		}
+
+		return e.complexity.ItemType.GraphicID(childComplexity), true
+
 	case "Item_type.group":
 		if e.complexity.ItemType.Group == nil {
 			break
@@ -1324,12 +1421,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ItemType.Group(childComplexity), true
 
-	case "Item_type.icon":
-		if e.complexity.ItemType.Icon == nil {
+	case "Item_type.group_id":
+		if e.complexity.ItemType.GroupID == nil {
 			break
 		}
 
-		return e.complexity.ItemType.Icon(childComplexity), true
+		return e.complexity.ItemType.GroupID(childComplexity), true
+
+	case "Item_type.icon_id":
+		if e.complexity.ItemType.IconID == nil {
+			break
+		}
+
+		return e.complexity.ItemType.IconID(childComplexity), true
 
 	case "Item_type.market_group":
 		if e.complexity.ItemType.MarketGroup == nil {
@@ -1471,12 +1575,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Modifier.Func(childComplexity), true
 
+	case "Modifier.modified_attribute":
+		if e.complexity.Modifier.ModifiedAttribute == nil {
+			break
+		}
+
+		return e.complexity.Modifier.ModifiedAttribute(childComplexity), true
+
 	case "Modifier.modified_attribute_id":
 		if e.complexity.Modifier.ModifiedAttributeID == nil {
 			break
 		}
 
 		return e.complexity.Modifier.ModifiedAttributeID(childComplexity), true
+
+	case "Modifier.modifying_attribute":
+		if e.complexity.Modifier.ModifyingAttribute == nil {
+			break
+		}
+
+		return e.complexity.Modifier.ModifyingAttribute(childComplexity), true
 
 	case "Modifier.modifying_attribute_id":
 		if e.complexity.Modifier.ModifyingAttributeID == nil {
@@ -2270,9 +2388,11 @@ type Item_type{
 	description : String
 	dogma_attributes : [Dogma_attribute]
 	dogma_effects : [Dogma_effect]
+	graphic_id : Int
 	graphic : Graphic
+	group_id : Int
 	group : Group
-	icon : Icon
+	icon_id : Int
 	market_group_id : Int
 	market_group : Market_group
 	mass : Float
@@ -2286,6 +2406,7 @@ type Item_type{
 
 type Dogma_attribute{
 	attribute : Dogma_attribute_detail
+	attribute_id : Int
 	value : Float
 }
 
@@ -2311,6 +2432,7 @@ type Unit{
 }
 
 type Dogma_effect{
+	effect_id : Int
 	effect : Dogma_effect_detail
 	is_default : Boolean
 }
@@ -2318,13 +2440,16 @@ type Dogma_effect{
 type Dogma_effect_detail{
 	description : String
 	disallow_auto_repeat : Boolean
-	discharge_attribute : Dogma_attribute
+	discharge_attribute_id : Int
+	discharge_attribute : Dogma_attribute_detail
 	display_name : String
-	duration_attribute : Dogma_attribute
+	duration_attribute_id : Int
+	duration_attribute : Dogma_attribute_detail
 	effect_category : Int
 	effect_id : Int
 	electronic_chance : Boolean
 	falloff_attribute_id : Int
+	falloff_attribute : Dogma_attribute_detail
 	icon : Icon
 	is_assistance : Boolean
 	is_offensive : Boolean
@@ -2335,8 +2460,10 @@ type Dogma_effect_detail{
 	pre_expression : Int
 	published : Boolean
 	range_attribute_id : Int
+	range_attribute : Dogma_attribute_detail
 	range_change : Boolean
 	tracking_speed_attribute_id : Int
+	tracking_speed_attribute : Dogma_attribute_detail
 }
 
 type Modifier{
@@ -2344,7 +2471,9 @@ type Modifier{
 	effect_id : Int
 	func : String
 	modified_attribute_id : Int
+	modified_attribute : Dogma_attribute_detail
 	modifying_attribute_id : Int
+	modifying_attribute : Dogma_attribute_detail
 	operator : Int
 }
 
@@ -4783,14 +4912,14 @@ func (ec *executionContext) _Dogma_attribute_attribute(ctx context.Context, fiel
 		Object:     "Dogma_attribute",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Attribute, nil
+		return ec.resolvers.Dogma_attribute().Attribute(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4802,6 +4931,38 @@ func (ec *executionContext) _Dogma_attribute_attribute(ctx context.Context, fiel
 	res := resTmp.(*model.DogmaAttributeDetail)
 	fc.Result = res
 	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Dogma_attribute_attribute_id(ctx context.Context, field graphql.CollectedField, obj *model.DogmaAttribute) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Dogma_attribute",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AttributeID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Dogma_attribute_value(ctx context.Context, field graphql.CollectedField, obj *model.DogmaAttribute) (ret graphql.Marshaler) {
@@ -5156,7 +5317,7 @@ func (ec *executionContext) _Dogma_attribute_detail_unit(ctx context.Context, fi
 	return ec.marshalOUnit2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐUnit(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Dogma_effect_effect(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffect) (ret graphql.Marshaler) {
+func (ec *executionContext) _Dogma_effect_effect_id(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffect) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5174,7 +5335,39 @@ func (ec *executionContext) _Dogma_effect_effect(ctx context.Context, field grap
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Effect, nil
+		return obj.EffectID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Dogma_effect_effect(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffect) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Dogma_effect",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Dogma_effect().Effect(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5284,7 +5477,7 @@ func (ec *executionContext) _Dogma_effect_detail_disallow_auto_repeat(ctx contex
 	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Dogma_effect_detail_discharge_attribute(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
+func (ec *executionContext) _Dogma_effect_detail_discharge_attribute_id(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5302,7 +5495,7 @@ func (ec *executionContext) _Dogma_effect_detail_discharge_attribute(ctx context
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.DischargeAttribute, nil
+		return obj.DischargeAttributeID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5311,9 +5504,41 @@ func (ec *executionContext) _Dogma_effect_detail_discharge_attribute(ctx context
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.DogmaAttribute)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalODogma_attribute2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttribute(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Dogma_effect_detail_discharge_attribute(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Dogma_effect_detail",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Dogma_effect_detail().DischargeAttribute(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.DogmaAttributeDetail)
+	fc.Result = res
+	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Dogma_effect_detail_display_name(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
@@ -5348,7 +5573,7 @@ func (ec *executionContext) _Dogma_effect_detail_display_name(ctx context.Contex
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Dogma_effect_detail_duration_attribute(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
+func (ec *executionContext) _Dogma_effect_detail_duration_attribute_id(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5366,7 +5591,7 @@ func (ec *executionContext) _Dogma_effect_detail_duration_attribute(ctx context.
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.DurationAttribute, nil
+		return obj.DurationAttributeID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5375,9 +5600,41 @@ func (ec *executionContext) _Dogma_effect_detail_duration_attribute(ctx context.
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.DogmaAttribute)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalODogma_attribute2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttribute(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Dogma_effect_detail_duration_attribute(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Dogma_effect_detail",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Dogma_effect_detail().DurationAttribute(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.DogmaAttributeDetail)
+	fc.Result = res
+	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Dogma_effect_detail_effect_category(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
@@ -5506,6 +5763,38 @@ func (ec *executionContext) _Dogma_effect_detail_falloff_attribute_id(ctx contex
 	res := resTmp.(*int)
 	fc.Result = res
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Dogma_effect_detail_falloff_attribute(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Dogma_effect_detail",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Dogma_effect_detail().FalloffAttribute(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.DogmaAttributeDetail)
+	fc.Result = res
+	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Dogma_effect_detail_icon(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
@@ -5828,6 +6117,38 @@ func (ec *executionContext) _Dogma_effect_detail_range_attribute_id(ctx context.
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Dogma_effect_detail_range_attribute(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Dogma_effect_detail",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Dogma_effect_detail().RangeAttribute(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.DogmaAttributeDetail)
+	fc.Result = res
+	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Dogma_effect_detail_range_change(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5890,6 +6211,38 @@ func (ec *executionContext) _Dogma_effect_detail_tracking_speed_attribute_id(ctx
 	res := resTmp.(*int)
 	fc.Result = res
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Dogma_effect_detail_tracking_speed_attribute(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Dogma_effect_detail",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Dogma_effect_detail().TrackingSpeedAttribute(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.DogmaAttributeDetail)
+	fc.Result = res
+	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Faction_corporation(ctx context.Context, field graphql.CollectedField, obj *model.Faction) (ret graphql.Marshaler) {
@@ -6820,7 +7173,7 @@ func (ec *executionContext) _Item_type_dogma_effects(ctx context.Context, field 
 	return ec.marshalODogma_effect2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaEffect(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Item_type_graphic(ctx context.Context, field graphql.CollectedField, obj *model.ItemType) (ret graphql.Marshaler) {
+func (ec *executionContext) _Item_type_graphic_id(ctx context.Context, field graphql.CollectedField, obj *model.ItemType) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6838,7 +7191,39 @@ func (ec *executionContext) _Item_type_graphic(ctx context.Context, field graphq
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Graphic, nil
+		return obj.GraphicID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Item_type_graphic(ctx context.Context, field graphql.CollectedField, obj *model.ItemType) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Item_type",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Item_type().Graphic(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6852,7 +7237,7 @@ func (ec *executionContext) _Item_type_graphic(ctx context.Context, field graphq
 	return ec.marshalOGraphic2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐGraphic(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Item_type_group(ctx context.Context, field graphql.CollectedField, obj *model.ItemType) (ret graphql.Marshaler) {
+func (ec *executionContext) _Item_type_group_id(ctx context.Context, field graphql.CollectedField, obj *model.ItemType) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6870,7 +7255,39 @@ func (ec *executionContext) _Item_type_group(ctx context.Context, field graphql.
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Group, nil
+		return obj.GroupID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Item_type_group(ctx context.Context, field graphql.CollectedField, obj *model.ItemType) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Item_type",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Item_type().Group(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6884,7 +7301,7 @@ func (ec *executionContext) _Item_type_group(ctx context.Context, field graphql.
 	return ec.marshalOGroup2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐGroup(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Item_type_icon(ctx context.Context, field graphql.CollectedField, obj *model.ItemType) (ret graphql.Marshaler) {
+func (ec *executionContext) _Item_type_icon_id(ctx context.Context, field graphql.CollectedField, obj *model.ItemType) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6902,7 +7319,7 @@ func (ec *executionContext) _Item_type_icon(ctx context.Context, field graphql.C
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Icon, nil
+		return obj.IconID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6911,9 +7328,9 @@ func (ec *executionContext) _Item_type_icon(ctx context.Context, field graphql.C
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.Icon)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalOIcon2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐIcon(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Item_type_market_group_id(ctx context.Context, field graphql.CollectedField, obj *model.ItemType) (ret graphql.Marshaler) {
@@ -7556,6 +7973,38 @@ func (ec *executionContext) _Modifier_modified_attribute_id(ctx context.Context,
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Modifier_modified_attribute(ctx context.Context, field graphql.CollectedField, obj *model.Modifier) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Modifier",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Modifier().ModifiedAttribute(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.DogmaAttributeDetail)
+	fc.Result = res
+	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Modifier_modifying_attribute_id(ctx context.Context, field graphql.CollectedField, obj *model.Modifier) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7586,6 +8035,38 @@ func (ec *executionContext) _Modifier_modifying_attribute_id(ctx context.Context
 	res := resTmp.(*int)
 	fc.Result = res
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Modifier_modifying_attribute(ctx context.Context, field graphql.CollectedField, obj *model.Modifier) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Modifier",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Modifier().ModifyingAttribute(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.DogmaAttributeDetail)
+	fc.Result = res
+	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Modifier_operator(ctx context.Context, field graphql.CollectedField, obj *model.Modifier) (ret graphql.Marshaler) {
@@ -11856,7 +12337,18 @@ func (ec *executionContext) _Dogma_attribute(ctx context.Context, sel ast.Select
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Dogma_attribute")
 		case "attribute":
-			out.Values[i] = ec._Dogma_attribute_attribute(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Dogma_attribute_attribute(ctx, field, obj)
+				return res
+			})
+		case "attribute_id":
+			out.Values[i] = ec._Dogma_attribute_attribute_id(ctx, field, obj)
 		case "value":
 			out.Values[i] = ec._Dogma_attribute_value(ctx, field, obj)
 		default:
@@ -11923,8 +12415,19 @@ func (ec *executionContext) _Dogma_effect(ctx context.Context, sel ast.Selection
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Dogma_effect")
+		case "effect_id":
+			out.Values[i] = ec._Dogma_effect_effect_id(ctx, field, obj)
 		case "effect":
-			out.Values[i] = ec._Dogma_effect_effect(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Dogma_effect_effect(ctx, field, obj)
+				return res
+			})
 		case "is_default":
 			out.Values[i] = ec._Dogma_effect_is_default(ctx, field, obj)
 		default:
@@ -11953,12 +12456,34 @@ func (ec *executionContext) _Dogma_effect_detail(ctx context.Context, sel ast.Se
 			out.Values[i] = ec._Dogma_effect_detail_description(ctx, field, obj)
 		case "disallow_auto_repeat":
 			out.Values[i] = ec._Dogma_effect_detail_disallow_auto_repeat(ctx, field, obj)
+		case "discharge_attribute_id":
+			out.Values[i] = ec._Dogma_effect_detail_discharge_attribute_id(ctx, field, obj)
 		case "discharge_attribute":
-			out.Values[i] = ec._Dogma_effect_detail_discharge_attribute(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Dogma_effect_detail_discharge_attribute(ctx, field, obj)
+				return res
+			})
 		case "display_name":
 			out.Values[i] = ec._Dogma_effect_detail_display_name(ctx, field, obj)
+		case "duration_attribute_id":
+			out.Values[i] = ec._Dogma_effect_detail_duration_attribute_id(ctx, field, obj)
 		case "duration_attribute":
-			out.Values[i] = ec._Dogma_effect_detail_duration_attribute(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Dogma_effect_detail_duration_attribute(ctx, field, obj)
+				return res
+			})
 		case "effect_category":
 			out.Values[i] = ec._Dogma_effect_detail_effect_category(ctx, field, obj)
 		case "effect_id":
@@ -11967,6 +12492,17 @@ func (ec *executionContext) _Dogma_effect_detail(ctx context.Context, sel ast.Se
 			out.Values[i] = ec._Dogma_effect_detail_electronic_chance(ctx, field, obj)
 		case "falloff_attribute_id":
 			out.Values[i] = ec._Dogma_effect_detail_falloff_attribute_id(ctx, field, obj)
+		case "falloff_attribute":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Dogma_effect_detail_falloff_attribute(ctx, field, obj)
+				return res
+			})
 		case "icon":
 			out.Values[i] = ec._Dogma_effect_detail_icon(ctx, field, obj)
 		case "is_assistance":
@@ -11987,10 +12523,32 @@ func (ec *executionContext) _Dogma_effect_detail(ctx context.Context, sel ast.Se
 			out.Values[i] = ec._Dogma_effect_detail_published(ctx, field, obj)
 		case "range_attribute_id":
 			out.Values[i] = ec._Dogma_effect_detail_range_attribute_id(ctx, field, obj)
+		case "range_attribute":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Dogma_effect_detail_range_attribute(ctx, field, obj)
+				return res
+			})
 		case "range_change":
 			out.Values[i] = ec._Dogma_effect_detail_range_change(ctx, field, obj)
 		case "tracking_speed_attribute_id":
 			out.Values[i] = ec._Dogma_effect_detail_tracking_speed_attribute_id(ctx, field, obj)
+		case "tracking_speed_attribute":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Dogma_effect_detail_tracking_speed_attribute(ctx, field, obj)
+				return res
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12159,12 +12717,34 @@ func (ec *executionContext) _Item_type(ctx context.Context, sel ast.SelectionSet
 			out.Values[i] = ec._Item_type_dogma_attributes(ctx, field, obj)
 		case "dogma_effects":
 			out.Values[i] = ec._Item_type_dogma_effects(ctx, field, obj)
+		case "graphic_id":
+			out.Values[i] = ec._Item_type_graphic_id(ctx, field, obj)
 		case "graphic":
-			out.Values[i] = ec._Item_type_graphic(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Item_type_graphic(ctx, field, obj)
+				return res
+			})
+		case "group_id":
+			out.Values[i] = ec._Item_type_group_id(ctx, field, obj)
 		case "group":
-			out.Values[i] = ec._Item_type_group(ctx, field, obj)
-		case "icon":
-			out.Values[i] = ec._Item_type_icon(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Item_type_group(ctx, field, obj)
+				return res
+			})
+		case "icon_id":
+			out.Values[i] = ec._Item_type_icon_id(ctx, field, obj)
 		case "market_group_id":
 			out.Values[i] = ec._Item_type_market_group_id(ctx, field, obj)
 		case "market_group":
@@ -12276,8 +12856,30 @@ func (ec *executionContext) _Modifier(ctx context.Context, sel ast.SelectionSet,
 			out.Values[i] = ec._Modifier_func(ctx, field, obj)
 		case "modified_attribute_id":
 			out.Values[i] = ec._Modifier_modified_attribute_id(ctx, field, obj)
+		case "modified_attribute":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Modifier_modified_attribute(ctx, field, obj)
+				return res
+			})
 		case "modifying_attribute_id":
 			out.Values[i] = ec._Modifier_modifying_attribute_id(ctx, field, obj)
+		case "modifying_attribute":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Modifier_modifying_attribute(ctx, field, obj)
+				return res
+			})
 		case "operator":
 			out.Values[i] = ec._Modifier_operator(ctx, field, obj)
 		default:
