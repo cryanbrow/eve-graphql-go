@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"time"
 
 	"github.com/cryanbrow/eve-graphql-go/graph/model"
 )
@@ -88,33 +89,39 @@ func SystemByID(id *int) (*model.System, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
+
+	inCache, result := CheckCache("SystemByID" + strconv.Itoa(*id))
+	var responseBytes []byte = result
 	var system *model.System = new(model.System)
+	if !inCache {
+		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/systems/%s/", strconv.Itoa(*id)))
+		if err != nil {
+			return nil, err
+		}
 
-	crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/systems/%s/", strconv.Itoa(*id)))
-	if err != nil {
-		return nil, err
-	}
+		queryParameters := crest_url.Query()
+		queryParameters.Add("datasource", "tranquility")
+		queryParameters.Add("language", "en")
 
-	queryParameters := crest_url.Query()
-	queryParameters.Add("datasource", "tranquility")
-	queryParameters.Add("language", "en")
+		crest_url.RawQuery = queryParameters.Encode()
 
-	crest_url.RawQuery = queryParameters.Encode()
+		request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+		if err != nil {
+			log.Printf("Could not request orders by region. %v", err)
+		}
 
-	request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
-	if err != nil {
-		log.Printf("Could not request orders by region. %v", err)
-	}
-	response, err := Client.Do(request)
-	if err != nil {
-		log.Printf("Could not make request. %v", err)
-		return system, err
-	}
+		response, err := Client.Do(request)
+		if err != nil {
+			log.Printf("Could not make request. %v", err)
+			return system, err
+		}
 
-	responseBytes, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		log.Printf("Could not read response for body. %v", err)
-		return system, err
+		responseBytes, err = ioutil.ReadAll(response.Body)
+		if err != nil {
+			log.Printf("Could not read response for body. %v", err)
+			return system, err
+		}
+		AddToCache("SystemByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &system); err != nil {
