@@ -5,11 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"strconv"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/cryanbrow/eve-graphql-go/graph/model"
 )
@@ -18,6 +19,7 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int) ([]
 	orders := make([]*model.Order, 0)
 	crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/markets/%s/orders/", strconv.Itoa(*regionID)))
 	if err != nil {
+		log.Errorln("Failed to Parse URL with Error : %s", err)
 		return nil, err
 	}
 
@@ -96,6 +98,7 @@ func SystemByID(id *int) (*model.System, error) {
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/systems/%s/", strconv.Itoa(*id)))
 		if err != nil {
+			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
 		}
 
@@ -145,6 +148,7 @@ func StationByID(id *int) (*model.Station, error) {
 		fmt.Println("Querying for station: ", id)
 		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/stations/%s/", strconv.Itoa(*id)))
 		if err != nil {
+			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
 		}
 
@@ -192,6 +196,7 @@ func PlanetByID(id *int) (*model.Planet, error) {
 
 		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/planets/%s/", strconv.Itoa(*id)))
 		if err != nil {
+			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
 		}
 
@@ -251,6 +256,7 @@ func MoonByID(id *int) (*model.Moon, error) {
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/moons/%s/", strconv.Itoa(*id)))
 		if err != nil {
+			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
 		}
 
@@ -309,6 +315,7 @@ func ItemTypeByID(id *int) (*model.ItemType, error) {
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/types/%s/", strconv.Itoa(*id)))
 		if err != nil {
+			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
 		}
 
@@ -367,6 +374,7 @@ func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/asteroid_belts/%s/", strconv.Itoa(*id)))
 		if err != nil {
+			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
 		}
 
@@ -412,6 +420,7 @@ func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/markets/groups/%s/", strconv.Itoa(*id)))
 		if err != nil {
+			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
 		}
 
@@ -457,6 +466,7 @@ func GroupByID(id *int) (*model.Group, error) {
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/groups/%s/", strconv.Itoa(*id)))
 		if err != nil {
+			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
 		}
 
@@ -503,6 +513,7 @@ func GraphicByID(id *int) (*model.Graphic, error) {
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/graphics/%s/", strconv.Itoa(*id)))
 		if err != nil {
+			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
 		}
 
@@ -549,6 +560,7 @@ func DogmaAttributeByID(id *int) (*model.DogmaAttributeDetail, error) {
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/dogma/attributes/%s/", strconv.Itoa(*id)))
 		if err != nil {
+			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
 		}
 
@@ -595,6 +607,7 @@ func DogmaEffectByID(id *int) (*model.DogmaEffectDetail, error) {
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/dogma/effects/%s/", strconv.Itoa(*id)))
 		if err != nil {
+			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
 		}
 
@@ -641,6 +654,7 @@ func CategoryByID(id *int) (*model.Category, error) {
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/categories/%s/", strconv.Itoa(*id)))
 		if err != nil {
+			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
 		}
 
@@ -685,5 +699,6 @@ var (
 )
 
 func init() {
+	log.SetFormatter(&log.JSONFormatter{})
 	Client = &http.Client{}
 }

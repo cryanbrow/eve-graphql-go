@@ -3,9 +3,10 @@ package main
 import (
 	"embed"
 	"html/template"
-	"log"
 	"net/http"
 	"os"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -24,6 +25,9 @@ var (
 const defaultPort = "8080"
 
 func main() {
+	log.SetFormatter(&log.JSONFormatter{})
+	log.SetLevel(log.DebugLevel)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
@@ -57,6 +61,6 @@ func main() {
 	})
 	http.FileServer(http.FS(res))
 
-	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Infoln("connect to http://localhost:%s/ for GraphQL playground", port)
+	log.Fatalln(http.ListenAndServe(":"+port, nil))
 }

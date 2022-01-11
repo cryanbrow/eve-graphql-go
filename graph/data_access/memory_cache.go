@@ -1,9 +1,10 @@
 package data_access
 
 import (
-	"fmt"
 	"sync"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type cacheRecord struct {
@@ -24,7 +25,7 @@ func CheckCache(key string) (bool, []byte) {
 func AddToCache(key string, value []byte, expiry int64) {
 	result, success := Cache.Load(key)
 	if !success || result.(cacheRecord).value == nil || result.(cacheRecord).expiry < time.Now().UnixMilli() {
-		fmt.Printf("Adding %s to Cache", key)
+		log.Debugln("Adding to Cache", key)
 		var record cacheRecord
 		record.expiry = expiry
 		record.value = value
