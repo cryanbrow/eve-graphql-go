@@ -44,6 +44,14 @@ func (r *dogma_effect_detailResolver) TrackingSpeedAttribute(ctx context.Context
 	return dao.DogmaAttributeByID(obj.TrackingSpeedAttributeID)
 }
 
+func (r *groupResolver) Category(ctx context.Context, obj *model.Group) (*model.Category, error) {
+	return dao.CategoryByID(obj.CategoryID)
+}
+
+func (r *groupResolver) ItemTypes(ctx context.Context, obj *model.Group) ([]*model.ItemType, error) {
+	return dao.ItemTypesByIDs(obj.Types)
+}
+
 func (r *item_typeResolver) Graphic(ctx context.Context, obj *model.ItemType) (*model.Graphic, error) {
 	return dao.GraphicByID(obj.GraphicID)
 }
@@ -124,6 +132,9 @@ func (r *Resolver) Dogma_effect_detail() generated.Dogma_effect_detailResolver {
 	return &dogma_effect_detailResolver{r}
 }
 
+// Group returns generated.GroupResolver implementation.
+func (r *Resolver) Group() generated.GroupResolver { return &groupResolver{r} }
+
 // Item_type returns generated.Item_typeResolver implementation.
 func (r *Resolver) Item_type() generated.Item_typeResolver { return &item_typeResolver{r} }
 
@@ -146,6 +157,7 @@ type asteroid_beltResolver struct{ *Resolver }
 type dogma_attributeResolver struct{ *Resolver }
 type dogma_effectResolver struct{ *Resolver }
 type dogma_effect_detailResolver struct{ *Resolver }
+type groupResolver struct{ *Resolver }
 type item_typeResolver struct{ *Resolver }
 type market_groupResolver struct{ *Resolver }
 type modifierResolver struct{ *Resolver }

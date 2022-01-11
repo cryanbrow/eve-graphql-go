@@ -630,6 +630,52 @@ func DogmaEffectByID(id *int) (*model.DogmaEffectDetail, error) {
 	return dogmaEffect, nil
 }
 
+func CategoryByID(id *int) (*model.Category, error) {
+	var category *model.Category = new(model.Category)
+	if id == nil {
+		return nil, nil
+	}
+
+	inCache, result := CheckCache("CategoryByID" + strconv.Itoa(*id))
+	var responseBytes []byte = result
+	if !inCache {
+		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/categories/%s/", strconv.Itoa(*id)))
+		if err != nil {
+			return nil, err
+		}
+
+		queryParameters := crest_url.Query()
+		queryParameters.Add("datasource", "tranquility")
+		queryParameters.Add("language", "en")
+
+		crest_url.RawQuery = queryParameters.Encode()
+
+		request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+		if err != nil {
+			log.Printf("Could not request orders by region. %v", err)
+		}
+		response, err := Client.Do(request)
+		if err != nil {
+			log.Printf("Could not make request. %v", err)
+			return category, err
+		}
+
+		responseBytes, err = ioutil.ReadAll(response.Body)
+		if err != nil {
+			log.Printf("Could not read response for body. %v", err)
+			return category, err
+		}
+		AddToCache("CategoryByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
+	}
+
+	if err := json.Unmarshal(responseBytes, &category); err != nil {
+		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		return category, err
+	}
+
+	return category, nil
+}
+
 type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }

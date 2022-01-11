@@ -39,6 +39,7 @@ type ResolverRoot interface {
 	Dogma_attribute() Dogma_attributeResolver
 	Dogma_effect() Dogma_effectResolver
 	Dogma_effect_detail() Dogma_effect_detailResolver
+	Group() GroupResolver
 	Item_type() Item_typeResolver
 	Market_group() Market_groupResolver
 	Modifier() ModifierResolver
@@ -217,11 +218,13 @@ type ComplexityRoot struct {
 	}
 
 	Group struct {
-		Category  func(childComplexity int) int
-		GroupID   func(childComplexity int) int
-		ItemTypes func(childComplexity int) int
-		Name      func(childComplexity int) int
-		Published func(childComplexity int) int
+		Category   func(childComplexity int) int
+		CategoryID func(childComplexity int) int
+		GroupID    func(childComplexity int) int
+		ItemTypes  func(childComplexity int) int
+		Name       func(childComplexity int) int
+		Published  func(childComplexity int) int
+		Types      func(childComplexity int) int
 	}
 
 	Icon struct {
@@ -417,6 +420,11 @@ type Dogma_effect_detailResolver interface {
 	RangeAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error)
 
 	TrackingSpeedAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error)
+}
+type GroupResolver interface {
+	Category(ctx context.Context, obj *model.Group) (*model.Category, error)
+
+	ItemTypes(ctx context.Context, obj *model.Group) ([]*model.ItemType, error)
 }
 type Item_typeResolver interface {
 	Graphic(ctx context.Context, obj *model.ItemType) (*model.Graphic, error)
@@ -1337,6 +1345,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Group.Category(childComplexity), true
 
+	case "Group.category_id":
+		if e.complexity.Group.CategoryID == nil {
+			break
+		}
+
+		return e.complexity.Group.CategoryID(childComplexity), true
+
 	case "Group.group_id":
 		if e.complexity.Group.GroupID == nil {
 			break
@@ -1364,6 +1379,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Group.Published(childComplexity), true
+
+	case "Group.types":
+		if e.complexity.Group.Types == nil {
+			break
+		}
+
+		return e.complexity.Group.Types(childComplexity), true
 
 	case "Icon.id":
 		if e.complexity.Icon.ID == nil {
@@ -2489,10 +2511,12 @@ type Graphic{
 }
 
 type Group{
+	category_id : Int
 	category : Category
 	group_id : Int
 	name : String
 	published : Boolean
+	types : [Int]
 	item_types : [Item_type]
 }
 
@@ -6821,7 +6845,7 @@ func (ec *executionContext) _Graphic_sof_race_name(ctx context.Context, field gr
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Group_category(ctx context.Context, field graphql.CollectedField, obj *model.Group) (ret graphql.Marshaler) {
+func (ec *executionContext) _Group_category_id(ctx context.Context, field graphql.CollectedField, obj *model.Group) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6839,7 +6863,39 @@ func (ec *executionContext) _Group_category(ctx context.Context, field graphql.C
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Category, nil
+		return obj.CategoryID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Group_category(ctx context.Context, field graphql.CollectedField, obj *model.Group) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Group",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Group().Category(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6949,7 +7005,7 @@ func (ec *executionContext) _Group_published(ctx context.Context, field graphql.
 	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Group_item_types(ctx context.Context, field graphql.CollectedField, obj *model.Group) (ret graphql.Marshaler) {
+func (ec *executionContext) _Group_types(ctx context.Context, field graphql.CollectedField, obj *model.Group) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6967,7 +7023,39 @@ func (ec *executionContext) _Group_item_types(ctx context.Context, field graphql
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ItemTypes, nil
+		return obj.Types, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚕᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Group_item_types(ctx context.Context, field graphql.CollectedField, obj *model.Group) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Group",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Group().ItemTypes(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12651,16 +12739,38 @@ func (ec *executionContext) _Group(ctx context.Context, sel ast.SelectionSet, ob
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Group")
+		case "category_id":
+			out.Values[i] = ec._Group_category_id(ctx, field, obj)
 		case "category":
-			out.Values[i] = ec._Group_category(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Group_category(ctx, field, obj)
+				return res
+			})
 		case "group_id":
 			out.Values[i] = ec._Group_group_id(ctx, field, obj)
 		case "name":
 			out.Values[i] = ec._Group_name(ctx, field, obj)
 		case "published":
 			out.Values[i] = ec._Group_published(ctx, field, obj)
+		case "types":
+			out.Values[i] = ec._Group_types(ctx, field, obj)
 		case "item_types":
-			out.Values[i] = ec._Group_item_types(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Group_item_types(ctx, field, obj)
+				return res
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

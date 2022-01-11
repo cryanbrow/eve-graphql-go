@@ -103,6 +103,12 @@ models:
         resolver: true
       types_details:
         resolver: true
+  Group:
+    fields:
+      category:
+        resolver: true
+      item_types:
+        resolver: true
   ID:
     model:
       - github.com/99designs/gqlgen/graphql.ID

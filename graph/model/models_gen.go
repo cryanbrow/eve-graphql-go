@@ -174,11 +174,13 @@ type Graphic struct {
 }
 
 type Group struct {
-	Category  *Category   `json:"category"`
-	GroupID   *int        `json:"group_id"`
-	Name      *string     `json:"name"`
-	Published *bool       `json:"published"`
-	ItemTypes []*ItemType `json:"item_types"`
+	CategoryID *int        `json:"category_id"`
+	Category   *Category   `json:"category"`
+	GroupID    *int        `json:"group_id"`
+	Name       *string     `json:"name"`
+	Published  *bool       `json:"published"`
+	Types      []*int      `json:"types"`
+	ItemTypes  []*ItemType `json:"item_types"`
 }
 
 type Icon struct {

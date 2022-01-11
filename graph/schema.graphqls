@@ -224,10 +224,12 @@ type Graphic{
 }
 
 type Group{
+	category_id : Int
 	category : Category
 	group_id : Int
 	name : String
 	published : Boolean
+	types : [Int]
 	item_types : [Item_type]
 }
 
