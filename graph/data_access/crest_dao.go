@@ -16,10 +16,11 @@ import (
 )
 
 func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int) ([]*model.Order, error) {
+	log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID, "orderType": orderType}).Info("OrdersForRegion Called")
 	orders := make([]*model.Order, 0)
-	crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/markets/%s/orders/", strconv.Itoa(*regionID)))
+	crest_url, err := url.Parse(fmt.Sprintf("%s/markets/%s/orders/", baseUriESI, strconv.Itoa(*regionID)))
 	if err != nil {
-		log.Errorln("Failed to Parse URL with Error : %s", err)
+		log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID, "orderType": orderType}).Errorf("Failed to Parse URL with Error : %s", err)
 		return nil, err
 	}
 
@@ -37,7 +38,8 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int) ([]
 	if err == nil && pages > 0 {
 		orders = append(orders, orderResult...)
 	} else {
-		log.Printf("Error is not nil. %v", err)
+		log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID, "orderType": orderType}).Errorf("First page query for Orders has error : %v", err)
+		println(err)
 	}
 
 	for i := 2; i <= pages; i++ {
@@ -46,7 +48,7 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int) ([]
 		if err == nil && pages > 0 {
 			orders = append(orders, orderResult...)
 		} else {
-			log.Printf("Error is not nil. %v", err)
+			log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID, "orderType": orderType, "page": i}).Errorf("Error is not nil : %v", err)
 		}
 	}
 
@@ -56,31 +58,15 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int) ([]
 func ordersForRegionREST(url string) ([]*model.Order, int, error) {
 	var orders []*model.Order
 	var pages = 0
-	request, err := http.NewRequest(http.MethodGet, url, nil)
+	responseBytes, header, err := makeRESTCall(url)
 	if err != nil {
-		log.Printf("Could not request orders by region. %v", err)
-	}
-	response, err := Client.Do(request)
-	if err != nil {
-		log.Printf("Could not make request. %v", err)
 		return orders, 0, err
 	}
 
-	pages, err = strconv.Atoi(response.Header.Get("x-pages"))
-
-	if err != nil {
-		log.Printf("Could get pages from header. %v", err)
-		return orders, 0, err
-	}
-
-	responseBytes, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		log.Printf("Could not read response for body. %v", err)
-		return orders, 0, err
-	}
+	pages, _ = strconv.Atoi(header.Get("x-pages"))
 
 	if err := json.Unmarshal(responseBytes, &orders); err != nil {
-		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		log.WithFields(log.Fields{"url": url}).Errorf("Could not unmarshal reponseBytes. : %v", err.Error())
 		return orders, 0, err
 	}
 
@@ -96,9 +82,9 @@ func SystemByID(id *int) (*model.System, error) {
 	var responseBytes []byte = result
 	var system *model.System = new(model.System)
 	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/systems/%s/", strconv.Itoa(*id)))
+		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/systems/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
-			log.Errorln("Failed to Parse URL with Error : %s", err)
+			log.Errorf("Failed to Parse URL with Error : %s", err)
 			return nil, err
 		}
 
@@ -108,27 +94,15 @@ func SystemByID(id *int) (*model.System, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+		responseBytes, _, err = makeRESTCall(crest_url.String())
 		if err != nil {
-			log.Printf("Could not request orders by region. %v", err)
-		}
-
-		response, err := Client.Do(request)
-		if err != nil {
-			log.Printf("Could not make request. %v", err)
-			return system, err
-		}
-
-		responseBytes, err = ioutil.ReadAll(response.Body)
-		if err != nil {
-			log.Printf("Could not read response for body. %v", err)
 			return system, err
 		}
 		AddToCache("SystemByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &system); err != nil {
-		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		log.Errorf("Could not unmarshal reponseBytes. %v", err)
 		return system, err
 	}
 
@@ -146,9 +120,9 @@ func StationByID(id *int) (*model.Station, error) {
 	var responseBytes []byte = result
 	if !inCache {
 		fmt.Println("Querying for station: ", id)
-		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/stations/%s/", strconv.Itoa(*id)))
+		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/stations/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
-			log.Errorln("Failed to Parse URL with Error : %s", err)
+			log.Errorf("Failed to Parse URL with Error : %s", err)
 			return nil, err
 		}
 
@@ -158,26 +132,15 @@ func StationByID(id *int) (*model.Station, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+		responseBytes, _, err = makeRESTCall(crest_url.String())
 		if err != nil {
-			log.Printf("Could not request orders by region. %v", err)
-		}
-		response, err := Client.Do(request)
-		if err != nil {
-			log.Printf("Could not make request. %v", err)
-			return station, err
-		}
-
-		responseBytes, err = ioutil.ReadAll(response.Body)
-		if err != nil {
-			log.Printf("Could not read response for body. %v", err)
 			return station, err
 		}
 		AddToCache("StationByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &station); err != nil {
-		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		log.Errorf("Could not unmarshal reponseBytes. %v", err)
 		return station, err
 	}
 
@@ -194,7 +157,7 @@ func PlanetByID(id *int) (*model.Planet, error) {
 	var responseBytes []byte = result
 	if !inCache {
 
-		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/planets/%s/", strconv.Itoa(*id)))
+		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/planets/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
 			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
@@ -206,19 +169,8 @@ func PlanetByID(id *int) (*model.Planet, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+		responseBytes, _, err = makeRESTCall(crest_url.String())
 		if err != nil {
-			log.Printf("Could not request orders by region. %v", err)
-		}
-		response, err := Client.Do(request)
-		if err != nil {
-			log.Printf("Could not make request. %v", err)
-			return planet, err
-		}
-
-		responseBytes, err = ioutil.ReadAll(response.Body)
-		if err != nil {
-			log.Printf("Could not read response for body. %v", err)
 			return planet, err
 		}
 		AddToCache("PlanetByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
@@ -254,7 +206,7 @@ func MoonByID(id *int) (*model.Moon, error) {
 	inCache, result := CheckCache("MoonByID" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/moons/%s/", strconv.Itoa(*id)))
+		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/moons/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
 			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
@@ -266,19 +218,8 @@ func MoonByID(id *int) (*model.Moon, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+		responseBytes, _, err = makeRESTCall(crest_url.String())
 		if err != nil {
-			log.Printf("Could not request orders by region. %v", err)
-		}
-		response, err := Client.Do(request)
-		if err != nil {
-			log.Printf("Could not make request. %v", err)
-			return moon, err
-		}
-
-		responseBytes, err = ioutil.ReadAll(response.Body)
-		if err != nil {
-			log.Printf("Could not read response for body. %v", err)
 			return moon, err
 		}
 		AddToCache("MoonByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
@@ -313,7 +254,7 @@ func ItemTypeByID(id *int) (*model.ItemType, error) {
 	inCache, result := CheckCache("ItemTypeByID" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/types/%s/", strconv.Itoa(*id)))
+		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/types/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
 			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
@@ -325,19 +266,8 @@ func ItemTypeByID(id *int) (*model.ItemType, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+		responseBytes, _, err = makeRESTCall(crest_url.String())
 		if err != nil {
-			log.Printf("Could not request orders by region. %v", err)
-		}
-		response, err := Client.Do(request)
-		if err != nil {
-			log.Printf("Could not make request. %v", err)
-			return itemType, err
-		}
-
-		responseBytes, err = ioutil.ReadAll(response.Body)
-		if err != nil {
-			log.Printf("Could not read response for body. %v", err)
 			return itemType, err
 		}
 		AddToCache("ItemTypeByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
@@ -372,7 +302,7 @@ func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
 	inCache, result := CheckCache("AsteroidBeltByID" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/asteroid_belts/%s/", strconv.Itoa(*id)))
+		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/asteroid_belts/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
 			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
@@ -384,19 +314,8 @@ func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+		responseBytes, _, err = makeRESTCall(crest_url.String())
 		if err != nil {
-			log.Printf("Could not request orders by region. %v", err)
-		}
-		response, err := Client.Do(request)
-		if err != nil {
-			log.Printf("Could not make request. %v", err)
-			return asteroidBelt, err
-		}
-
-		responseBytes, err = ioutil.ReadAll(response.Body)
-		if err != nil {
-			log.Printf("Could not read response for body. %v", err)
 			return asteroidBelt, err
 		}
 		AddToCache("AsteroidBeltByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
@@ -418,7 +337,7 @@ func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 	inCache, result := CheckCache("MarketGroupByID" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/markets/groups/%s/", strconv.Itoa(*id)))
+		crest_url, err := url.Parse(fmt.Sprintf("%s/markets/groups/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
 			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
@@ -430,19 +349,8 @@ func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+		responseBytes, _, err = makeRESTCall(crest_url.String())
 		if err != nil {
-			log.Printf("Could not request orders by region. %v", err)
-		}
-		response, err := Client.Do(request)
-		if err != nil {
-			log.Printf("Could not make request. %v", err)
-			return marketGroup, err
-		}
-
-		responseBytes, err = ioutil.ReadAll(response.Body)
-		if err != nil {
-			log.Printf("Could not read response for body. %v", err)
 			return marketGroup, err
 		}
 		AddToCache("MarketGroupByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
@@ -464,7 +372,7 @@ func GroupByID(id *int) (*model.Group, error) {
 	inCache, result := CheckCache("GroupByID" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/groups/%s/", strconv.Itoa(*id)))
+		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/groups/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
 			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
@@ -476,19 +384,8 @@ func GroupByID(id *int) (*model.Group, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+		responseBytes, _, err = makeRESTCall(crest_url.String())
 		if err != nil {
-			log.Printf("Could not request orders by region. %v", err)
-		}
-		response, err := Client.Do(request)
-		if err != nil {
-			log.Printf("Could not make request. %v", err)
-			return group, err
-		}
-
-		responseBytes, err = ioutil.ReadAll(response.Body)
-		if err != nil {
-			log.Printf("Could not read response for body. %v", err)
 			return group, err
 		}
 		AddToCache("GroupByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
@@ -511,7 +408,7 @@ func GraphicByID(id *int) (*model.Graphic, error) {
 	inCache, result := CheckCache("GraphicByID" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/graphics/%s/", strconv.Itoa(*id)))
+		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/graphics/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
 			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
@@ -523,19 +420,8 @@ func GraphicByID(id *int) (*model.Graphic, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+		responseBytes, _, err = makeRESTCall(crest_url.String())
 		if err != nil {
-			log.Printf("Could not request orders by region. %v", err)
-		}
-		response, err := Client.Do(request)
-		if err != nil {
-			log.Printf("Could not make request. %v", err)
-			return graphic, err
-		}
-
-		responseBytes, err = ioutil.ReadAll(response.Body)
-		if err != nil {
-			log.Printf("Could not read response for body. %v", err)
 			return graphic, err
 		}
 		AddToCache("GraphicByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
@@ -558,7 +444,7 @@ func DogmaAttributeByID(id *int) (*model.DogmaAttributeDetail, error) {
 	inCache, result := CheckCache("DogmaAttributeByID" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/dogma/attributes/%s/", strconv.Itoa(*id)))
+		crest_url, err := url.Parse(fmt.Sprintf("%s/dogma/attributes/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
 			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
@@ -570,19 +456,8 @@ func DogmaAttributeByID(id *int) (*model.DogmaAttributeDetail, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+		responseBytes, _, err = makeRESTCall(crest_url.String())
 		if err != nil {
-			log.Printf("Could not request orders by region. %v", err)
-		}
-		response, err := Client.Do(request)
-		if err != nil {
-			log.Printf("Could not make request. %v", err)
-			return dogmaAttribute, err
-		}
-
-		responseBytes, err = ioutil.ReadAll(response.Body)
-		if err != nil {
-			log.Printf("Could not read response for body. %v", err)
 			return dogmaAttribute, err
 		}
 		AddToCache("DogmaAttributeByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
@@ -605,7 +480,7 @@ func DogmaEffectByID(id *int) (*model.DogmaEffectDetail, error) {
 	inCache, result := CheckCache("DogmaEffectByID" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/dogma/effects/%s/", strconv.Itoa(*id)))
+		crest_url, err := url.Parse(fmt.Sprintf("%s/dogma/effects/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
 			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
@@ -617,19 +492,8 @@ func DogmaEffectByID(id *int) (*model.DogmaEffectDetail, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+		responseBytes, _, err = makeRESTCall(crest_url.String())
 		if err != nil {
-			log.Printf("Could not request orders by region. %v", err)
-		}
-		response, err := Client.Do(request)
-		if err != nil {
-			log.Printf("Could not make request. %v", err)
-			return dogmaEffect, err
-		}
-
-		responseBytes, err = ioutil.ReadAll(response.Body)
-		if err != nil {
-			log.Printf("Could not read response for body. %v", err)
 			return dogmaEffect, err
 		}
 		AddToCache("DogmaEffectByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
@@ -652,7 +516,7 @@ func CategoryByID(id *int) (*model.Category, error) {
 	inCache, result := CheckCache("CategoryByID" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("https://esi.evetech.net/latest/universe/categories/%s/", strconv.Itoa(*id)))
+		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/categories/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
 			log.Errorln("Failed to Parse URL with Error : %s", err)
 			return nil, err
@@ -664,19 +528,8 @@ func CategoryByID(id *int) (*model.Category, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		request, err := http.NewRequest(http.MethodGet, crest_url.String(), nil)
+		responseBytes, _, err = makeRESTCall(crest_url.String())
 		if err != nil {
-			log.Printf("Could not request orders by region. %v", err)
-		}
-		response, err := Client.Do(request)
-		if err != nil {
-			log.Printf("Could not make request. %v", err)
-			return category, err
-		}
-
-		responseBytes, err = ioutil.ReadAll(response.Body)
-		if err != nil {
-			log.Printf("Could not read response for body. %v", err)
 			return category, err
 		}
 		AddToCache("CategoryByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
@@ -690,15 +543,44 @@ func CategoryByID(id *int) (*model.Category, error) {
 	return category, nil
 }
 
+func makeRESTCall(url string) ([]byte, http.Header, error) {
+	log.WithFields(log.Fields{"url": url}).Info("Making REST Call")
+	request, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		log.WithFields(log.Fields{"url": url}).Errorf("Could not build request. : %s", err)
+	}
+	response, err := Client.Do(request)
+	if err != nil {
+		log.WithFields(log.Fields{"url": url}).Errorf("Could not make request. : %s", err)
+		return make([]byte, 0), nil, err
+	}
+
+	if err != nil {
+		log.WithFields(log.Fields{"url": url}).Errorf("Could get pages from header. : %s", err)
+		return make([]byte, 0), nil, err
+	}
+	h := response.Header
+	responseBytes, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.WithFields(log.Fields{"url": url}).Errorf("Could not read response for body. : %s", err)
+		return make([]byte, 0), nil, err
+	}
+	return responseBytes, h, nil
+}
+
 type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
 var (
-	Client HTTPClient
+	baseUriESI string
+	Client     HTTPClient
 )
 
 func init() {
 	log.SetFormatter(&log.JSONFormatter{})
+	log.SetLevel(log.DebugLevel)
+	log.SetReportCaller(true)
 	Client = &http.Client{}
+	baseUriESI = "https://esi.evetech.net/latest"
 }

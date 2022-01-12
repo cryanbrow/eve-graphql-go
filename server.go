@@ -27,6 +27,7 @@ const defaultPort = "8080"
 func main() {
 	log.SetFormatter(&log.JSONFormatter{})
 	log.SetLevel(log.DebugLevel)
+	log.SetReportCaller(true)
 
 	port := os.Getenv("PORT")
 	if port == "" {
