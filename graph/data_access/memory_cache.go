@@ -12,7 +12,7 @@ type cacheRecord struct {
 	expiry int64
 }
 
-func CheckCache(key string) (bool, []byte) {
+func CheckMemoryCache(key string) (bool, []byte) {
 	result, success := Cache.Load(key)
 	if !success || result.(cacheRecord).value == nil || result.(cacheRecord).expiry < time.Now().UnixMilli() {
 		Cache.Delete(key)
@@ -22,12 +22,12 @@ func CheckCache(key string) (bool, []byte) {
 	}
 }
 
-func AddToCache(key string, value []byte, expiry int64) {
+func AddToMemoryCache(key string, value []byte, ttl int64) {
 	result, success := Cache.Load(key)
 	if !success || result.(cacheRecord).value == nil || result.(cacheRecord).expiry < time.Now().UnixMilli() {
-		log.Debugln("Adding to Cache", key)
+		log.Debugf("Adding to Memory Cache: %s", key)
 		var record cacheRecord
-		record.expiry = expiry
+		record.expiry = ttl + time.Now().UnixMilli()
 		record.value = value
 		Cache.Store(key, record)
 	}

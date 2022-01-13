@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
-	"time"
 
 	log "github.com/sirupsen/logrus"
 
@@ -78,13 +77,13 @@ func SystemByID(id *int) (*model.System, error) {
 		return nil, errors.New("nil id")
 	}
 
-	inCache, result := CheckCache("SystemByID" + strconv.Itoa(*id))
+	inCache, result := CheckRedisCache("SystemByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	var system *model.System = new(model.System)
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/systems/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
-			log.Errorf("Failed to Parse URL with Error : %s", err)
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
 			return nil, err
 		}
 
@@ -98,11 +97,11 @@ func SystemByID(id *int) (*model.System, error) {
 		if err != nil {
 			return system, err
 		}
-		AddToCache("SystemByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
+		AddToRedisCache("SystemByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &system); err != nil {
-		log.Errorf("Could not unmarshal reponseBytes. %v", err)
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
 		return system, err
 	}
 
@@ -114,7 +113,7 @@ func StationByID(id *int) (*model.Station, error) {
 		return nil, errors.New("nil id")
 	}
 
-	inCache, result := CheckCache("StationByID" + strconv.Itoa(*id))
+	inCache, result := CheckRedisCache("StationByID:" + strconv.Itoa(*id))
 
 	var station *model.Station = new(model.Station)
 	var responseBytes []byte = result
@@ -122,7 +121,7 @@ func StationByID(id *int) (*model.Station, error) {
 		fmt.Println("Querying for station: ", id)
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/stations/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
-			log.Errorf("Failed to Parse URL with Error : %s", err)
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
 			return nil, err
 		}
 
@@ -136,11 +135,11 @@ func StationByID(id *int) (*model.Station, error) {
 		if err != nil {
 			return station, err
 		}
-		AddToCache("StationByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
+		AddToRedisCache("StationByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &station); err != nil {
-		log.Errorf("Could not unmarshal reponseBytes. %v", err)
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
 		return station, err
 	}
 
@@ -153,13 +152,13 @@ func PlanetByID(id *int) (*model.Planet, error) {
 		return nil, errors.New("nil id")
 	}
 
-	inCache, result := CheckCache("PlanetByID" + strconv.Itoa(*id))
+	inCache, result := CheckRedisCache("PlanetByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/planets/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
-			log.Errorln("Failed to Parse URL with Error : %s", err)
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
 			return nil, err
 		}
 
@@ -173,11 +172,11 @@ func PlanetByID(id *int) (*model.Planet, error) {
 		if err != nil {
 			return planet, err
 		}
-		AddToCache("PlanetByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
+		AddToRedisCache("PlanetByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &planet); err != nil {
-		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
 		return planet, err
 	}
 
@@ -203,12 +202,12 @@ func MoonByID(id *int) (*model.Moon, error) {
 		return nil, errors.New("nil id")
 	}
 
-	inCache, result := CheckCache("MoonByID" + strconv.Itoa(*id))
+	inCache, result := CheckRedisCache("MoonByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/moons/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
-			log.Errorln("Failed to Parse URL with Error : %s", err)
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
 			return nil, err
 		}
 
@@ -222,11 +221,11 @@ func MoonByID(id *int) (*model.Moon, error) {
 		if err != nil {
 			return moon, err
 		}
-		AddToCache("MoonByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
+		AddToRedisCache("MoonByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &moon); err != nil {
-		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
 		return moon, err
 	}
 
@@ -251,12 +250,12 @@ func ItemTypeByID(id *int) (*model.ItemType, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	inCache, result := CheckCache("ItemTypeByID" + strconv.Itoa(*id))
+	inCache, result := CheckRedisCache("ItemTypeByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/types/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
-			log.Errorln("Failed to Parse URL with Error : %s", err)
+			log.WithFields(log.Fields{"id": id}).Errorln("Failed to Parse URL with Error : %v", err)
 			return nil, err
 		}
 
@@ -270,11 +269,11 @@ func ItemTypeByID(id *int) (*model.ItemType, error) {
 		if err != nil {
 			return itemType, err
 		}
-		AddToCache("ItemTypeByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
+		AddToRedisCache("ItemTypeByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &itemType); err != nil {
-		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
 		return itemType, err
 	}
 
@@ -299,12 +298,12 @@ func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	inCache, result := CheckCache("AsteroidBeltByID" + strconv.Itoa(*id))
+	inCache, result := CheckRedisCache("AsteroidBeltByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/asteroid_belts/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
-			log.Errorln("Failed to Parse URL with Error : %s", err)
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
 			return nil, err
 		}
 
@@ -318,11 +317,11 @@ func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
 		if err != nil {
 			return asteroidBelt, err
 		}
-		AddToCache("AsteroidBeltByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
+		AddToRedisCache("AsteroidBeltByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &asteroidBelt); err != nil {
-		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
 		return asteroidBelt, err
 	}
 
@@ -334,12 +333,12 @@ func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	inCache, result := CheckCache("MarketGroupByID" + strconv.Itoa(*id))
+	inCache, result := CheckRedisCache("MarketGroupByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/markets/groups/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
-			log.Errorln("Failed to Parse URL with Error : %s", err)
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
 			return nil, err
 		}
 
@@ -353,11 +352,11 @@ func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 		if err != nil {
 			return marketGroup, err
 		}
-		AddToCache("MarketGroupByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
+		AddToRedisCache("MarketGroupByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &marketGroup); err != nil {
-		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
 		return marketGroup, err
 	}
 
@@ -369,12 +368,12 @@ func GroupByID(id *int) (*model.Group, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	inCache, result := CheckCache("GroupByID" + strconv.Itoa(*id))
+	inCache, result := CheckRedisCache("GroupByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/groups/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
-			log.Errorln("Failed to Parse URL with Error : %s", err)
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
 			return nil, err
 		}
 
@@ -388,11 +387,11 @@ func GroupByID(id *int) (*model.Group, error) {
 		if err != nil {
 			return group, err
 		}
-		AddToCache("GroupByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
+		AddToRedisCache("GroupByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &group); err != nil {
-		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
 		return group, err
 	}
 
@@ -405,12 +404,12 @@ func GraphicByID(id *int) (*model.Graphic, error) {
 		return nil, errors.New("nil id")
 	}
 
-	inCache, result := CheckCache("GraphicByID" + strconv.Itoa(*id))
+	inCache, result := CheckRedisCache("GraphicByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/graphics/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
-			log.Errorln("Failed to Parse URL with Error : %s", err)
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
 			return nil, err
 		}
 
@@ -424,11 +423,11 @@ func GraphicByID(id *int) (*model.Graphic, error) {
 		if err != nil {
 			return graphic, err
 		}
-		AddToCache("GraphicByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
+		AddToRedisCache("GraphicByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &graphic); err != nil {
-		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
 		return graphic, err
 	}
 
@@ -441,12 +440,12 @@ func DogmaAttributeByID(id *int) (*model.DogmaAttributeDetail, error) {
 		return nil, nil
 	}
 
-	inCache, result := CheckCache("DogmaAttributeByID" + strconv.Itoa(*id))
+	inCache, result := CheckRedisCache("DogmaAttributeByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/dogma/attributes/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
-			log.Errorln("Failed to Parse URL with Error : %s", err)
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
 			return nil, err
 		}
 
@@ -460,11 +459,11 @@ func DogmaAttributeByID(id *int) (*model.DogmaAttributeDetail, error) {
 		if err != nil {
 			return dogmaAttribute, err
 		}
-		AddToCache("DogmaAttributeByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
+		AddToRedisCache("DogmaAttributeByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &dogmaAttribute); err != nil {
-		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
 		return dogmaAttribute, err
 	}
 
@@ -477,12 +476,12 @@ func DogmaEffectByID(id *int) (*model.DogmaEffectDetail, error) {
 		return nil, nil
 	}
 
-	inCache, result := CheckCache("DogmaEffectByID" + strconv.Itoa(*id))
+	inCache, result := CheckRedisCache("DogmaEffectByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/dogma/effects/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
-			log.Errorln("Failed to Parse URL with Error : %s", err)
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
 			return nil, err
 		}
 
@@ -496,11 +495,11 @@ func DogmaEffectByID(id *int) (*model.DogmaEffectDetail, error) {
 		if err != nil {
 			return dogmaEffect, err
 		}
-		AddToCache("DogmaEffectByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
+		AddToRedisCache("DogmaEffectByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &dogmaEffect); err != nil {
-		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
 		return dogmaEffect, err
 	}
 
@@ -513,12 +512,12 @@ func CategoryByID(id *int) (*model.Category, error) {
 		return nil, nil
 	}
 
-	inCache, result := CheckCache("CategoryByID" + strconv.Itoa(*id))
+	inCache, result := CheckRedisCache("CategoryByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/categories/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
-			log.Errorln("Failed to Parse URL with Error : %s", err)
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
 			return nil, err
 		}
 
@@ -532,11 +531,11 @@ func CategoryByID(id *int) (*model.Category, error) {
 		if err != nil {
 			return category, err
 		}
-		AddToCache("CategoryByID"+strconv.Itoa(*id), responseBytes, time.Now().UnixMilli()+43200000)
+		AddToRedisCache("CategoryByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &category); err != nil {
-		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
 		return category, err
 	}
 
@@ -547,22 +546,22 @@ func makeRESTCall(url string) ([]byte, http.Header, error) {
 	log.WithFields(log.Fields{"url": url}).Info("Making REST Call")
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		log.WithFields(log.Fields{"url": url}).Errorf("Could not build request. : %s", err)
+		log.WithFields(log.Fields{"url": url}).Errorf("Could not build request. : %v", err)
 	}
 	response, err := Client.Do(request)
 	if err != nil {
-		log.WithFields(log.Fields{"url": url}).Errorf("Could not make request. : %s", err)
+		log.WithFields(log.Fields{"url": url}).Errorf("Could not make request. : %v", err)
 		return make([]byte, 0), nil, err
 	}
 
 	if err != nil {
-		log.WithFields(log.Fields{"url": url}).Errorf("Could get pages from header. : %s", err)
+		log.WithFields(log.Fields{"url": url}).Errorf("Could get pages from header. : %v", err)
 		return make([]byte, 0), nil, err
 	}
 	h := response.Header
 	responseBytes, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		log.WithFields(log.Fields{"url": url}).Errorf("Could not read response for body. : %s", err)
+		log.WithFields(log.Fields{"url": url}).Errorf("Could not read response for body. : %v", err)
 		return make([]byte, 0), nil, err
 	}
 	return responseBytes, h, nil
