@@ -6,6 +6,7 @@ type Query{
 	) : [Order]
 	systemById(id : Int) : System
 	stationById(id : Int) : Station
+	planetById(id : Int) : Planet
 }
 enum Ordertype {
 	buy

@@ -315,6 +315,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		OrdersForRegion func(childComplexity int, regionID *int, orderType *model.Ordertype, typeID *int) int
+		PlanetByID      func(childComplexity int, id *int) int
 		StationByID     func(childComplexity int, id *int) int
 		SystemByID      func(childComplexity int, id *int) int
 	}
@@ -454,6 +455,7 @@ type QueryResolver interface {
 	OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordertype, typeID *int) ([]*model.Order, error)
 	SystemByID(ctx context.Context, id *int) (*model.System, error)
 	StationByID(ctx context.Context, id *int) (*model.Station, error)
+	PlanetByID(ctx context.Context, id *int) (*model.Planet, error)
 }
 type System_planetResolver interface {
 	AsteroidBeltsProperties(ctx context.Context, obj *model.SystemPlanet) ([]*model.AsteroidBelt, error)
@@ -1833,6 +1835,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.OrdersForRegion(childComplexity, args["region_id"].(*int), args["order_type"].(*model.Ordertype), args["type_id"].(*int)), true
 
+	case "Query.planetById":
+		if e.complexity.Query.PlanetByID == nil {
+			break
+		}
+
+		args, err := ec.field_Query_planetById_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.PlanetByID(childComplexity, args["id"].(*int)), true
+
 	case "Query.stationById":
 		if e.complexity.Query.StationByID == nil {
 			break
@@ -2293,6 +2307,7 @@ var sources = []*ast.Source{
 	) : [Order]
 	systemById(id : Int) : System
 	stationById(id : Int) : Station
+	planetById(id : Int) : Planet
 }
 enum Ordertype {
 	buy
@@ -2838,6 +2853,21 @@ func (ec *executionContext) field_Query_ordersForRegion_args(ctx context.Context
 		}
 	}
 	args["type_id"] = arg2
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_planetById_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -9173,6 +9203,45 @@ func (ec *executionContext) _Query_stationById(ctx context.Context, field graphq
 	return ec.marshalOStation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStation(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_planetById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_planetById_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().PlanetByID(rctx, args["id"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Planet)
+	fc.Result = res
+	return ec.marshalOPlanet2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐPlanet(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -13221,6 +13290,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_stationById(ctx, field)
+				return res
+			})
+		case "planetById":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_planetById(ctx, field)
 				return res
 			})
 		case "__type":

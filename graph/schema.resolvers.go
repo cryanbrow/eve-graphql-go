@@ -103,6 +103,10 @@ func (r *queryResolver) StationByID(ctx context.Context, id *int) (*model.Statio
 	return dao.StationByID(id)
 }
 
+func (r *queryResolver) PlanetByID(ctx context.Context, id *int) (*model.Planet, error) {
+	return dao.PlanetByID(id)
+}
+
 func (r *system_planetResolver) AsteroidBeltsProperties(ctx context.Context, obj *model.SystemPlanet) ([]*model.AsteroidBelt, error) {
 	return dao.AsteroidBeltDetails(obj.AsteroidBelts)
 }

@@ -118,7 +118,6 @@ func StationByID(id *int) (*model.Station, error) {
 	var station *model.Station = new(model.Station)
 	var responseBytes []byte = result
 	if !inCache {
-		fmt.Println("Querying for station: ", id)
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/stations/%s/", baseUriESI, strconv.Itoa(*id)))
 		if err != nil {
 			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
@@ -554,12 +553,12 @@ func makeRESTCall(url string) ([]byte, http.Header, error) {
 		return make([]byte, 0), nil, err
 	}
 
-	if err != nil {
-		log.WithFields(log.Fields{"url": url}).Errorf("Could get pages from header. : %v", err)
-		return make([]byte, 0), nil, err
-	}
 	h := response.Header
 	responseBytes, err := ioutil.ReadAll(response.Body)
+	if response.StatusCode != 200 {
+		log.WithFields(log.Fields{"url": url, "status_code": response.StatusCode}).Errorf("Received bad status code. : %v", err)
+		return make([]byte, 0), nil, err
+	}
 	if err != nil {
 		log.WithFields(log.Fields{"url": url}).Errorf("Could not read response for body. : %v", err)
 		return make([]byte, 0), nil, err
