@@ -79,20 +79,25 @@ type Constellation struct {
 }
 
 type Corporation struct {
-	Alliance    *Alliance  `json:"alliance"`
-	Ceo         *Character `json:"ceo"`
-	Creator     *Character `json:"creator"`
-	DateFounded *string    `json:"date_founded"`
-	Description *string    `json:"description"`
-	Faction     *Faction   `json:"faction"`
-	HomeStation *Station   `json:"home_station"`
-	MemberCount *int       `json:"member_count"`
-	Name        *string    `json:"name"`
-	Shares      *int       `json:"shares"`
-	TaxRate     *float64   `json:"tax_rate"`
-	Ticker      *string    `json:"ticker"`
-	URL         *string    `json:"url"`
-	WarEligible *bool      `json:"war_eligible"`
+	Alliance      *Alliance  `json:"alliance"`
+	AllianceID    *int       `json:"alliance_id"`
+	Ceo           *Character `json:"ceo"`
+	CeoID         *int       `json:"ceo_id"`
+	Creator       *Character `json:"creator"`
+	CreatorID     *int       `json:"creator_id"`
+	DateFounded   *string    `json:"date_founded"`
+	Description   *string    `json:"description"`
+	Faction       *Faction   `json:"faction"`
+	FactionID     *int       `json:"faction_id"`
+	HomeStation   *Station   `json:"home_station"`
+	HomeStationID *int       `json:"home_station_id"`
+	MemberCount   *int       `json:"member_count"`
+	Name          *string    `json:"name"`
+	Shares        *int       `json:"shares"`
+	TaxRate       *float64   `json:"tax_rate"`
+	Ticker        *string    `json:"ticker"`
+	URL           *string    `json:"url"`
+	WarEligible   *bool      `json:"war_eligible"`
 }
 
 type DogmaAttribute struct {
@@ -260,7 +265,9 @@ type Planet struct {
 	PlanetID *int      `json:"planet_id"`
 	Position *Position `json:"position"`
 	System   *System   `json:"system"`
+	SystemID *int      `json:"system_id"`
 	ItemType *ItemType `json:"item_type"`
+	TypeID   *int      `json:"type_id"`
 }
 
 type Position struct {

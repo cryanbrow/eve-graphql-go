@@ -145,6 +145,43 @@ func StationByID(id *int) (*model.Station, error) {
 	return station, nil
 }
 
+func CorporationByID(id *int) (*model.Corporation, error) {
+	if id == nil {
+		return nil, errors.New("nil id")
+	}
+
+	inCache, result := CheckRedisCache("CorporationByID:" + strconv.Itoa(*id))
+
+	var corporation *model.Corporation = new(model.Corporation)
+	var responseBytes []byte = result
+	if !inCache {
+		crest_url, err := url.Parse(fmt.Sprintf("%s/corporations/%s/", baseUriESI, strconv.Itoa(*id)))
+		if err != nil {
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
+			return nil, err
+		}
+
+		queryParameters := crest_url.Query()
+		queryParameters.Add("datasource", "tranquility")
+		queryParameters.Add("language", "en")
+
+		crest_url.RawQuery = queryParameters.Encode()
+
+		responseBytes, _, err = makeRESTCall(crest_url.String())
+		if err != nil {
+			return corporation, err
+		}
+		AddToRedisCache("CorporationByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+	}
+
+	if err := json.Unmarshal(responseBytes, &corporation); err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
+		return corporation, err
+	}
+
+	return corporation, nil
+}
+
 func PlanetByID(id *int) (*model.Planet, error) {
 	var planet *model.Planet = new(model.Planet)
 	if id == nil {

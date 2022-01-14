@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 
 	dao "github.com/cryanbrow/eve-graphql-go/graph/data_access"
 	"github.com/cryanbrow/eve-graphql-go/graph/generated"
@@ -13,6 +14,26 @@ import (
 
 func (r *asteroid_beltResolver) System(ctx context.Context, obj *model.AsteroidBelt) (*model.System, error) {
 	return dao.SystemByID(obj.SystemID)
+}
+
+func (r *corporationResolver) Alliance(ctx context.Context, obj *model.Corporation) (*model.Alliance, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *corporationResolver) Ceo(ctx context.Context, obj *model.Corporation) (*model.Character, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *corporationResolver) Creator(ctx context.Context, obj *model.Corporation) (*model.Character, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *corporationResolver) Faction(ctx context.Context, obj *model.Corporation) (*model.Faction, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *corporationResolver) HomeStation(ctx context.Context, obj *model.Corporation) (*model.Station, error) {
+	return dao.StationByID(obj.HomeStationID)
 }
 
 func (r *dogma_attributeResolver) Attribute(ctx context.Context, obj *model.DogmaAttribute) (*model.DogmaAttributeDetail, error) {
@@ -91,6 +112,14 @@ func (r *orderResolver) ItemType(ctx context.Context, obj *model.Order) (*model.
 	return dao.ItemTypeByID(obj.TypeID)
 }
 
+func (r *planetResolver) System(ctx context.Context, obj *model.Planet) (*model.System, error) {
+	return dao.SystemByID(obj.SystemID)
+}
+
+func (r *planetResolver) ItemType(ctx context.Context, obj *model.Planet) (*model.ItemType, error) {
+	return dao.ItemTypeByID(obj.TypeID)
+}
+
 func (r *queryResolver) OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordertype, typeID *int) ([]*model.Order, error) {
 	return dao.OrdersForRegion(regionID, orderType, typeID)
 }
@@ -107,6 +136,10 @@ func (r *queryResolver) PlanetByID(ctx context.Context, id *int) (*model.Planet,
 	return dao.PlanetByID(id)
 }
 
+func (r *queryResolver) CorporationByID(ctx context.Context, id *int) (*model.Corporation, error) {
+	return dao.CorporationByID(id)
+}
+
 func (r *system_planetResolver) AsteroidBeltsProperties(ctx context.Context, obj *model.SystemPlanet) ([]*model.AsteroidBelt, error) {
 	return dao.AsteroidBeltDetails(obj.AsteroidBelts)
 }
@@ -121,6 +154,9 @@ func (r *system_planetResolver) PlanetProperties(ctx context.Context, obj *model
 
 // Asteroid_belt returns generated.Asteroid_beltResolver implementation.
 func (r *Resolver) Asteroid_belt() generated.Asteroid_beltResolver { return &asteroid_beltResolver{r} }
+
+// Corporation returns generated.CorporationResolver implementation.
+func (r *Resolver) Corporation() generated.CorporationResolver { return &corporationResolver{r} }
 
 // Dogma_attribute returns generated.Dogma_attributeResolver implementation.
 func (r *Resolver) Dogma_attribute() generated.Dogma_attributeResolver {
@@ -150,6 +186,9 @@ func (r *Resolver) Modifier() generated.ModifierResolver { return &modifierResol
 // Order returns generated.OrderResolver implementation.
 func (r *Resolver) Order() generated.OrderResolver { return &orderResolver{r} }
 
+// Planet returns generated.PlanetResolver implementation.
+func (r *Resolver) Planet() generated.PlanetResolver { return &planetResolver{r} }
+
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
@@ -157,6 +196,7 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 func (r *Resolver) System_planet() generated.System_planetResolver { return &system_planetResolver{r} }
 
 type asteroid_beltResolver struct{ *Resolver }
+type corporationResolver struct{ *Resolver }
 type dogma_attributeResolver struct{ *Resolver }
 type dogma_effectResolver struct{ *Resolver }
 type dogma_effect_detailResolver struct{ *Resolver }
@@ -165,5 +205,6 @@ type item_typeResolver struct{ *Resolver }
 type market_groupResolver struct{ *Resolver }
 type modifierResolver struct{ *Resolver }
 type orderResolver struct{ *Resolver }
+type planetResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type system_planetResolver struct{ *Resolver }

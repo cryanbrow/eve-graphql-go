@@ -109,6 +109,24 @@ models:
         resolver: true
       item_types:
         resolver: true
+  Planet:
+    fields:
+      item_type:
+        resolver: true
+      system:
+        resolver: true
+  Corporation:
+    fields:
+      alliance:
+        resolver: true
+      ceo:
+        resolver: true
+      creator: 
+        resolver: true
+      faction: 
+        resolver: true
+      home_station:
+        resolver: true
   ID:
     model:
       - github.com/99designs/gqlgen/graphql.ID

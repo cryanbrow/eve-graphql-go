@@ -36,6 +36,7 @@ type Config struct {
 
 type ResolverRoot interface {
 	Asteroid_belt() Asteroid_beltResolver
+	Corporation() CorporationResolver
 	Dogma_attribute() Dogma_attributeResolver
 	Dogma_effect() Dogma_effectResolver
 	Dogma_effect_detail() Dogma_effect_detailResolver
@@ -44,6 +45,7 @@ type ResolverRoot interface {
 	Market_group() Market_groupResolver
 	Modifier() ModifierResolver
 	Order() OrderResolver
+	Planet() PlanetResolver
 	Query() QueryResolver
 	System_planet() System_planetResolver
 }
@@ -123,20 +125,25 @@ type ComplexityRoot struct {
 	}
 
 	Corporation struct {
-		Alliance    func(childComplexity int) int
-		Ceo         func(childComplexity int) int
-		Creator     func(childComplexity int) int
-		DateFounded func(childComplexity int) int
-		Description func(childComplexity int) int
-		Faction     func(childComplexity int) int
-		HomeStation func(childComplexity int) int
-		MemberCount func(childComplexity int) int
-		Name        func(childComplexity int) int
-		Shares      func(childComplexity int) int
-		TaxRate     func(childComplexity int) int
-		Ticker      func(childComplexity int) int
-		URL         func(childComplexity int) int
-		WarEligible func(childComplexity int) int
+		Alliance      func(childComplexity int) int
+		AllianceID    func(childComplexity int) int
+		Ceo           func(childComplexity int) int
+		CeoID         func(childComplexity int) int
+		Creator       func(childComplexity int) int
+		CreatorID     func(childComplexity int) int
+		DateFounded   func(childComplexity int) int
+		Description   func(childComplexity int) int
+		Faction       func(childComplexity int) int
+		FactionID     func(childComplexity int) int
+		HomeStation   func(childComplexity int) int
+		HomeStationID func(childComplexity int) int
+		MemberCount   func(childComplexity int) int
+		Name          func(childComplexity int) int
+		Shares        func(childComplexity int) int
+		TaxRate       func(childComplexity int) int
+		Ticker        func(childComplexity int) int
+		URL           func(childComplexity int) int
+		WarEligible   func(childComplexity int) int
 	}
 
 	DogmaAttribute struct {
@@ -305,6 +312,8 @@ type ComplexityRoot struct {
 		PlanetID func(childComplexity int) int
 		Position func(childComplexity int) int
 		System   func(childComplexity int) int
+		SystemID func(childComplexity int) int
+		TypeID   func(childComplexity int) int
 	}
 
 	Position struct {
@@ -314,6 +323,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
+		CorporationByID func(childComplexity int, id *int) int
 		OrdersForRegion func(childComplexity int, regionID *int, orderType *model.Ordertype, typeID *int) int
 		PlanetByID      func(childComplexity int, id *int) int
 		StationByID     func(childComplexity int, id *int) int
@@ -405,6 +415,17 @@ type ComplexityRoot struct {
 type Asteroid_beltResolver interface {
 	System(ctx context.Context, obj *model.AsteroidBelt) (*model.System, error)
 }
+type CorporationResolver interface {
+	Alliance(ctx context.Context, obj *model.Corporation) (*model.Alliance, error)
+
+	Ceo(ctx context.Context, obj *model.Corporation) (*model.Character, error)
+
+	Creator(ctx context.Context, obj *model.Corporation) (*model.Character, error)
+
+	Faction(ctx context.Context, obj *model.Corporation) (*model.Faction, error)
+
+	HomeStation(ctx context.Context, obj *model.Corporation) (*model.Station, error)
+}
 type Dogma_attributeResolver interface {
 	Attribute(ctx context.Context, obj *model.DogmaAttribute) (*model.DogmaAttributeDetail, error)
 }
@@ -451,11 +472,17 @@ type OrderResolver interface {
 
 	ItemType(ctx context.Context, obj *model.Order) (*model.ItemType, error)
 }
+type PlanetResolver interface {
+	System(ctx context.Context, obj *model.Planet) (*model.System, error)
+
+	ItemType(ctx context.Context, obj *model.Planet) (*model.ItemType, error)
+}
 type QueryResolver interface {
 	OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordertype, typeID *int) ([]*model.Order, error)
 	SystemByID(ctx context.Context, id *int) (*model.System, error)
 	StationByID(ctx context.Context, id *int) (*model.Station, error)
 	PlanetByID(ctx context.Context, id *int) (*model.Planet, error)
+	CorporationByID(ctx context.Context, id *int) (*model.Corporation, error)
 }
 type System_planetResolver interface {
 	AsteroidBeltsProperties(ctx context.Context, obj *model.SystemPlanet) ([]*model.AsteroidBelt, error)
@@ -829,6 +856,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Corporation.Alliance(childComplexity), true
 
+	case "Corporation.alliance_id":
+		if e.complexity.Corporation.AllianceID == nil {
+			break
+		}
+
+		return e.complexity.Corporation.AllianceID(childComplexity), true
+
 	case "Corporation.ceo":
 		if e.complexity.Corporation.Ceo == nil {
 			break
@@ -836,12 +870,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Corporation.Ceo(childComplexity), true
 
+	case "Corporation.ceo_id":
+		if e.complexity.Corporation.CeoID == nil {
+			break
+		}
+
+		return e.complexity.Corporation.CeoID(childComplexity), true
+
 	case "Corporation.creator":
 		if e.complexity.Corporation.Creator == nil {
 			break
 		}
 
 		return e.complexity.Corporation.Creator(childComplexity), true
+
+	case "Corporation.creator_id":
+		if e.complexity.Corporation.CreatorID == nil {
+			break
+		}
+
+		return e.complexity.Corporation.CreatorID(childComplexity), true
 
 	case "Corporation.date_founded":
 		if e.complexity.Corporation.DateFounded == nil {
@@ -864,12 +912,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Corporation.Faction(childComplexity), true
 
+	case "Corporation.faction_id":
+		if e.complexity.Corporation.FactionID == nil {
+			break
+		}
+
+		return e.complexity.Corporation.FactionID(childComplexity), true
+
 	case "Corporation.home_station":
 		if e.complexity.Corporation.HomeStation == nil {
 			break
 		}
 
 		return e.complexity.Corporation.HomeStation(childComplexity), true
+
+	case "Corporation.home_station_id":
+		if e.complexity.Corporation.HomeStationID == nil {
+			break
+		}
+
+		return e.complexity.Corporation.HomeStationID(childComplexity), true
 
 	case "Corporation.member_count":
 		if e.complexity.Corporation.MemberCount == nil {
@@ -1802,6 +1864,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Planet.System(childComplexity), true
 
+	case "Planet.system_id":
+		if e.complexity.Planet.SystemID == nil {
+			break
+		}
+
+		return e.complexity.Planet.SystemID(childComplexity), true
+
+	case "Planet.type_id":
+		if e.complexity.Planet.TypeID == nil {
+			break
+		}
+
+		return e.complexity.Planet.TypeID(childComplexity), true
+
 	case "Position.x":
 		if e.complexity.Position.X == nil {
 			break
@@ -1822,6 +1898,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Position.Z(childComplexity), true
+
+	case "Query.corporationById":
+		if e.complexity.Query.CorporationByID == nil {
+			break
+		}
+
+		args, err := ec.field_Query_corporationById_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CorporationByID(childComplexity, args["id"].(*int)), true
 
 	case "Query.ordersForRegion":
 		if e.complexity.Query.OrdersForRegion == nil {
@@ -2308,6 +2396,7 @@ var sources = []*ast.Source{
 	systemById(id : Int) : System
 	stationById(id : Int) : Station
 	planetById(id : Int) : Planet
+	corporationById(id : Int) : Corporation
 }
 enum Ordertype {
 	buy
@@ -2349,12 +2438,17 @@ type Station{
 
 type Corporation{
 	alliance : Alliance
+	alliance_id : Int
 	ceo : Character
+	ceo_id : Int
 	creator : Character
+	creator_id : Int
 	date_founded : String
 	description : String
 	faction : Faction
+	faction_id : Int
 	home_station : Station
+	home_station_id : Int
 	member_count : Int
 	name : String
 	shares : Int
@@ -2604,7 +2698,9 @@ type Planet{
 	planet_id : Int
 	position : Position
 	system : System
+	system_id : Int
 	item_type : Item_type
+	type_id : Int
 }
 
 type System_planet{
@@ -2820,6 +2916,21 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_corporationById_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -4518,14 +4629,14 @@ func (ec *executionContext) _Corporation_alliance(ctx context.Context, field gra
 		Object:     "Corporation",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Alliance, nil
+		return ec.resolvers.Corporation().Alliance(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4539,7 +4650,7 @@ func (ec *executionContext) _Corporation_alliance(ctx context.Context, field gra
 	return ec.marshalOAlliance2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐAlliance(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Corporation_ceo(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Corporation_alliance_id(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4557,7 +4668,39 @@ func (ec *executionContext) _Corporation_ceo(ctx context.Context, field graphql.
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Ceo, nil
+		return obj.AllianceID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Corporation_ceo(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Corporation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Corporation().Ceo(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4571,7 +4714,7 @@ func (ec *executionContext) _Corporation_ceo(ctx context.Context, field graphql.
 	return ec.marshalOCharacter2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCharacter(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Corporation_creator(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Corporation_ceo_id(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4589,7 +4732,39 @@ func (ec *executionContext) _Corporation_creator(ctx context.Context, field grap
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Creator, nil
+		return obj.CeoID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Corporation_creator(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Corporation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Corporation().Creator(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4601,6 +4776,38 @@ func (ec *executionContext) _Corporation_creator(ctx context.Context, field grap
 	res := resTmp.(*model.Character)
 	fc.Result = res
 	return ec.marshalOCharacter2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCharacter(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Corporation_creator_id(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Corporation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatorID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Corporation_date_founded(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
@@ -4678,14 +4885,14 @@ func (ec *executionContext) _Corporation_faction(ctx context.Context, field grap
 		Object:     "Corporation",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Faction, nil
+		return ec.resolvers.Corporation().Faction(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4699,7 +4906,7 @@ func (ec *executionContext) _Corporation_faction(ctx context.Context, field grap
 	return ec.marshalOFaction2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐFaction(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Corporation_home_station(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Corporation_faction_id(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4717,7 +4924,39 @@ func (ec *executionContext) _Corporation_home_station(ctx context.Context, field
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.HomeStation, nil
+		return obj.FactionID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Corporation_home_station(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Corporation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Corporation().HomeStation(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4729,6 +4968,38 @@ func (ec *executionContext) _Corporation_home_station(ctx context.Context, field
 	res := resTmp.(*model.Station)
 	fc.Result = res
 	return ec.marshalOStation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStation(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Corporation_home_station_id(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Corporation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HomeStationID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Corporation_member_count(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
@@ -8937,14 +9208,14 @@ func (ec *executionContext) _Planet_system(ctx context.Context, field graphql.Co
 		Object:     "Planet",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.System, nil
+		return ec.resolvers.Planet().System(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8958,7 +9229,7 @@ func (ec *executionContext) _Planet_system(ctx context.Context, field graphql.Co
 	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystem(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Planet_item_type(ctx context.Context, field graphql.CollectedField, obj *model.Planet) (ret graphql.Marshaler) {
+func (ec *executionContext) _Planet_system_id(ctx context.Context, field graphql.CollectedField, obj *model.Planet) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8976,7 +9247,39 @@ func (ec *executionContext) _Planet_item_type(ctx context.Context, field graphql
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ItemType, nil
+		return obj.SystemID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Planet_item_type(ctx context.Context, field graphql.CollectedField, obj *model.Planet) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Planet",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Planet().ItemType(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8988,6 +9291,38 @@ func (ec *executionContext) _Planet_item_type(ctx context.Context, field graphql
 	res := resTmp.(*model.ItemType)
 	fc.Result = res
 	return ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐItemType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Planet_type_id(ctx context.Context, field graphql.CollectedField, obj *model.Planet) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Planet",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TypeID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Position_x(ctx context.Context, field graphql.CollectedField, obj *model.Position) (ret graphql.Marshaler) {
@@ -9240,6 +9575,45 @@ func (ec *executionContext) _Query_planetById(ctx context.Context, field graphql
 	res := resTmp.(*model.Planet)
 	fc.Result = res
 	return ec.marshalOPlanet2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐPlanet(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_corporationById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_corporationById_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CorporationByID(rctx, args["id"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Corporation)
+	fc.Result = res
+	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCorporation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -12444,19 +12818,74 @@ func (ec *executionContext) _Corporation(ctx context.Context, sel ast.SelectionS
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Corporation")
 		case "alliance":
-			out.Values[i] = ec._Corporation_alliance(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Corporation_alliance(ctx, field, obj)
+				return res
+			})
+		case "alliance_id":
+			out.Values[i] = ec._Corporation_alliance_id(ctx, field, obj)
 		case "ceo":
-			out.Values[i] = ec._Corporation_ceo(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Corporation_ceo(ctx, field, obj)
+				return res
+			})
+		case "ceo_id":
+			out.Values[i] = ec._Corporation_ceo_id(ctx, field, obj)
 		case "creator":
-			out.Values[i] = ec._Corporation_creator(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Corporation_creator(ctx, field, obj)
+				return res
+			})
+		case "creator_id":
+			out.Values[i] = ec._Corporation_creator_id(ctx, field, obj)
 		case "date_founded":
 			out.Values[i] = ec._Corporation_date_founded(ctx, field, obj)
 		case "description":
 			out.Values[i] = ec._Corporation_description(ctx, field, obj)
 		case "faction":
-			out.Values[i] = ec._Corporation_faction(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Corporation_faction(ctx, field, obj)
+				return res
+			})
+		case "faction_id":
+			out.Values[i] = ec._Corporation_faction_id(ctx, field, obj)
 		case "home_station":
-			out.Values[i] = ec._Corporation_home_station(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Corporation_home_station(ctx, field, obj)
+				return res
+			})
+		case "home_station_id":
+			out.Values[i] = ec._Corporation_home_station_id(ctx, field, obj)
 		case "member_count":
 			out.Values[i] = ec._Corporation_member_count(ctx, field, obj)
 		case "name":
@@ -13202,9 +13631,31 @@ func (ec *executionContext) _Planet(ctx context.Context, sel ast.SelectionSet, o
 		case "position":
 			out.Values[i] = ec._Planet_position(ctx, field, obj)
 		case "system":
-			out.Values[i] = ec._Planet_system(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Planet_system(ctx, field, obj)
+				return res
+			})
+		case "system_id":
+			out.Values[i] = ec._Planet_system_id(ctx, field, obj)
 		case "item_type":
-			out.Values[i] = ec._Planet_item_type(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Planet_item_type(ctx, field, obj)
+				return res
+			})
+		case "type_id":
+			out.Values[i] = ec._Planet_type_id(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -13301,6 +13752,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_planetById(ctx, field)
+				return res
+			})
+		case "corporationById":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_corporationById(ctx, field)
 				return res
 			})
 		case "__type":

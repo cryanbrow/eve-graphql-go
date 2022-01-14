@@ -7,6 +7,7 @@ type Query{
 	systemById(id : Int) : System
 	stationById(id : Int) : Station
 	planetById(id : Int) : Planet
+	corporationById(id : Int) : Corporation
 }
 enum Ordertype {
 	buy
@@ -48,12 +49,17 @@ type Station{
 
 type Corporation{
 	alliance : Alliance
+	alliance_id : Int
 	ceo : Character
+	ceo_id : Int
 	creator : Character
+	creator_id : Int
 	date_founded : String
 	description : String
 	faction : Faction
+	faction_id : Int
 	home_station : Station
+	home_station_id : Int
 	member_count : Int
 	name : String
 	shares : Int
@@ -303,7 +309,9 @@ type Planet{
 	planet_id : Int
 	position : Position
 	system : System
+	system_id : Int
 	item_type : Item_type
+	type_id : Int
 }
 
 type System_planet{
