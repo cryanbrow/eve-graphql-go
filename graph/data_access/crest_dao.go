@@ -182,6 +182,80 @@ func CorporationByID(id *int) (*model.Corporation, error) {
 	return corporation, nil
 }
 
+func AllianceByID(id *int) (*model.Alliance, error) {
+	if id == nil {
+		return nil, errors.New("nil id")
+	}
+
+	inCache, result := CheckRedisCache("AllianceByID:" + strconv.Itoa(*id))
+
+	var alliance *model.Alliance = new(model.Alliance)
+	var responseBytes []byte = result
+	if !inCache {
+		crest_url, err := url.Parse(fmt.Sprintf("%s/alliances/%s/", baseUriESI, strconv.Itoa(*id)))
+		if err != nil {
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
+			return nil, err
+		}
+
+		queryParameters := crest_url.Query()
+		queryParameters.Add("datasource", "tranquility")
+		queryParameters.Add("language", "en")
+
+		crest_url.RawQuery = queryParameters.Encode()
+
+		responseBytes, _, err = makeRESTCall(crest_url.String())
+		if err != nil {
+			return alliance, err
+		}
+		AddToRedisCache("AllianceByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+	}
+
+	if err := json.Unmarshal(responseBytes, &alliance); err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
+		return alliance, err
+	}
+
+	return alliance, nil
+}
+
+func CharacterByID(id *int) (*model.Character, error) {
+	if id == nil {
+		return nil, errors.New("nil id")
+	}
+
+	inCache, result := CheckRedisCache("CharacterByID:" + strconv.Itoa(*id))
+
+	var character *model.Character = new(model.Character)
+	var responseBytes []byte = result
+	if !inCache {
+		crest_url, err := url.Parse(fmt.Sprintf("%s/characters/%s/", baseUriESI, strconv.Itoa(*id)))
+		if err != nil {
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
+			return nil, err
+		}
+
+		queryParameters := crest_url.Query()
+		queryParameters.Add("datasource", "tranquility")
+		queryParameters.Add("language", "en")
+
+		crest_url.RawQuery = queryParameters.Encode()
+
+		responseBytes, _, err = makeRESTCall(crest_url.String())
+		if err != nil {
+			return character, err
+		}
+		AddToRedisCache("CharacterByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+	}
+
+	if err := json.Unmarshal(responseBytes, &character); err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
+		return character, err
+	}
+
+	return character, nil
+}
+
 func PlanetByID(id *int) (*model.Planet, error) {
 	var planet *model.Planet = new(model.Planet)
 	if id == nil {
@@ -576,6 +650,71 @@ func CategoryByID(id *int) (*model.Category, error) {
 	}
 
 	return category, nil
+}
+
+func FactionByID(id *int) (*model.Faction, error) {
+	var faction *model.Faction = new(model.Faction)
+	if id == nil {
+		return nil, nil
+	}
+
+	inCache, result := CheckRedisCache("FactionByID:" + strconv.Itoa(*id))
+	if !inCache {
+		faction, err := factionByArray(id)
+		if err != nil {
+			return nil, err
+		} else {
+			return faction, nil
+		}
+	} else {
+		if err := json.Unmarshal(result, &faction); err != nil {
+			log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
+			return faction, err
+		} else {
+			return faction, nil
+		}
+	}
+}
+
+func factionByArray(id *int) (*model.Faction, error) {
+	var factions []*model.Faction = make([]*model.Faction, 0)
+	var returnFaction *model.Faction
+	var responseBytes []byte = make([]byte, 0)
+	crest_url, err := url.Parse(fmt.Sprintf("%s/universe/factions/", baseUriESI))
+	if err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
+		return nil, err
+	}
+
+	queryParameters := crest_url.Query()
+	queryParameters.Add("datasource", "tranquility")
+	queryParameters.Add("language", "en")
+
+	crest_url.RawQuery = queryParameters.Encode()
+
+	responseBytes, _, err = makeRESTCall(crest_url.String())
+	if err != nil {
+		return nil, err
+	}
+
+	if err := json.Unmarshal(responseBytes, &factions); err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
+		return nil, err
+	}
+	for _, faction := range factions {
+		log.Info(*faction.Name)
+		if *faction.FactionID == *id {
+			returnFaction = faction
+			log.Info("Found Faction ID")
+		}
+		factionBytes, err := json.Marshal(*faction)
+		if err == nil {
+			AddToRedisCache("FactionByID:"+strconv.Itoa(*faction.FactionID), factionBytes, 43200000)
+		} else {
+			log.Errorf("Failure Marshalling: %v", err)
+		}
+	}
+	return returnFaction, nil
 }
 
 func makeRESTCall(url string) ([]byte, http.Header, error) {

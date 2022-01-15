@@ -5,7 +5,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	dao "github.com/cryanbrow/eve-graphql-go/graph/data_access"
 	"github.com/cryanbrow/eve-graphql-go/graph/generated"
@@ -17,19 +16,19 @@ func (r *asteroid_beltResolver) System(ctx context.Context, obj *model.AsteroidB
 }
 
 func (r *corporationResolver) Alliance(ctx context.Context, obj *model.Corporation) (*model.Alliance, error) {
-	panic(fmt.Errorf("not implemented"))
+	return dao.AllianceByID(obj.AllianceID)
 }
 
 func (r *corporationResolver) Ceo(ctx context.Context, obj *model.Corporation) (*model.Character, error) {
-	panic(fmt.Errorf("not implemented"))
+	return dao.CharacterByID(obj.CeoID)
 }
 
 func (r *corporationResolver) Creator(ctx context.Context, obj *model.Corporation) (*model.Character, error) {
-	panic(fmt.Errorf("not implemented"))
+	return dao.CharacterByID(obj.CreatorID)
 }
 
 func (r *corporationResolver) Faction(ctx context.Context, obj *model.Corporation) (*model.Faction, error) {
-	panic(fmt.Errorf("not implemented"))
+	return dao.FactionByID(obj.FactionID)
 }
 
 func (r *corporationResolver) HomeStation(ctx context.Context, obj *model.Corporation) (*model.Station, error) {
@@ -62,6 +61,18 @@ func (r *dogma_effect_detailResolver) RangeAttribute(ctx context.Context, obj *m
 
 func (r *dogma_effect_detailResolver) TrackingSpeedAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
 	return dao.DogmaAttributeByID(obj.TrackingSpeedAttributeID)
+}
+
+func (r *factionResolver) Corporation(ctx context.Context, obj *model.Faction) (*model.Corporation, error) {
+	return dao.CorporationByID(obj.CorporationID)
+}
+
+func (r *factionResolver) MilitiaCorporation(ctx context.Context, obj *model.Faction) (*model.Corporation, error) {
+	return dao.CorporationByID(obj.MilitiaCorporationID)
+}
+
+func (r *factionResolver) SolarSystem(ctx context.Context, obj *model.Faction) (*model.System, error) {
+	return dao.SystemByID(obj.SolarSystemID)
 }
 
 func (r *groupResolver) Category(ctx context.Context, obj *model.Group) (*model.Category, error) {
@@ -140,6 +151,10 @@ func (r *queryResolver) CorporationByID(ctx context.Context, id *int) (*model.Co
 	return dao.CorporationByID(id)
 }
 
+func (r *queryResolver) FactionByID(ctx context.Context, id *int) (*model.Faction, error) {
+	return dao.FactionByID(id)
+}
+
 func (r *system_planetResolver) AsteroidBeltsProperties(ctx context.Context, obj *model.SystemPlanet) ([]*model.AsteroidBelt, error) {
 	return dao.AsteroidBeltDetails(obj.AsteroidBelts)
 }
@@ -171,6 +186,9 @@ func (r *Resolver) Dogma_effect_detail() generated.Dogma_effect_detailResolver {
 	return &dogma_effect_detailResolver{r}
 }
 
+// Faction returns generated.FactionResolver implementation.
+func (r *Resolver) Faction() generated.FactionResolver { return &factionResolver{r} }
+
 // Group returns generated.GroupResolver implementation.
 func (r *Resolver) Group() generated.GroupResolver { return &groupResolver{r} }
 
@@ -200,6 +218,7 @@ type corporationResolver struct{ *Resolver }
 type dogma_attributeResolver struct{ *Resolver }
 type dogma_effectResolver struct{ *Resolver }
 type dogma_effect_detailResolver struct{ *Resolver }
+type factionResolver struct{ *Resolver }
 type groupResolver struct{ *Resolver }
 type item_typeResolver struct{ *Resolver }
 type market_groupResolver struct{ *Resolver }

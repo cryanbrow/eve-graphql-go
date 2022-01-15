@@ -40,6 +40,7 @@ type ResolverRoot interface {
 	Dogma_attribute() Dogma_attributeResolver
 	Dogma_effect() Dogma_effectResolver
 	Dogma_effect_detail() Dogma_effect_detailResolver
+	Faction() FactionResolver
 	Group() GroupResolver
 	Item_type() Item_typeResolver
 	Market_group() Market_groupResolver
@@ -201,16 +202,19 @@ type ComplexityRoot struct {
 	}
 
 	Faction struct {
-		Corporation        func(childComplexity int) int
-		Description        func(childComplexity int) int
-		FactionID          func(childComplexity int) int
-		IsUnique           func(childComplexity int) int
-		MilitiaCorporation func(childComplexity int) int
-		Name               func(childComplexity int) int
-		SizeFactor         func(childComplexity int) int
-		SolarSystem        func(childComplexity int) int
-		StationCount       func(childComplexity int) int
-		StationSystemCount func(childComplexity int) int
+		Corporation          func(childComplexity int) int
+		CorporationID        func(childComplexity int) int
+		Description          func(childComplexity int) int
+		FactionID            func(childComplexity int) int
+		IsUnique             func(childComplexity int) int
+		MilitiaCorporation   func(childComplexity int) int
+		MilitiaCorporationID func(childComplexity int) int
+		Name                 func(childComplexity int) int
+		SizeFactor           func(childComplexity int) int
+		SolarSystem          func(childComplexity int) int
+		SolarSystemID        func(childComplexity int) int
+		StationCount         func(childComplexity int) int
+		StationSystemCount   func(childComplexity int) int
 	}
 
 	Graphic struct {
@@ -324,6 +328,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		CorporationByID func(childComplexity int, id *int) int
+		FactionByID     func(childComplexity int, id *int) int
 		OrdersForRegion func(childComplexity int, regionID *int, orderType *model.Ordertype, typeID *int) int
 		PlanetByID      func(childComplexity int, id *int) int
 		StationByID     func(childComplexity int, id *int) int
@@ -443,6 +448,13 @@ type Dogma_effect_detailResolver interface {
 
 	TrackingSpeedAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error)
 }
+type FactionResolver interface {
+	Corporation(ctx context.Context, obj *model.Faction) (*model.Corporation, error)
+
+	MilitiaCorporation(ctx context.Context, obj *model.Faction) (*model.Corporation, error)
+
+	SolarSystem(ctx context.Context, obj *model.Faction) (*model.System, error)
+}
 type GroupResolver interface {
 	Category(ctx context.Context, obj *model.Group) (*model.Category, error)
 
@@ -483,6 +495,7 @@ type QueryResolver interface {
 	StationByID(ctx context.Context, id *int) (*model.Station, error)
 	PlanetByID(ctx context.Context, id *int) (*model.Planet, error)
 	CorporationByID(ctx context.Context, id *int) (*model.Corporation, error)
+	FactionByID(ctx context.Context, id *int) (*model.Faction, error)
 }
 type System_planetResolver interface {
 	AsteroidBeltsProperties(ctx context.Context, obj *model.SystemPlanet) ([]*model.AsteroidBelt, error)
@@ -1283,6 +1296,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Faction.Corporation(childComplexity), true
 
+	case "Faction.corporation_id":
+		if e.complexity.Faction.CorporationID == nil {
+			break
+		}
+
+		return e.complexity.Faction.CorporationID(childComplexity), true
+
 	case "Faction.description":
 		if e.complexity.Faction.Description == nil {
 			break
@@ -1311,6 +1331,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Faction.MilitiaCorporation(childComplexity), true
 
+	case "Faction.militia_corporation_id":
+		if e.complexity.Faction.MilitiaCorporationID == nil {
+			break
+		}
+
+		return e.complexity.Faction.MilitiaCorporationID(childComplexity), true
+
 	case "Faction.name":
 		if e.complexity.Faction.Name == nil {
 			break
@@ -1331,6 +1358,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Faction.SolarSystem(childComplexity), true
+
+	case "Faction.solar_system_id":
+		if e.complexity.Faction.SolarSystemID == nil {
+			break
+		}
+
+		return e.complexity.Faction.SolarSystemID(childComplexity), true
 
 	case "Faction.station_count":
 		if e.complexity.Faction.StationCount == nil {
@@ -1911,6 +1945,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.CorporationByID(childComplexity, args["id"].(*int)), true
 
+	case "Query.factionByID":
+		if e.complexity.Query.FactionByID == nil {
+			break
+		}
+
+		args, err := ec.field_Query_factionByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.FactionByID(childComplexity, args["id"].(*int)), true
+
 	case "Query.ordersForRegion":
 		if e.complexity.Query.OrdersForRegion == nil {
 			break
@@ -2397,6 +2443,7 @@ var sources = []*ast.Source{
 	stationById(id : Int) : Station
 	planetById(id : Int) : Planet
 	corporationById(id : Int) : Corporation
+	factionByID(id : Int) : Faction
 }
 enum Ordertype {
 	buy
@@ -2647,13 +2694,16 @@ type Market_group{
 }
 
 type Faction{
+	corporation_id : Int
 	corporation : Corporation
 	description : String
 	faction_id : Int
 	is_unique : Boolean
+	militia_corporation_id : Int
 	militia_corporation : Corporation
 	name : String
 	size_factor : Float
+	solar_system_id : Int
 	solar_system : System
 	station_count : Int
 	station_system_count : Int
@@ -2920,6 +2970,21 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 }
 
 func (ec *executionContext) field_Query_corporationById_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_factionByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *int
@@ -6570,7 +6635,7 @@ func (ec *executionContext) _Dogma_effect_detail_tracking_speed_attribute(ctx co
 	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Faction_corporation(ctx context.Context, field graphql.CollectedField, obj *model.Faction) (ret graphql.Marshaler) {
+func (ec *executionContext) _Faction_corporation_id(ctx context.Context, field graphql.CollectedField, obj *model.Faction) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6588,7 +6653,39 @@ func (ec *executionContext) _Faction_corporation(ctx context.Context, field grap
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Corporation, nil
+		return obj.CorporationID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Faction_corporation(ctx context.Context, field graphql.CollectedField, obj *model.Faction) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Faction",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Faction().Corporation(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6698,7 +6795,7 @@ func (ec *executionContext) _Faction_is_unique(ctx context.Context, field graphq
 	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Faction_militia_corporation(ctx context.Context, field graphql.CollectedField, obj *model.Faction) (ret graphql.Marshaler) {
+func (ec *executionContext) _Faction_militia_corporation_id(ctx context.Context, field graphql.CollectedField, obj *model.Faction) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6716,7 +6813,39 @@ func (ec *executionContext) _Faction_militia_corporation(ctx context.Context, fi
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.MilitiaCorporation, nil
+		return obj.MilitiaCorporationID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Faction_militia_corporation(ctx context.Context, field graphql.CollectedField, obj *model.Faction) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Faction",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Faction().MilitiaCorporation(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6794,7 +6923,7 @@ func (ec *executionContext) _Faction_size_factor(ctx context.Context, field grap
 	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Faction_solar_system(ctx context.Context, field graphql.CollectedField, obj *model.Faction) (ret graphql.Marshaler) {
+func (ec *executionContext) _Faction_solar_system_id(ctx context.Context, field graphql.CollectedField, obj *model.Faction) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6812,7 +6941,39 @@ func (ec *executionContext) _Faction_solar_system(ctx context.Context, field gra
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.SolarSystem, nil
+		return obj.SolarSystemID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Faction_solar_system(ctx context.Context, field graphql.CollectedField, obj *model.Faction) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Faction",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Faction().SolarSystem(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9614,6 +9775,45 @@ func (ec *executionContext) _Query_corporationById(ctx context.Context, field gr
 	res := resTmp.(*model.Corporation)
 	fc.Result = res
 	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCorporation(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_factionByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_factionByID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().FactionByID(rctx, args["id"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Faction)
+	fc.Result = res
+	return ec.marshalOFaction2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐFaction(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -13157,22 +13357,55 @@ func (ec *executionContext) _Faction(ctx context.Context, sel ast.SelectionSet, 
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Faction")
+		case "corporation_id":
+			out.Values[i] = ec._Faction_corporation_id(ctx, field, obj)
 		case "corporation":
-			out.Values[i] = ec._Faction_corporation(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Faction_corporation(ctx, field, obj)
+				return res
+			})
 		case "description":
 			out.Values[i] = ec._Faction_description(ctx, field, obj)
 		case "faction_id":
 			out.Values[i] = ec._Faction_faction_id(ctx, field, obj)
 		case "is_unique":
 			out.Values[i] = ec._Faction_is_unique(ctx, field, obj)
+		case "militia_corporation_id":
+			out.Values[i] = ec._Faction_militia_corporation_id(ctx, field, obj)
 		case "militia_corporation":
-			out.Values[i] = ec._Faction_militia_corporation(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Faction_militia_corporation(ctx, field, obj)
+				return res
+			})
 		case "name":
 			out.Values[i] = ec._Faction_name(ctx, field, obj)
 		case "size_factor":
 			out.Values[i] = ec._Faction_size_factor(ctx, field, obj)
+		case "solar_system_id":
+			out.Values[i] = ec._Faction_solar_system_id(ctx, field, obj)
 		case "solar_system":
-			out.Values[i] = ec._Faction_solar_system(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Faction_solar_system(ctx, field, obj)
+				return res
+			})
 		case "station_count":
 			out.Values[i] = ec._Faction_station_count(ctx, field, obj)
 		case "station_system_count":
@@ -13763,6 +13996,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_corporationById(ctx, field)
+				return res
+			})
+		case "factionByID":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_factionByID(ctx, field)
 				return res
 			})
 		case "__type":

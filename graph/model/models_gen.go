@@ -155,16 +155,19 @@ type DogmaEffectDetail struct {
 }
 
 type Faction struct {
-	Corporation        *Corporation `json:"corporation"`
-	Description        *string      `json:"description"`
-	FactionID          *int         `json:"faction_id"`
-	IsUnique           *bool        `json:"is_unique"`
-	MilitiaCorporation *Corporation `json:"militia_corporation"`
-	Name               *string      `json:"name"`
-	SizeFactor         *float64     `json:"size_factor"`
-	SolarSystem        *System      `json:"solar_system"`
-	StationCount       *int         `json:"station_count"`
-	StationSystemCount *int         `json:"station_system_count"`
+	CorporationID        *int         `json:"corporation_id"`
+	Corporation          *Corporation `json:"corporation"`
+	Description          *string      `json:"description"`
+	FactionID            *int         `json:"faction_id"`
+	IsUnique             *bool        `json:"is_unique"`
+	MilitiaCorporationID *int         `json:"militia_corporation_id"`
+	MilitiaCorporation   *Corporation `json:"militia_corporation"`
+	Name                 *string      `json:"name"`
+	SizeFactor           *float64     `json:"size_factor"`
+	SolarSystemID        *int         `json:"solar_system_id"`
+	SolarSystem          *System      `json:"solar_system"`
+	StationCount         *int         `json:"station_count"`
+	StationSystemCount   *int         `json:"station_system_count"`
 }
 
 type Graphic struct {

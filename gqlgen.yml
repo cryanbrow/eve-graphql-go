@@ -127,6 +127,14 @@ models:
         resolver: true
       home_station:
         resolver: true
+  Faction:
+    fields:
+      corporation:
+        resolver: true
+      militia_corporation:
+        resolver: true
+      solar_system:
+        resolver : true
   ID:
     model:
       - github.com/99designs/gqlgen/graphql.ID

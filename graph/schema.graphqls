@@ -8,6 +8,7 @@ type Query{
 	stationById(id : Int) : Station
 	planetById(id : Int) : Planet
 	corporationById(id : Int) : Corporation
+	factionByID(id : Int) : Faction
 }
 enum Ordertype {
 	buy
@@ -258,13 +259,16 @@ type Market_group{
 }
 
 type Faction{
+	corporation_id : Int
 	corporation : Corporation
 	description : String
 	faction_id : Int
 	is_unique : Boolean
+	militia_corporation_id : Int
 	militia_corporation : Corporation
 	name : String
 	size_factor : Float
+	solar_system_id : Int
 	solar_system : System
 	station_count : Int
 	station_system_count : Int
