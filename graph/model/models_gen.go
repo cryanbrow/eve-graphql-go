@@ -9,19 +9,24 @@ import (
 )
 
 type Alliance struct {
-	CreatorCorporation  *Corporation `json:"creator_corporation"`
-	Creator             *Character   `json:"creator"`
-	DateFounded         *string      `json:"date_founded"`
-	ExecutorCorporation *Corporation `json:"executor_corporation"`
-	Faction             *Faction     `json:"faction"`
-	Name                *string      `json:"name"`
-	Ticker              *string      `json:"ticker"`
+	CreatorCorporationID  *int         `json:"creator_corporation_id"`
+	CreatorCorporation    *Corporation `json:"creator_corporation"`
+	CreatorID             *int         `json:"creator_id"`
+	Creator               *Character   `json:"creator"`
+	DateFounded           *string      `json:"date_founded"`
+	ExecutorCorporationID *int         `json:"executor_corporation_id"`
+	ExecutorCorporation   *Corporation `json:"executor_corporation"`
+	FactionID             *int         `json:"faction_id"`
+	Faction               *Faction     `json:"faction"`
+	Name                  *string      `json:"name"`
+	Ticker                *string      `json:"ticker"`
 }
 
 type Ancestry struct {
+	BloodlineID      *int       `json:"bloodline_id"`
 	Bloodline        *Bloodline `json:"bloodline"`
 	Description      *string    `json:"description"`
-	Icon             *Icon      `json:"icon"`
+	IconID           *int       `json:"icon_id"`
 	ID               *int       `json:"id"`
 	Name             *string    `json:"name"`
 	ShortDescription *string    `json:"short_description"`
@@ -35,17 +40,20 @@ type AsteroidBelt struct {
 }
 
 type Bloodline struct {
-	ID           *int         `json:"id"`
-	Charisma     *int         `json:"charisma"`
-	Corporation  *Corporation `json:"corporation"`
-	Description  *string      `json:"description"`
-	Intelligence *int         `json:"intelligence"`
-	Memory       *int         `json:"memory"`
-	Name         *string      `json:"name"`
-	Perception   *int         `json:"perception"`
-	Race         *Race        `json:"race"`
-	ShipType     *ItemType    `json:"ship_type"`
-	Willpower    *int         `json:"willpower"`
+	BloodlineID   *int         `json:"bloodline_id"`
+	Charisma      *int         `json:"charisma"`
+	CorporationID *int         `json:"corporation_id"`
+	Corporation   *Corporation `json:"corporation"`
+	Description   *string      `json:"description"`
+	Intelligence  *int         `json:"intelligence"`
+	Memory        *int         `json:"memory"`
+	Name          *string      `json:"name"`
+	Perception    *int         `json:"perception"`
+	RaceID        *int         `json:"race_id"`
+	Race          *Race        `json:"race"`
+	ShipTypeID    *int         `json:"ship_type_id"`
+	ShipType      *ItemType    `json:"ship_type"`
+	Willpower     *int         `json:"willpower"`
 }
 
 type Category struct {
@@ -56,15 +64,21 @@ type Category struct {
 }
 
 type Character struct {
+	AllianceID     *int         `json:"alliance_id"`
 	Alliance       *Alliance    `json:"alliance"`
+	AncestryID     *int         `json:"ancestry_id"`
 	Ancestry       *Ancestry    `json:"ancestry"`
 	Birthday       *string      `json:"birthday"`
+	BloodlineID    *int         `json:"bloodline_id"`
 	Bloodline      *Bloodline   `json:"bloodline"`
+	CorporationID  *int         `json:"corporation_id"`
 	Corporation    *Corporation `json:"corporation"`
 	Description    *string      `json:"description"`
+	FactionID      *int         `json:"faction_id"`
 	Faction        *Faction     `json:"faction"`
 	Gender         *Gender      `json:"gender"`
 	Name           *string      `json:"name"`
+	RaceID         *int         `json:"race_id"`
 	Race           *Race        `json:"race"`
 	SecurityStatus *float64     `json:"security_status"`
 	Title          *string      `json:"title"`
@@ -323,14 +337,18 @@ type Station struct {
 	MaxDockableShipVolume    *float64     `json:"max_dockable_ship_volume"`
 	Name                     *string      `json:"name"`
 	OfficeRentalCost         *float64     `json:"office_rental_cost"`
+	Owner                    *int         `json:"owner"`
 	OwningCorporation        *Corporation `json:"owning_corporation"`
 	Position                 *Position    `json:"position"`
+	RaceID                   *int         `json:"race_id"`
 	Race                     *Race        `json:"race"`
 	ReprocessingEfficiency   *float64     `json:"reprocessing_efficiency"`
 	ReprocessingStationsTake *float64     `json:"reprocessing_stations_take"`
 	Services                 []*Services  `json:"services"`
 	StationID                *int         `json:"station_id"`
+	SystemID                 *int         `json:"system_id"`
 	System                   *System      `json:"system"`
+	TypeID                   *int         `json:"type_id"`
 	StationType              *ItemType    `json:"station_type"`
 }
 

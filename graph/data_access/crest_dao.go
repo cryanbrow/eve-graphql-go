@@ -717,6 +717,204 @@ func factionByArray(id *int) (*model.Faction, error) {
 	return returnFaction, nil
 }
 
+func AncestryByID(id *int) (*model.Ancestry, error) {
+	var ancestry *model.Ancestry = new(model.Ancestry)
+	var err error
+	if id == nil {
+		return nil, nil
+	}
+
+	inCache, result := CheckRedisCache("AncestryByID:" + strconv.Itoa(*id))
+	if !inCache {
+		ancestry, err = ancestryByArray(id)
+		if err != nil {
+			return nil, err
+		} else {
+			return ancestry, nil
+		}
+	} else {
+		if err := json.Unmarshal(result, &ancestry); err != nil {
+			log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
+			return ancestry, err
+		} else {
+			return ancestry, nil
+		}
+	}
+}
+
+func ancestryByArray(id *int) (*model.Ancestry, error) {
+	var ancestries []*model.Ancestry = make([]*model.Ancestry, 0)
+	var returnAncestry *model.Ancestry
+	var responseBytes []byte = make([]byte, 0)
+	crest_url, err := url.Parse(fmt.Sprintf("%s/universe/ancestries/", baseUriESI))
+	if err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
+		return nil, err
+	}
+
+	queryParameters := crest_url.Query()
+	queryParameters.Add("datasource", "tranquility")
+	queryParameters.Add("language", "en")
+
+	crest_url.RawQuery = queryParameters.Encode()
+
+	responseBytes, _, err = makeRESTCall(crest_url.String())
+	if err != nil {
+		return nil, err
+	}
+
+	if err := json.Unmarshal(responseBytes, &ancestries); err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
+		return nil, err
+	}
+	for _, ancestry := range ancestries {
+		log.Info(*ancestry.Name)
+		if *ancestry.ID == *id {
+			returnAncestry = ancestry
+			log.Info("Found Ancestry ID")
+		}
+		ancestryBytes, err := json.Marshal(*ancestry)
+		if err == nil {
+			AddToRedisCache("AncestryByID:"+strconv.Itoa(*ancestry.ID), ancestryBytes, 43200000)
+		} else {
+			log.Errorf("Failure Marshalling: %v", err)
+		}
+	}
+	return returnAncestry, nil
+}
+
+func BloodlineByID(id *int) (*model.Bloodline, error) {
+	var bloodline *model.Bloodline = new(model.Bloodline)
+	var err error
+	if id == nil {
+		return nil, nil
+	}
+
+	inCache, result := CheckRedisCache("BloodlineByID:" + strconv.Itoa(*id))
+	if !inCache {
+		bloodline, err = bloodlineByArray(id)
+		if err != nil {
+			return nil, err
+		} else {
+			return bloodline, nil
+		}
+	} else {
+		if err := json.Unmarshal(result, &bloodline); err != nil {
+			log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
+			return bloodline, err
+		} else {
+			return bloodline, nil
+		}
+	}
+}
+
+func bloodlineByArray(id *int) (*model.Bloodline, error) {
+	var bloodlines []*model.Bloodline = make([]*model.Bloodline, 0)
+	var returnBloodline *model.Bloodline
+	var responseBytes []byte = make([]byte, 0)
+	crest_url, err := url.Parse(fmt.Sprintf("%s/universe/bloodlines/", baseUriESI))
+	if err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
+		return nil, err
+	}
+
+	queryParameters := crest_url.Query()
+	queryParameters.Add("datasource", "tranquility")
+	queryParameters.Add("language", "en")
+
+	crest_url.RawQuery = queryParameters.Encode()
+
+	responseBytes, _, err = makeRESTCall(crest_url.String())
+	if err != nil {
+		return nil, err
+	}
+
+	if err := json.Unmarshal(responseBytes, &bloodlines); err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
+		return nil, err
+	}
+	for _, bloodline := range bloodlines {
+		log.Info(*bloodline.Name)
+		if *bloodline.BloodlineID == *id {
+			returnBloodline = bloodline
+			log.Info("Found Bloodline ID")
+		}
+		bloodlineBytes, err := json.Marshal(*bloodline)
+		if err == nil {
+			AddToRedisCache("BloodlineByID:"+strconv.Itoa(*bloodline.BloodlineID), bloodlineBytes, 43200000)
+		} else {
+			log.Errorf("Failure Marshalling: %v", err)
+		}
+	}
+	return returnBloodline, nil
+}
+
+func RaceByID(id *int) (*model.Race, error) {
+	var race *model.Race = new(model.Race)
+	var err error
+	if id == nil {
+		return nil, nil
+	}
+
+	inCache, result := CheckRedisCache("RaceByID:" + strconv.Itoa(*id))
+	if !inCache {
+		race, err = raceByArray(id)
+		if err != nil {
+			return nil, err
+		} else {
+			return race, nil
+		}
+	} else {
+		if err := json.Unmarshal(result, &race); err != nil {
+			log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
+			return race, err
+		} else {
+			return race, nil
+		}
+	}
+}
+
+func raceByArray(id *int) (*model.Race, error) {
+	var races []*model.Race = make([]*model.Race, 0)
+	var returnRace *model.Race
+	var responseBytes []byte = make([]byte, 0)
+	crest_url, err := url.Parse(fmt.Sprintf("%s/universe/races/", baseUriESI))
+	if err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
+		return nil, err
+	}
+
+	queryParameters := crest_url.Query()
+	queryParameters.Add("datasource", "tranquility")
+	queryParameters.Add("language", "en")
+
+	crest_url.RawQuery = queryParameters.Encode()
+
+	responseBytes, _, err = makeRESTCall(crest_url.String())
+	if err != nil {
+		return nil, err
+	}
+
+	if err := json.Unmarshal(responseBytes, &races); err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
+		return nil, err
+	}
+	for _, race := range races {
+		log.Info(*race.Name)
+		if *race.RaceID == *id {
+			returnRace = race
+			log.Info("Found Race ID")
+		}
+		raceBytes, err := json.Marshal(*race)
+		if err == nil {
+			AddToRedisCache("RaceByID:"+strconv.Itoa(*race.RaceID), raceBytes, 43200000)
+		} else {
+			log.Errorf("Failure Marshalling: %v", err)
+		}
+	}
+	return returnRace, nil
+}
+
 func makeRESTCall(url string) ([]byte, http.Header, error) {
 	log.WithFields(log.Fields{"url": url}).Info("Making REST Call")
 	request, err := http.NewRequest(http.MethodGet, url, nil)

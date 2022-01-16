@@ -11,8 +11,52 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/model"
 )
 
+func (r *allianceResolver) CreatorCorporation(ctx context.Context, obj *model.Alliance) (*model.Corporation, error) {
+	return dao.CorporationByID(obj.CreatorCorporationID)
+}
+
+func (r *allianceResolver) Creator(ctx context.Context, obj *model.Alliance) (*model.Character, error) {
+	return dao.CharacterByID(obj.CreatorID)
+}
+
+func (r *allianceResolver) ExecutorCorporation(ctx context.Context, obj *model.Alliance) (*model.Corporation, error) {
+	return dao.CorporationByID(obj.ExecutorCorporationID)
+}
+
+func (r *allianceResolver) Faction(ctx context.Context, obj *model.Alliance) (*model.Faction, error) {
+	return dao.FactionByID(obj.FactionID)
+}
+
+func (r *ancestryResolver) Bloodline(ctx context.Context, obj *model.Ancestry) (*model.Bloodline, error) {
+	return dao.BloodlineByID(obj.BloodlineID)
+}
+
 func (r *asteroid_beltResolver) System(ctx context.Context, obj *model.AsteroidBelt) (*model.System, error) {
 	return dao.SystemByID(obj.SystemID)
+}
+
+func (r *characterResolver) Alliance(ctx context.Context, obj *model.Character) (*model.Alliance, error) {
+	return dao.AllianceByID(obj.AllianceID)
+}
+
+func (r *characterResolver) Ancestry(ctx context.Context, obj *model.Character) (*model.Ancestry, error) {
+	return dao.AncestryByID(obj.AncestryID)
+}
+
+func (r *characterResolver) Bloodline(ctx context.Context, obj *model.Character) (*model.Bloodline, error) {
+	return dao.BloodlineByID(obj.BloodlineID)
+}
+
+func (r *characterResolver) Corporation(ctx context.Context, obj *model.Character) (*model.Corporation, error) {
+	return dao.CorporationByID(obj.CorporationID)
+}
+
+func (r *characterResolver) Faction(ctx context.Context, obj *model.Character) (*model.Faction, error) {
+	return dao.FactionByID(obj.FactionID)
+}
+
+func (r *characterResolver) Race(ctx context.Context, obj *model.Character) (*model.Race, error) {
+	return dao.RaceByID(obj.RaceID)
 }
 
 func (r *corporationResolver) Alliance(ctx context.Context, obj *model.Corporation) (*model.Alliance, error) {
@@ -155,6 +199,22 @@ func (r *queryResolver) FactionByID(ctx context.Context, id *int) (*model.Factio
 	return dao.FactionByID(id)
 }
 
+func (r *stationResolver) OwningCorporation(ctx context.Context, obj *model.Station) (*model.Corporation, error) {
+	return dao.CorporationByID(obj.Owner)
+}
+
+func (r *stationResolver) Race(ctx context.Context, obj *model.Station) (*model.Race, error) {
+	return dao.RaceByID(obj.RaceID)
+}
+
+func (r *stationResolver) System(ctx context.Context, obj *model.Station) (*model.System, error) {
+	return dao.SystemByID(obj.SystemID)
+}
+
+func (r *stationResolver) StationType(ctx context.Context, obj *model.Station) (*model.ItemType, error) {
+	return dao.ItemTypeByID(obj.TypeID)
+}
+
 func (r *system_planetResolver) AsteroidBeltsProperties(ctx context.Context, obj *model.SystemPlanet) ([]*model.AsteroidBelt, error) {
 	return dao.AsteroidBeltDetails(obj.AsteroidBelts)
 }
@@ -167,8 +227,17 @@ func (r *system_planetResolver) PlanetProperties(ctx context.Context, obj *model
 	return dao.PlanetByID(obj.PlanetID)
 }
 
+// Alliance returns generated.AllianceResolver implementation.
+func (r *Resolver) Alliance() generated.AllianceResolver { return &allianceResolver{r} }
+
+// Ancestry returns generated.AncestryResolver implementation.
+func (r *Resolver) Ancestry() generated.AncestryResolver { return &ancestryResolver{r} }
+
 // Asteroid_belt returns generated.Asteroid_beltResolver implementation.
 func (r *Resolver) Asteroid_belt() generated.Asteroid_beltResolver { return &asteroid_beltResolver{r} }
+
+// Character returns generated.CharacterResolver implementation.
+func (r *Resolver) Character() generated.CharacterResolver { return &characterResolver{r} }
 
 // Corporation returns generated.CorporationResolver implementation.
 func (r *Resolver) Corporation() generated.CorporationResolver { return &corporationResolver{r} }
@@ -210,10 +279,16 @@ func (r *Resolver) Planet() generated.PlanetResolver { return &planetResolver{r}
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+// Station returns generated.StationResolver implementation.
+func (r *Resolver) Station() generated.StationResolver { return &stationResolver{r} }
+
 // System_planet returns generated.System_planetResolver implementation.
 func (r *Resolver) System_planet() generated.System_planetResolver { return &system_planetResolver{r} }
 
+type allianceResolver struct{ *Resolver }
+type ancestryResolver struct{ *Resolver }
 type asteroid_beltResolver struct{ *Resolver }
+type characterResolver struct{ *Resolver }
 type corporationResolver struct{ *Resolver }
 type dogma_attributeResolver struct{ *Resolver }
 type dogma_effectResolver struct{ *Resolver }
@@ -226,4 +301,5 @@ type modifierResolver struct{ *Resolver }
 type orderResolver struct{ *Resolver }
 type planetResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type stationResolver struct{ *Resolver }
 type system_planetResolver struct{ *Resolver }

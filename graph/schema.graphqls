@@ -9,6 +9,7 @@ type Query{
 	planetById(id : Int) : Planet
 	corporationById(id : Int) : Corporation
 	factionByID(id : Int) : Faction
+
 }
 enum Ordertype {
 	buy
@@ -37,14 +38,18 @@ type Station{
 	max_dockable_ship_volume : Float
 	name : String
 	office_rental_cost : Float
+	owner : Int
 	owning_corporation : Corporation
 	position : Position
-	race: Race
+	race_id : Int
+	race : Race
 	reprocessing_efficiency : Float
 	reprocessing_stations_take : Float
 	services : [Services]
 	station_id : Int
+	system_id : Int
 	system : System
+	type_id : Int
 	station_type : Item_type
 }
 
@@ -71,49 +76,63 @@ type Corporation{
 }
 
 type Alliance{
+	creator_corporation_id : Int
 	creator_corporation : Corporation
+	creator_id : Int
 	creator : Character
 	date_founded : String
+	executor_corporation_id : Int
 	executor_corporation : Corporation
+	faction_id : Int
 	faction : Faction
 	name : String
 	ticker : String
 }
 
 type Character{
+	alliance_id : Int
 	alliance : Alliance
+	ancestry_id : Int
 	ancestry : Ancestry
 	birthday : String
+	bloodline_id : Int
 	bloodline : Bloodline
+	corporation_id : Int
 	corporation : Corporation
 	description : String
+	faction_id : Int
 	faction : Faction
 	gender : Gender
 	name : String
+	race_id : Int
 	race : Race
 	security_status : Float
 	title : String
 }
 
 type Ancestry{
+	bloodline_id : Int
 	bloodline : Bloodline
 	description : String
-	icon : Icon
+	icon_id : Int
 	id : Int
 	name : String
 	short_description : String
 }
 
 type Bloodline{
-	id : Int
+	bloodline_id : Int
 	charisma : Int
+	corporation_id : Int
 	corporation : Corporation
 	description : String
 	intelligence : Int
 	memory : Int
 	name : String
 	perception : Int
+	race_id : Int
 	race : Race
+	ship_type_id : Int
 	ship_type : Item_type
 	willpower : Int
 }

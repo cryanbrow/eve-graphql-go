@@ -127,6 +127,20 @@ models:
         resolver: true
       home_station:
         resolver: true
+  Character:
+    fields:
+      alliance:
+        resolver: true
+      ancestry:
+        resolver: true
+      bloodline:
+        resolver: true
+      corporation:
+        resolver: true
+      faction:
+        resolver: true
+      race:
+        resolver: true
   Faction:
     fields:
       corporation:
@@ -135,6 +149,30 @@ models:
         resolver: true
       solar_system:
         resolver : true
+  Ancestry:
+    fields:
+      bloodline:
+        resolver: true
+  Station:
+    fields:
+      owning_corporation:
+        resolver: true
+      race:
+        resolver: true
+      system:
+        resolver: true
+      station_type:
+        resolver: true
+  Alliance:
+    fields:
+      creator_corporation:
+        resolver: true
+      creator:
+        resolver: true
+      executor_corporation:
+        resolver: true
+      faction:
+        resolver: true
   ID:
     model:
       - github.com/99designs/gqlgen/graphql.ID
