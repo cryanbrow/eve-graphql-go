@@ -294,15 +294,18 @@ type Faction{
 }
 
 type System{
+	constellation_id : Int
 	constellation : Constellation
 	name : String
 	planets : [System_planet]
 	position : Position
 	security_class : String
+	star_id : Int
 	star : Star
+	stargates : [Int]
 	stargate_list : [Stargate]
+	stations : [Int]
 	station_list : [Station]
-	station_ids: [Int]
 	system_id : Int
 }
 

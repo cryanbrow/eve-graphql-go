@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 
 	dao "github.com/cryanbrow/eve-graphql-go/graph/data_access"
 	"github.com/cryanbrow/eve-graphql-go/graph/generated"
@@ -215,6 +216,22 @@ func (r *stationResolver) StationType(ctx context.Context, obj *model.Station) (
 	return dao.ItemTypeByID(obj.TypeID)
 }
 
+func (r *systemResolver) Constellation(ctx context.Context, obj *model.System) (*model.Constellation, error) {
+	return dao.ConstellationByID(obj.ConstellationID)
+}
+
+func (r *systemResolver) Star(ctx context.Context, obj *model.System) (*model.Star, error) {
+	return dao.StarByID(obj.StarID)
+}
+
+func (r *systemResolver) Stargates(ctx context.Context, obj *model.System) ([]*int, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemResolver) StationList(ctx context.Context, obj *model.System) ([]*model.Station, error) {
+	return dao.StationByArray(obj.Stations)
+}
+
 func (r *system_planetResolver) AsteroidBeltsProperties(ctx context.Context, obj *model.SystemPlanet) ([]*model.AsteroidBelt, error) {
 	return dao.AsteroidBeltDetails(obj.AsteroidBelts)
 }
@@ -282,6 +299,9 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 // Station returns generated.StationResolver implementation.
 func (r *Resolver) Station() generated.StationResolver { return &stationResolver{r} }
 
+// System returns generated.SystemResolver implementation.
+func (r *Resolver) System() generated.SystemResolver { return &systemResolver{r} }
+
 // System_planet returns generated.System_planetResolver implementation.
 func (r *Resolver) System_planet() generated.System_planetResolver { return &system_planetResolver{r} }
 
@@ -302,4 +322,5 @@ type orderResolver struct{ *Resolver }
 type planetResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type stationResolver struct{ *Resolver }
+type systemResolver struct{ *Resolver }
 type system_planetResolver struct{ *Resolver }

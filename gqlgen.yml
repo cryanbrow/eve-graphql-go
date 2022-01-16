@@ -173,6 +173,16 @@ models:
         resolver: true
       faction:
         resolver: true
+  System:
+    fields:
+      constellation:
+        resolver: true
+      star:
+        resolver: true
+      stargates:
+        resolver: true
+      station_list:
+        resolver: true
   ID:
     model:
       - github.com/99designs/gqlgen/graphql.ID

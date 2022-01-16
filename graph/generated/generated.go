@@ -52,6 +52,7 @@ type ResolverRoot interface {
 	Planet() PlanetResolver
 	Query() QueryResolver
 	Station() StationResolver
+	System() SystemResolver
 	System_planet() System_planetResolver
 }
 
@@ -413,16 +414,19 @@ type ComplexityRoot struct {
 	}
 
 	System struct {
-		Constellation func(childComplexity int) int
-		Name          func(childComplexity int) int
-		Planets       func(childComplexity int) int
-		Position      func(childComplexity int) int
-		SecurityClass func(childComplexity int) int
-		Star          func(childComplexity int) int
-		StargateList  func(childComplexity int) int
-		StationIds    func(childComplexity int) int
-		StationList   func(childComplexity int) int
-		SystemID      func(childComplexity int) int
+		Constellation   func(childComplexity int) int
+		ConstellationID func(childComplexity int) int
+		Name            func(childComplexity int) int
+		Planets         func(childComplexity int) int
+		Position        func(childComplexity int) int
+		SecurityClass   func(childComplexity int) int
+		Star            func(childComplexity int) int
+		StarID          func(childComplexity int) int
+		StargateList    func(childComplexity int) int
+		Stargates       func(childComplexity int) int
+		StationList     func(childComplexity int) int
+		Stations        func(childComplexity int) int
+		SystemID        func(childComplexity int) int
 	}
 
 	SystemPlanet struct {
@@ -552,6 +556,14 @@ type StationResolver interface {
 	System(ctx context.Context, obj *model.Station) (*model.System, error)
 
 	StationType(ctx context.Context, obj *model.Station) (*model.ItemType, error)
+}
+type SystemResolver interface {
+	Constellation(ctx context.Context, obj *model.System) (*model.Constellation, error)
+
+	Star(ctx context.Context, obj *model.System) (*model.Star, error)
+	Stargates(ctx context.Context, obj *model.System) ([]*int, error)
+
+	StationList(ctx context.Context, obj *model.System) ([]*model.Station, error)
 }
 type System_planetResolver interface {
 	AsteroidBeltsProperties(ctx context.Context, obj *model.SystemPlanet) ([]*model.AsteroidBelt, error)
@@ -2453,6 +2465,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.System.Constellation(childComplexity), true
 
+	case "System.constellation_id":
+		if e.complexity.System.ConstellationID == nil {
+			break
+		}
+
+		return e.complexity.System.ConstellationID(childComplexity), true
+
 	case "System.name":
 		if e.complexity.System.Name == nil {
 			break
@@ -2488,6 +2507,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.System.Star(childComplexity), true
 
+	case "System.star_id":
+		if e.complexity.System.StarID == nil {
+			break
+		}
+
+		return e.complexity.System.StarID(childComplexity), true
+
 	case "System.stargate_list":
 		if e.complexity.System.StargateList == nil {
 			break
@@ -2495,12 +2521,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.System.StargateList(childComplexity), true
 
-	case "System.station_ids":
-		if e.complexity.System.StationIds == nil {
+	case "System.stargates":
+		if e.complexity.System.Stargates == nil {
 			break
 		}
 
-		return e.complexity.System.StationIds(childComplexity), true
+		return e.complexity.System.Stargates(childComplexity), true
 
 	case "System.station_list":
 		if e.complexity.System.StationList == nil {
@@ -2508,6 +2534,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.System.StationList(childComplexity), true
+
+	case "System.stations":
+		if e.complexity.System.Stations == nil {
+			break
+		}
+
+		return e.complexity.System.Stations(childComplexity), true
 
 	case "System.system_id":
 		if e.complexity.System.SystemID == nil {
@@ -2911,15 +2944,18 @@ type Faction{
 }
 
 type System{
+	constellation_id : Int
 	constellation : Constellation
 	name : String
 	planets : [System_planet]
 	position : Position
 	security_class : String
+	star_id : Int
 	star : Star
+	stargates : [Int]
 	stargate_list : [Stargate]
+	stations : [Int]
 	station_list : [Station]
-	station_ids: [Int]
 	system_id : Int
 }
 
@@ -11848,7 +11884,7 @@ func (ec *executionContext) _Station_station_type(ctx context.Context, field gra
 	return ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐItemType(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _System_constellation(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
+func (ec *executionContext) _System_constellation_id(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -11866,7 +11902,39 @@ func (ec *executionContext) _System_constellation(ctx context.Context, field gra
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Constellation, nil
+		return obj.ConstellationID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _System_constellation(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "System",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.System().Constellation(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12008,7 +12076,7 @@ func (ec *executionContext) _System_security_class(ctx context.Context, field gr
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _System_star(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
+func (ec *executionContext) _System_star_id(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -12026,7 +12094,39 @@ func (ec *executionContext) _System_star(ctx context.Context, field graphql.Coll
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Star, nil
+		return obj.StarID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _System_star(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "System",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.System().Star(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12038,6 +12138,38 @@ func (ec *executionContext) _System_star(ctx context.Context, field graphql.Coll
 	res := resTmp.(*model.Star)
 	fc.Result = res
 	return ec.marshalOStar2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStar(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _System_stargates(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "System",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.System().Stargates(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚕᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _System_stargate_list(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
@@ -12072,7 +12204,7 @@ func (ec *executionContext) _System_stargate_list(ctx context.Context, field gra
 	return ec.marshalOStargate2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStargate(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _System_station_list(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
+func (ec *executionContext) _System_stations(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -12090,39 +12222,7 @@ func (ec *executionContext) _System_station_list(ctx context.Context, field grap
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.StationList, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*model.Station)
-	fc.Result = res
-	return ec.marshalOStation2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStation(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _System_station_ids(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "System",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.StationIds, nil
+		return obj.Stations, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12134,6 +12234,38 @@ func (ec *executionContext) _System_station_ids(ctx context.Context, field graph
 	res := resTmp.([]*int)
 	fc.Result = res
 	return ec.marshalOInt2ᚕᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _System_station_list(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "System",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.System().StationList(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Station)
+	fc.Result = res
+	return ec.marshalOStation2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _System_system_id(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
@@ -15189,8 +15321,19 @@ func (ec *executionContext) _System(ctx context.Context, sel ast.SelectionSet, o
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("System")
+		case "constellation_id":
+			out.Values[i] = ec._System_constellation_id(ctx, field, obj)
 		case "constellation":
-			out.Values[i] = ec._System_constellation(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._System_constellation(ctx, field, obj)
+				return res
+			})
 		case "name":
 			out.Values[i] = ec._System_name(ctx, field, obj)
 		case "planets":
@@ -15199,14 +15342,45 @@ func (ec *executionContext) _System(ctx context.Context, sel ast.SelectionSet, o
 			out.Values[i] = ec._System_position(ctx, field, obj)
 		case "security_class":
 			out.Values[i] = ec._System_security_class(ctx, field, obj)
+		case "star_id":
+			out.Values[i] = ec._System_star_id(ctx, field, obj)
 		case "star":
-			out.Values[i] = ec._System_star(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._System_star(ctx, field, obj)
+				return res
+			})
+		case "stargates":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._System_stargates(ctx, field, obj)
+				return res
+			})
 		case "stargate_list":
 			out.Values[i] = ec._System_stargate_list(ctx, field, obj)
+		case "stations":
+			out.Values[i] = ec._System_stations(ctx, field, obj)
 		case "station_list":
-			out.Values[i] = ec._System_station_list(ctx, field, obj)
-		case "station_ids":
-			out.Values[i] = ec._System_station_ids(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._System_station_list(ctx, field, obj)
+				return res
+			})
 		case "system_id":
 			out.Values[i] = ec._System_system_id(ctx, field, obj)
 		default:

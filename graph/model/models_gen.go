@@ -353,16 +353,19 @@ type Station struct {
 }
 
 type System struct {
-	Constellation *Constellation  `json:"constellation"`
-	Name          *string         `json:"name"`
-	Planets       []*SystemPlanet `json:"planets"`
-	Position      *Position       `json:"position"`
-	SecurityClass *string         `json:"security_class"`
-	Star          *Star           `json:"star"`
-	StargateList  []*Stargate     `json:"stargate_list"`
-	StationList   []*Station      `json:"station_list"`
-	StationIds    []*int          `json:"station_ids"`
-	SystemID      *int            `json:"system_id"`
+	ConstellationID *int            `json:"constellation_id"`
+	Constellation   *Constellation  `json:"constellation"`
+	Name            *string         `json:"name"`
+	Planets         []*SystemPlanet `json:"planets"`
+	Position        *Position       `json:"position"`
+	SecurityClass   *string         `json:"security_class"`
+	StarID          *int            `json:"star_id"`
+	Star            *Star           `json:"star"`
+	Stargates       []*int          `json:"stargates"`
+	StargateList    []*Stargate     `json:"stargate_list"`
+	Stations        []*int          `json:"stations"`
+	StationList     []*Station      `json:"station_list"`
+	SystemID        *int            `json:"system_id"`
 }
 
 type SystemPlanet struct {

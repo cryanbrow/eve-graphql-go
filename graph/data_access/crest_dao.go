@@ -108,6 +108,19 @@ func SystemByID(id *int) (*model.System, error) {
 	return system, nil
 }
 
+func StationByArray(ids []*int) ([]*model.Station, error) {
+	stationDetails := make([]*model.Station, 0)
+	for _, element := range ids {
+		station, err := StationByID(element)
+		if err == nil {
+			stationDetails = append(stationDetails, station)
+		} else {
+			return nil, err
+		}
+	}
+	return stationDetails, nil
+}
+
 func StationByID(id *int) (*model.Station, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
@@ -506,6 +519,76 @@ func GroupByID(id *int) (*model.Group, error) {
 	}
 
 	return group, nil
+}
+
+func ConstellationByID(id *int) (*model.Constellation, error) {
+	var constellation *model.Constellation = new(model.Constellation)
+	if id == nil {
+		return nil, errors.New("nil id")
+	}
+	inCache, result := CheckRedisCache("ConstellationByID:" + strconv.Itoa(*id))
+	var responseBytes []byte = result
+	if !inCache {
+		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/constellations/%s/", baseUriESI, strconv.Itoa(*id)))
+		if err != nil {
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
+			return nil, err
+		}
+
+		queryParameters := crest_url.Query()
+		queryParameters.Add("datasource", "tranquility")
+		queryParameters.Add("language", "en")
+
+		crest_url.RawQuery = queryParameters.Encode()
+
+		responseBytes, _, err = makeRESTCall(crest_url.String())
+		if err != nil {
+			return constellation, err
+		}
+		AddToRedisCache("ConstellationByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+	}
+
+	if err := json.Unmarshal(responseBytes, &constellation); err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
+		return constellation, err
+	}
+
+	return constellation, nil
+}
+
+func StarByID(id *int) (*model.Star, error) {
+	var star *model.Star = new(model.Star)
+	if id == nil {
+		return nil, errors.New("nil id")
+	}
+	inCache, result := CheckRedisCache("StarByID:" + strconv.Itoa(*id))
+	var responseBytes []byte = result
+	if !inCache {
+		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/stars/%s/", baseUriESI, strconv.Itoa(*id)))
+		if err != nil {
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
+			return nil, err
+		}
+
+		queryParameters := crest_url.Query()
+		queryParameters.Add("datasource", "tranquility")
+		queryParameters.Add("language", "en")
+
+		crest_url.RawQuery = queryParameters.Encode()
+
+		responseBytes, _, err = makeRESTCall(crest_url.String())
+		if err != nil {
+			return star, err
+		}
+		AddToRedisCache("StarByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+	}
+
+	if err := json.Unmarshal(responseBytes, &star); err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
+		return star, err
+	}
+
+	return star, nil
 }
 
 func GraphicByID(id *int) (*model.Graphic, error) {
