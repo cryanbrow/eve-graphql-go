@@ -179,9 +179,29 @@ models:
         resolver: true
       star:
         resolver: true
-      stargates:
+      stargate_list:
         resolver: true
       station_list:
+        resolver: true
+  Stargate:
+    fields:
+      item_type:
+        resolver: true
+  StargateDestination:
+    fields:
+      stargate:
+        resolver: true
+      system:
+        resolver: true
+  Region:
+    fields:
+      constellation_list:
+        resolver: true
+  Constellation:
+    fields:
+      region:
+        resolver: true
+      solar_systems:
         resolver: true
   ID:
     model:

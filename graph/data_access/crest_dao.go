@@ -306,6 +306,56 @@ func PlanetByID(id *int) (*model.Planet, error) {
 	return planet, nil
 }
 
+func StargateDetails(stargates []*int) ([]*model.Stargate, error) {
+	stargateDetails := make([]*model.Stargate, 0)
+	for _, element := range stargates {
+		stargate, err := StargateByID(element)
+		if err == nil {
+			stargateDetails = append(stargateDetails, stargate)
+		} else {
+			return nil, err
+		}
+	}
+	return stargateDetails, nil
+}
+
+func StargateByID(id *int) (*model.Stargate, error) {
+	var stargate *model.Stargate = new(model.Stargate)
+	if id == nil {
+		return nil, errors.New("nil id")
+	}
+
+	inCache, result := CheckRedisCache("StargateByID:" + strconv.Itoa(*id))
+	var responseBytes []byte = result
+	if !inCache {
+
+		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/stargates/%s/", baseUriESI, strconv.Itoa(*id)))
+		if err != nil {
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
+			return nil, err
+		}
+
+		queryParameters := crest_url.Query()
+		queryParameters.Add("datasource", "tranquility")
+		queryParameters.Add("language", "en")
+
+		crest_url.RawQuery = queryParameters.Encode()
+
+		responseBytes, _, err = makeRESTCall(crest_url.String())
+		if err != nil {
+			return stargate, err
+		}
+		AddToRedisCache("StargateByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+	}
+
+	if err := json.Unmarshal(responseBytes, &stargate); err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
+		return stargate, err
+	}
+
+	return stargate, nil
+}
+
 func MoonDetails(moons []*int) ([]*model.Moon, error) {
 	moonDetails := make([]*model.Moon, 0)
 	for _, element := range moons {

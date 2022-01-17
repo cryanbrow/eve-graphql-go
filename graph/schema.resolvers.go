@@ -60,6 +60,14 @@ func (r *characterResolver) Race(ctx context.Context, obj *model.Character) (*mo
 	return dao.RaceByID(obj.RaceID)
 }
 
+func (r *constellationResolver) Region(ctx context.Context, obj *model.Constellation) (*model.Region, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *constellationResolver) SolarSystems(ctx context.Context, obj *model.Constellation) ([]*model.System, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *corporationResolver) Alliance(ctx context.Context, obj *model.Corporation) (*model.Alliance, error) {
 	return dao.AllianceByID(obj.AllianceID)
 }
@@ -200,6 +208,22 @@ func (r *queryResolver) FactionByID(ctx context.Context, id *int) (*model.Factio
 	return dao.FactionByID(id)
 }
 
+func (r *regionResolver) ConstellationList(ctx context.Context, obj *model.Region) ([]*model.Constellation, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *stargateResolver) ItemType(ctx context.Context, obj *model.Stargate) (*model.ItemType, error) {
+	return dao.ItemTypeByID(obj.TypeID)
+}
+
+func (r *stargateDestinationResolver) Stargate(ctx context.Context, obj *model.StargateDestination) (*model.Stargate, error) {
+	return dao.StargateByID(obj.StargateID)
+}
+
+func (r *stargateDestinationResolver) System(ctx context.Context, obj *model.StargateDestination) (*model.System, error) {
+	return dao.SystemByID(obj.SystemID)
+}
+
 func (r *stationResolver) OwningCorporation(ctx context.Context, obj *model.Station) (*model.Corporation, error) {
 	return dao.CorporationByID(obj.Owner)
 }
@@ -224,8 +248,8 @@ func (r *systemResolver) Star(ctx context.Context, obj *model.System) (*model.St
 	return dao.StarByID(obj.StarID)
 }
 
-func (r *systemResolver) Stargates(ctx context.Context, obj *model.System) ([]*int, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *systemResolver) StargateList(ctx context.Context, obj *model.System) ([]*model.Stargate, error) {
+	return dao.StargateDetails(obj.Stargates)
 }
 
 func (r *systemResolver) StationList(ctx context.Context, obj *model.System) ([]*model.Station, error) {
@@ -255,6 +279,9 @@ func (r *Resolver) Asteroid_belt() generated.Asteroid_beltResolver { return &ast
 
 // Character returns generated.CharacterResolver implementation.
 func (r *Resolver) Character() generated.CharacterResolver { return &characterResolver{r} }
+
+// Constellation returns generated.ConstellationResolver implementation.
+func (r *Resolver) Constellation() generated.ConstellationResolver { return &constellationResolver{r} }
 
 // Corporation returns generated.CorporationResolver implementation.
 func (r *Resolver) Corporation() generated.CorporationResolver { return &corporationResolver{r} }
@@ -296,6 +323,17 @@ func (r *Resolver) Planet() generated.PlanetResolver { return &planetResolver{r}
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+// Region returns generated.RegionResolver implementation.
+func (r *Resolver) Region() generated.RegionResolver { return &regionResolver{r} }
+
+// Stargate returns generated.StargateResolver implementation.
+func (r *Resolver) Stargate() generated.StargateResolver { return &stargateResolver{r} }
+
+// StargateDestination returns generated.StargateDestinationResolver implementation.
+func (r *Resolver) StargateDestination() generated.StargateDestinationResolver {
+	return &stargateDestinationResolver{r}
+}
+
 // Station returns generated.StationResolver implementation.
 func (r *Resolver) Station() generated.StationResolver { return &stationResolver{r} }
 
@@ -309,6 +347,7 @@ type allianceResolver struct{ *Resolver }
 type ancestryResolver struct{ *Resolver }
 type asteroid_beltResolver struct{ *Resolver }
 type characterResolver struct{ *Resolver }
+type constellationResolver struct{ *Resolver }
 type corporationResolver struct{ *Resolver }
 type dogma_attributeResolver struct{ *Resolver }
 type dogma_effectResolver struct{ *Resolver }
@@ -321,6 +360,9 @@ type modifierResolver struct{ *Resolver }
 type orderResolver struct{ *Resolver }
 type planetResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type regionResolver struct{ *Resolver }
+type stargateResolver struct{ *Resolver }
+type stargateDestinationResolver struct{ *Resolver }
 type stationResolver struct{ *Resolver }
 type systemResolver struct{ *Resolver }
 type system_planetResolver struct{ *Resolver }

@@ -313,7 +313,9 @@ type Constellation{
 	constellation_id : Int
 	name : String
 	position : Position
+	region_id : Int
 	region : Region
+	systems : [Int]
 	solar_systems : [System]
 }
 
@@ -324,6 +326,7 @@ type Position{
 }
 
 type Region{
+	constellations : [Int]
 	constellation_list : [Constellation]
 	description : String
 	name : String
@@ -473,11 +476,14 @@ type Stargate{
 	position : Position
 	stargate_id : Int
 	system : System
+	type_id : Int
 	item_type : Item_type
 }
 
 type StargateDestination{
+	stargate_id : Int
 	stargate : Stargate
+	system_id : Int
 	system : System
 }
 

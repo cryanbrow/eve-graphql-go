@@ -88,7 +88,9 @@ type Constellation struct {
 	ConstellationID *int      `json:"constellation_id"`
 	Name            *string   `json:"name"`
 	Position        *Position `json:"position"`
+	RegionID        *int      `json:"region_id"`
 	Region          *Region   `json:"region"`
+	Systems         []*int    `json:"systems"`
 	SolarSystems    []*System `json:"solar_systems"`
 }
 
@@ -301,6 +303,7 @@ type Race struct {
 }
 
 type Region struct {
+	Constellations    []*int           `json:"constellations"`
 	ConstellationList []*Constellation `json:"constellation_list"`
 	Description       *string          `json:"description"`
 	Name              *string          `json:"name"`
@@ -325,12 +328,15 @@ type Stargate struct {
 	Position    *Position            `json:"position"`
 	StargateID  *int                 `json:"stargate_id"`
 	System      *System              `json:"system"`
+	TypeID      *int                 `json:"type_id"`
 	ItemType    *ItemType            `json:"item_type"`
 }
 
 type StargateDestination struct {
-	Stargate *Stargate `json:"stargate"`
-	System   *System   `json:"system"`
+	StargateID *int      `json:"stargate_id"`
+	Stargate   *Stargate `json:"stargate"`
+	SystemID   *int      `json:"system_id"`
+	System     *System   `json:"system"`
 }
 
 type Station struct {
