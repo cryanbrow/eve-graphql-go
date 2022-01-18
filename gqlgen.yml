@@ -203,6 +203,16 @@ models:
         resolver: true
       solar_systems:
         resolver: true
+  Moon:
+    fields:
+      system:
+        resolver: true
+  Star:
+    fields:
+      solar_system:
+        resolver: true
+      item_type:
+        resolver: true
   ID:
     model:
       - github.com/99designs/gqlgen/graphql.ID

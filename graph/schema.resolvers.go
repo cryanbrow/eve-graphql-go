@@ -5,7 +5,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	dao "github.com/cryanbrow/eve-graphql-go/graph/data_access"
 	"github.com/cryanbrow/eve-graphql-go/graph/generated"
@@ -61,11 +60,11 @@ func (r *characterResolver) Race(ctx context.Context, obj *model.Character) (*mo
 }
 
 func (r *constellationResolver) Region(ctx context.Context, obj *model.Constellation) (*model.Region, error) {
-	panic(fmt.Errorf("not implemented"))
+	return dao.RegionByID(obj.RegionID)
 }
 
 func (r *constellationResolver) SolarSystems(ctx context.Context, obj *model.Constellation) ([]*model.System, error) {
-	panic(fmt.Errorf("not implemented"))
+	return dao.SystemByArray(obj.Systems)
 }
 
 func (r *corporationResolver) Alliance(ctx context.Context, obj *model.Corporation) (*model.Alliance, error) {
@@ -164,6 +163,10 @@ func (r *modifierResolver) ModifyingAttribute(ctx context.Context, obj *model.Mo
 	return dao.DogmaAttributeByID(obj.ModifyingAttributeID)
 }
 
+func (r *moonResolver) System(ctx context.Context, obj *model.Moon) (*model.System, error) {
+	return dao.SystemByID(obj.SystemID)
+}
+
 func (r *orderResolver) Location(ctx context.Context, obj *model.Order) (*model.Station, error) {
 	return dao.StationByID(obj.LocationID)
 }
@@ -209,7 +212,15 @@ func (r *queryResolver) FactionByID(ctx context.Context, id *int) (*model.Factio
 }
 
 func (r *regionResolver) ConstellationList(ctx context.Context, obj *model.Region) ([]*model.Constellation, error) {
-	panic(fmt.Errorf("not implemented"))
+	return dao.ConstellationsByIDs(obj.Constellations)
+}
+
+func (r *starResolver) SolarSystem(ctx context.Context, obj *model.Star) (*model.System, error) {
+	return dao.SystemByID(obj.SolarSystemID)
+}
+
+func (r *starResolver) ItemType(ctx context.Context, obj *model.Star) (*model.ItemType, error) {
+	return dao.ItemTypeByID(obj.TypeID)
 }
 
 func (r *stargateResolver) ItemType(ctx context.Context, obj *model.Stargate) (*model.ItemType, error) {
@@ -314,6 +325,9 @@ func (r *Resolver) Market_group() generated.Market_groupResolver { return &marke
 // Modifier returns generated.ModifierResolver implementation.
 func (r *Resolver) Modifier() generated.ModifierResolver { return &modifierResolver{r} }
 
+// Moon returns generated.MoonResolver implementation.
+func (r *Resolver) Moon() generated.MoonResolver { return &moonResolver{r} }
+
 // Order returns generated.OrderResolver implementation.
 func (r *Resolver) Order() generated.OrderResolver { return &orderResolver{r} }
 
@@ -325,6 +339,9 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
 // Region returns generated.RegionResolver implementation.
 func (r *Resolver) Region() generated.RegionResolver { return &regionResolver{r} }
+
+// Star returns generated.StarResolver implementation.
+func (r *Resolver) Star() generated.StarResolver { return &starResolver{r} }
 
 // Stargate returns generated.StargateResolver implementation.
 func (r *Resolver) Stargate() generated.StargateResolver { return &stargateResolver{r} }
@@ -357,10 +374,12 @@ type groupResolver struct{ *Resolver }
 type item_typeResolver struct{ *Resolver }
 type market_groupResolver struct{ *Resolver }
 type modifierResolver struct{ *Resolver }
+type moonResolver struct{ *Resolver }
 type orderResolver struct{ *Resolver }
 type planetResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type regionResolver struct{ *Resolver }
+type starResolver struct{ *Resolver }
 type stargateResolver struct{ *Resolver }
 type stargateDestinationResolver struct{ *Resolver }
 type stationResolver struct{ *Resolver }

@@ -72,6 +72,19 @@ func ordersForRegionREST(url string) ([]*model.Order, int, error) {
 	return orders, pages, nil
 }
 
+func SystemByArray(ids []*int) ([]*model.System, error) {
+	systemDetails := make([]*model.System, 0)
+	for _, element := range ids {
+		system, err := SystemByID(element)
+		if err == nil {
+			systemDetails = append(systemDetails, system)
+		} else {
+			return nil, err
+		}
+	}
+	return systemDetails, nil
+}
+
 func SystemByID(id *int) (*model.System, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
@@ -571,6 +584,19 @@ func GroupByID(id *int) (*model.Group, error) {
 	return group, nil
 }
 
+func ConstellationsByIDs(ids []*int) ([]*model.Constellation, error) {
+	constellationDetails := make([]*model.Constellation, 0)
+	for _, element := range ids {
+		constellation, err := ConstellationByID(element)
+		if err == nil {
+			constellationDetails = append(constellationDetails, constellation)
+		} else {
+			return nil, err
+		}
+	}
+	return constellationDetails, nil
+}
+
 func ConstellationByID(id *int) (*model.Constellation, error) {
 	var constellation *model.Constellation = new(model.Constellation)
 	if id == nil {
@@ -783,6 +809,42 @@ func CategoryByID(id *int) (*model.Category, error) {
 	}
 
 	return category, nil
+}
+
+func RegionByID(id *int) (*model.Region, error) {
+	var region *model.Region = new(model.Region)
+	if id == nil {
+		return nil, nil
+	}
+
+	inCache, result := CheckRedisCache("RegionByID:" + strconv.Itoa(*id))
+	var responseBytes []byte = result
+	if !inCache {
+		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/regions/%s/", baseUriESI, strconv.Itoa(*id)))
+		if err != nil {
+			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
+			return nil, err
+		}
+
+		queryParameters := crest_url.Query()
+		queryParameters.Add("datasource", "tranquility")
+		queryParameters.Add("language", "en")
+
+		crest_url.RawQuery = queryParameters.Encode()
+
+		responseBytes, _, err = makeRESTCall(crest_url.String())
+		if err != nil {
+			return region, err
+		}
+		AddToRedisCache("RegionByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+	}
+
+	if err := json.Unmarshal(responseBytes, &region); err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
+		return region, err
+	}
+
+	return region, nil
 }
 
 func FactionByID(id *int) (*model.Faction, error) {

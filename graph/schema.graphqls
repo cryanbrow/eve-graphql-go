@@ -1,13 +1,19 @@
 type Query{
+	"""queries for orders in a required region id for active market orders."""
 	ordersForRegion(
 		region_id : Int
 		order_type : Ordertype = all
 		type_id : Int
 	) : [Order]
+	"""Get information on a solar system."""
 	systemById(id : Int) : System
+	"""Get information on a station"""
 	stationById(id : Int) : Station
+	"""Get information on a planet"""
 	planetById(id : Int) : Planet
+	"""Public information about a corporation"""
 	corporationById(id : Int) : Corporation
+	"""Get information on a faction"""
 	factionByID(id : Int) : Faction
 
 }
@@ -16,6 +22,7 @@ enum Ordertype {
 	sell
 	all
 }
+"""Object representing a market order"""
 type Order {
 	duration : Int
 	is_buy_order : Boolean
@@ -363,6 +370,7 @@ type Moon{
 	moon_id : Int
 	name : String
 	position : Position
+	system_id : Int
 	system : System
 }
 
@@ -371,10 +379,12 @@ type Star{
 	luminosity : Float
 	name : String
 	radius : Int
+	solar_system_id : Int
 	solar_system : System
 	spectral_class : Spectral_class
 	star_id : Int
 	temperature : Int
+	type_id : Int
 	item_type : Item_type
 }
 

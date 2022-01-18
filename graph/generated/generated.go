@@ -49,10 +49,12 @@ type ResolverRoot interface {
 	Item_type() Item_typeResolver
 	Market_group() Market_groupResolver
 	Modifier() ModifierResolver
+	Moon() MoonResolver
 	Order() OrderResolver
 	Planet() PlanetResolver
 	Query() QueryResolver
 	Region() RegionResolver
+	Star() StarResolver
 	Stargate() StargateResolver
 	StargateDestination() StargateDestinationResolver
 	Station() StationResolver
@@ -315,6 +317,7 @@ type ComplexityRoot struct {
 		Name     func(childComplexity int) int
 		Position func(childComplexity int) int
 		System   func(childComplexity int) int
+		SystemID func(childComplexity int) int
 	}
 
 	Order struct {
@@ -382,9 +385,11 @@ type ComplexityRoot struct {
 		Name          func(childComplexity int) int
 		Radius        func(childComplexity int) int
 		SolarSystem   func(childComplexity int) int
+		SolarSystemID func(childComplexity int) int
 		SpectralClass func(childComplexity int) int
 		StarID        func(childComplexity int) int
 		Temperature   func(childComplexity int) int
+		TypeID        func(childComplexity int) int
 	}
 
 	Stargate struct {
@@ -543,6 +548,9 @@ type ModifierResolver interface {
 
 	ModifyingAttribute(ctx context.Context, obj *model.Modifier) (*model.DogmaAttributeDetail, error)
 }
+type MoonResolver interface {
+	System(ctx context.Context, obj *model.Moon) (*model.System, error)
+}
 type OrderResolver interface {
 	Location(ctx context.Context, obj *model.Order) (*model.Station, error)
 
@@ -565,6 +573,11 @@ type QueryResolver interface {
 }
 type RegionResolver interface {
 	ConstellationList(ctx context.Context, obj *model.Region) ([]*model.Constellation, error)
+}
+type StarResolver interface {
+	SolarSystem(ctx context.Context, obj *model.Star) (*model.System, error)
+
+	ItemType(ctx context.Context, obj *model.Star) (*model.ItemType, error)
 }
 type StargateResolver interface {
 	ItemType(ctx context.Context, obj *model.Stargate) (*model.ItemType, error)
@@ -1965,6 +1978,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Moon.System(childComplexity), true
 
+	case "Moon.system_id":
+		if e.complexity.Moon.SystemID == nil {
+			break
+		}
+
+		return e.complexity.Moon.SystemID(childComplexity), true
+
 	case "Order.duration":
 		if e.complexity.Order.Duration == nil {
 			break
@@ -2317,6 +2337,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Star.SolarSystem(childComplexity), true
 
+	case "Star.solar_system_id":
+		if e.complexity.Star.SolarSystemID == nil {
+			break
+		}
+
+		return e.complexity.Star.SolarSystemID(childComplexity), true
+
 	case "Star.spectral_class":
 		if e.complexity.Star.SpectralClass == nil {
 			break
@@ -2337,6 +2364,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Star.Temperature(childComplexity), true
+
+	case "Star.type_id":
+		if e.complexity.Star.TypeID == nil {
+			break
+		}
+
+		return e.complexity.Star.TypeID(childComplexity), true
 
 	case "Stargate.destination":
 		if e.complexity.Stargate.Destination == nil {
@@ -2718,15 +2752,21 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 
 var sources = []*ast.Source{
 	{Name: "graph/schema.graphqls", Input: `type Query{
+	"""queries for orders in a required region id for active market orders."""
 	ordersForRegion(
 		region_id : Int
 		order_type : Ordertype = all
 		type_id : Int
 	) : [Order]
+	"""Get information on a solar system."""
 	systemById(id : Int) : System
+	"""Get information on a station"""
 	stationById(id : Int) : Station
+	"""Get information on a planet"""
 	planetById(id : Int) : Planet
+	"""Public information about a corporation"""
 	corporationById(id : Int) : Corporation
+	"""Get information on a faction"""
 	factionByID(id : Int) : Faction
 
 }
@@ -2735,6 +2775,7 @@ enum Ordertype {
 	sell
 	all
 }
+"""Object representing a market order"""
 type Order {
 	duration : Int
 	is_buy_order : Boolean
@@ -3082,6 +3123,7 @@ type Moon{
 	moon_id : Int
 	name : String
 	position : Position
+	system_id : Int
 	system : System
 }
 
@@ -3090,10 +3132,12 @@ type Star{
 	luminosity : Float
 	name : String
 	radius : Int
+	solar_system_id : Int
 	solar_system : System
 	spectral_class : Spectral_class
 	star_id : Int
 	temperature : Int
+	type_id : Int
 	item_type : Item_type
 }
 
@@ -9571,7 +9615,7 @@ func (ec *executionContext) _Moon_position(ctx context.Context, field graphql.Co
 	return ec.marshalOPosition2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐPosition(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Moon_system(ctx context.Context, field graphql.CollectedField, obj *model.Moon) (ret graphql.Marshaler) {
+func (ec *executionContext) _Moon_system_id(ctx context.Context, field graphql.CollectedField, obj *model.Moon) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9589,7 +9633,39 @@ func (ec *executionContext) _Moon_system(ctx context.Context, field graphql.Coll
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.System, nil
+		return obj.SystemID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Moon_system(ctx context.Context, field graphql.CollectedField, obj *model.Moon) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Moon",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Moon().System(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11127,7 +11203,7 @@ func (ec *executionContext) _Star_radius(ctx context.Context, field graphql.Coll
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Star_solar_system(ctx context.Context, field graphql.CollectedField, obj *model.Star) (ret graphql.Marshaler) {
+func (ec *executionContext) _Star_solar_system_id(ctx context.Context, field graphql.CollectedField, obj *model.Star) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -11145,7 +11221,39 @@ func (ec *executionContext) _Star_solar_system(ctx context.Context, field graphq
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.SolarSystem, nil
+		return obj.SolarSystemID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Star_solar_system(ctx context.Context, field graphql.CollectedField, obj *model.Star) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Star",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Star().SolarSystem(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11255,7 +11363,7 @@ func (ec *executionContext) _Star_temperature(ctx context.Context, field graphql
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Star_item_type(ctx context.Context, field graphql.CollectedField, obj *model.Star) (ret graphql.Marshaler) {
+func (ec *executionContext) _Star_type_id(ctx context.Context, field graphql.CollectedField, obj *model.Star) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -11273,7 +11381,39 @@ func (ec *executionContext) _Star_item_type(ctx context.Context, field graphql.C
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ItemType, nil
+		return obj.TypeID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Star_item_type(ctx context.Context, field graphql.CollectedField, obj *model.Star) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Star",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Star().ItemType(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -15076,8 +15216,19 @@ func (ec *executionContext) _Moon(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = ec._Moon_name(ctx, field, obj)
 		case "position":
 			out.Values[i] = ec._Moon_position(ctx, field, obj)
+		case "system_id":
+			out.Values[i] = ec._Moon_system_id(ctx, field, obj)
 		case "system":
-			out.Values[i] = ec._Moon_system(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Moon_system(ctx, field, obj)
+				return res
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -15439,16 +15590,38 @@ func (ec *executionContext) _Star(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = ec._Star_name(ctx, field, obj)
 		case "radius":
 			out.Values[i] = ec._Star_radius(ctx, field, obj)
+		case "solar_system_id":
+			out.Values[i] = ec._Star_solar_system_id(ctx, field, obj)
 		case "solar_system":
-			out.Values[i] = ec._Star_solar_system(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Star_solar_system(ctx, field, obj)
+				return res
+			})
 		case "spectral_class":
 			out.Values[i] = ec._Star_spectral_class(ctx, field, obj)
 		case "star_id":
 			out.Values[i] = ec._Star_star_id(ctx, field, obj)
 		case "temperature":
 			out.Values[i] = ec._Star_temperature(ctx, field, obj)
+		case "type_id":
+			out.Values[i] = ec._Star_type_id(ctx, field, obj)
 		case "item_type":
-			out.Values[i] = ec._Star_item_type(ctx, field, obj)
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Star_item_type(ctx, field, obj)
+				return res
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

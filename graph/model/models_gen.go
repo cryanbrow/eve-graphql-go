@@ -258,9 +258,11 @@ type Moon struct {
 	MoonID   *int      `json:"moon_id"`
 	Name     *string   `json:"name"`
 	Position *Position `json:"position"`
+	SystemID *int      `json:"system_id"`
 	System   *System   `json:"system"`
 }
 
+// Object representing a market order
 type Order struct {
 	Duration     *int      `json:"duration"`
 	IsBuyOrder   *bool     `json:"is_buy_order"`
@@ -315,10 +317,12 @@ type Star struct {
 	Luminosity    *float64       `json:"luminosity"`
 	Name          *string        `json:"name"`
 	Radius        *int           `json:"radius"`
+	SolarSystemID *int           `json:"solar_system_id"`
 	SolarSystem   *System        `json:"solar_system"`
 	SpectralClass *SpectralClass `json:"spectral_class"`
 	StarID        *int           `json:"star_id"`
 	Temperature   *int           `json:"temperature"`
+	TypeID        *int           `json:"type_id"`
 	ItemType      *ItemType      `json:"item_type"`
 }
 
