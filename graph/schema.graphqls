@@ -24,20 +24,35 @@ enum Ordertype {
 }
 """Object representing a market order"""
 type Order {
+	"""Duration of Order"""
 	duration : Int
+	"""Is it a buy order"""
 	is_buy_order : Boolean
+	"""Date the order was issued"""
 	issued : String
+	"""Station where the order is placed at"""
 	location : Station
+	"""id of station where order is placed at"""
 	location_id: Int
+	"""Minimum volume of purchase"""
 	min_volume : Int
+	"""unique id of the order"""
 	order_id : Int!
+	"""Price in isk of the order"""
 	price : Float
+	"""Range of Order Station/System/Region"""
 	range : Range
+	"""System where the order is placed"""
 	system : System
+	"""id of the system where the order is placed"""
 	system_id: Int
+	"""EVE item type that is in the order"""
 	item_type : Item_type
+	"""id of item type"""
 	type_id : Int
+	"""number of items remaining in the order"""
 	volume_remain : Int
+	"""number of items initally placed in the order"""
 	volume_total : Int
 }
 

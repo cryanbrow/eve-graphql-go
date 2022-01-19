@@ -264,21 +264,36 @@ type Moon struct {
 
 // Object representing a market order
 type Order struct {
-	Duration     *int      `json:"duration"`
-	IsBuyOrder   *bool     `json:"is_buy_order"`
-	Issued       *string   `json:"issued"`
-	Location     *Station  `json:"location"`
-	LocationID   *int      `json:"location_id"`
-	MinVolume    *int      `json:"min_volume"`
-	OrderID      int       `json:"order_id"`
-	Price        *float64  `json:"price"`
-	Range        *Range    `json:"range"`
-	System       *System   `json:"system"`
-	SystemID     *int      `json:"system_id"`
-	ItemType     *ItemType `json:"item_type"`
-	TypeID       *int      `json:"type_id"`
-	VolumeRemain *int      `json:"volume_remain"`
-	VolumeTotal  *int      `json:"volume_total"`
+	// Duration of Order
+	Duration *int `json:"duration"`
+	// Is it a buy order
+	IsBuyOrder *bool `json:"is_buy_order"`
+	// Date the order was issued
+	Issued *string `json:"issued"`
+	// Station where the order is placed at
+	Location *Station `json:"location"`
+	// id of station where order is placed at
+	LocationID *int `json:"location_id"`
+	// Minimum volume of purchase
+	MinVolume *int `json:"min_volume"`
+	// unique id of the order
+	OrderID int `json:"order_id"`
+	// Price in isk of the order
+	Price *float64 `json:"price"`
+	// Range of Order Station/System/Region
+	Range *Range `json:"range"`
+	// System where the order is placed
+	System *System `json:"system"`
+	// id of the system where the order is placed
+	SystemID *int `json:"system_id"`
+	// EVE item type that is in the order
+	ItemType *ItemType `json:"item_type"`
+	// id of item type
+	TypeID *int `json:"type_id"`
+	// number of items remaining in the order
+	VolumeRemain *int `json:"volume_remain"`
+	// number of items initally placed in the order
+	VolumeTotal *int `json:"volume_total"`
 }
 
 type Planet struct {
