@@ -15,13 +15,35 @@ type Query{
 	corporationById(id : Int) : Corporation
 	"""Get information on a faction"""
 	factionByID(id : Int) : Faction
-
+	"""Get history of orders for region and type id"""
+	orderHistory(
+		region_id : Int
+		type_id : Int
+	) : [OrderHistory]
 }
+
 enum Ordertype {
 	buy
 	sell
 	all
 }
+
+"""History of sales of a type by region"""
+type OrderHistory {
+	"""average sales price"""
+	average: Float
+	"""date of the history"""
+	date: String
+	"""highest price paid for item"""
+	highest: Float
+	"""lowest price paid for item"""
+	lowest: Float
+	"""number of orders for item type in specified region"""
+	order_count: Int
+	"""number of units of item in region that were moved"""
+	volume: Int
+}
+
 """Object representing a market order"""
 type Order {
 	"""Duration of Order"""
@@ -56,22 +78,39 @@ type Order {
 	volume_total : Int
 }
 
+"""Space station in EVE and information about it."""
 type Station{
+	"""Max ships that can be docked in the station"""
 	max_dockable_ship_volume : Float
+	"""Name of the station"""
 	name : String
+	"""Cost of renting an office for your Corporation"""
 	office_rental_cost : Float
+	"""Owner ID of Corporation of station"""
 	owner : Int
+	"""Complex object representing the Corporation that owns the station"""
 	owning_corporation : Corporation
+	"""x,y,z position of station in space"""
 	position : Position
+	"""id of the race that the station is built by"""
 	race_id : Int
+	"""race that the station is built by"""
 	race : Race
+	"""Floating point percentage of efficiency of the reprocessing facilities of this station"""
 	reprocessing_efficiency : Float
+	"""floating point percent of take of materials in reprocessing"""
 	reprocessing_stations_take : Float
+	"""Services provided by the station"""
 	services : [Services]
+	"""Unique ID of the station"""
 	station_id : Int
+	"""Unique ID of the system that the station resides in"""
 	system_id : Int
+	"""System the station resides in"""
 	system : System
+	"""type id of station"""
 	type_id : Int
+	"""item type of the station"""
 	station_type : Item_type
 }
 

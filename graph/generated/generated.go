@@ -338,6 +338,15 @@ type ComplexityRoot struct {
 		VolumeTotal  func(childComplexity int) int
 	}
 
+	OrderHistory struct {
+		Average    func(childComplexity int) int
+		Date       func(childComplexity int) int
+		Highest    func(childComplexity int) int
+		Lowest     func(childComplexity int) int
+		OrderCount func(childComplexity int) int
+		Volume     func(childComplexity int) int
+	}
+
 	Planet struct {
 		ItemType func(childComplexity int) int
 		Name     func(childComplexity int) int
@@ -357,6 +366,7 @@ type ComplexityRoot struct {
 	Query struct {
 		CorporationByID func(childComplexity int, id *int) int
 		FactionByID     func(childComplexity int, id *int) int
+		OrderHistory    func(childComplexity int, regionID *int, typeID *int) int
 		OrdersForRegion func(childComplexity int, regionID *int, orderType *model.Ordertype, typeID *int) int
 		PlanetByID      func(childComplexity int, id *int) int
 		StationByID     func(childComplexity int, id *int) int
@@ -570,6 +580,7 @@ type QueryResolver interface {
 	PlanetByID(ctx context.Context, id *int) (*model.Planet, error)
 	CorporationByID(ctx context.Context, id *int) (*model.Corporation, error)
 	FactionByID(ctx context.Context, id *int) (*model.Faction, error)
+	OrderHistory(ctx context.Context, regionID *int, typeID *int) ([]*model.OrderHistory, error)
 }
 type RegionResolver interface {
 	ConstellationList(ctx context.Context, obj *model.Region) ([]*model.Constellation, error)
@@ -2090,6 +2101,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Order.VolumeTotal(childComplexity), true
 
+	case "OrderHistory.average":
+		if e.complexity.OrderHistory.Average == nil {
+			break
+		}
+
+		return e.complexity.OrderHistory.Average(childComplexity), true
+
+	case "OrderHistory.date":
+		if e.complexity.OrderHistory.Date == nil {
+			break
+		}
+
+		return e.complexity.OrderHistory.Date(childComplexity), true
+
+	case "OrderHistory.highest":
+		if e.complexity.OrderHistory.Highest == nil {
+			break
+		}
+
+		return e.complexity.OrderHistory.Highest(childComplexity), true
+
+	case "OrderHistory.lowest":
+		if e.complexity.OrderHistory.Lowest == nil {
+			break
+		}
+
+		return e.complexity.OrderHistory.Lowest(childComplexity), true
+
+	case "OrderHistory.order_count":
+		if e.complexity.OrderHistory.OrderCount == nil {
+			break
+		}
+
+		return e.complexity.OrderHistory.OrderCount(childComplexity), true
+
+	case "OrderHistory.volume":
+		if e.complexity.OrderHistory.Volume == nil {
+			break
+		}
+
+		return e.complexity.OrderHistory.Volume(childComplexity), true
+
 	case "Planet.item_type":
 		if e.complexity.Planet.ItemType == nil {
 			break
@@ -2183,6 +2236,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.FactionByID(childComplexity, args["id"].(*int)), true
+
+	case "Query.orderHistory":
+		if e.complexity.Query.OrderHistory == nil {
+			break
+		}
+
+		args, err := ec.field_Query_orderHistory_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.OrderHistory(childComplexity, args["region_id"].(*int), args["type_id"].(*int)), true
 
 	case "Query.ordersForRegion":
 		if e.complexity.Query.OrdersForRegion == nil {
@@ -2768,13 +2833,35 @@ var sources = []*ast.Source{
 	corporationById(id : Int) : Corporation
 	"""Get information on a faction"""
 	factionByID(id : Int) : Faction
-
+	"""Get history of orders for region and type id"""
+	orderHistory(
+		region_id : Int
+		type_id : Int
+	) : [OrderHistory]
 }
+
 enum Ordertype {
 	buy
 	sell
 	all
 }
+
+"""History of sales of a type by region"""
+type OrderHistory {
+	"""average sales price"""
+	average: Float
+	"""date of the history"""
+	date: String
+	"""highest price paid for item"""
+	highest: Float
+	"""lowest price paid for item"""
+	lowest: Float
+	"""number of orders for item type in specified region"""
+	order_count: Int
+	"""number of units of item in region that were moved"""
+	volume: Int
+}
+
 """Object representing a market order"""
 type Order {
 	"""Duration of Order"""
@@ -2809,22 +2896,39 @@ type Order {
 	volume_total : Int
 }
 
+"""Space station in EVE and information about it."""
 type Station{
+	"""Max ships that can be docked in the station"""
 	max_dockable_ship_volume : Float
+	"""Name of the station"""
 	name : String
+	"""Cost of renting an office for your Corporation"""
 	office_rental_cost : Float
+	"""Owner ID of Corporation of station"""
 	owner : Int
+	"""Complex object representing the Corporation that owns the station"""
 	owning_corporation : Corporation
+	"""x,y,z position of station in space"""
 	position : Position
+	"""id of the race that the station is built by"""
 	race_id : Int
+	"""race that the station is built by"""
 	race : Race
+	"""Floating point percentage of efficiency of the reprocessing facilities of this station"""
 	reprocessing_efficiency : Float
+	"""floating point percent of take of materials in reprocessing"""
 	reprocessing_stations_take : Float
+	"""Services provided by the station"""
 	services : [Services]
+	"""Unique ID of the station"""
 	station_id : Int
+	"""Unique ID of the system that the station resides in"""
 	system_id : Int
+	"""System the station resides in"""
 	system : System
+	"""type id of station"""
 	type_id : Int
+	"""item type of the station"""
 	station_type : Item_type
 }
 
@@ -3367,6 +3471,30 @@ func (ec *executionContext) field_Query_factionByID_args(ctx context.Context, ra
 		}
 	}
 	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_orderHistory_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *int
+	if tmp, ok := rawArgs["region_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("region_id"))
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["region_id"] = arg0
+	var arg1 *int
+	if tmp, ok := rawArgs["type_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("type_id"))
+		arg1, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["type_id"] = arg1
 	return args, nil
 }
 
@@ -10177,6 +10305,198 @@ func (ec *executionContext) _Order_volume_total(ctx context.Context, field graph
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _OrderHistory_average(ctx context.Context, field graphql.CollectedField, obj *model.OrderHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "OrderHistory",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Average, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*float64)
+	fc.Result = res
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _OrderHistory_date(ctx context.Context, field graphql.CollectedField, obj *model.OrderHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "OrderHistory",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Date, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _OrderHistory_highest(ctx context.Context, field graphql.CollectedField, obj *model.OrderHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "OrderHistory",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Highest, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*float64)
+	fc.Result = res
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _OrderHistory_lowest(ctx context.Context, field graphql.CollectedField, obj *model.OrderHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "OrderHistory",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Lowest, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*float64)
+	fc.Result = res
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _OrderHistory_order_count(ctx context.Context, field graphql.CollectedField, obj *model.OrderHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "OrderHistory",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.OrderCount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _OrderHistory_volume(ctx context.Context, field graphql.CollectedField, obj *model.OrderHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "OrderHistory",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Volume, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Planet_name(ctx context.Context, field graphql.CollectedField, obj *model.Planet) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -10729,6 +11049,45 @@ func (ec *executionContext) _Query_factionByID(ctx context.Context, field graphq
 	res := resTmp.(*model.Faction)
 	fc.Result = res
 	return ec.marshalOFaction2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐFaction(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_orderHistory(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_orderHistory_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().OrderHistory(rctx, args["region_id"].(*int), args["type_id"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.OrderHistory)
+	fc.Result = res
+	return ec.marshalOOrderHistory2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrderHistory(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -15337,6 +15696,40 @@ func (ec *executionContext) _Order(ctx context.Context, sel ast.SelectionSet, ob
 	return out
 }
 
+var orderHistoryImplementors = []string{"OrderHistory"}
+
+func (ec *executionContext) _OrderHistory(ctx context.Context, sel ast.SelectionSet, obj *model.OrderHistory) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, orderHistoryImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("OrderHistory")
+		case "average":
+			out.Values[i] = ec._OrderHistory_average(ctx, field, obj)
+		case "date":
+			out.Values[i] = ec._OrderHistory_date(ctx, field, obj)
+		case "highest":
+			out.Values[i] = ec._OrderHistory_highest(ctx, field, obj)
+		case "lowest":
+			out.Values[i] = ec._OrderHistory_lowest(ctx, field, obj)
+		case "order_count":
+			out.Values[i] = ec._OrderHistory_order_count(ctx, field, obj)
+		case "volume":
+			out.Values[i] = ec._OrderHistory_volume(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var planetImplementors = []string{"Planet"}
 
 func (ec *executionContext) _Planet(ctx context.Context, sel ast.SelectionSet, obj *model.Planet) graphql.Marshaler {
@@ -15498,6 +15891,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_factionByID(ctx, field)
+				return res
+			})
+		case "orderHistory":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_orderHistory(ctx, field)
 				return res
 			})
 		case "__type":
@@ -17172,6 +17576,54 @@ func (ec *executionContext) marshalOOrder2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgr
 		return graphql.Null
 	}
 	return ec._Order(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOOrderHistory2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrderHistory(ctx context.Context, sel ast.SelectionSet, v []*model.OrderHistory) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOOrderHistory2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrderHistory(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
+func (ec *executionContext) marshalOOrderHistory2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrderHistory(ctx context.Context, sel ast.SelectionSet, v *model.OrderHistory) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._OrderHistory(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOOrdertype2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrdertype(ctx context.Context, v interface{}) (*model.Ordertype, error) {

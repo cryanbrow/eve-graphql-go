@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"strconv"
 
+	cache "github.com/cryanbrow/eve-graphql-go/graph/caching"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/cryanbrow/eve-graphql-go/graph/model"
@@ -54,6 +55,43 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int) ([]
 	return orders, nil
 }
 
+func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
+	if regionID == nil || typeID == nil {
+		return nil, errors.New("nil id")
+	}
+
+	inCache, result := cache.CheckRedisCache("OrderHistoryByID:" + strconv.Itoa(*regionID) + ":" + strconv.Itoa(*typeID))
+	var responseBytes []byte = result
+	var orderHistory []*model.OrderHistory = make([]*model.OrderHistory, 0)
+	if !inCache {
+		crest_url, err := url.Parse(fmt.Sprintf("%s/markets/%s/history", baseUriESI, strconv.Itoa(*regionID)))
+		if err != nil {
+			log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID}).Errorf("Failed to Parse URL with Error : %v", err)
+			return nil, err
+		}
+
+		queryParameters := crest_url.Query()
+		queryParameters.Add("type_id", strconv.Itoa(*typeID))
+		queryParameters.Add("datasource", "tranquility")
+		queryParameters.Add("language", "en")
+
+		crest_url.RawQuery = queryParameters.Encode()
+
+		responseBytes, _, err = makeRESTCall(crest_url.String())
+		if err != nil {
+			return orderHistory, err
+		}
+		cache.AddToRedisCache("OrderHistoryByID:"+strconv.Itoa(*regionID)+":"+strconv.Itoa(*typeID), responseBytes, 43200000)
+	}
+
+	if err := json.Unmarshal(responseBytes, &orderHistory); err != nil {
+		log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID}).Errorf("Could not unmarshal reponseBytes. %v", err)
+		return orderHistory, err
+	}
+
+	return orderHistory, nil
+}
+
 func ordersForRegionREST(url string) ([]*model.Order, int, error) {
 	var orders []*model.Order
 	var pages = 0
@@ -90,7 +128,7 @@ func SystemByID(id *int) (*model.System, error) {
 		return nil, errors.New("nil id")
 	}
 
-	inCache, result := CheckMemoryCache("SystemByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("SystemByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	var system *model.System = new(model.System)
 	if !inCache {
@@ -110,7 +148,7 @@ func SystemByID(id *int) (*model.System, error) {
 		if err != nil {
 			return system, err
 		}
-		AddToMemoryCache("SystemByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("SystemByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &system); err != nil {
@@ -139,7 +177,7 @@ func StationByID(id *int) (*model.Station, error) {
 		return nil, errors.New("nil id")
 	}
 
-	inCache, result := CheckMemoryCache("StationByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("StationByID:" + strconv.Itoa(*id))
 
 	var station *model.Station = new(model.Station)
 	var responseBytes []byte = result
@@ -160,7 +198,7 @@ func StationByID(id *int) (*model.Station, error) {
 		if err != nil {
 			return station, err
 		}
-		AddToMemoryCache("StationByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("StationByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &station); err != nil {
@@ -176,7 +214,7 @@ func CorporationByID(id *int) (*model.Corporation, error) {
 		return nil, errors.New("nil id")
 	}
 
-	inCache, result := CheckMemoryCache("CorporationByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("CorporationByID:" + strconv.Itoa(*id))
 
 	var corporation *model.Corporation = new(model.Corporation)
 	var responseBytes []byte = result
@@ -197,7 +235,7 @@ func CorporationByID(id *int) (*model.Corporation, error) {
 		if err != nil {
 			return corporation, err
 		}
-		AddToMemoryCache("CorporationByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("CorporationByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &corporation); err != nil {
@@ -213,7 +251,7 @@ func AllianceByID(id *int) (*model.Alliance, error) {
 		return nil, errors.New("nil id")
 	}
 
-	inCache, result := CheckMemoryCache("AllianceByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("AllianceByID:" + strconv.Itoa(*id))
 
 	var alliance *model.Alliance = new(model.Alliance)
 	var responseBytes []byte = result
@@ -234,7 +272,7 @@ func AllianceByID(id *int) (*model.Alliance, error) {
 		if err != nil {
 			return alliance, err
 		}
-		AddToMemoryCache("AllianceByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("AllianceByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &alliance); err != nil {
@@ -250,7 +288,7 @@ func CharacterByID(id *int) (*model.Character, error) {
 		return nil, errors.New("nil id")
 	}
 
-	inCache, result := CheckMemoryCache("CharacterByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("CharacterByID:" + strconv.Itoa(*id))
 
 	var character *model.Character = new(model.Character)
 	var responseBytes []byte = result
@@ -271,7 +309,7 @@ func CharacterByID(id *int) (*model.Character, error) {
 		if err != nil {
 			return character, err
 		}
-		AddToMemoryCache("CharacterByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("CharacterByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &character); err != nil {
@@ -288,7 +326,7 @@ func PlanetByID(id *int) (*model.Planet, error) {
 		return nil, errors.New("nil id")
 	}
 
-	inCache, result := CheckMemoryCache("PlanetByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("PlanetByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 
@@ -308,7 +346,7 @@ func PlanetByID(id *int) (*model.Planet, error) {
 		if err != nil {
 			return planet, err
 		}
-		AddToMemoryCache("PlanetByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("PlanetByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &planet); err != nil {
@@ -338,7 +376,7 @@ func StargateByID(id *int) (*model.Stargate, error) {
 		return nil, errors.New("nil id")
 	}
 
-	inCache, result := CheckMemoryCache("StargateByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("StargateByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 
@@ -358,7 +396,7 @@ func StargateByID(id *int) (*model.Stargate, error) {
 		if err != nil {
 			return stargate, err
 		}
-		AddToMemoryCache("StargateByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("StargateByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &stargate); err != nil {
@@ -388,7 +426,7 @@ func MoonByID(id *int) (*model.Moon, error) {
 		return nil, errors.New("nil id")
 	}
 
-	inCache, result := CheckMemoryCache("MoonByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("MoonByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/moons/%s/", baseUriESI, strconv.Itoa(*id)))
@@ -407,7 +445,7 @@ func MoonByID(id *int) (*model.Moon, error) {
 		if err != nil {
 			return moon, err
 		}
-		AddToMemoryCache("MoonByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("MoonByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &moon); err != nil {
@@ -436,7 +474,7 @@ func ItemTypeByID(id *int) (*model.ItemType, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	inCache, result := CheckMemoryCache("ItemTypeByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("ItemTypeByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/types/%s/", baseUriESI, strconv.Itoa(*id)))
@@ -455,7 +493,7 @@ func ItemTypeByID(id *int) (*model.ItemType, error) {
 		if err != nil {
 			return itemType, err
 		}
-		AddToMemoryCache("ItemTypeByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("ItemTypeByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &itemType); err != nil {
@@ -484,7 +522,7 @@ func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	inCache, result := CheckMemoryCache("AsteroidBeltByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("AsteroidBeltByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/asteroid_belts/%s/", baseUriESI, strconv.Itoa(*id)))
@@ -503,7 +541,7 @@ func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
 		if err != nil {
 			return asteroidBelt, err
 		}
-		AddToMemoryCache("AsteroidBeltByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("AsteroidBeltByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &asteroidBelt); err != nil {
@@ -519,7 +557,7 @@ func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	inCache, result := CheckMemoryCache("MarketGroupByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("MarketGroupByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/markets/groups/%s/", baseUriESI, strconv.Itoa(*id)))
@@ -538,7 +576,7 @@ func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 		if err != nil {
 			return marketGroup, err
 		}
-		AddToMemoryCache("MarketGroupByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("MarketGroupByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &marketGroup); err != nil {
@@ -554,7 +592,7 @@ func GroupByID(id *int) (*model.Group, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	inCache, result := CheckMemoryCache("GroupByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("GroupByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/groups/%s/", baseUriESI, strconv.Itoa(*id)))
@@ -573,7 +611,7 @@ func GroupByID(id *int) (*model.Group, error) {
 		if err != nil {
 			return group, err
 		}
-		AddToMemoryCache("GroupByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("GroupByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &group); err != nil {
@@ -602,7 +640,7 @@ func ConstellationByID(id *int) (*model.Constellation, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	inCache, result := CheckMemoryCache("ConstellationByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("ConstellationByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/constellations/%s/", baseUriESI, strconv.Itoa(*id)))
@@ -621,7 +659,7 @@ func ConstellationByID(id *int) (*model.Constellation, error) {
 		if err != nil {
 			return constellation, err
 		}
-		AddToMemoryCache("ConstellationByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("ConstellationByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &constellation); err != nil {
@@ -637,7 +675,7 @@ func StarByID(id *int) (*model.Star, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	inCache, result := CheckMemoryCache("StarByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("StarByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/stars/%s/", baseUriESI, strconv.Itoa(*id)))
@@ -656,7 +694,7 @@ func StarByID(id *int) (*model.Star, error) {
 		if err != nil {
 			return star, err
 		}
-		AddToMemoryCache("StarByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("StarByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &star); err != nil {
@@ -673,7 +711,7 @@ func GraphicByID(id *int) (*model.Graphic, error) {
 		return nil, errors.New("nil id")
 	}
 
-	inCache, result := CheckMemoryCache("GraphicByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("GraphicByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/graphics/%s/", baseUriESI, strconv.Itoa(*id)))
@@ -692,7 +730,7 @@ func GraphicByID(id *int) (*model.Graphic, error) {
 		if err != nil {
 			return graphic, err
 		}
-		AddToMemoryCache("GraphicByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("GraphicByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &graphic); err != nil {
@@ -709,7 +747,7 @@ func DogmaAttributeByID(id *int) (*model.DogmaAttributeDetail, error) {
 		return nil, nil
 	}
 
-	inCache, result := CheckMemoryCache("DogmaAttributeByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("DogmaAttributeByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/dogma/attributes/%s/", baseUriESI, strconv.Itoa(*id)))
@@ -728,7 +766,7 @@ func DogmaAttributeByID(id *int) (*model.DogmaAttributeDetail, error) {
 		if err != nil {
 			return dogmaAttribute, err
 		}
-		AddToMemoryCache("DogmaAttributeByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("DogmaAttributeByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &dogmaAttribute); err != nil {
@@ -745,7 +783,7 @@ func DogmaEffectByID(id *int) (*model.DogmaEffectDetail, error) {
 		return nil, nil
 	}
 
-	inCache, result := CheckMemoryCache("DogmaEffectByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("DogmaEffectByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/dogma/effects/%s/", baseUriESI, strconv.Itoa(*id)))
@@ -764,7 +802,7 @@ func DogmaEffectByID(id *int) (*model.DogmaEffectDetail, error) {
 		if err != nil {
 			return dogmaEffect, err
 		}
-		AddToMemoryCache("DogmaEffectByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("DogmaEffectByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &dogmaEffect); err != nil {
@@ -781,7 +819,7 @@ func CategoryByID(id *int) (*model.Category, error) {
 		return nil, nil
 	}
 
-	inCache, result := CheckMemoryCache("CategoryByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("CategoryByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/categories/%s/", baseUriESI, strconv.Itoa(*id)))
@@ -800,7 +838,7 @@ func CategoryByID(id *int) (*model.Category, error) {
 		if err != nil {
 			return category, err
 		}
-		AddToMemoryCache("CategoryByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("CategoryByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &category); err != nil {
@@ -817,7 +855,7 @@ func RegionByID(id *int) (*model.Region, error) {
 		return nil, nil
 	}
 
-	inCache, result := CheckMemoryCache("RegionByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("RegionByID:" + strconv.Itoa(*id))
 	var responseBytes []byte = result
 	if !inCache {
 		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/regions/%s/", baseUriESI, strconv.Itoa(*id)))
@@ -836,7 +874,7 @@ func RegionByID(id *int) (*model.Region, error) {
 		if err != nil {
 			return region, err
 		}
-		AddToMemoryCache("RegionByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("RegionByID:"+strconv.Itoa(*id), responseBytes, 43200000)
 	}
 
 	if err := json.Unmarshal(responseBytes, &region); err != nil {
@@ -853,7 +891,7 @@ func FactionByID(id *int) (*model.Faction, error) {
 		return nil, nil
 	}
 
-	inCache, result := CheckMemoryCache("FactionByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("FactionByID:" + strconv.Itoa(*id))
 	if !inCache {
 		faction, err := factionByArray(id)
 		if err != nil {
@@ -904,7 +942,7 @@ func factionByArray(id *int) (*model.Faction, error) {
 		}
 		factionBytes, err := json.Marshal(*faction)
 		if err == nil {
-			AddToMemoryCache("FactionByID:"+strconv.Itoa(*faction.FactionID), factionBytes, 43200000)
+			cache.AddToRedisCache("FactionByID:"+strconv.Itoa(*faction.FactionID), factionBytes, 43200000)
 		} else {
 			log.Errorf("Failure Marshalling: %v", err)
 		}
@@ -919,7 +957,7 @@ func AncestryByID(id *int) (*model.Ancestry, error) {
 		return nil, nil
 	}
 
-	inCache, result := CheckMemoryCache("AncestryByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("AncestryByID:" + strconv.Itoa(*id))
 	if !inCache {
 		ancestry, err = ancestryByArray(id)
 		if err != nil {
@@ -970,7 +1008,7 @@ func ancestryByArray(id *int) (*model.Ancestry, error) {
 		}
 		ancestryBytes, err := json.Marshal(*ancestry)
 		if err == nil {
-			AddToMemoryCache("AncestryByID:"+strconv.Itoa(*ancestry.ID), ancestryBytes, 43200000)
+			cache.AddToRedisCache("AncestryByID:"+strconv.Itoa(*ancestry.ID), ancestryBytes, 43200000)
 		} else {
 			log.Errorf("Failure Marshalling: %v", err)
 		}
@@ -985,7 +1023,7 @@ func BloodlineByID(id *int) (*model.Bloodline, error) {
 		return nil, nil
 	}
 
-	inCache, result := CheckMemoryCache("BloodlineByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("BloodlineByID:" + strconv.Itoa(*id))
 	if !inCache {
 		bloodline, err = bloodlineByArray(id)
 		if err != nil {
@@ -1036,7 +1074,7 @@ func bloodlineByArray(id *int) (*model.Bloodline, error) {
 		}
 		bloodlineBytes, err := json.Marshal(*bloodline)
 		if err == nil {
-			AddToMemoryCache("BloodlineByID:"+strconv.Itoa(*bloodline.BloodlineID), bloodlineBytes, 43200000)
+			cache.AddToRedisCache("BloodlineByID:"+strconv.Itoa(*bloodline.BloodlineID), bloodlineBytes, 43200000)
 		} else {
 			log.Errorf("Failure Marshalling: %v", err)
 		}
@@ -1051,7 +1089,7 @@ func RaceByID(id *int) (*model.Race, error) {
 		return nil, nil
 	}
 
-	inCache, result := CheckMemoryCache("RaceByID:" + strconv.Itoa(*id))
+	inCache, result := cache.CheckRedisCache("RaceByID:" + strconv.Itoa(*id))
 	if !inCache {
 		race, err = raceByArray(id)
 		if err != nil {
@@ -1102,7 +1140,7 @@ func raceByArray(id *int) (*model.Race, error) {
 		}
 		raceBytes, err := json.Marshal(*race)
 		if err == nil {
-			AddToMemoryCache("RaceByID:"+strconv.Itoa(*race.RaceID), raceBytes, 43200000)
+			cache.AddToRedisCache("RaceByID:"+strconv.Itoa(*race.RaceID), raceBytes, 43200000)
 		} else {
 			log.Errorf("Failure Marshalling: %v", err)
 		}

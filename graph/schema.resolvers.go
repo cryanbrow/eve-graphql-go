@@ -211,6 +211,10 @@ func (r *queryResolver) FactionByID(ctx context.Context, id *int) (*model.Factio
 	return dao.FactionByID(id)
 }
 
+func (r *queryResolver) OrderHistory(ctx context.Context, regionID *int, typeID *int) ([]*model.OrderHistory, error) {
+	return dao.OrderHistory(regionID, typeID)
+}
+
 func (r *regionResolver) ConstellationList(ctx context.Context, obj *model.Region) ([]*model.Constellation, error) {
 	return dao.ConstellationsByIDs(obj.Constellations)
 }

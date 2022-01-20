@@ -296,6 +296,22 @@ type Order struct {
 	VolumeTotal *int `json:"volume_total"`
 }
 
+// History of sales of a type by region
+type OrderHistory struct {
+	// average sales price
+	Average *float64 `json:"average"`
+	// date of the history
+	Date *string `json:"date"`
+	// highest price paid for item
+	Highest *float64 `json:"highest"`
+	// lowest price paid for item
+	Lowest *float64 `json:"lowest"`
+	// number of orders for item type in specified region
+	OrderCount *int `json:"order_count"`
+	// number of units of item in region that were moved
+	Volume *int `json:"volume"`
+}
+
 type Planet struct {
 	Name     *string   `json:"name"`
 	PlanetID *int      `json:"planet_id"`
@@ -358,23 +374,40 @@ type StargateDestination struct {
 	System     *System   `json:"system"`
 }
 
+// Space station in EVE and information about it.
 type Station struct {
-	MaxDockableShipVolume    *float64     `json:"max_dockable_ship_volume"`
-	Name                     *string      `json:"name"`
-	OfficeRentalCost         *float64     `json:"office_rental_cost"`
-	Owner                    *int         `json:"owner"`
-	OwningCorporation        *Corporation `json:"owning_corporation"`
-	Position                 *Position    `json:"position"`
-	RaceID                   *int         `json:"race_id"`
-	Race                     *Race        `json:"race"`
-	ReprocessingEfficiency   *float64     `json:"reprocessing_efficiency"`
-	ReprocessingStationsTake *float64     `json:"reprocessing_stations_take"`
-	Services                 []*Services  `json:"services"`
-	StationID                *int         `json:"station_id"`
-	SystemID                 *int         `json:"system_id"`
-	System                   *System      `json:"system"`
-	TypeID                   *int         `json:"type_id"`
-	StationType              *ItemType    `json:"station_type"`
+	// Max ships that can be docked in the station
+	MaxDockableShipVolume *float64 `json:"max_dockable_ship_volume"`
+	// Name of the station
+	Name *string `json:"name"`
+	// Cost of renting an office for your Corporation
+	OfficeRentalCost *float64 `json:"office_rental_cost"`
+	// Owner ID of Corporation of station
+	Owner *int `json:"owner"`
+	// Complex object representing the Corporation that owns the station
+	OwningCorporation *Corporation `json:"owning_corporation"`
+	// x,y,z position of station in space
+	Position *Position `json:"position"`
+	// id of the race that the station is built by
+	RaceID *int `json:"race_id"`
+	// race that the station is built by
+	Race *Race `json:"race"`
+	// Floating point percentage of efficiency of the reprocessing facilities of this station
+	ReprocessingEfficiency *float64 `json:"reprocessing_efficiency"`
+	// floating point percent of take of materials in reprocessing
+	ReprocessingStationsTake *float64 `json:"reprocessing_stations_take"`
+	// Services provided by the station
+	Services []*Services `json:"services"`
+	// Unique ID of the station
+	StationID *int `json:"station_id"`
+	// Unique ID of the system that the station resides in
+	SystemID *int `json:"system_id"`
+	// System the station resides in
+	System *System `json:"system"`
+	// type id of station
+	TypeID *int `json:"type_id"`
+	// item type of the station
+	StationType *ItemType `json:"station_type"`
 }
 
 type System struct {
