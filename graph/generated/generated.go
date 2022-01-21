@@ -364,13 +364,14 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		CorporationByID func(childComplexity int, id *int) int
-		FactionByID     func(childComplexity int, id *int) int
-		OrderHistory    func(childComplexity int, regionID *int, typeID *int) int
-		OrdersForRegion func(childComplexity int, regionID *int, orderType *model.Ordertype, typeID *int) int
-		PlanetByID      func(childComplexity int, id *int) int
-		StationByID     func(childComplexity int, id *int) int
-		SystemByID      func(childComplexity int, id *int) int
+		CorporationByID       func(childComplexity int, id *int) int
+		FactionByID           func(childComplexity int, id *int) int
+		OrderHistory          func(childComplexity int, regionID *int, typeID *int) int
+		OrdersForRegion       func(childComplexity int, regionID *int, orderType *model.Ordertype, typeID *int) int
+		OrdersForRegionByName func(childComplexity int, region *string, orderType *model.Ordertype, typeID *int) int
+		PlanetByID            func(childComplexity int, id *int) int
+		StationByID           func(childComplexity int, id *int) int
+		SystemByID            func(childComplexity int, id *int) int
 	}
 
 	Race struct {
@@ -575,6 +576,7 @@ type PlanetResolver interface {
 }
 type QueryResolver interface {
 	OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordertype, typeID *int) ([]*model.Order, error)
+	OrdersForRegionByName(ctx context.Context, region *string, orderType *model.Ordertype, typeID *int) ([]*model.Order, error)
 	SystemByID(ctx context.Context, id *int) (*model.System, error)
 	StationByID(ctx context.Context, id *int) (*model.Station, error)
 	PlanetByID(ctx context.Context, id *int) (*model.Planet, error)
@@ -2261,6 +2263,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.OrdersForRegion(childComplexity, args["region_id"].(*int), args["order_type"].(*model.Ordertype), args["type_id"].(*int)), true
 
+	case "Query.ordersForRegionByName":
+		if e.complexity.Query.OrdersForRegionByName == nil {
+			break
+		}
+
+		args, err := ec.field_Query_ordersForRegionByName_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.OrdersForRegionByName(childComplexity, args["region"].(*string), args["order_type"].(*model.Ordertype), args["type_id"].(*int)), true
+
 	case "Query.planetById":
 		if e.complexity.Query.PlanetByID == nil {
 			break
@@ -2820,6 +2834,11 @@ var sources = []*ast.Source{
 	"""queries for orders in a required region id for active market orders."""
 	ordersForRegion(
 		region_id : Int
+		order_type : Ordertype = all
+		type_id : Int
+	) : [Order]
+	ordersForRegionByName(
+		region : String
 		order_type : Ordertype = all
 		type_id : Int
 	) : [Order]
@@ -3495,6 +3514,39 @@ func (ec *executionContext) field_Query_orderHistory_args(ctx context.Context, r
 		}
 	}
 	args["type_id"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_ordersForRegionByName_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["region"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("region"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["region"] = arg0
+	var arg1 *model.Ordertype
+	if tmp, ok := rawArgs["order_type"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("order_type"))
+		arg1, err = ec.unmarshalOOrdertype2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrdertype(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["order_type"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["type_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("type_id"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["type_id"] = arg2
 	return args, nil
 }
 
@@ -10856,6 +10908,45 @@ func (ec *executionContext) _Query_ordersForRegion(ctx context.Context, field gr
 	return ec.marshalOOrder2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrder(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_ordersForRegionByName(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_ordersForRegionByName_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().OrdersForRegionByName(rctx, args["region"].(*string), args["order_type"].(*model.Ordertype), args["type_id"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Order)
+	fc.Result = res
+	return ec.marshalOOrder2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrder(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_systemById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -15836,6 +15927,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_ordersForRegion(ctx, field)
+				return res
+			})
+		case "ordersForRegionByName":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_ordersForRegionByName(ctx, field)
 				return res
 			})
 		case "systemById":

@@ -5,6 +5,11 @@ type Query{
 		order_type : Ordertype = all
 		type_id : Int
 	) : [Order]
+	ordersForRegionByName(
+		region : String
+		order_type : Ordertype = all
+		type_id : Int
+	) : [Order]
 	"""Get information on a solar system."""
 	systemById(id : Int) : System
 	"""Get information on a station"""

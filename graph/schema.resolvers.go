@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 
 	dao "github.com/cryanbrow/eve-graphql-go/graph/data_access"
 	"github.com/cryanbrow/eve-graphql-go/graph/generated"
@@ -189,6 +190,10 @@ func (r *planetResolver) ItemType(ctx context.Context, obj *model.Planet) (*mode
 
 func (r *queryResolver) OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordertype, typeID *int) ([]*model.Order, error) {
 	return dao.OrdersForRegion(regionID, orderType, typeID)
+}
+
+func (r *queryResolver) OrdersForRegionByName(ctx context.Context, region *string, orderType *model.Ordertype, typeID *int) ([]*model.Order, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *queryResolver) SystemByID(ctx context.Context, id *int) (*model.System, error) {

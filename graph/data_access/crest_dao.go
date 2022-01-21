@@ -1,6 +1,7 @@
 package data_access
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -55,6 +56,10 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int) ([]
 	return orders, nil
 }
 
+func OrdersForRegionByName(region *string, orderType *model.Ordertype, typeID *string) ([]*model.Order, error) {
+	return nil, nil
+}
+
 func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 	if regionID == nil || typeID == nil {
 		return nil, errors.New("nil id")
@@ -77,7 +82,8 @@ func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return orderHistory, err
 		}
@@ -95,7 +101,8 @@ func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 func ordersForRegionREST(url string) ([]*model.Order, int, error) {
 	var orders []*model.Order
 	var pages = 0
-	responseBytes, header, err := makeRESTCall(url)
+	var buffer bytes.Buffer
+	responseBytes, header, err := makeRESTCall(url, http.MethodGet, buffer)
 	if err != nil {
 		return orders, 0, err
 	}
@@ -144,7 +151,8 @@ func SystemByID(id *int) (*model.System, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return system, err
 		}
@@ -194,7 +202,8 @@ func StationByID(id *int) (*model.Station, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return station, err
 		}
@@ -231,7 +240,8 @@ func CorporationByID(id *int) (*model.Corporation, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return corporation, err
 		}
@@ -268,7 +278,8 @@ func AllianceByID(id *int) (*model.Alliance, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return alliance, err
 		}
@@ -305,7 +316,8 @@ func CharacterByID(id *int) (*model.Character, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return character, err
 		}
@@ -342,7 +354,8 @@ func PlanetByID(id *int) (*model.Planet, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return planet, err
 		}
@@ -392,7 +405,8 @@ func StargateByID(id *int) (*model.Stargate, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return stargate, err
 		}
@@ -441,7 +455,8 @@ func MoonByID(id *int) (*model.Moon, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return moon, err
 		}
@@ -489,7 +504,8 @@ func ItemTypeByID(id *int) (*model.ItemType, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return itemType, err
 		}
@@ -537,7 +553,8 @@ func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return asteroidBelt, err
 		}
@@ -572,7 +589,8 @@ func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return marketGroup, err
 		}
@@ -607,7 +625,8 @@ func GroupByID(id *int) (*model.Group, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return group, err
 		}
@@ -655,7 +674,8 @@ func ConstellationByID(id *int) (*model.Constellation, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return constellation, err
 		}
@@ -690,7 +710,8 @@ func StarByID(id *int) (*model.Star, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return star, err
 		}
@@ -726,7 +747,8 @@ func GraphicByID(id *int) (*model.Graphic, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return graphic, err
 		}
@@ -762,7 +784,8 @@ func DogmaAttributeByID(id *int) (*model.DogmaAttributeDetail, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return dogmaAttribute, err
 		}
@@ -798,7 +821,8 @@ func DogmaEffectByID(id *int) (*model.DogmaEffectDetail, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return dogmaEffect, err
 		}
@@ -834,7 +858,8 @@ func CategoryByID(id *int) (*model.Category, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return category, err
 		}
@@ -870,7 +895,8 @@ func RegionByID(id *int) (*model.Region, error) {
 
 		crest_url.RawQuery = queryParameters.Encode()
 
-		responseBytes, _, err = makeRESTCall(crest_url.String())
+		var buffer bytes.Buffer
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return region, err
 		}
@@ -925,7 +951,8 @@ func factionByArray(id *int) (*model.Faction, error) {
 
 	crest_url.RawQuery = queryParameters.Encode()
 
-	responseBytes, _, err = makeRESTCall(crest_url.String())
+	var buffer bytes.Buffer
+	responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 	if err != nil {
 		return nil, err
 	}
@@ -991,7 +1018,8 @@ func ancestryByArray(id *int) (*model.Ancestry, error) {
 
 	crest_url.RawQuery = queryParameters.Encode()
 
-	responseBytes, _, err = makeRESTCall(crest_url.String())
+	var buffer bytes.Buffer
+	responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 	if err != nil {
 		return nil, err
 	}
@@ -1057,7 +1085,8 @@ func bloodlineByArray(id *int) (*model.Bloodline, error) {
 
 	crest_url.RawQuery = queryParameters.Encode()
 
-	responseBytes, _, err = makeRESTCall(crest_url.String())
+	var buffer bytes.Buffer
+	responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 	if err != nil {
 		return nil, err
 	}
@@ -1123,7 +1152,8 @@ func raceByArray(id *int) (*model.Race, error) {
 
 	crest_url.RawQuery = queryParameters.Encode()
 
-	responseBytes, _, err = makeRESTCall(crest_url.String())
+	var buffer bytes.Buffer
+	responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 	if err != nil {
 		return nil, err
 	}
@@ -1148,9 +1178,75 @@ func raceByArray(id *int) (*model.Race, error) {
 	return returnRace, nil
 }
 
-func makeRESTCall(url string) ([]byte, http.Header, error) {
+func idForName(name *string) (int, error) {
+	var ids *model.Names = new(model.Names)
+	if name == nil {
+		return 0, errors.New("nil name")
+	}
+
+	inCache, result := cache.CheckRedisCache("IDForName:" + *name)
+	var responseBytes []byte = result
+	if !inCache {
+		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/ids/", baseUriESI))
+		if err != nil {
+			log.WithFields(log.Fields{"name": name}).Errorf("Failed to Parse URL with Error : %v", err)
+			return 0, err
+		}
+
+		queryParameters := crest_url.Query()
+		queryParameters.Add("datasource", "tranquility")
+		queryParameters.Add("language", "en")
+
+		crest_url.RawQuery = queryParameters.Encode()
+
+		singleItemArray := []string{*name}
+
+		var buf bytes.Buffer
+		err = json.NewEncoder(&buf).Encode(singleItemArray)
+		if err != nil {
+			log.Error(err)
+			return 0, err
+		}
+
+		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodPost, buf)
+		if err != nil {
+			return 0, err
+		}
+		cache.AddToRedisCache("IDForName:"+*name, responseBytes, 43200000)
+	}
+
+	if err := json.Unmarshal(responseBytes, &ids); err != nil {
+		log.WithFields(log.Fields{"name": *name}).Errorf("Could not unmarshal reponseBytes. %v", err)
+		return 0, err
+	}
+
+	switch {
+	case ids.Agents != nil:
+		return *ids.Agents[0].ID, nil
+	case ids.Alliances != nil:
+		return *ids.Alliances[0].ID, nil
+	case ids.Characters != nil:
+		return *ids.Characters[0].ID, nil
+	case ids.Constellations != nil:
+		return *ids.Constellations[0].ID, nil
+	case ids.Corporations != nil:
+		return *ids.Corporations[0].ID, nil
+	case ids.Factions != nil:
+		return *ids.Factions[0].ID, nil
+	case ids.InventoryTypes != nil:
+		return *ids.InventoryTypes[0].ID, nil
+	case ids.Regions != nil:
+		return *ids.Regions[0].ID, nil
+	case ids.Systems != nil:
+		return *ids.Systems[0].ID, nil
+	default:
+		return 0, errors.New("all fields nil")
+	}
+}
+
+func makeRESTCall(url string, verb string, byteBuffer bytes.Buffer) ([]byte, http.Header, error) {
 	log.WithFields(log.Fields{"url": url}).Info("Making REST Call")
-	request, err := http.NewRequest(http.MethodGet, url, nil)
+	request, err := http.NewRequest(verb, url, &byteBuffer)
 	if err != nil {
 		log.WithFields(log.Fields{"url": url}).Errorf("Could not build request. : %v", err)
 	}
