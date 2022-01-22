@@ -368,7 +368,7 @@ type ComplexityRoot struct {
 		FactionByID           func(childComplexity int, id *int) int
 		OrderHistory          func(childComplexity int, regionID *int, typeID *int) int
 		OrdersForRegion       func(childComplexity int, regionID *int, orderType *model.Ordertype, typeID *int) int
-		OrdersForRegionByName func(childComplexity int, region *string, orderType *model.Ordertype, typeID *int) int
+		OrdersForRegionByName func(childComplexity int, region *string, orderType *model.Ordertype, typeName *string) int
 		PlanetByID            func(childComplexity int, id *int) int
 		StationByID           func(childComplexity int, id *int) int
 		SystemByID            func(childComplexity int, id *int) int
@@ -576,7 +576,7 @@ type PlanetResolver interface {
 }
 type QueryResolver interface {
 	OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordertype, typeID *int) ([]*model.Order, error)
-	OrdersForRegionByName(ctx context.Context, region *string, orderType *model.Ordertype, typeID *int) ([]*model.Order, error)
+	OrdersForRegionByName(ctx context.Context, region *string, orderType *model.Ordertype, typeName *string) ([]*model.Order, error)
 	SystemByID(ctx context.Context, id *int) (*model.System, error)
 	StationByID(ctx context.Context, id *int) (*model.Station, error)
 	PlanetByID(ctx context.Context, id *int) (*model.Planet, error)
@@ -2273,7 +2273,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.OrdersForRegionByName(childComplexity, args["region"].(*string), args["order_type"].(*model.Ordertype), args["type_id"].(*int)), true
+		return e.complexity.Query.OrdersForRegionByName(childComplexity, args["region"].(*string), args["order_type"].(*model.Ordertype), args["type_name"].(*string)), true
 
 	case "Query.planetById":
 		if e.complexity.Query.PlanetByID == nil {
@@ -2840,7 +2840,7 @@ var sources = []*ast.Source{
 	ordersForRegionByName(
 		region : String
 		order_type : Ordertype = all
-		type_id : Int
+		type_name : String
 	) : [Order]
 	"""Get information on a solar system."""
 	systemById(id : Int) : System
@@ -3538,15 +3538,15 @@ func (ec *executionContext) field_Query_ordersForRegionByName_args(ctx context.C
 		}
 	}
 	args["order_type"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["type_id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("type_id"))
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+	var arg2 *string
+	if tmp, ok := rawArgs["type_name"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("type_name"))
+		arg2, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["type_id"] = arg2
+	args["type_name"] = arg2
 	return args, nil
 }
 
@@ -10933,7 +10933,7 @@ func (ec *executionContext) _Query_ordersForRegionByName(ctx context.Context, fi
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().OrdersForRegionByName(rctx, args["region"].(*string), args["order_type"].(*model.Ordertype), args["type_id"].(*int))
+		return ec.resolvers.Query().OrdersForRegionByName(rctx, args["region"].(*string), args["order_type"].(*model.Ordertype), args["type_name"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

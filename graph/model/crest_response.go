@@ -16,3 +16,13 @@ type NameTuple struct {
 	ID   *int    `json:"id"`
 	Name *string `json:"name"`
 }
+
+const AGENTS = "agents"
+const ALLIANCES = "alliances"
+const CHARACTERS = "characters"
+const CONSTELLATIONS = "constellations"
+const CORPORATIONS = "corporations"
+const FACTIONS = "factions"
+const INVENTORY_TYPES = "inventory_types"
+const REGIONS = "regions"
+const SYSTEMS = "systems"

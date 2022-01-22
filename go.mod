@@ -19,5 +19,5 @@ require (
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/sirupsen/logrus v1.8.1
-	golang.org/x/sys v0.0.0-20210423082822-04245dca01da // indirect
+	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
 )

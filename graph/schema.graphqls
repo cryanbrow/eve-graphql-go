@@ -8,7 +8,7 @@ type Query{
 	ordersForRegionByName(
 		region : String
 		order_type : Ordertype = all
-		type_id : Int
+		type_name : String
 	) : [Order]
 	"""Get information on a solar system."""
 	systemById(id : Int) : System

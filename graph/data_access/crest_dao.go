@@ -56,8 +56,21 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int) ([]
 	return orders, nil
 }
 
-func OrdersForRegionByName(region *string, orderType *model.Ordertype, typeID *string) ([]*model.Order, error) {
-	return nil, nil
+func OrdersForRegionByName(region *string, orderType *model.Ordertype, typeName *string) ([]*model.Order, error) {
+	regionID, err := idForName(region, model.REGIONS)
+	if err != nil {
+		return nil, errors.New("unknown name for region")
+	}
+	typeID, err := idForName(typeName, model.INVENTORY_TYPES)
+	if err != nil {
+		return nil, errors.New("unknown name for typeName")
+	}
+	orders, err := OrdersForRegion(&regionID, orderType, &typeID)
+	if err != nil {
+		return nil, err
+	}
+
+	return orders, nil
 }
 
 func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
@@ -183,6 +196,9 @@ func StationByArray(ids []*int) ([]*model.Station, error) {
 func StationByID(id *int) (*model.Station, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
+	}
+	if *id > 2147483647 {
+		return nil, nil
 	}
 
 	inCache, result := cache.CheckRedisCache("StationByID:" + strconv.Itoa(*id))
@@ -1178,7 +1194,7 @@ func raceByArray(id *int) (*model.Race, error) {
 	return returnRace, nil
 }
 
-func idForName(name *string) (int, error) {
+func idForName(name *string, name_type string) (int, error) {
 	var ids *model.Names = new(model.Names)
 	if name == nil {
 		return 0, errors.New("nil name")
@@ -1220,28 +1236,29 @@ func idForName(name *string) (int, error) {
 		return 0, err
 	}
 
-	switch {
-	case ids.Agents != nil:
+	switch name_type {
+	case model.AGENTS:
 		return *ids.Agents[0].ID, nil
-	case ids.Alliances != nil:
+	case model.ALLIANCES:
 		return *ids.Alliances[0].ID, nil
-	case ids.Characters != nil:
+	case model.CHARACTERS:
 		return *ids.Characters[0].ID, nil
-	case ids.Constellations != nil:
+	case model.CONSTELLATIONS:
 		return *ids.Constellations[0].ID, nil
-	case ids.Corporations != nil:
+	case model.CORPORATIONS:
 		return *ids.Corporations[0].ID, nil
-	case ids.Factions != nil:
+	case model.FACTIONS:
 		return *ids.Factions[0].ID, nil
-	case ids.InventoryTypes != nil:
+	case model.INVENTORY_TYPES:
 		return *ids.InventoryTypes[0].ID, nil
-	case ids.Regions != nil:
+	case model.REGIONS:
 		return *ids.Regions[0].ID, nil
-	case ids.Systems != nil:
+	case model.SYSTEMS:
 		return *ids.Systems[0].ID, nil
 	default:
 		return 0, errors.New("all fields nil")
 	}
+
 }
 
 func makeRESTCall(url string, verb string, byteBuffer bytes.Buffer) ([]byte, http.Header, error) {
