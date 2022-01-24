@@ -6,11 +6,13 @@ import (
 
 	"context"
 
+	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 	"github.com/go-redis/redis/v8"
 	log "github.com/sirupsen/logrus"
 )
 
 func CheckRedisCache(key string) (bool, []byte) {
+	log.Debugf("Checking Redis Cache for key: %s", key)
 	val, err := rdb.Get(ctx, key).Result()
 	if err != nil {
 		if err.Error() == string("redis: nil") {
@@ -23,6 +25,7 @@ func CheckRedisCache(key string) (bool, []byte) {
 }
 
 func AddToRedisCache(key string, value []byte, ttl int) {
+	log.Debugf("Adding to Redis Cache: %s", key)
 	ttlString, err := time.ParseDuration((strconv.Itoa(ttl) + "ms"))
 	if err != nil {
 		log.Errorf("Failed to parse TTL: %v ", err)
@@ -31,7 +34,9 @@ func AddToRedisCache(key string, value []byte, ttl int) {
 	_, err = rdb.Get(ctx, key).Result()
 	if err != nil {
 		if err.Error() == string("redis: nil") {
-			rdb.Set(ctx, key, value, ttlString)
+			status := rdb.Set(ctx, key, value, ttlString)
+			statusText, err := status.Result()
+			log.Debugf("status text: %s Error: %v", statusText, err)
 		} else {
 			log.Errorf("Redis encountered an error: %v", err)
 		}
@@ -44,9 +49,11 @@ var (
 )
 
 func init() {
+	log.Info(configuration.AppConfig.Redis.Url + ":" + configuration.AppConfig.Redis.Port)
 	rdb = redis.NewClient(&redis.Options{
-		Addr:     "192.168.0.201:30893",
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Addr:     configuration.AppConfig.Redis.Url + ":" + configuration.AppConfig.Redis.Port,
+		Username: configuration.AppConfig.Redis.User,
+		Password: configuration.AppConfig.Redis.Password,
+		DB:       0, // use default DB
 	})
 }

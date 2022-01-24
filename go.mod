@@ -5,7 +5,9 @@ go 1.17
 require (
 	github.com/99designs/gqlgen v0.14.0
 	github.com/go-redis/redis/v8 v8.11.4
+	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/vektah/gqlparser/v2 v2.2.0
+	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
