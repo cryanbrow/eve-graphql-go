@@ -24,9 +24,9 @@ func CheckRedisCache(key string) (bool, []byte) {
 	return true, []byte(val)
 }
 
-func AddToRedisCache(key string, value []byte, ttl int) {
+func AddToRedisCache(key string, value []byte, ttl int64) {
 	log.Debugf("Adding to Redis Cache: %s", key)
-	ttlString, err := time.ParseDuration((strconv.Itoa(ttl) + "ms"))
+	ttlString, err := time.ParseDuration((strconv.FormatInt(ttl, 10) + "ms"))
 	if err != nil {
 		log.Errorf("Failed to parse TTL: %v ", err)
 		return
@@ -49,7 +49,6 @@ var (
 )
 
 func init() {
-	log.Info(configuration.AppConfig.Redis.Url + ":" + configuration.AppConfig.Redis.Port)
 	rdb = redis.NewClient(&redis.Options{
 		Addr:     configuration.AppConfig.Redis.Url + ":" + configuration.AppConfig.Redis.Port,
 		Username: configuration.AppConfig.Redis.User,

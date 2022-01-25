@@ -11,6 +11,7 @@ import (
 	"strconv"
 
 	cache "github.com/cryanbrow/eve-graphql-go/graph/caching"
+	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/cryanbrow/eve-graphql-go/graph/model"
@@ -96,11 +97,12 @@ func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return orderHistory, err
 		}
-		cache.AddToRedisCache("OrderHistoryByID:"+strconv.Itoa(*regionID)+":"+strconv.Itoa(*typeID), responseBytes, 43200000)
+
+		cache.AddToRedisCache("OrderHistoryByID:"+strconv.Itoa(*regionID)+":"+strconv.Itoa(*typeID), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &orderHistory); err != nil {
@@ -165,11 +167,11 @@ func SystemByID(id *int) (*model.System, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return system, err
 		}
-		cache.AddToRedisCache("SystemByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("SystemByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &system); err != nil {
@@ -219,11 +221,11 @@ func StationByID(id *int) (*model.Station, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return station, err
 		}
-		cache.AddToRedisCache("StationByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("StationByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &station); err != nil {
@@ -257,11 +259,11 @@ func CorporationByID(id *int) (*model.Corporation, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return corporation, err
 		}
-		cache.AddToRedisCache("CorporationByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("CorporationByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &corporation); err != nil {
@@ -295,11 +297,11 @@ func AllianceByID(id *int) (*model.Alliance, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return alliance, err
 		}
-		cache.AddToRedisCache("AllianceByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("AllianceByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &alliance); err != nil {
@@ -333,11 +335,11 @@ func CharacterByID(id *int) (*model.Character, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return character, err
 		}
-		cache.AddToRedisCache("CharacterByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("CharacterByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &character); err != nil {
@@ -371,11 +373,11 @@ func PlanetByID(id *int) (*model.Planet, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return planet, err
 		}
-		cache.AddToRedisCache("PlanetByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("PlanetByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &planet); err != nil {
@@ -422,11 +424,11 @@ func StargateByID(id *int) (*model.Stargate, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return stargate, err
 		}
-		cache.AddToRedisCache("StargateByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("StargateByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &stargate); err != nil {
@@ -472,11 +474,11 @@ func MoonByID(id *int) (*model.Moon, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return moon, err
 		}
-		cache.AddToRedisCache("MoonByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("MoonByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &moon); err != nil {
@@ -521,11 +523,11 @@ func ItemTypeByID(id *int) (*model.ItemType, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return itemType, err
 		}
-		cache.AddToRedisCache("ItemTypeByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("ItemTypeByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &itemType); err != nil {
@@ -570,11 +572,11 @@ func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return asteroidBelt, err
 		}
-		cache.AddToRedisCache("AsteroidBeltByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("AsteroidBeltByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &asteroidBelt); err != nil {
@@ -606,11 +608,11 @@ func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return marketGroup, err
 		}
-		cache.AddToRedisCache("MarketGroupByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("MarketGroupByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &marketGroup); err != nil {
@@ -642,11 +644,11 @@ func GroupByID(id *int) (*model.Group, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return group, err
 		}
-		cache.AddToRedisCache("GroupByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("GroupByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &group); err != nil {
@@ -691,11 +693,11 @@ func ConstellationByID(id *int) (*model.Constellation, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return constellation, err
 		}
-		cache.AddToRedisCache("ConstellationByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("ConstellationByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &constellation); err != nil {
@@ -727,11 +729,11 @@ func StarByID(id *int) (*model.Star, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return star, err
 		}
-		cache.AddToRedisCache("StarByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("StarByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &star); err != nil {
@@ -764,11 +766,11 @@ func GraphicByID(id *int) (*model.Graphic, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return graphic, err
 		}
-		cache.AddToRedisCache("GraphicByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("GraphicByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &graphic); err != nil {
@@ -801,11 +803,11 @@ func DogmaAttributeByID(id *int) (*model.DogmaAttributeDetail, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return dogmaAttribute, err
 		}
-		cache.AddToRedisCache("DogmaAttributeByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("DogmaAttributeByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &dogmaAttribute); err != nil {
@@ -838,11 +840,11 @@ func DogmaEffectByID(id *int) (*model.DogmaEffectDetail, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return dogmaEffect, err
 		}
-		cache.AddToRedisCache("DogmaEffectByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("DogmaEffectByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &dogmaEffect); err != nil {
@@ -875,11 +877,11 @@ func CategoryByID(id *int) (*model.Category, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return category, err
 		}
-		cache.AddToRedisCache("CategoryByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("CategoryByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &category); err != nil {
@@ -912,11 +914,11 @@ func RegionByID(id *int) (*model.Region, error) {
 		crest_url.RawQuery = queryParameters.Encode()
 
 		var buffer bytes.Buffer
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 		if err != nil {
 			return region, err
 		}
-		cache.AddToRedisCache("RegionByID:"+strconv.Itoa(*id), responseBytes, 43200000)
+		cache.AddToRedisCache("RegionByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &region); err != nil {
@@ -968,7 +970,7 @@ func factionByArray(id *int) (*model.Faction, error) {
 	crest_url.RawQuery = queryParameters.Encode()
 
 	var buffer bytes.Buffer
-	responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+	responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 	if err != nil {
 		return nil, err
 	}
@@ -985,7 +987,7 @@ func factionByArray(id *int) (*model.Faction, error) {
 		}
 		factionBytes, err := json.Marshal(*faction)
 		if err == nil {
-			cache.AddToRedisCache("FactionByID:"+strconv.Itoa(*faction.FactionID), factionBytes, 43200000)
+			cache.AddToRedisCache("FactionByID:"+strconv.Itoa(*faction.FactionID), factionBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 		} else {
 			log.Errorf("Failure Marshalling: %v", err)
 		}
@@ -1035,7 +1037,7 @@ func ancestryByArray(id *int) (*model.Ancestry, error) {
 	crest_url.RawQuery = queryParameters.Encode()
 
 	var buffer bytes.Buffer
-	responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+	responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 	if err != nil {
 		return nil, err
 	}
@@ -1052,7 +1054,7 @@ func ancestryByArray(id *int) (*model.Ancestry, error) {
 		}
 		ancestryBytes, err := json.Marshal(*ancestry)
 		if err == nil {
-			cache.AddToRedisCache("AncestryByID:"+strconv.Itoa(*ancestry.ID), ancestryBytes, 43200000)
+			cache.AddToRedisCache("AncestryByID:"+strconv.Itoa(*ancestry.ID), ancestryBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 		} else {
 			log.Errorf("Failure Marshalling: %v", err)
 		}
@@ -1102,7 +1104,7 @@ func bloodlineByArray(id *int) (*model.Bloodline, error) {
 	crest_url.RawQuery = queryParameters.Encode()
 
 	var buffer bytes.Buffer
-	responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+	responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 	if err != nil {
 		return nil, err
 	}
@@ -1119,7 +1121,7 @@ func bloodlineByArray(id *int) (*model.Bloodline, error) {
 		}
 		bloodlineBytes, err := json.Marshal(*bloodline)
 		if err == nil {
-			cache.AddToRedisCache("BloodlineByID:"+strconv.Itoa(*bloodline.BloodlineID), bloodlineBytes, 43200000)
+			cache.AddToRedisCache("BloodlineByID:"+strconv.Itoa(*bloodline.BloodlineID), bloodlineBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 		} else {
 			log.Errorf("Failure Marshalling: %v", err)
 		}
@@ -1169,7 +1171,7 @@ func raceByArray(id *int) (*model.Race, error) {
 	crest_url.RawQuery = queryParameters.Encode()
 
 	var buffer bytes.Buffer
-	responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodGet, buffer)
+	responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodGet, buffer)
 	if err != nil {
 		return nil, err
 	}
@@ -1186,7 +1188,7 @@ func raceByArray(id *int) (*model.Race, error) {
 		}
 		raceBytes, err := json.Marshal(*race)
 		if err == nil {
-			cache.AddToRedisCache("RaceByID:"+strconv.Itoa(*race.RaceID), raceBytes, 43200000)
+			cache.AddToRedisCache("RaceByID:"+strconv.Itoa(*race.RaceID), raceBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 		} else {
 			log.Errorf("Failure Marshalling: %v", err)
 		}
@@ -1224,11 +1226,11 @@ func idForName(name *string, name_type string) (int, error) {
 			return 0, err
 		}
 
-		responseBytes, _, err = makeRESTCall(crest_url.String(), http.MethodPost, buf)
+		responseBytes, headers, err := makeRESTCall(crest_url.String(), http.MethodPost, buf)
 		if err != nil {
 			return 0, err
 		}
-		cache.AddToRedisCache("IDForName:"+*name, responseBytes, 43200000)
+		cache.AddToRedisCache("IDForName:"+*name, responseBytes, helpers.ESI_time_to_millis(headers.Get("expires")))
 	}
 
 	if err := json.Unmarshal(responseBytes, &ids); err != nil {
