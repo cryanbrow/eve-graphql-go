@@ -25,10 +25,6 @@ var (
 const defaultPort = "8080"
 
 func main() {
-	log.SetFormatter(&log.JSONFormatter{})
-	log.SetLevel(log.DebugLevel)
-	log.SetReportCaller(true)
-
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
@@ -45,7 +41,7 @@ func main() {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
-		tpl, err := template.ParseFS(res, page)
+		template, err := template.ParseFS(res, page)
 		if err != nil {
 			log.Printf("page %s not found in pages cache...", r.RequestURI)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -56,7 +52,7 @@ func main() {
 		data := map[string]interface{}{
 			"userAgent": r.UserAgent(),
 		}
-		if err := tpl.Execute(w, data); err != nil {
+		if err := template.Execute(w, data); err != nil {
 			return
 		}
 	})

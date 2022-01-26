@@ -17,6 +17,16 @@ type Config struct {
 		User     string `yaml:"user"`
 		Password string `yaml:"password"`
 	} `yaml:"redis"`
+	Esi struct {
+		Default struct {
+			Query_params []Key_value `yaml:"query_params"`
+		} `yaml:"default"`
+	} `yaml:"esi"`
+}
+
+type Key_value struct {
+	Key   string `yaml:"key"`
+	Value string `yaml:"value"`
 }
 
 var AppConfig Config
@@ -47,7 +57,14 @@ func processError(err error) {
 	os.Exit(2)
 }
 
+func SetupLogging() {
+	log.SetFormatter(&log.JSONFormatter{})
+	log.SetLevel(log.DebugLevel)
+	log.SetReportCaller(true)
+}
+
 func init() {
+	SetupLogging()
 	ReadFile()
 	ReadEnv()
 }

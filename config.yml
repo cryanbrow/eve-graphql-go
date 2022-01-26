@@ -3,3 +3,10 @@ redis:
   password: ''
   user: ''
   port: '30893'
+esi:
+  default:
+    query_params:
+    - key: 'datasource'
+      value: 'tranquility'
+    - key: 'language'
+      value: 'en'
