@@ -1252,6 +1252,7 @@ func idForName(name *string, name_type string) (int, error) {
 
 }
 
+//TODO store array in key different than search redis key
 func makeRESTCall(base_url string, verb string, byteBuffer bytes.Buffer, additional_query_params []configuration.Key_value, redis_key string) ([]byte, http.Header, error) {
 	inCache, result := cache.CheckRedisCache(redis_key)
 	if !inCache {
