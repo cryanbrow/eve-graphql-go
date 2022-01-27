@@ -33,7 +33,7 @@ func (r *ancestryResolver) Bloodline(ctx context.Context, obj *model.Ancestry) (
 }
 
 func (r *asteroid_beltResolver) System(ctx context.Context, obj *model.AsteroidBelt) (*model.System, error) {
-	return dao.SystemByID(obj.SystemID)
+	return universe.SystemByID(obj.SystemID)
 }
 
 func (r *characterResolver) Alliance(ctx context.Context, obj *model.Character) (*model.Alliance, error) {
@@ -65,7 +65,7 @@ func (r *constellationResolver) Region(ctx context.Context, obj *model.Constella
 }
 
 func (r *constellationResolver) SolarSystems(ctx context.Context, obj *model.Constellation) ([]*model.System, error) {
-	return dao.SystemByArray(obj.Systems)
+	return universe.SystemByArray(obj.Systems)
 }
 
 func (r *corporationResolver) Alliance(ctx context.Context, obj *model.Corporation) (*model.Alliance, error) {
@@ -85,7 +85,7 @@ func (r *corporationResolver) Faction(ctx context.Context, obj *model.Corporatio
 }
 
 func (r *corporationResolver) HomeStation(ctx context.Context, obj *model.Corporation) (*model.Station, error) {
-	return dao.StationByID(obj.HomeStationID)
+	return universe.StationByID(obj.HomeStationID)
 }
 
 func (r *dogma_attributeResolver) Attribute(ctx context.Context, obj *model.DogmaAttribute) (*model.DogmaAttributeDetail, error) {
@@ -125,7 +125,7 @@ func (r *factionResolver) MilitiaCorporation(ctx context.Context, obj *model.Fac
 }
 
 func (r *factionResolver) SolarSystem(ctx context.Context, obj *model.Faction) (*model.System, error) {
-	return dao.SystemByID(obj.SolarSystemID)
+	return universe.SystemByID(obj.SolarSystemID)
 }
 
 func (r *groupResolver) Category(ctx context.Context, obj *model.Group) (*model.Category, error) {
@@ -133,7 +133,7 @@ func (r *groupResolver) Category(ctx context.Context, obj *model.Group) (*model.
 }
 
 func (r *groupResolver) ItemTypes(ctx context.Context, obj *model.Group) ([]*model.ItemType, error) {
-	return dao.ItemTypesByIDs(obj.Types)
+	return universe.ItemTypesByIDs(obj.Types)
 }
 
 func (r *item_typeResolver) Graphic(ctx context.Context, obj *model.ItemType) (*model.Graphic, error) {
@@ -141,7 +141,7 @@ func (r *item_typeResolver) Graphic(ctx context.Context, obj *model.ItemType) (*
 }
 
 func (r *item_typeResolver) Group(ctx context.Context, obj *model.ItemType) (*model.Group, error) {
-	return dao.GroupByID(obj.GroupID)
+	return universe.GroupByID(obj.GroupID)
 }
 
 func (r *item_typeResolver) MarketGroup(ctx context.Context, obj *model.ItemType) (*model.MarketGroup, error) {
@@ -149,11 +149,11 @@ func (r *item_typeResolver) MarketGroup(ctx context.Context, obj *model.ItemType
 }
 
 func (r *market_groupResolver) ParentGroup(ctx context.Context, obj *model.MarketGroup) (*model.Group, error) {
-	return dao.GroupByID(obj.ParentGroupID)
+	return universe.GroupByID(obj.ParentGroupID)
 }
 
 func (r *market_groupResolver) TypesDetails(ctx context.Context, obj *model.MarketGroup) ([]*model.ItemType, error) {
-	return dao.ItemTypesByIDs(obj.Types)
+	return universe.ItemTypesByIDs(obj.Types)
 }
 
 func (r *modifierResolver) ModifiedAttribute(ctx context.Context, obj *model.Modifier) (*model.DogmaAttributeDetail, error) {
@@ -165,27 +165,27 @@ func (r *modifierResolver) ModifyingAttribute(ctx context.Context, obj *model.Mo
 }
 
 func (r *moonResolver) System(ctx context.Context, obj *model.Moon) (*model.System, error) {
-	return dao.SystemByID(obj.SystemID)
+	return universe.SystemByID(obj.SystemID)
 }
 
 func (r *orderResolver) Location(ctx context.Context, obj *model.Order) (*model.Station, error) {
-	return dao.StationByID(obj.LocationID)
+	return universe.StationByID(obj.LocationID)
 }
 
 func (r *orderResolver) System(ctx context.Context, obj *model.Order) (*model.System, error) {
-	return dao.SystemByID(obj.SystemID)
+	return universe.SystemByID(obj.SystemID)
 }
 
 func (r *orderResolver) ItemType(ctx context.Context, obj *model.Order) (*model.ItemType, error) {
-	return dao.ItemTypeByID(obj.TypeID)
+	return universe.ItemTypeByID(obj.TypeID)
 }
 
 func (r *planetResolver) System(ctx context.Context, obj *model.Planet) (*model.System, error) {
-	return dao.SystemByID(obj.SystemID)
+	return universe.SystemByID(obj.SystemID)
 }
 
 func (r *planetResolver) ItemType(ctx context.Context, obj *model.Planet) (*model.ItemType, error) {
-	return dao.ItemTypeByID(obj.TypeID)
+	return universe.ItemTypeByID(obj.TypeID)
 }
 
 func (r *queryResolver) OrdersForRegion(ctx context.Context, regionID int, orderType model.Ordertype, typeID *int, page int) (*model.OrderWrapper, error) {
@@ -197,15 +197,15 @@ func (r *queryResolver) OrdersForRegionByName(ctx context.Context, region string
 }
 
 func (r *queryResolver) SystemByID(ctx context.Context, id *int) (*model.System, error) {
-	return dao.SystemByID(id)
+	return universe.SystemByID(id)
 }
 
 func (r *queryResolver) StationByID(ctx context.Context, id *int) (*model.Station, error) {
-	return dao.StationByID(id)
+	return universe.StationByID(id)
 }
 
 func (r *queryResolver) PlanetByID(ctx context.Context, id *int) (*model.Planet, error) {
-	return dao.PlanetByID(id)
+	return universe.PlanetByID(id)
 }
 
 func (r *queryResolver) CorporationByID(ctx context.Context, id *int) (*model.Corporation, error) {
@@ -221,27 +221,27 @@ func (r *queryResolver) OrderHistory(ctx context.Context, regionID *int, typeID 
 }
 
 func (r *regionResolver) ConstellationList(ctx context.Context, obj *model.Region) ([]*model.Constellation, error) {
-	return dao.ConstellationsByIDs(obj.Constellations)
+	return universe.ConstellationsByIDs(obj.Constellations)
 }
 
 func (r *starResolver) SolarSystem(ctx context.Context, obj *model.Star) (*model.System, error) {
-	return dao.SystemByID(obj.SolarSystemID)
+	return universe.SystemByID(obj.SolarSystemID)
 }
 
 func (r *starResolver) ItemType(ctx context.Context, obj *model.Star) (*model.ItemType, error) {
-	return dao.ItemTypeByID(obj.TypeID)
+	return universe.ItemTypeByID(obj.TypeID)
 }
 
 func (r *stargateResolver) ItemType(ctx context.Context, obj *model.Stargate) (*model.ItemType, error) {
-	return dao.ItemTypeByID(obj.TypeID)
+	return universe.ItemTypeByID(obj.TypeID)
 }
 
 func (r *stargateDestinationResolver) Stargate(ctx context.Context, obj *model.StargateDestination) (*model.Stargate, error) {
-	return dao.StargateByID(obj.StargateID)
+	return universe.StargateByID(obj.StargateID)
 }
 
 func (r *stargateDestinationResolver) System(ctx context.Context, obj *model.StargateDestination) (*model.System, error) {
-	return dao.SystemByID(obj.SystemID)
+	return universe.SystemByID(obj.SystemID)
 }
 
 func (r *stationResolver) OwningCorporation(ctx context.Context, obj *model.Station) (*model.Corporation, error) {
@@ -253,15 +253,15 @@ func (r *stationResolver) Race(ctx context.Context, obj *model.Station) (*model.
 }
 
 func (r *stationResolver) System(ctx context.Context, obj *model.Station) (*model.System, error) {
-	return dao.SystemByID(obj.SystemID)
+	return universe.SystemByID(obj.SystemID)
 }
 
 func (r *stationResolver) StationType(ctx context.Context, obj *model.Station) (*model.ItemType, error) {
-	return dao.ItemTypeByID(obj.TypeID)
+	return universe.ItemTypeByID(obj.TypeID)
 }
 
 func (r *systemResolver) Constellation(ctx context.Context, obj *model.System) (*model.Constellation, error) {
-	return dao.ConstellationByID(obj.ConstellationID)
+	return universe.ConstellationByID(obj.ConstellationID)
 }
 
 func (r *systemResolver) Star(ctx context.Context, obj *model.System) (*model.Star, error) {
@@ -269,11 +269,11 @@ func (r *systemResolver) Star(ctx context.Context, obj *model.System) (*model.St
 }
 
 func (r *systemResolver) StargateList(ctx context.Context, obj *model.System) ([]*model.Stargate, error) {
-	return dao.StargateDetails(obj.Stargates)
+	return universe.StargateDetails(obj.Stargates)
 }
 
 func (r *systemResolver) StationList(ctx context.Context, obj *model.System) ([]*model.Station, error) {
-	return dao.StationByArray(obj.Stations)
+	return universe.StationByArray(obj.Stations)
 }
 
 func (r *system_planetResolver) AsteroidBeltsProperties(ctx context.Context, obj *model.SystemPlanet) ([]*model.AsteroidBelt, error) {
@@ -281,11 +281,11 @@ func (r *system_planetResolver) AsteroidBeltsProperties(ctx context.Context, obj
 }
 
 func (r *system_planetResolver) MoonDetails(ctx context.Context, obj *model.SystemPlanet) ([]*model.Moon, error) {
-	return dao.MoonDetails(obj.Moons)
+	return universe.MoonDetails(obj.Moons)
 }
 
 func (r *system_planetResolver) PlanetProperties(ctx context.Context, obj *model.SystemPlanet) (*model.Planet, error) {
-	return dao.PlanetByID(obj.PlanetID)
+	return universe.PlanetByID(obj.PlanetID)
 }
 
 // Alliance returns generated.AllianceResolver implementation.
