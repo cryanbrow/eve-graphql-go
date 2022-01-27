@@ -7,6 +7,7 @@ import (
 	"context"
 
 	dao "github.com/cryanbrow/eve-graphql-go/graph/data_access"
+	universe "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
 	"github.com/cryanbrow/eve-graphql-go/graph/generated"
 	"github.com/cryanbrow/eve-graphql-go/graph/model"
 )
@@ -276,7 +277,7 @@ func (r *systemResolver) StationList(ctx context.Context, obj *model.System) ([]
 }
 
 func (r *system_planetResolver) AsteroidBeltsProperties(ctx context.Context, obj *model.SystemPlanet) ([]*model.AsteroidBelt, error) {
-	return dao.AsteroidBeltDetails(obj.AsteroidBelts)
+	return universe.AsteroidBeltDetails(obj.AsteroidBelts)
 }
 
 func (r *system_planetResolver) MoonDetails(ctx context.Context, obj *model.SystemPlanet) ([]*model.Moon, error) {

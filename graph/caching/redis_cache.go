@@ -36,7 +36,7 @@ func AddToRedisCache(key string, value []byte, ttl int64) {
 		if err.Error() == string("redis: nil") {
 			status := rdb.Set(ctx, key, value, ttlString)
 			statusText, err := status.Result()
-			log.Debugf("status text: %s Error: %v", statusText, err)
+			log.Errorf("status text: %s Error: %v", statusText, err)
 		} else {
 			log.Errorf("Redis encountered an error: %v", err)
 		}
