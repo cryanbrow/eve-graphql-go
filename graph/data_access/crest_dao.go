@@ -18,48 +18,41 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/model"
 )
 
-//TODO implement page
-func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int) ([]*model.Order, error) {
+func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int, page *int) ([]*model.Order, error) {
 	log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID, "orderType": orderType}).Info("OrdersForRegion Called")
 	orders := make([]*model.Order, 0)
-	crest_url, err := url.Parse(fmt.Sprintf("%s/markets/%s/orders/", baseUriESI, strconv.Itoa(*regionID)))
-	if err != nil {
-		log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID, "orderType": orderType}).Errorf("Failed to Parse URL with Error : %s", err)
-		return nil, err
-	}
+	base_url := fmt.Sprintf("%s/markets/%s/orders/", baseUriESI, strconv.Itoa(*regionID))
 
-	queryParameters := crest_url.Query()
-	queryParameters.Add("datasource", "tranquility")
-	queryParameters.Add("order_type", string(*orderType))
-	queryParameters.Add("page", "1")
+	redis_key := "OrdersForRegion:" + strconv.Itoa(*regionID) + ":" + orderType.String()
+
+	query_params := make([]configuration.Key_value, 2)
+	kv := new(configuration.Key_value)
+	kv.Key = "page"
+	kv.Value = strconv.Itoa(*page)
+	query_params = append(query_params, *kv)
+
 	if typeID != nil {
-		queryParameters.Add("type_id", strconv.Itoa(*typeID))
+		redis_key = redis_key + ":" + strconv.Itoa(*typeID)
+		kv.Key = "type_id"
+		kv.Value = strconv.Itoa(*typeID)
+		query_params = append(query_params, *kv)
 	}
-	crest_url.RawQuery = queryParameters.Encode()
 
-	orderResult, pages, err := ordersForRegionREST(crest_url.String())
+	redis_key = redis_key + ":" + strconv.Itoa(*page)
 
-	if err == nil && pages > 0 {
+	orderResult, _, err := ordersForRegionREST(base_url, query_params, redis_key)
+
+	if err == nil {
 		orders = append(orders, orderResult...)
 	} else {
 		log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID, "orderType": orderType}).Errorf("First page query for Orders has error : %v", err)
 		println(err)
 	}
 
-	for i := 2; i <= pages; i++ {
-		queryParameters.Set("page", strconv.Itoa(i))
-		orderResult, pages, err := ordersForRegionREST(crest_url.String())
-		if err == nil && pages > 0 {
-			orders = append(orders, orderResult...)
-		} else {
-			log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID, "orderType": orderType, "page": i}).Errorf("Error is not nil : %v", err)
-		}
-	}
-
 	return orders, nil
 }
 
-func OrdersForRegionByName(region *string, orderType *model.Ordertype, typeName *string) ([]*model.Order, error) {
+func OrdersForRegionByName(region *string, orderType *model.Ordertype, typeName *string, page *int) ([]*model.Order, error) {
 	regionID, err := idForName(region, model.REGIONS)
 	if err != nil {
 		return nil, errors.New("unknown name for region")
@@ -68,7 +61,7 @@ func OrdersForRegionByName(region *string, orderType *model.Ordertype, typeName 
 	if err != nil {
 		return nil, errors.New("unknown name for typeName")
 	}
-	orders, err := OrdersForRegion(&regionID, orderType, &typeID)
+	orders, err := OrdersForRegion(&regionID, orderType, &typeID, page)
 	if err != nil {
 		return nil, err
 	}
@@ -80,32 +73,14 @@ func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 	if regionID == nil || typeID == nil {
 		return nil, errors.New("nil id")
 	}
-
-	inCache, result := cache.CheckRedisCache("OrderHistoryByID:" + strconv.Itoa(*regionID) + ":" + strconv.Itoa(*typeID))
-	var responseBytes []byte = result
 	var orderHistory []*model.OrderHistory = make([]*model.OrderHistory, 0)
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/markets/%s/history", baseUriESI, strconv.Itoa(*regionID)))
-		if err != nil {
-			log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
+	base_url := fmt.Sprintf("%s/markets/%s/history", baseUriESI, strconv.Itoa(*regionID))
+	redis_key := "OrderHistoryByID:" + strconv.Itoa(*regionID) + ":" + strconv.Itoa(*typeID)
 
-		queryParameters := crest_url.Query()
-		queryParameters.Add("type_id", strconv.Itoa(*typeID))
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return orderHistory, err
-		}
-
-		cache.AddToRedisCache("OrderHistoryByID:"+strconv.Itoa(*regionID)+":"+strconv.Itoa(*typeID), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return orderHistory, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &orderHistory); err != nil {
@@ -116,11 +91,11 @@ func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 	return orderHistory, nil
 }
 
-func ordersForRegionREST(url string) ([]*model.Order, int, error) {
+func ordersForRegionREST(url string, additional_query_params []configuration.Key_value, redis_key string) ([]*model.Order, int, error) {
 	var orders []*model.Order
 	var pages = 0
 	var buffer bytes.Buffer
-	responseBytes, header, err := makeRESTCall(url, http.MethodGet, buffer, nil)
+	responseBytes, header, err := makeRESTCall(url, http.MethodGet, buffer, additional_query_params, redis_key)
 	if err != nil {
 		return orders, 0, err
 	}
@@ -152,30 +127,14 @@ func SystemByID(id *int) (*model.System, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-
-	inCache, result := cache.CheckRedisCache("SystemByID:" + strconv.Itoa(*id))
-	var responseBytes []byte = result
 	var system *model.System = new(model.System)
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/systems/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
+	base_url := fmt.Sprintf("%s/universe/systems/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "SystemByID:" + strconv.Itoa(*id)
 
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return system, err
-		}
-		cache.AddToRedisCache("SystemByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return system, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &system); err != nil {
@@ -206,31 +165,14 @@ func StationByID(id *int) (*model.Station, error) {
 	if *id > 2147483647 {
 		return nil, nil
 	}
-
-	inCache, result := cache.CheckRedisCache("StationByID:" + strconv.Itoa(*id))
-
 	var station *model.Station = new(model.Station)
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/stations/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
+	base_url := fmt.Sprintf("%s/universe/stations/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "StationByID:" + strconv.Itoa(*id)
 
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return station, err
-		}
-		cache.AddToRedisCache("StationByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return station, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &station); err != nil {
@@ -242,34 +184,17 @@ func StationByID(id *int) (*model.Station, error) {
 }
 
 func CorporationByID(id *int) (*model.Corporation, error) {
+	var corporation *model.Corporation = new(model.Corporation)
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
+	base_url := fmt.Sprintf("%s/corporations/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "CorporationByID:" + strconv.Itoa(*id)
 
-	inCache, result := cache.CheckRedisCache("CorporationByID:" + strconv.Itoa(*id))
-
-	var corporation *model.Corporation = new(model.Corporation)
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/corporations/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
-
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return corporation, err
-		}
-		cache.AddToRedisCache("CorporationByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return corporation, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &corporation); err != nil {
@@ -281,34 +206,17 @@ func CorporationByID(id *int) (*model.Corporation, error) {
 }
 
 func AllianceByID(id *int) (*model.Alliance, error) {
+	var alliance *model.Alliance = new(model.Alliance)
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
+	base_url := fmt.Sprintf("%s/alliances/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "AllianceByID:" + strconv.Itoa(*id)
 
-	inCache, result := cache.CheckRedisCache("AllianceByID:" + strconv.Itoa(*id))
-
-	var alliance *model.Alliance = new(model.Alliance)
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/alliances/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
-
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return alliance, err
-		}
-		cache.AddToRedisCache("AllianceByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return alliance, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &alliance); err != nil {
@@ -320,34 +228,17 @@ func AllianceByID(id *int) (*model.Alliance, error) {
 }
 
 func CharacterByID(id *int) (*model.Character, error) {
+	var character *model.Character = new(model.Character)
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
+	base_url := fmt.Sprintf("%s/characters/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "CharacterByID:" + strconv.Itoa(*id)
 
-	inCache, result := cache.CheckRedisCache("CharacterByID:" + strconv.Itoa(*id))
-
-	var character *model.Character = new(model.Character)
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/characters/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
-
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return character, err
-		}
-		cache.AddToRedisCache("CharacterByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return character, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &character); err != nil {
@@ -363,30 +254,13 @@ func PlanetByID(id *int) (*model.Planet, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
+	base_url := fmt.Sprintf("%s/universe/planets/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "PlanetByID:" + strconv.Itoa(*id)
 
-	inCache, result := cache.CheckRedisCache("PlanetByID:" + strconv.Itoa(*id))
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-
-		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/planets/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
-
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return planet, err
-		}
-		cache.AddToRedisCache("PlanetByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return planet, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &planet); err != nil {
@@ -415,30 +289,13 @@ func StargateByID(id *int) (*model.Stargate, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
+	base_url := fmt.Sprintf("%s/universe/stargates/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "StargateByID:" + strconv.Itoa(*id)
 
-	inCache, result := cache.CheckRedisCache("StargateByID:" + strconv.Itoa(*id))
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-
-		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/stargates/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
-
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return stargate, err
-		}
-		cache.AddToRedisCache("StargateByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return stargate, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &stargate); err != nil {
@@ -467,29 +324,13 @@ func MoonByID(id *int) (*model.Moon, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
+	base_url := fmt.Sprintf("%s/universe/moons/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "MoonByID:" + strconv.Itoa(*id)
 
-	inCache, result := cache.CheckRedisCache("MoonByID:" + strconv.Itoa(*id))
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/moons/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
-
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return moon, err
-		}
-		cache.AddToRedisCache("MoonByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return moon, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &moon); err != nil {
@@ -518,28 +359,13 @@ func ItemTypeByID(id *int) (*model.ItemType, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	inCache, result := cache.CheckRedisCache("ItemTypeByID:" + strconv.Itoa(*id))
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/types/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorln("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
+	base_url := fmt.Sprintf("%s/universe/types/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "ItemTypeByID:" + strconv.Itoa(*id)
 
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return itemType, err
-		}
-		cache.AddToRedisCache("ItemTypeByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return itemType, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &itemType); err != nil {
@@ -568,28 +394,13 @@ func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	inCache, result := cache.CheckRedisCache("AsteroidBeltByID:" + strconv.Itoa(*id))
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/asteroid_belts/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
+	base_url := fmt.Sprintf("%s/universe/asteroid_belts/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "AsteroidBeltByID:" + strconv.Itoa(*id)
 
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return asteroidBelt, err
-		}
-		cache.AddToRedisCache("AsteroidBeltByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return asteroidBelt, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &asteroidBelt); err != nil {
@@ -605,28 +416,13 @@ func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	inCache, result := cache.CheckRedisCache("MarketGroupByID:" + strconv.Itoa(*id))
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/markets/groups/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
+	base_url := fmt.Sprintf("%s/markets/groups/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "MarketGroupByID:" + strconv.Itoa(*id)
 
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return marketGroup, err
-		}
-		cache.AddToRedisCache("MarketGroupByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return marketGroup, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &marketGroup); err != nil {
@@ -642,28 +438,13 @@ func GroupByID(id *int) (*model.Group, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	inCache, result := cache.CheckRedisCache("GroupByID:" + strconv.Itoa(*id))
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/groups/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
+	base_url := fmt.Sprintf("%s/universe/groups/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "GroupByID:" + strconv.Itoa(*id)
 
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return group, err
-		}
-		cache.AddToRedisCache("GroupByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return group, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &group); err != nil {
@@ -692,28 +473,13 @@ func ConstellationByID(id *int) (*model.Constellation, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	inCache, result := cache.CheckRedisCache("ConstellationByID:" + strconv.Itoa(*id))
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/constellations/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
+	base_url := fmt.Sprintf("%s/universe/constellations/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "ConstellationByID:" + strconv.Itoa(*id)
 
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return constellation, err
-		}
-		cache.AddToRedisCache("ConstellationByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return constellation, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &constellation); err != nil {
@@ -729,28 +495,13 @@ func StarByID(id *int) (*model.Star, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	inCache, result := cache.CheckRedisCache("StarByID:" + strconv.Itoa(*id))
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/stars/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
+	base_url := fmt.Sprintf("%s/universe/stars/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "StarByID:" + strconv.Itoa(*id)
 
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return star, err
-		}
-		cache.AddToRedisCache("StarByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return star, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &star); err != nil {
@@ -766,29 +517,13 @@ func GraphicByID(id *int) (*model.Graphic, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
+	base_url := fmt.Sprintf("%s/universe/graphics/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "GraphicByID:" + strconv.Itoa(*id)
 
-	inCache, result := cache.CheckRedisCache("GraphicByID:" + strconv.Itoa(*id))
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/graphics/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
-
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return graphic, err
-		}
-		cache.AddToRedisCache("GraphicByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return graphic, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &graphic); err != nil {
@@ -804,29 +539,13 @@ func DogmaAttributeByID(id *int) (*model.DogmaAttributeDetail, error) {
 	if id == nil {
 		return nil, nil
 	}
+	base_url := fmt.Sprintf("%s/dogma/attributes/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "DogmaAttributeByID:" + strconv.Itoa(*id)
 
-	inCache, result := cache.CheckRedisCache("DogmaAttributeByID:" + strconv.Itoa(*id))
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/dogma/attributes/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
-
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return dogmaAttribute, err
-		}
-		cache.AddToRedisCache("DogmaAttributeByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return dogmaAttribute, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &dogmaAttribute); err != nil {
@@ -842,29 +561,13 @@ func DogmaEffectByID(id *int) (*model.DogmaEffectDetail, error) {
 	if id == nil {
 		return nil, nil
 	}
+	base_url := fmt.Sprintf("%s/dogma/effects/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "DogmaEffectByID:" + strconv.Itoa(*id)
 
-	inCache, result := cache.CheckRedisCache("DogmaEffectByID:" + strconv.Itoa(*id))
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/dogma/effects/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
-
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return dogmaEffect, err
-		}
-		cache.AddToRedisCache("DogmaEffectByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return dogmaEffect, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &dogmaEffect); err != nil {
@@ -880,29 +583,13 @@ func CategoryByID(id *int) (*model.Category, error) {
 	if id == nil {
 		return nil, nil
 	}
+	base_url := fmt.Sprintf("%s/universe/categories/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "CategoryByID:" + strconv.Itoa(*id)
 
-	inCache, result := cache.CheckRedisCache("CategoryByID:" + strconv.Itoa(*id))
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/categories/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
-
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return category, err
-		}
-		cache.AddToRedisCache("CategoryByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return category, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &category); err != nil {
@@ -918,29 +605,13 @@ func RegionByID(id *int) (*model.Region, error) {
 	if id == nil {
 		return nil, nil
 	}
+	base_url := fmt.Sprintf("%s/universe/regions/%s/", baseUriESI, strconv.Itoa(*id))
+	redis_key := "RegionByID:" + strconv.Itoa(*id)
 
-	inCache, result := cache.CheckRedisCache("RegionByID:" + strconv.Itoa(*id))
-	var responseBytes []byte = result
-	var headers http.Header = nil
-	if !inCache {
-		crest_url, err := url.Parse(fmt.Sprintf("%s/universe/regions/%s/", baseUriESI, strconv.Itoa(*id)))
-		if err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-			return nil, err
-		}
-
-		queryParameters := crest_url.Query()
-		queryParameters.Add("datasource", "tranquility")
-		queryParameters.Add("language", "en")
-
-		crest_url.RawQuery = queryParameters.Encode()
-
-		var buffer bytes.Buffer
-		responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
-		if err != nil {
-			return region, err
-		}
-		cache.AddToRedisCache("RegionByID:"+strconv.Itoa(*id), responseBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+	var buffer bytes.Buffer
+	responseBytes, _, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	if err != nil {
+		return region, err
 	}
 
 	if err := json.Unmarshal(responseBytes, &region); err != nil {
@@ -978,22 +649,11 @@ func FactionByID(id *int) (*model.Faction, error) {
 func factionByArray(id *int) (*model.Faction, error) {
 	var factions []*model.Faction = make([]*model.Faction, 0)
 	var returnFaction *model.Faction
-	var responseBytes []byte = make([]byte, 0)
-	var headers http.Header = nil
-	crest_url, err := url.Parse(fmt.Sprintf("%s/universe/factions/", baseUriESI))
-	if err != nil {
-		log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-		return nil, err
-	}
-
-	queryParameters := crest_url.Query()
-	queryParameters.Add("datasource", "tranquility")
-	queryParameters.Add("language", "en")
-
-	crest_url.RawQuery = queryParameters.Encode()
+	base_url := fmt.Sprintf("%s/universe/factions/", baseUriESI)
+	redis_key := "FactionByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
+	responseBytes, headers, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return nil, err
 	}
@@ -1046,22 +706,11 @@ func AncestryByID(id *int) (*model.Ancestry, error) {
 func ancestryByArray(id *int) (*model.Ancestry, error) {
 	var ancestries []*model.Ancestry = make([]*model.Ancestry, 0)
 	var returnAncestry *model.Ancestry
-	var responseBytes []byte = make([]byte, 0)
-	var headers http.Header = nil
-	crest_url, err := url.Parse(fmt.Sprintf("%s/universe/ancestries/", baseUriESI))
-	if err != nil {
-		log.WithFields(log.Fields{"id": id}).Errorf("Failed to Parse URL with Error : %v", err)
-		return nil, err
-	}
-
-	queryParameters := crest_url.Query()
-	queryParameters.Add("datasource", "tranquility")
-	queryParameters.Add("language", "en")
-
-	crest_url.RawQuery = queryParameters.Encode()
+	var redis_key = "AncestryByID:" + strconv.Itoa(*id)
+	base_url := fmt.Sprintf("%s/universe/ancestries/", baseUriESI)
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err = makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
+	responseBytes, headers, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return nil, err
 	}
@@ -1118,7 +767,7 @@ func bloodlineByArray(id *int) (*model.Bloodline, error) {
 	redis_key := "BloodlineByID"
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err := makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
+	responseBytes, headers, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return nil, err
 	}
@@ -1176,7 +825,7 @@ func raceByArray(id *int) (*model.Race, error) {
 	redis_key := "RaceByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err := makeRESTCall(base_url, http.MethodPost, buffer, nil, redis_key)
+	responseBytes, headers, err := makeRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return nil, err
 	}
@@ -1204,11 +853,11 @@ func raceByArray(id *int) (*model.Race, error) {
 func idForName(name *string, name_type string) (int, error) {
 	var ids *model.Names = new(model.Names)
 	base_url := fmt.Sprintf("%s/universe/ids/", baseUriESI)
-	redis_key := "IDForName:" + *name
-	singleItemArray := []string{*name}
 	if name == nil {
 		return 0, errors.New("nil name")
 	}
+	redis_key := "IDForName:" + *name
+	singleItemArray := []string{*name}
 
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(singleItemArray)
@@ -1252,9 +901,8 @@ func idForName(name *string, name_type string) (int, error) {
 
 }
 
-//TODO store array in key different than search redis key
-func makeRESTCall(base_url string, verb string, byteBuffer bytes.Buffer, additional_query_params []configuration.Key_value, redis_key string) ([]byte, http.Header, error) {
-	inCache, result := cache.CheckRedisCache(redis_key)
+func makeRESTCall(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+	inCache, result := cache.CheckRedisCache(redis_query_key)
 	if !inCache {
 		crest_url, err := url.Parse(base_url)
 		if err != nil {
@@ -1273,7 +921,7 @@ func makeRESTCall(base_url string, verb string, byteBuffer bytes.Buffer, additio
 		url := crest_url.String()
 
 		log.WithFields(log.Fields{"url": url}).Info("Making REST Call")
-		request, err := http.NewRequest(verb, url, &byteBuffer)
+		request, err := http.NewRequest(verb, url, &body)
 		if err != nil {
 			log.WithFields(log.Fields{"url": url}).Errorf("Could not build request. : %v", err)
 		}
@@ -1293,7 +941,7 @@ func makeRESTCall(base_url string, verb string, byteBuffer bytes.Buffer, additio
 			log.WithFields(log.Fields{"url": url}).Errorf("Could not read response for body. : %v", err)
 			return make([]byte, 0), nil, err
 		}
-		cache.AddToRedisCache(redis_key, responseBytes, helpers.ESI_ttl_to_millis(h.Get("expires")))
+		cache.AddToRedisCache(redis_query_key, responseBytes, helpers.ESI_ttl_to_millis(h.Get("expires")))
 		return responseBytes, h, nil
 	}
 	return result, nil, nil
@@ -1313,5 +961,5 @@ func init() {
 	log.SetLevel(log.DebugLevel)
 	log.SetReportCaller(true)
 	Client = &http.Client{}
-	baseUriESI = "https://esi.evetech.net/latest"
+	baseUriESI = configuration.AppConfig.Esi.Default.Url
 }

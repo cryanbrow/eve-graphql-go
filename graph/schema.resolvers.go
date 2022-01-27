@@ -187,12 +187,12 @@ func (r *planetResolver) ItemType(ctx context.Context, obj *model.Planet) (*mode
 	return dao.ItemTypeByID(obj.TypeID)
 }
 
-func (r *queryResolver) OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordertype, typeID *int) ([]*model.Order, error) {
-	return dao.OrdersForRegion(regionID, orderType, typeID)
+func (r *queryResolver) OrdersForRegion(ctx context.Context, regionID int, orderType model.Ordertype, typeID *int, page int) ([]*model.Order, error) {
+	return dao.OrdersForRegion(&regionID, &orderType, typeID, &page)
 }
 
-func (r *queryResolver) OrdersForRegionByName(ctx context.Context, region *string, orderType *model.Ordertype, typeName *string) ([]*model.Order, error) {
-	return dao.OrdersForRegionByName(region, orderType, typeName)
+func (r *queryResolver) OrdersForRegionByName(ctx context.Context, region string, orderType model.Ordertype, typeName *string, page int) ([]*model.Order, error) {
+	return dao.OrdersForRegionByName(&region, &orderType, typeName, &page)
 }
 
 func (r *queryResolver) SystemByID(ctx context.Context, id *int) (*model.System, error) {

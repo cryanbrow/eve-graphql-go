@@ -10,3 +10,4 @@ esi:
       value: 'tranquility'
     - key: 'language'
       value: 'en'
+    url: 'https://esi.evetech.net/latest'

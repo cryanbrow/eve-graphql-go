@@ -20,6 +20,7 @@ type Config struct {
 	Esi struct {
 		Default struct {
 			Query_params []Key_value `yaml:"query_params"`
+			Url          string      `yaml:"url"`
 		} `yaml:"default"`
 	} `yaml:"esi"`
 }

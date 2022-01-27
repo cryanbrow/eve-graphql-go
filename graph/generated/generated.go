@@ -367,8 +367,8 @@ type ComplexityRoot struct {
 		CorporationByID       func(childComplexity int, id *int) int
 		FactionByID           func(childComplexity int, id *int) int
 		OrderHistory          func(childComplexity int, regionID *int, typeID *int) int
-		OrdersForRegion       func(childComplexity int, regionID *int, orderType *model.Ordertype, typeID *int) int
-		OrdersForRegionByName func(childComplexity int, region *string, orderType *model.Ordertype, typeName *string) int
+		OrdersForRegion       func(childComplexity int, regionID int, orderType model.Ordertype, typeID *int, page int) int
+		OrdersForRegionByName func(childComplexity int, region string, orderType model.Ordertype, typeName *string, page int) int
 		PlanetByID            func(childComplexity int, id *int) int
 		StationByID           func(childComplexity int, id *int) int
 		SystemByID            func(childComplexity int, id *int) int
@@ -575,8 +575,8 @@ type PlanetResolver interface {
 	ItemType(ctx context.Context, obj *model.Planet) (*model.ItemType, error)
 }
 type QueryResolver interface {
-	OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordertype, typeID *int) ([]*model.Order, error)
-	OrdersForRegionByName(ctx context.Context, region *string, orderType *model.Ordertype, typeName *string) ([]*model.Order, error)
+	OrdersForRegion(ctx context.Context, regionID int, orderType model.Ordertype, typeID *int, page int) ([]*model.Order, error)
+	OrdersForRegionByName(ctx context.Context, region string, orderType model.Ordertype, typeName *string, page int) ([]*model.Order, error)
 	SystemByID(ctx context.Context, id *int) (*model.System, error)
 	StationByID(ctx context.Context, id *int) (*model.Station, error)
 	PlanetByID(ctx context.Context, id *int) (*model.Planet, error)
@@ -2261,7 +2261,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.OrdersForRegion(childComplexity, args["region_id"].(*int), args["order_type"].(*model.Ordertype), args["type_id"].(*int)), true
+		return e.complexity.Query.OrdersForRegion(childComplexity, args["region_id"].(int), args["order_type"].(model.Ordertype), args["type_id"].(*int), args["page"].(int)), true
 
 	case "Query.ordersForRegionByName":
 		if e.complexity.Query.OrdersForRegionByName == nil {
@@ -2273,7 +2273,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.OrdersForRegionByName(childComplexity, args["region"].(*string), args["order_type"].(*model.Ordertype), args["type_name"].(*string)), true
+		return e.complexity.Query.OrdersForRegionByName(childComplexity, args["region"].(string), args["order_type"].(model.Ordertype), args["type_name"].(*string), args["page"].(int)), true
 
 	case "Query.planetById":
 		if e.complexity.Query.PlanetByID == nil {
@@ -2833,30 +2833,32 @@ var sources = []*ast.Source{
 	{Name: "graph/schema.graphqls", Input: `type Query{
 	"""queries for orders in a required region id for active market orders."""
 	ordersForRegion(
-		region_id : Int
-		order_type : Ordertype = all
-		type_id : Int
-	) : [Order]
+		region_id: Int!
+		order_type: Ordertype! = all
+		type_id: Int
+		page: Int!
+	): [Order]
 	ordersForRegionByName(
-		region : String
-		order_type : Ordertype = all
-		type_name : String
-	) : [Order]
+		region: String!
+		order_type: Ordertype! = all
+		type_name: String
+		page: Int!
+	): [Order]
 	"""Get information on a solar system."""
-	systemById(id : Int) : System
+	systemById(id: Int): System
 	"""Get information on a station"""
-	stationById(id : Int) : Station
+	stationById(id: Int): Station
 	"""Get information on a planet"""
-	planetById(id : Int) : Planet
+	planetById(id: Int): Planet
 	"""Public information about a corporation"""
-	corporationById(id : Int) : Corporation
+	corporationById(id: Int): Corporation
 	"""Get information on a faction"""
-	factionByID(id : Int) : Faction
+	factionByID(id: Int): Faction
 	"""Get history of orders for region and type id"""
 	orderHistory(
-		region_id : Int
-		type_id : Int
-	) : [OrderHistory]
+		region_id: Int
+		type_id: Int
+	): [OrderHistory]
 }
 
 enum Ordertype {
@@ -2884,399 +2886,399 @@ type OrderHistory {
 """Object representing a market order"""
 type Order {
 	"""Duration of Order"""
-	duration : Int
+	duration: Int
 	"""Is it a buy order"""
-	is_buy_order : Boolean
+	is_buy_order: Boolean
 	"""Date the order was issued"""
-	issued : String
+	issued: String
 	"""Station where the order is placed at"""
-	location : Station
+	location: Station
 	"""id of station where order is placed at"""
 	location_id: Int
 	"""Minimum volume of purchase"""
-	min_volume : Int
+	min_volume: Int
 	"""unique id of the order"""
-	order_id : Int!
+	order_id: Int!
 	"""Price in isk of the order"""
-	price : Float
+	price: Float
 	"""Range of Order Station/System/Region"""
-	range : Range
+	range: Range
 	"""System where the order is placed"""
-	system : System
+	system: System
 	"""id of the system where the order is placed"""
 	system_id: Int
 	"""EVE item type that is in the order"""
-	item_type : Item_type
+	item_type: Item_type
 	"""id of item type"""
-	type_id : Int
+	type_id: Int
 	"""number of items remaining in the order"""
-	volume_remain : Int
+	volume_remain: Int
 	"""number of items initally placed in the order"""
-	volume_total : Int
+	volume_total: Int
 }
 
 """Space station in EVE and information about it."""
 type Station{
 	"""Max ships that can be docked in the station"""
-	max_dockable_ship_volume : Float
+	max_dockable_ship_volume: Float
 	"""Name of the station"""
-	name : String
+	name: String
 	"""Cost of renting an office for your Corporation"""
-	office_rental_cost : Float
+	office_rental_cost: Float
 	"""Owner ID of Corporation of station"""
-	owner : Int
+	owner: Int
 	"""Complex object representing the Corporation that owns the station"""
-	owning_corporation : Corporation
+	owning_corporation: Corporation
 	"""x,y,z position of station in space"""
-	position : Position
+	position: Position
 	"""id of the race that the station is built by"""
-	race_id : Int
+	race_id: Int
 	"""race that the station is built by"""
-	race : Race
+	race: Race
 	"""Floating point percentage of efficiency of the reprocessing facilities of this station"""
-	reprocessing_efficiency : Float
+	reprocessing_efficiency: Float
 	"""floating point percent of take of materials in reprocessing"""
-	reprocessing_stations_take : Float
+	reprocessing_stations_take: Float
 	"""Services provided by the station"""
-	services : [Services]
+	services: [Services]
 	"""Unique ID of the station"""
-	station_id : Int
+	station_id: Int
 	"""Unique ID of the system that the station resides in"""
-	system_id : Int
+	system_id: Int
 	"""System the station resides in"""
-	system : System
+	system: System
 	"""type id of station"""
-	type_id : Int
+	type_id: Int
 	"""item type of the station"""
-	station_type : Item_type
+	station_type: Item_type
 }
 
 type Corporation{
-	alliance : Alliance
-	alliance_id : Int
-	ceo : Character
-	ceo_id : Int
-	creator : Character
-	creator_id : Int
-	date_founded : String
-	description : String
-	faction : Faction
-	faction_id : Int
-	home_station : Station
-	home_station_id : Int
-	member_count : Int
-	name : String
-	shares : Int
-	tax_rate : Float
-	ticker : String
-	url : String
-	war_eligible : Boolean
+	alliance: Alliance
+	alliance_id: Int
+	ceo: Character
+	ceo_id: Int
+	creator: Character
+	creator_id: Int
+	date_founded: String
+	description: String
+	faction: Faction
+	faction_id: Int
+	home_station: Station
+	home_station_id: Int
+	member_count: Int
+	name: String
+	shares: Int
+	tax_rate: Float
+	ticker: String
+	url: String
+	war_eligible: Boolean
 }
 
 type Alliance{
-	creator_corporation_id : Int
-	creator_corporation : Corporation
-	creator_id : Int
-	creator : Character
-	date_founded : String
-	executor_corporation_id : Int
-	executor_corporation : Corporation
-	faction_id : Int
-	faction : Faction
-	name : String
-	ticker : String
+	creator_corporation_id: Int
+	creator_corporation: Corporation
+	creator_id: Int
+	creator: Character
+	date_founded: String
+	executor_corporation_id: Int
+	executor_corporation: Corporation
+	faction_id: Int
+	faction: Faction
+	name: String
+	ticker: String
 }
 
 type Character{
-	alliance_id : Int
-	alliance : Alliance
-	ancestry_id : Int
-	ancestry : Ancestry
-	birthday : String
-	bloodline_id : Int
-	bloodline : Bloodline
-	corporation_id : Int
-	corporation : Corporation
-	description : String
-	faction_id : Int
-	faction : Faction
-	gender : Gender
-	name : String
-	race_id : Int
-	race : Race
-	security_status : Float
-	title : String
+	alliance_id: Int
+	alliance: Alliance
+	ancestry_id: Int
+	ancestry: Ancestry
+	birthday: String
+	bloodline_id: Int
+	bloodline: Bloodline
+	corporation_id: Int
+	corporation: Corporation
+	description: String
+	faction_id: Int
+	faction: Faction
+	gender: Gender
+	name: String
+	race_id: Int
+	race: Race
+	security_status: Float
+	title: String
 }
 
 type Ancestry{
-	bloodline_id : Int
-	bloodline : Bloodline
-	description : String
-	icon_id : Int
-	id : Int
-	name : String
-	short_description : String
+	bloodline_id: Int
+	bloodline: Bloodline
+	description: String
+	icon_id: Int
+	id: Int
+	name: String
+	short_description: String
 }
 
 type Bloodline{
-	bloodline_id : Int
-	charisma : Int
-	corporation_id : Int
-	corporation : Corporation
-	description : String
-	intelligence : Int
-	memory : Int
-	name : String
-	perception : Int
-	race_id : Int
-	race : Race
-	ship_type_id : Int
-	ship_type : Item_type
-	willpower : Int
+	bloodline_id: Int
+	charisma: Int
+	corporation_id: Int
+	corporation: Corporation
+	description: String
+	intelligence: Int
+	memory: Int
+	name: String
+	perception: Int
+	race_id: Int
+	race: Race
+	ship_type_id: Int
+	ship_type: Item_type
+	willpower: Int
 }
 
 type Race{
-	alliance : Alliance
-	description : String
-	name : String
-	race_id : Int
+	alliance: Alliance
+	description: String
+	name: String
+	race_id: Int
 }
 
 type Item_type{
-	type_id : Int
-	capacity : Float
-	description : String
-	dogma_attributes : [Dogma_attribute]
-	dogma_effects : [Dogma_effect]
-	graphic_id : Int
-	graphic : Graphic
-	group_id : Int
-	group : Group
-	icon_id : Int
-	market_group_id : Int
-	market_group : Market_group
-	mass : Float
-	name : String
-	packaged_volume : Float
-	portion_size : Int
-	published : Boolean
-	radius : Float
-	volume : Float
+	type_id: Int
+	capacity: Float
+	description: String
+	dogma_attributes: [Dogma_attribute]
+	dogma_effects: [Dogma_effect]
+	graphic_id: Int
+	graphic: Graphic
+	group_id: Int
+	group: Group
+	icon_id: Int
+	market_group_id: Int
+	market_group: Market_group
+	mass: Float
+	name: String
+	packaged_volume: Float
+	portion_size: Int
+	published: Boolean
+	radius: Float
+	volume: Float
 }
 
 type Dogma_attribute{
-	attribute : Dogma_attribute_detail
-	attribute_id : Int
-	value : Float
+	attribute: Dogma_attribute_detail
+	attribute_id: Int
+	value: Float
 }
 
 type Dogma_attribute_detail{
-	attribute_id : Int
-	default_value : Float
-	description : String
-	display_name : String
-	high_is_good : Boolean
-	icon : Icon
-	name : String
-	published : Boolean
-	stackable : Boolean
-	unit : Unit
+	attribute_id: Int
+	default_value: Float
+	description: String
+	display_name: String
+	high_is_good: Boolean
+	icon: Icon
+	name: String
+	published: Boolean
+	stackable: Boolean
+	unit: Unit
 }
 
 type Icon{
-	id : Int
+	id: Int
 }
 
 type Unit{
-	id : Int
+	id: Int
 }
 
 type Dogma_effect{
-	effect_id : Int
-	effect : Dogma_effect_detail
-	is_default : Boolean
+	effect_id: Int
+	effect: Dogma_effect_detail
+	is_default: Boolean
 }
 
 type Dogma_effect_detail{
-	description : String
-	disallow_auto_repeat : Boolean
-	discharge_attribute_id : Int
-	discharge_attribute : Dogma_attribute_detail
-	display_name : String
-	duration_attribute_id : Int
-	duration_attribute : Dogma_attribute_detail
-	effect_category : Int
-	effect_id : Int
-	electronic_chance : Boolean
-	falloff_attribute_id : Int
-	falloff_attribute : Dogma_attribute_detail
-	icon : Icon
-	is_assistance : Boolean
-	is_offensive : Boolean
-	is_warp_safe : Boolean
-	modifiers : [Modifier]
-	name : String
-	post_expression : Int
-	pre_expression : Int
-	published : Boolean
-	range_attribute_id : Int
-	range_attribute : Dogma_attribute_detail
-	range_change : Boolean
-	tracking_speed_attribute_id : Int
-	tracking_speed_attribute : Dogma_attribute_detail
+	description: String
+	disallow_auto_repeat: Boolean
+	discharge_attribute_id: Int
+	discharge_attribute: Dogma_attribute_detail
+	display_name: String
+	duration_attribute_id: Int
+	duration_attribute: Dogma_attribute_detail
+	effect_category: Int
+	effect_id: Int
+	electronic_chance: Boolean
+	falloff_attribute_id: Int
+	falloff_attribute: Dogma_attribute_detail
+	icon: Icon
+	is_assistance: Boolean
+	is_offensive: Boolean
+	is_warp_safe: Boolean
+	modifiers: [Modifier]
+	name: String
+	post_expression: Int
+	pre_expression: Int
+	published: Boolean
+	range_attribute_id: Int
+	range_attribute: Dogma_attribute_detail
+	range_change: Boolean
+	tracking_speed_attribute_id: Int
+	tracking_speed_attribute: Dogma_attribute_detail
 }
 
 type Modifier{
-	domain : String
-	effect_id : Int
-	func : String
-	modified_attribute_id : Int
-	modified_attribute : Dogma_attribute_detail
-	modifying_attribute_id : Int
-	modifying_attribute : Dogma_attribute_detail
-	operator : Int
+	domain: String
+	effect_id: Int
+	func: String
+	modified_attribute_id: Int
+	modified_attribute: Dogma_attribute_detail
+	modifying_attribute_id: Int
+	modifying_attribute: Dogma_attribute_detail
+	operator: Int
 }
 
 type Graphic{
-	collision_file : String
-	graphic_file : String
-	graphic_id : Int
-	icon_folder : String
-	sof_dna : String
-	sof_faction_name : String
-	sof_hull_name : String
-	sof_race_name : String
+	collision_file: String
+	graphic_file: String
+	graphic_id: Int
+	icon_folder: String
+	sof_dna: String
+	sof_faction_name: String
+	sof_hull_name: String
+	sof_race_name: String
 }
 
 type Group{
-	category_id : Int
-	category : Category
-	group_id : Int
-	name : String
-	published : Boolean
-	types : [Int]
-	item_types : [Item_type]
+	category_id: Int
+	category: Category
+	group_id: Int
+	name: String
+	published: Boolean
+	types: [Int]
+	item_types: [Item_type]
 }
 
 type Category{
-	category_id : Int
-	category_groups : [Group]
-	name : String
-	published : Boolean
+	category_id: Int
+	category_groups: [Group]
+	name: String
+	published: Boolean
 }
 
 type Market_group{
-	description : String
-	id : Int
-	name : String
-	parent_group_id : Int
-	parent_group : Group
-	types : [Int]
-	types_details : [Item_type]
+	description: String
+	id: Int
+	name: String
+	parent_group_id: Int
+	parent_group: Group
+	types: [Int]
+	types_details: [Item_type]
 }
 
 type Faction{
-	corporation_id : Int
-	corporation : Corporation
-	description : String
-	faction_id : Int
-	is_unique : Boolean
-	militia_corporation_id : Int
-	militia_corporation : Corporation
-	name : String
-	size_factor : Float
-	solar_system_id : Int
-	solar_system : System
-	station_count : Int
-	station_system_count : Int
+	corporation_id: Int
+	corporation: Corporation
+	description: String
+	faction_id: Int
+	is_unique: Boolean
+	militia_corporation_id: Int
+	militia_corporation: Corporation
+	name: String
+	size_factor: Float
+	solar_system_id: Int
+	solar_system: System
+	station_count: Int
+	station_system_count: Int
 }
 
 type System{
-	constellation_id : Int
-	constellation : Constellation
-	name : String
-	planets : [System_planet]
-	position : Position
-	security_class : String
-	star_id : Int
-	star : Star
-	stargates : [Int]
-	stargate_list : [Stargate]
-	stations : [Int]
-	station_list : [Station]
-	system_id : Int
+	constellation_id: Int
+	constellation: Constellation
+	name: String
+	planets: [System_planet]
+	position: Position
+	security_class: String
+	star_id: Int
+	star: Star
+	stargates: [Int]
+	stargate_list: [Stargate]
+	stations: [Int]
+	station_list: [Station]
+	system_id: Int
 }
 
 type Constellation{
-	constellation_id : Int
-	name : String
-	position : Position
-	region_id : Int
-	region : Region
-	systems : [Int]
-	solar_systems : [System]
+	constellation_id: Int
+	name: String
+	position: Position
+	region_id: Int
+	region: Region
+	systems: [Int]
+	solar_systems: [System]
 }
 
 type Position{
-	x : Float
-	y : Float
-	z : Float
+	x: Float
+	y: Float
+	z: Float
 }
 
 type Region{
-	constellations : [Int]
-	constellation_list : [Constellation]
-	description : String
-	name : String
-	region_id : Int
+	constellations: [Int]
+	constellation_list: [Constellation]
+	description: String
+	name: String
+	region_id: Int
 }
 
 type Planet{
-	name : String
-	planet_id : Int
-	position : Position
-	system : System
-	system_id : Int
-	item_type : Item_type
-	type_id : Int
+	name: String
+	planet_id: Int
+	position: Position
+	system: System
+	system_id: Int
+	item_type: Item_type
+	type_id: Int
 }
 
 type System_planet{
-	asteroid_belts_properties : [Asteroid_belt]
-	asteroid_belts : [Int]
-	moons : [Int]
-	moon_details : [Moon]
-	planet_properties : Planet
+	asteroid_belts_properties: [Asteroid_belt]
+	asteroid_belts: [Int]
+	moons: [Int]
+	moon_details: [Moon]
+	planet_properties: Planet
 	planet_id: Int
 }
 
 type Asteroid_belt{
-	name : String
-	position : Position
-	system : System
-	system_id : Int
+	name: String
+	position: Position
+	system: System
+	system_id: Int
 }
 
 type Moon{
-	moon_id : Int
-	name : String
-	position : Position
-	system_id : Int
-	system : System
+	moon_id: Int
+	name: String
+	position: Position
+	system_id: Int
+	system: System
 }
 
 type Star{
-	age : Int
-	luminosity : Float
-	name : String
-	radius : Int
-	solar_system_id : Int
-	solar_system : System
-	spectral_class : Spectral_class
-	star_id : Int
-	temperature : Int
-	type_id : Int
-	item_type : Item_type
+	age: Int
+	luminosity: Float
+	name: String
+	radius: Int
+	solar_system_id: Int
+	solar_system: System
+	spectral_class: Spectral_class
+	star_id: Int
+	temperature: Int
+	type_id: Int
+	item_type: Item_type
 }
 
 enum Spectral_class{
@@ -3372,20 +3374,20 @@ enum Spectral_class{
 }
 
 type Stargate{
-	destination : StargateDestination
-	name : String
-	position : Position
-	stargate_id : Int
-	system : System
-	type_id : Int
-	item_type : Item_type
+	destination: StargateDestination
+	name: String
+	position: Position
+	stargate_id: Int
+	system: System
+	type_id: Int
+	item_type: Item_type
 }
 
 type StargateDestination{
-	stargate_id : Int
-	stargate : Stargate
-	system_id : Int
-	system : System
+	stargate_id: Int
+	stargate: Stargate
+	system_id: Int
+	system: System
 }
 
 enum Gender{
@@ -3520,19 +3522,19 @@ func (ec *executionContext) field_Query_orderHistory_args(ctx context.Context, r
 func (ec *executionContext) field_Query_ordersForRegionByName_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *string
+	var arg0 string
 	if tmp, ok := rawArgs["region"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("region"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
 	args["region"] = arg0
-	var arg1 *model.Ordertype
+	var arg1 model.Ordertype
 	if tmp, ok := rawArgs["order_type"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("order_type"))
-		arg1, err = ec.unmarshalOOrdertype2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrdertype(ctx, tmp)
+		arg1, err = ec.unmarshalNOrdertype2githubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrdertype(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3547,25 +3549,34 @@ func (ec *executionContext) field_Query_ordersForRegionByName_args(ctx context.C
 		}
 	}
 	args["type_name"] = arg2
+	var arg3 int
+	if tmp, ok := rawArgs["page"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("page"))
+		arg3, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["page"] = arg3
 	return args, nil
 }
 
 func (ec *executionContext) field_Query_ordersForRegion_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *int
+	var arg0 int
 	if tmp, ok := rawArgs["region_id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("region_id"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
 	args["region_id"] = arg0
-	var arg1 *model.Ordertype
+	var arg1 model.Ordertype
 	if tmp, ok := rawArgs["order_type"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("order_type"))
-		arg1, err = ec.unmarshalOOrdertype2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrdertype(ctx, tmp)
+		arg1, err = ec.unmarshalNOrdertype2githubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrdertype(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3580,6 +3591,15 @@ func (ec *executionContext) field_Query_ordersForRegion_args(ctx context.Context
 		}
 	}
 	args["type_id"] = arg2
+	var arg3 int
+	if tmp, ok := rawArgs["page"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("page"))
+		arg3, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["page"] = arg3
 	return args, nil
 }
 
@@ -10894,7 +10914,7 @@ func (ec *executionContext) _Query_ordersForRegion(ctx context.Context, field gr
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().OrdersForRegion(rctx, args["region_id"].(*int), args["order_type"].(*model.Ordertype), args["type_id"].(*int))
+		return ec.resolvers.Query().OrdersForRegion(rctx, args["region_id"].(int), args["order_type"].(model.Ordertype), args["type_id"].(*int), args["page"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10933,7 +10953,7 @@ func (ec *executionContext) _Query_ordersForRegionByName(ctx context.Context, fi
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().OrdersForRegionByName(rctx, args["region"].(*string), args["order_type"].(*model.Ordertype), args["type_name"].(*string))
+		return ec.resolvers.Query().OrdersForRegionByName(rctx, args["region"].(string), args["order_type"].(model.Ordertype), args["type_name"].(*string), args["page"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -16786,6 +16806,16 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
+func (ec *executionContext) unmarshalNOrdertype2githubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrdertype(ctx context.Context, v interface{}) (model.Ordertype, error) {
+	var res model.Ordertype
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNOrdertype2githubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrdertype(ctx context.Context, sel ast.SelectionSet, v model.Ordertype) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -17726,22 +17756,6 @@ func (ec *executionContext) marshalOOrderHistory2ᚖgithubᚗcomᚋcryanbrowᚋe
 		return graphql.Null
 	}
 	return ec._OrderHistory(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalOOrdertype2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrdertype(ctx context.Context, v interface{}) (*model.Ordertype, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var res = new(model.Ordertype)
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOOrdertype2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrdertype(ctx context.Context, sel ast.SelectionSet, v *model.Ordertype) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return v
 }
 
 func (ec *executionContext) marshalOPlanet2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐPlanet(ctx context.Context, sel ast.SelectionSet, v *model.Planet) graphql.Marshaler {
