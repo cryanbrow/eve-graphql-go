@@ -5,13 +5,13 @@ type Query{
 		order_type: Ordertype! = all
 		type_id: Int
 		page: Int!
-	): [Order]
+	): OrderWrapper
 	ordersForRegionByName(
 		region: String!
 		order_type: Ordertype! = all
 		type_name: String
 		page: Int!
-	): [Order]
+	): OrderWrapper
 	"""Get information on a solar system."""
 	systemById(id: Int): System
 	"""Get information on a station"""
@@ -33,6 +33,11 @@ enum Ordertype {
 	buy
 	sell
 	all
+}
+
+type OrderWrapper {
+	xpages: Int
+	list: [Order]
 }
 
 """History of sales of a type by region"""

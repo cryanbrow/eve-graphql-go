@@ -7,7 +7,7 @@ import (
 	"context"
 
 	dao "github.com/cryanbrow/eve-graphql-go/graph/data_access"
-	universe "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
+	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
 	"github.com/cryanbrow/eve-graphql-go/graph/generated"
 	"github.com/cryanbrow/eve-graphql-go/graph/model"
 )
@@ -188,11 +188,11 @@ func (r *planetResolver) ItemType(ctx context.Context, obj *model.Planet) (*mode
 	return dao.ItemTypeByID(obj.TypeID)
 }
 
-func (r *queryResolver) OrdersForRegion(ctx context.Context, regionID int, orderType model.Ordertype, typeID *int, page int) ([]*model.Order, error) {
+func (r *queryResolver) OrdersForRegion(ctx context.Context, regionID int, orderType model.Ordertype, typeID *int, page int) (*model.OrderWrapper, error) {
 	return dao.OrdersForRegion(&regionID, &orderType, typeID, &page)
 }
 
-func (r *queryResolver) OrdersForRegionByName(ctx context.Context, region string, orderType model.Ordertype, typeName *string, page int) ([]*model.Order, error) {
+func (r *queryResolver) OrdersForRegionByName(ctx context.Context, region string, orderType model.Ordertype, typeName *string, page int) (*model.OrderWrapper, error) {
 	return dao.OrdersForRegionByName(&region, &orderType, typeName, &page)
 }
 

@@ -312,6 +312,11 @@ type OrderHistory struct {
 	Volume *int `json:"volume"`
 }
 
+type OrderWrapper struct {
+	Xpages *int     `json:"xpages"`
+	List   []*Order `json:"list"`
+}
+
 type Planet struct {
 	Name     *string   `json:"name"`
 	PlanetID *int      `json:"planet_id"`

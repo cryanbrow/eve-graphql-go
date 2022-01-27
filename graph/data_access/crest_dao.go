@@ -16,9 +16,9 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/model"
 )
 
-func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int, page *int) ([]*model.Order, error) {
+func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int, page *int) (*model.OrderWrapper, error) {
 	log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID, "orderType": orderType}).Info("OrdersForRegion Called")
-	orders := make([]*model.Order, 0)
+	orderList := make([]*model.Order, 0)
 	base_url := fmt.Sprintf("%s/markets/%s/orders/", baseUriESI, strconv.Itoa(*regionID))
 
 	redis_key := "OrdersForRegion:" + strconv.Itoa(*regionID) + ":" + orderType.String()
@@ -38,19 +38,23 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int, pag
 
 	redis_key = redis_key + ":" + strconv.Itoa(*page)
 
-	orderResult, _, err := ordersForRegionREST(base_url, query_params, redis_key)
+	orderResult, pages, err := ordersForRegionREST(base_url, query_params, redis_key)
 
 	if err == nil {
-		orders = append(orders, orderResult...)
+		orderList = append(orderList, orderResult...)
 	} else {
 		log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID, "orderType": orderType}).Errorf("First page query for Orders has error : %v", err)
 		println(err)
 	}
 
-	return orders, nil
+	return_orders := new(model.OrderWrapper)
+	return_orders.List = orderList
+	return_orders.Xpages = &pages
+
+	return return_orders, nil
 }
 
-func OrdersForRegionByName(region *string, orderType *model.Ordertype, typeName *string, page *int) ([]*model.Order, error) {
+func OrdersForRegionByName(region *string, orderType *model.Ordertype, typeName *string, page *int) (*model.OrderWrapper, error) {
 	regionID, err := idForName(region, model.REGIONS)
 	if err != nil {
 		return nil, errors.New("unknown name for region")

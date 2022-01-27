@@ -347,6 +347,11 @@ type ComplexityRoot struct {
 		Volume     func(childComplexity int) int
 	}
 
+	OrderWrapper struct {
+		List   func(childComplexity int) int
+		Xpages func(childComplexity int) int
+	}
+
 	Planet struct {
 		ItemType func(childComplexity int) int
 		Name     func(childComplexity int) int
@@ -575,8 +580,8 @@ type PlanetResolver interface {
 	ItemType(ctx context.Context, obj *model.Planet) (*model.ItemType, error)
 }
 type QueryResolver interface {
-	OrdersForRegion(ctx context.Context, regionID int, orderType model.Ordertype, typeID *int, page int) ([]*model.Order, error)
-	OrdersForRegionByName(ctx context.Context, region string, orderType model.Ordertype, typeName *string, page int) ([]*model.Order, error)
+	OrdersForRegion(ctx context.Context, regionID int, orderType model.Ordertype, typeID *int, page int) (*model.OrderWrapper, error)
+	OrdersForRegionByName(ctx context.Context, region string, orderType model.Ordertype, typeName *string, page int) (*model.OrderWrapper, error)
 	SystemByID(ctx context.Context, id *int) (*model.System, error)
 	StationByID(ctx context.Context, id *int) (*model.Station, error)
 	PlanetByID(ctx context.Context, id *int) (*model.Planet, error)
@@ -2145,6 +2150,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.OrderHistory.Volume(childComplexity), true
 
+	case "OrderWrapper.list":
+		if e.complexity.OrderWrapper.List == nil {
+			break
+		}
+
+		return e.complexity.OrderWrapper.List(childComplexity), true
+
+	case "OrderWrapper.xpages":
+		if e.complexity.OrderWrapper.Xpages == nil {
+			break
+		}
+
+		return e.complexity.OrderWrapper.Xpages(childComplexity), true
+
 	case "Planet.item_type":
 		if e.complexity.Planet.ItemType == nil {
 			break
@@ -2837,13 +2856,13 @@ var sources = []*ast.Source{
 		order_type: Ordertype! = all
 		type_id: Int
 		page: Int!
-	): [Order]
+	): OrderWrapper
 	ordersForRegionByName(
 		region: String!
 		order_type: Ordertype! = all
 		type_name: String
 		page: Int!
-	): [Order]
+	): OrderWrapper
 	"""Get information on a solar system."""
 	systemById(id: Int): System
 	"""Get information on a station"""
@@ -2865,6 +2884,11 @@ enum Ordertype {
 	buy
 	sell
 	all
+}
+
+type OrderWrapper {
+	xpages: Int
+	list: [Order]
 }
 
 """History of sales of a type by region"""
@@ -10569,6 +10593,70 @@ func (ec *executionContext) _OrderHistory_volume(ctx context.Context, field grap
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _OrderWrapper_xpages(ctx context.Context, field graphql.CollectedField, obj *model.OrderWrapper) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "OrderWrapper",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Xpages, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _OrderWrapper_list(ctx context.Context, field graphql.CollectedField, obj *model.OrderWrapper) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "OrderWrapper",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.List, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Order)
+	fc.Result = res
+	return ec.marshalOOrder2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrder(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Planet_name(ctx context.Context, field graphql.CollectedField, obj *model.Planet) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -10923,9 +11011,9 @@ func (ec *executionContext) _Query_ordersForRegion(ctx context.Context, field gr
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Order)
+	res := resTmp.(*model.OrderWrapper)
 	fc.Result = res
-	return ec.marshalOOrder2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrder(ctx, field.Selections, res)
+	return ec.marshalOOrderWrapper2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrderWrapper(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_ordersForRegionByName(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -10962,9 +11050,9 @@ func (ec *executionContext) _Query_ordersForRegionByName(ctx context.Context, fi
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Order)
+	res := resTmp.(*model.OrderWrapper)
 	fc.Result = res
-	return ec.marshalOOrder2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrder(ctx, field.Selections, res)
+	return ec.marshalOOrderWrapper2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrderWrapper(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_systemById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -15841,6 +15929,32 @@ func (ec *executionContext) _OrderHistory(ctx context.Context, sel ast.Selection
 	return out
 }
 
+var orderWrapperImplementors = []string{"OrderWrapper"}
+
+func (ec *executionContext) _OrderWrapper(ctx context.Context, sel ast.SelectionSet, obj *model.OrderWrapper) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, orderWrapperImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("OrderWrapper")
+		case "xpages":
+			out.Values[i] = ec._OrderWrapper_xpages(ctx, field, obj)
+		case "list":
+			out.Values[i] = ec._OrderWrapper_list(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var planetImplementors = []string{"Planet"}
 
 func (ec *executionContext) _Planet(ctx context.Context, sel ast.SelectionSet, obj *model.Planet) graphql.Marshaler {
@@ -17756,6 +17870,13 @@ func (ec *executionContext) marshalOOrderHistory2ᚖgithubᚗcomᚋcryanbrowᚋe
 		return graphql.Null
 	}
 	return ec._OrderHistory(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOOrderWrapper2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrderWrapper(ctx context.Context, sel ast.SelectionSet, v *model.OrderWrapper) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._OrderWrapper(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOPlanet2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐPlanet(ctx context.Context, sel ast.SelectionSet, v *model.Planet) graphql.Marshaler {
