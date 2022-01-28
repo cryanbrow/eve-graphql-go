@@ -6,30 +6,34 @@ package graph
 import (
 	"context"
 
-	dao "github.com/cryanbrow/eve-graphql-go/graph/data_access"
+	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/alliance"
+	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/character"
+	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/corporation"
+	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/dogma"
+	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/market"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
 	"github.com/cryanbrow/eve-graphql-go/graph/generated"
 	"github.com/cryanbrow/eve-graphql-go/graph/model"
 )
 
 func (r *allianceResolver) CreatorCorporation(ctx context.Context, obj *model.Alliance) (*model.Corporation, error) {
-	return dao.CorporationByID(obj.CreatorCorporationID)
+	return corporation.CorporationByID(obj.CreatorCorporationID)
 }
 
 func (r *allianceResolver) Creator(ctx context.Context, obj *model.Alliance) (*model.Character, error) {
-	return dao.CharacterByID(obj.CreatorID)
+	return character.CharacterByID(obj.CreatorID)
 }
 
 func (r *allianceResolver) ExecutorCorporation(ctx context.Context, obj *model.Alliance) (*model.Corporation, error) {
-	return dao.CorporationByID(obj.ExecutorCorporationID)
+	return corporation.CorporationByID(obj.ExecutorCorporationID)
 }
 
 func (r *allianceResolver) Faction(ctx context.Context, obj *model.Alliance) (*model.Faction, error) {
-	return dao.FactionByID(obj.FactionID)
+	return universe.FactionByID(obj.FactionID)
 }
 
 func (r *ancestryResolver) Bloodline(ctx context.Context, obj *model.Ancestry) (*model.Bloodline, error) {
-	return dao.BloodlineByID(obj.BloodlineID)
+	return universe.BloodlineByID(obj.BloodlineID)
 }
 
 func (r *asteroid_beltResolver) System(ctx context.Context, obj *model.AsteroidBelt) (*model.System, error) {
@@ -37,31 +41,31 @@ func (r *asteroid_beltResolver) System(ctx context.Context, obj *model.AsteroidB
 }
 
 func (r *characterResolver) Alliance(ctx context.Context, obj *model.Character) (*model.Alliance, error) {
-	return dao.AllianceByID(obj.AllianceID)
+	return alliance.AllianceByID(obj.AllianceID)
 }
 
 func (r *characterResolver) Ancestry(ctx context.Context, obj *model.Character) (*model.Ancestry, error) {
-	return dao.AncestryByID(obj.AncestryID)
+	return universe.AncestryByID(obj.AncestryID)
 }
 
 func (r *characterResolver) Bloodline(ctx context.Context, obj *model.Character) (*model.Bloodline, error) {
-	return dao.BloodlineByID(obj.BloodlineID)
+	return universe.BloodlineByID(obj.BloodlineID)
 }
 
 func (r *characterResolver) Corporation(ctx context.Context, obj *model.Character) (*model.Corporation, error) {
-	return dao.CorporationByID(obj.CorporationID)
+	return corporation.CorporationByID(obj.CorporationID)
 }
 
 func (r *characterResolver) Faction(ctx context.Context, obj *model.Character) (*model.Faction, error) {
-	return dao.FactionByID(obj.FactionID)
+	return universe.FactionByID(obj.FactionID)
 }
 
 func (r *characterResolver) Race(ctx context.Context, obj *model.Character) (*model.Race, error) {
-	return dao.RaceByID(obj.RaceID)
+	return universe.RaceByID(obj.RaceID)
 }
 
 func (r *constellationResolver) Region(ctx context.Context, obj *model.Constellation) (*model.Region, error) {
-	return dao.RegionByID(obj.RegionID)
+	return universe.RegionByID(obj.RegionID)
 }
 
 func (r *constellationResolver) SolarSystems(ctx context.Context, obj *model.Constellation) ([]*model.System, error) {
@@ -69,19 +73,19 @@ func (r *constellationResolver) SolarSystems(ctx context.Context, obj *model.Con
 }
 
 func (r *corporationResolver) Alliance(ctx context.Context, obj *model.Corporation) (*model.Alliance, error) {
-	return dao.AllianceByID(obj.AllianceID)
+	return alliance.AllianceByID(obj.AllianceID)
 }
 
 func (r *corporationResolver) Ceo(ctx context.Context, obj *model.Corporation) (*model.Character, error) {
-	return dao.CharacterByID(obj.CeoID)
+	return character.CharacterByID(obj.CeoID)
 }
 
 func (r *corporationResolver) Creator(ctx context.Context, obj *model.Corporation) (*model.Character, error) {
-	return dao.CharacterByID(obj.CreatorID)
+	return character.CharacterByID(obj.CreatorID)
 }
 
 func (r *corporationResolver) Faction(ctx context.Context, obj *model.Corporation) (*model.Faction, error) {
-	return dao.FactionByID(obj.FactionID)
+	return universe.FactionByID(obj.FactionID)
 }
 
 func (r *corporationResolver) HomeStation(ctx context.Context, obj *model.Corporation) (*model.Station, error) {
@@ -89,39 +93,39 @@ func (r *corporationResolver) HomeStation(ctx context.Context, obj *model.Corpor
 }
 
 func (r *dogma_attributeResolver) Attribute(ctx context.Context, obj *model.DogmaAttribute) (*model.DogmaAttributeDetail, error) {
-	return dao.DogmaAttributeByID(obj.AttributeID)
+	return dogma.DogmaAttributeByID(obj.AttributeID)
 }
 
 func (r *dogma_effectResolver) Effect(ctx context.Context, obj *model.DogmaEffect) (*model.DogmaEffectDetail, error) {
-	return dao.DogmaEffectByID(obj.EffectID)
+	return dogma.DogmaEffectByID(obj.EffectID)
 }
 
 func (r *dogma_effect_detailResolver) DischargeAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
-	return dao.DogmaAttributeByID(obj.DischargeAttributeID)
+	return dogma.DogmaAttributeByID(obj.DischargeAttributeID)
 }
 
 func (r *dogma_effect_detailResolver) DurationAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
-	return dao.DogmaAttributeByID(obj.DurationAttributeID)
+	return dogma.DogmaAttributeByID(obj.DurationAttributeID)
 }
 
 func (r *dogma_effect_detailResolver) FalloffAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
-	return dao.DogmaAttributeByID(obj.FalloffAttributeID)
+	return dogma.DogmaAttributeByID(obj.FalloffAttributeID)
 }
 
 func (r *dogma_effect_detailResolver) RangeAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
-	return dao.DogmaAttributeByID(obj.RangeAttributeID)
+	return dogma.DogmaAttributeByID(obj.RangeAttributeID)
 }
 
 func (r *dogma_effect_detailResolver) TrackingSpeedAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
-	return dao.DogmaAttributeByID(obj.TrackingSpeedAttributeID)
+	return dogma.DogmaAttributeByID(obj.TrackingSpeedAttributeID)
 }
 
 func (r *factionResolver) Corporation(ctx context.Context, obj *model.Faction) (*model.Corporation, error) {
-	return dao.CorporationByID(obj.CorporationID)
+	return corporation.CorporationByID(obj.CorporationID)
 }
 
 func (r *factionResolver) MilitiaCorporation(ctx context.Context, obj *model.Faction) (*model.Corporation, error) {
-	return dao.CorporationByID(obj.MilitiaCorporationID)
+	return corporation.CorporationByID(obj.MilitiaCorporationID)
 }
 
 func (r *factionResolver) SolarSystem(ctx context.Context, obj *model.Faction) (*model.System, error) {
@@ -129,7 +133,7 @@ func (r *factionResolver) SolarSystem(ctx context.Context, obj *model.Faction) (
 }
 
 func (r *groupResolver) Category(ctx context.Context, obj *model.Group) (*model.Category, error) {
-	return dao.CategoryByID(obj.CategoryID)
+	return universe.CategoryByID(obj.CategoryID)
 }
 
 func (r *groupResolver) ItemTypes(ctx context.Context, obj *model.Group) ([]*model.ItemType, error) {
@@ -137,7 +141,7 @@ func (r *groupResolver) ItemTypes(ctx context.Context, obj *model.Group) ([]*mod
 }
 
 func (r *item_typeResolver) Graphic(ctx context.Context, obj *model.ItemType) (*model.Graphic, error) {
-	return dao.GraphicByID(obj.GraphicID)
+	return universe.GraphicByID(obj.GraphicID)
 }
 
 func (r *item_typeResolver) Group(ctx context.Context, obj *model.ItemType) (*model.Group, error) {
@@ -145,7 +149,7 @@ func (r *item_typeResolver) Group(ctx context.Context, obj *model.ItemType) (*mo
 }
 
 func (r *item_typeResolver) MarketGroup(ctx context.Context, obj *model.ItemType) (*model.MarketGroup, error) {
-	return dao.MarketGroupByID(obj.MarketGroupID)
+	return market.MarketGroupByID(obj.MarketGroupID)
 }
 
 func (r *market_groupResolver) ParentGroup(ctx context.Context, obj *model.MarketGroup) (*model.Group, error) {
@@ -157,11 +161,11 @@ func (r *market_groupResolver) TypesDetails(ctx context.Context, obj *model.Mark
 }
 
 func (r *modifierResolver) ModifiedAttribute(ctx context.Context, obj *model.Modifier) (*model.DogmaAttributeDetail, error) {
-	return dao.DogmaAttributeByID(obj.ModifiedAttributeID)
+	return dogma.DogmaAttributeByID(obj.ModifiedAttributeID)
 }
 
 func (r *modifierResolver) ModifyingAttribute(ctx context.Context, obj *model.Modifier) (*model.DogmaAttributeDetail, error) {
-	return dao.DogmaAttributeByID(obj.ModifyingAttributeID)
+	return dogma.DogmaAttributeByID(obj.ModifyingAttributeID)
 }
 
 func (r *moonResolver) System(ctx context.Context, obj *model.Moon) (*model.System, error) {
@@ -189,11 +193,11 @@ func (r *planetResolver) ItemType(ctx context.Context, obj *model.Planet) (*mode
 }
 
 func (r *queryResolver) OrdersForRegion(ctx context.Context, regionID int, orderType model.Ordertype, typeID *int, page int) (*model.OrderWrapper, error) {
-	return dao.OrdersForRegion(&regionID, &orderType, typeID, &page)
+	return market.OrdersForRegion(&regionID, &orderType, typeID, &page)
 }
 
 func (r *queryResolver) OrdersForRegionByName(ctx context.Context, region string, orderType model.Ordertype, typeName *string, page int) (*model.OrderWrapper, error) {
-	return dao.OrdersForRegionByName(&region, &orderType, typeName, &page)
+	return market.OrdersForRegionByName(&region, &orderType, typeName, &page)
 }
 
 func (r *queryResolver) SystemByID(ctx context.Context, id *int) (*model.System, error) {
@@ -209,15 +213,15 @@ func (r *queryResolver) PlanetByID(ctx context.Context, id *int) (*model.Planet,
 }
 
 func (r *queryResolver) CorporationByID(ctx context.Context, id *int) (*model.Corporation, error) {
-	return dao.CorporationByID(id)
+	return corporation.CorporationByID(id)
 }
 
 func (r *queryResolver) FactionByID(ctx context.Context, id *int) (*model.Faction, error) {
-	return dao.FactionByID(id)
+	return universe.FactionByID(id)
 }
 
 func (r *queryResolver) OrderHistory(ctx context.Context, regionID *int, typeID *int) ([]*model.OrderHistory, error) {
-	return dao.OrderHistory(regionID, typeID)
+	return market.OrderHistory(regionID, typeID)
 }
 
 func (r *regionResolver) ConstellationList(ctx context.Context, obj *model.Region) ([]*model.Constellation, error) {
@@ -245,11 +249,11 @@ func (r *stargateDestinationResolver) System(ctx context.Context, obj *model.Sta
 }
 
 func (r *stationResolver) OwningCorporation(ctx context.Context, obj *model.Station) (*model.Corporation, error) {
-	return dao.CorporationByID(obj.Owner)
+	return corporation.CorporationByID(obj.Owner)
 }
 
 func (r *stationResolver) Race(ctx context.Context, obj *model.Station) (*model.Race, error) {
-	return dao.RaceByID(obj.RaceID)
+	return universe.RaceByID(obj.RaceID)
 }
 
 func (r *stationResolver) System(ctx context.Context, obj *model.Station) (*model.System, error) {
@@ -265,7 +269,7 @@ func (r *systemResolver) Constellation(ctx context.Context, obj *model.System) (
 }
 
 func (r *systemResolver) Star(ctx context.Context, obj *model.System) (*model.Star, error) {
-	return dao.StarByID(obj.StarID)
+	return universe.StarByID(obj.StarID)
 }
 
 func (r *systemResolver) StargateList(ctx context.Context, obj *model.System) ([]*model.Stargate, error) {
