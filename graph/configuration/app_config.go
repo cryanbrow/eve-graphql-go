@@ -10,7 +10,12 @@ import (
 
 const configPath = "config.yml"
 
+var TestConfigPath string
+
 type Config struct {
+	Server struct {
+		Port string `yaml:"port"`
+	}
 	Redis struct {
 		Url      string `yaml:"url"`
 		Port     string `yaml:"port"`
@@ -33,7 +38,14 @@ type Key_value struct {
 var AppConfig Config
 
 func ReadFile() {
-	file, err := os.Open(configPath)
+	var file *os.File
+	var err error
+	if TestConfigPath == "" {
+		file, err = os.Open(configPath)
+	} else {
+		log.Debug("test config path is populated")
+		file, err = os.Open(TestConfigPath)
+	}
 	if err != nil {
 		processError(err)
 	}
@@ -64,7 +76,7 @@ func SetupLogging() {
 	log.SetReportCaller(true)
 }
 
-func init() {
+func LoadConfiguration() {
 	SetupLogging()
 	ReadFile()
 	ReadEnv()

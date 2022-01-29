@@ -35,20 +35,15 @@ func AddToRedisCache(key string, value []byte, ttl int64) {
 	if err != nil {
 		if err.Error() == string("redis: nil") {
 			status := rdb.Set(ctx, key, value, ttlString)
-			statusText, err := status.Result()
-			log.Errorf("status text: %s Error: %v", statusText, err)
+			statusText, _ := status.Result()
+			log.Debugf("status text: %s", statusText)
 		} else {
 			log.Errorf("Redis encountered an error: %v", err)
 		}
 	}
 }
 
-var (
-	ctx context.Context = context.Background()
-	rdb *redis.Client
-)
-
-func init() {
+func ConfigureRedisClient() {
 	rdb = redis.NewClient(&redis.Options{
 		Addr:     configuration.AppConfig.Redis.Url + ":" + configuration.AppConfig.Redis.Port,
 		Username: configuration.AppConfig.Redis.User,
@@ -56,3 +51,8 @@ func init() {
 		DB:       0, // use default DB
 	})
 }
+
+var (
+	ctx context.Context = context.Background()
+	rdb *redis.Client
+)

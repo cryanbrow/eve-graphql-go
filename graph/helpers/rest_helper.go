@@ -65,9 +65,6 @@ var (
 	Client HTTPClient
 )
 
-func init() {
-	log.SetFormatter(&log.JSONFormatter{})
-	log.SetLevel(log.DebugLevel)
-	log.SetReportCaller(true)
+func SetupRestHelper() {
 	Client = &http.Client{}
 }

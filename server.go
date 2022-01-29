@@ -11,7 +11,10 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/cryanbrow/eve-graphql-go/graph"
+	"github.com/cryanbrow/eve-graphql-go/graph/caching"
+	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 	"github.com/cryanbrow/eve-graphql-go/graph/generated"
+	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
 var (
@@ -22,12 +25,11 @@ var (
 	}
 )
 
-const defaultPort = "8080"
-
 func main() {
+	setupDependencies()
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = defaultPort
+		port = configuration.AppConfig.Server.Port
 	}
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
@@ -60,4 +62,10 @@ func main() {
 
 	log.Infoln("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatalln(http.ListenAndServe(":"+port, nil))
+}
+
+func setupDependencies() {
+	configuration.LoadConfiguration()
+	helpers.SetupRestHelper()
+	caching.ConfigureRedisClient()
 }
