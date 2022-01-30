@@ -11,7 +11,10 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func CheckRedisCache(key string) (bool, []byte) {
+type Client struct {
+}
+
+func (c *Client) CheckRedisCache(key string) (bool, []byte) {
 	log.Debugf("Checking Redis Cache for key: %s", key)
 	val, err := rdb.Get(ctx, key).Result()
 	if err != nil {
@@ -24,7 +27,7 @@ func CheckRedisCache(key string) (bool, []byte) {
 	return true, []byte(val)
 }
 
-func AddToRedisCache(key string, value []byte, ttl int64) {
+func (c *Client) AddToRedisCache(key string, value []byte, ttl int64) {
 	log.Debugf("Adding to Redis Cache: %s", key)
 	ttlString, err := time.ParseDuration((strconv.FormatInt(ttl, 10) + "ms"))
 	if err != nil {

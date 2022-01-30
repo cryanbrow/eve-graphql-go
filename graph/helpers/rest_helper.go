@@ -12,7 +12,7 @@ import (
 )
 
 func MakeCachingRESTCall(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
-	inCache, result := cache.CheckRedisCache(redis_query_key)
+	inCache, result := Redis_client.CheckRedisCache(redis_query_key)
 	if !inCache {
 		crest_url, err := url.Parse(base_url)
 		if err != nil {
@@ -51,7 +51,7 @@ func MakeCachingRESTCall(base_url string, verb string, body bytes.Buffer, additi
 			log.WithFields(log.Fields{"url": url}).Errorf("Could not read response for body. : %v", err)
 			return make([]byte, 0), nil, err
 		}
-		cache.AddToRedisCache(redis_query_key, responseBytes, ESI_ttl_to_millis(h.Get("expires")))
+		Redis_client.AddToRedisCache(redis_query_key, responseBytes, ESI_ttl_to_millis(h.Get("expires")))
 		return responseBytes, h, nil
 	}
 	return result, nil, nil
@@ -61,10 +61,17 @@ type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
+type RedisClient interface {
+	AddToRedisCache(key string, value []byte, ttl int64)
+	CheckRedisCache(key string) (bool, []byte)
+}
+
 var (
-	Client HTTPClient
+	Client       HTTPClient
+	Redis_client RedisClient
 )
 
 func SetupRestHelper() {
 	Client = &http.Client{}
+	Redis_client = &cache.Client{}
 }

@@ -13,6 +13,7 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph"
 	"github.com/cryanbrow/eve-graphql-go/graph/caching"
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
+	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
 	"github.com/cryanbrow/eve-graphql-go/graph/generated"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
@@ -68,4 +69,5 @@ func setupDependencies() {
 	configuration.LoadConfiguration()
 	helpers.SetupRestHelper()
 	caching.ConfigureRedisClient()
+	universe.SetupUniverseRest()
 }
