@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"bytes"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -34,6 +35,7 @@ func MakeCachingRESTCall(base_url string, verb string, body bytes.Buffer, additi
 		request, err := http.NewRequest(verb, url, &body)
 		if err != nil {
 			log.WithFields(log.Fields{"url": url}).Errorf("Could not build request. : %v", err)
+			return make([]byte, 0), nil, err
 		}
 		response, err := Client.Do(request)
 		if err != nil {
@@ -45,7 +47,7 @@ func MakeCachingRESTCall(base_url string, verb string, body bytes.Buffer, additi
 		responseBytes, err := ioutil.ReadAll(response.Body)
 		if response.StatusCode != 200 {
 			log.WithFields(log.Fields{"url": url, "status_code": response.StatusCode}).Errorf("Received bad status code. : %v", err)
-			return make([]byte, 0), nil, err
+			return make([]byte, 0), nil, errors.New(response.Status)
 		}
 		if err != nil {
 			log.WithFields(log.Fields{"url": url}).Errorf("Could not read response for body. : %v", err)
