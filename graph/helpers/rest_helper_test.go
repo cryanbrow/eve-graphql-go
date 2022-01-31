@@ -1,0 +1,206 @@
+package helpers
+
+import (
+	"bytes"
+	"io/ioutil"
+	"net/http"
+	"strconv"
+	"testing"
+
+	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
+)
+
+func TestSuccessful_MakeCachingRESTCall(t *testing.T) {
+	Redis_client = &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return false, make([]byte, 0)
+		},
+	}
+	jsonResponse := `[{
+		"full_name": "mock-repo"
+	   }]`
+	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
+
+	Client = &MockClient{
+		MockDo: func(*http.Request) (*http.Response, error) {
+			return &http.Response{
+				StatusCode: 200,
+				Body:       r,
+			}, nil
+		},
+	}
+
+	query_params := make([]configuration.Key_value, 2)
+	kv := new(configuration.Key_value)
+	kv.Key = "page"
+	kv.Value = strconv.Itoa(1)
+	query_params = append(query_params, *kv)
+
+	url := "https://www.google.com"
+	var buffer bytes.Buffer
+	bytes, _, err := MakeCachingRESTCall(url, http.MethodGet, buffer, query_params, "himom")
+	if string(bytes) != jsonResponse {
+		t.Error("Failed to return correct byte array.")
+	}
+	if err != nil {
+		t.Error("Returned non nil error.")
+	}
+}
+
+func TestSuccessfulWithDefaultParams_MakeCachingRESTCall(t *testing.T) {
+	Redis_client = &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return false, make([]byte, 0)
+		},
+	}
+	jsonResponse := `[{
+		"full_name": "mock-repo"
+	   }]`
+	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
+
+	Client = &MockClient{
+		MockDo: func(*http.Request) (*http.Response, error) {
+			return &http.Response{
+				StatusCode: 200,
+				Body:       r,
+			}, nil
+		},
+	}
+
+	query_params := make([]configuration.Key_value, 2)
+	kv := new(configuration.Key_value)
+	kv.Key = "page"
+	kv.Value = strconv.Itoa(1)
+	query_params = append(query_params, *kv)
+
+	configuration.AppConfig.Esi.Default.Query_params = query_params
+
+	url := "https://www.google.com"
+	var buffer bytes.Buffer
+	bytes, _, err := MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
+	if string(bytes) != jsonResponse {
+		t.Error("Failed to return correct byte array.")
+	}
+	if err != nil {
+		t.Error("Returned non nil error.")
+	}
+}
+
+func TestSuccessfulWithQueryParams_MakeCachingRESTCall(t *testing.T) {
+	Redis_client = &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return false, make([]byte, 0)
+		},
+	}
+	jsonResponse := `[{
+		"full_name": "mock-repo"
+	   }]`
+	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
+
+	Client = &MockClient{
+		MockDo: func(*http.Request) (*http.Response, error) {
+			return &http.Response{
+				StatusCode: 200,
+				Body:       r,
+			}, nil
+		},
+	}
+
+	url := "https://www.google.com"
+	var buffer bytes.Buffer
+	bytes, _, err := MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
+	if string(bytes) != jsonResponse {
+		t.Error("Failed to return correct byte array.")
+	}
+	if err != nil {
+		t.Error("Returned non nil error.")
+	}
+}
+
+func TestUnparseableURL_MakeCachingRESTCall(t *testing.T) {
+	Redis_client = &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return false, make([]byte, 0)
+		},
+	}
+	jsonResponse := `[{
+		"full_name": "mock-repo"
+	   }]`
+	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
+
+	Client = &MockClient{
+		MockDo: func(*http.Request) (*http.Response, error) {
+			return &http.Response{
+				StatusCode: 200,
+				Body:       r,
+			}, nil
+		},
+	}
+
+	myslice := make([]byte, 1)
+	myslice[0] = 0x7f
+	url := string(myslice)
+	var buffer bytes.Buffer
+	_, _, err := MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
+	if err == nil {
+		t.Error("Returned nil error.")
+	}
+}
+
+func TestNewRequestFailure_MakeCachingRESTCall(t *testing.T) {
+	Redis_client = &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return false, make([]byte, 0)
+		},
+	}
+	jsonResponse := `[{
+		"full_name": "mock-repo"
+	   }]`
+	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
+
+	Client = &MockClient{
+		MockDo: func(*http.Request) (*http.Response, error) {
+			return &http.Response{
+				StatusCode: 200,
+				Body:       r,
+			}, nil
+		},
+	}
+
+	url := ""
+	var buffer bytes.Buffer
+	_, _, err := MakeCachingRESTCall(url, "s", buffer, nil, "himom")
+	if err == nil {
+		t.Error("Returned nil error.")
+	}
+}
+
+type MockDoType func(req *http.Request) (*http.Response, error)
+type MockAddToRedisCacheType func(key string, value []byte, ttl int64)
+type MockCheckRedisCacheType func(key string) (bool, []byte)
+
+type MockClient struct {
+	MockDo MockDoType
+}
+
+type MockRedisClient struct {
+	MockAdd   MockAddToRedisCacheType
+	MockCheck MockCheckRedisCacheType
+}
+
+func (m *MockClient) Do(req *http.Request) (*http.Response, error) {
+	return m.MockDo(req)
+}
+
+func (m *MockRedisClient) AddToRedisCache(key string, value []byte, ttl int64) {
+	m.MockAdd(key, value, ttl)
+}
+
+func (m *MockRedisClient) CheckRedisCache(key string) (bool, []byte) {
+	return m.MockCheck(key)
+}
