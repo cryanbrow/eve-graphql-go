@@ -12,7 +12,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/cryanbrow/eve-graphql-go/graph/model"
+	"github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -3558,7 +3558,7 @@ func (ec *executionContext) field_Query_ordersForRegionByName_args(ctx context.C
 	var arg1 model.Ordertype
 	if tmp, ok := rawArgs["order_type"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("order_type"))
-		arg1, err = ec.unmarshalNOrdertype2githubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrdertype(ctx, tmp)
+		arg1, err = ec.unmarshalNOrdertype2githubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐOrdertype(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3600,7 +3600,7 @@ func (ec *executionContext) field_Query_ordersForRegion_args(ctx context.Context
 	var arg1 model.Ordertype
 	if tmp, ok := rawArgs["order_type"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("order_type"))
-		arg1, err = ec.unmarshalNOrdertype2githubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrdertype(ctx, tmp)
+		arg1, err = ec.unmarshalNOrdertype2githubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐOrdertype(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3771,7 +3771,7 @@ func (ec *executionContext) _Alliance_creator_corporation(ctx context.Context, f
 	}
 	res := resTmp.(*model.Corporation)
 	fc.Result = res
-	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCorporation(ctx, field.Selections, res)
+	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCorporation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Alliance_creator_id(ctx context.Context, field graphql.CollectedField, obj *model.Alliance) (ret graphql.Marshaler) {
@@ -3835,7 +3835,7 @@ func (ec *executionContext) _Alliance_creator(ctx context.Context, field graphql
 	}
 	res := resTmp.(*model.Character)
 	fc.Result = res
-	return ec.marshalOCharacter2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCharacter(ctx, field.Selections, res)
+	return ec.marshalOCharacter2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCharacter(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Alliance_date_founded(ctx context.Context, field graphql.CollectedField, obj *model.Alliance) (ret graphql.Marshaler) {
@@ -3931,7 +3931,7 @@ func (ec *executionContext) _Alliance_executor_corporation(ctx context.Context, 
 	}
 	res := resTmp.(*model.Corporation)
 	fc.Result = res
-	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCorporation(ctx, field.Selections, res)
+	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCorporation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Alliance_faction_id(ctx context.Context, field graphql.CollectedField, obj *model.Alliance) (ret graphql.Marshaler) {
@@ -3995,7 +3995,7 @@ func (ec *executionContext) _Alliance_faction(ctx context.Context, field graphql
 	}
 	res := resTmp.(*model.Faction)
 	fc.Result = res
-	return ec.marshalOFaction2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐFaction(ctx, field.Selections, res)
+	return ec.marshalOFaction2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐFaction(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Alliance_name(ctx context.Context, field graphql.CollectedField, obj *model.Alliance) (ret graphql.Marshaler) {
@@ -4123,7 +4123,7 @@ func (ec *executionContext) _Ancestry_bloodline(ctx context.Context, field graph
 	}
 	res := resTmp.(*model.Bloodline)
 	fc.Result = res
-	return ec.marshalOBloodline2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐBloodline(ctx, field.Selections, res)
+	return ec.marshalOBloodline2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐBloodline(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Ancestry_description(ctx context.Context, field graphql.CollectedField, obj *model.Ancestry) (ret graphql.Marshaler) {
@@ -4347,7 +4347,7 @@ func (ec *executionContext) _Asteroid_belt_position(ctx context.Context, field g
 	}
 	res := resTmp.(*model.Position)
 	fc.Result = res
-	return ec.marshalOPosition2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐPosition(ctx, field.Selections, res)
+	return ec.marshalOPosition2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐPosition(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Asteroid_belt_system(ctx context.Context, field graphql.CollectedField, obj *model.AsteroidBelt) (ret graphql.Marshaler) {
@@ -4379,7 +4379,7 @@ func (ec *executionContext) _Asteroid_belt_system(ctx context.Context, field gra
 	}
 	res := resTmp.(*model.System)
 	fc.Result = res
-	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystem(ctx, field.Selections, res)
+	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Asteroid_belt_system_id(ctx context.Context, field graphql.CollectedField, obj *model.AsteroidBelt) (ret graphql.Marshaler) {
@@ -4539,7 +4539,7 @@ func (ec *executionContext) _Bloodline_corporation(ctx context.Context, field gr
 	}
 	res := resTmp.(*model.Corporation)
 	fc.Result = res
-	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCorporation(ctx, field.Selections, res)
+	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCorporation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Bloodline_description(ctx context.Context, field graphql.CollectedField, obj *model.Bloodline) (ret graphql.Marshaler) {
@@ -4763,7 +4763,7 @@ func (ec *executionContext) _Bloodline_race(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(*model.Race)
 	fc.Result = res
-	return ec.marshalORace2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐRace(ctx, field.Selections, res)
+	return ec.marshalORace2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐRace(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Bloodline_ship_type_id(ctx context.Context, field graphql.CollectedField, obj *model.Bloodline) (ret graphql.Marshaler) {
@@ -4827,7 +4827,7 @@ func (ec *executionContext) _Bloodline_ship_type(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.ItemType)
 	fc.Result = res
-	return ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐItemType(ctx, field.Selections, res)
+	return ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐItemType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Bloodline_willpower(ctx context.Context, field graphql.CollectedField, obj *model.Bloodline) (ret graphql.Marshaler) {
@@ -4923,7 +4923,7 @@ func (ec *executionContext) _Category_category_groups(ctx context.Context, field
 	}
 	res := resTmp.([]*model.Group)
 	fc.Result = res
-	return ec.marshalOGroup2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐGroup(ctx, field.Selections, res)
+	return ec.marshalOGroup2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐGroup(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Category_name(ctx context.Context, field graphql.CollectedField, obj *model.Category) (ret graphql.Marshaler) {
@@ -5051,7 +5051,7 @@ func (ec *executionContext) _Character_alliance(ctx context.Context, field graph
 	}
 	res := resTmp.(*model.Alliance)
 	fc.Result = res
-	return ec.marshalOAlliance2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐAlliance(ctx, field.Selections, res)
+	return ec.marshalOAlliance2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐAlliance(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Character_ancestry_id(ctx context.Context, field graphql.CollectedField, obj *model.Character) (ret graphql.Marshaler) {
@@ -5115,7 +5115,7 @@ func (ec *executionContext) _Character_ancestry(ctx context.Context, field graph
 	}
 	res := resTmp.(*model.Ancestry)
 	fc.Result = res
-	return ec.marshalOAncestry2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐAncestry(ctx, field.Selections, res)
+	return ec.marshalOAncestry2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐAncestry(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Character_birthday(ctx context.Context, field graphql.CollectedField, obj *model.Character) (ret graphql.Marshaler) {
@@ -5211,7 +5211,7 @@ func (ec *executionContext) _Character_bloodline(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.Bloodline)
 	fc.Result = res
-	return ec.marshalOBloodline2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐBloodline(ctx, field.Selections, res)
+	return ec.marshalOBloodline2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐBloodline(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Character_corporation_id(ctx context.Context, field graphql.CollectedField, obj *model.Character) (ret graphql.Marshaler) {
@@ -5275,7 +5275,7 @@ func (ec *executionContext) _Character_corporation(ctx context.Context, field gr
 	}
 	res := resTmp.(*model.Corporation)
 	fc.Result = res
-	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCorporation(ctx, field.Selections, res)
+	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCorporation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Character_description(ctx context.Context, field graphql.CollectedField, obj *model.Character) (ret graphql.Marshaler) {
@@ -5371,7 +5371,7 @@ func (ec *executionContext) _Character_faction(ctx context.Context, field graphq
 	}
 	res := resTmp.(*model.Faction)
 	fc.Result = res
-	return ec.marshalOFaction2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐFaction(ctx, field.Selections, res)
+	return ec.marshalOFaction2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐFaction(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Character_gender(ctx context.Context, field graphql.CollectedField, obj *model.Character) (ret graphql.Marshaler) {
@@ -5403,7 +5403,7 @@ func (ec *executionContext) _Character_gender(ctx context.Context, field graphql
 	}
 	res := resTmp.(*model.Gender)
 	fc.Result = res
-	return ec.marshalOGender2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐGender(ctx, field.Selections, res)
+	return ec.marshalOGender2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐGender(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Character_name(ctx context.Context, field graphql.CollectedField, obj *model.Character) (ret graphql.Marshaler) {
@@ -5499,7 +5499,7 @@ func (ec *executionContext) _Character_race(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(*model.Race)
 	fc.Result = res
-	return ec.marshalORace2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐRace(ctx, field.Selections, res)
+	return ec.marshalORace2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐRace(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Character_security_status(ctx context.Context, field graphql.CollectedField, obj *model.Character) (ret graphql.Marshaler) {
@@ -5659,7 +5659,7 @@ func (ec *executionContext) _Constellation_position(ctx context.Context, field g
 	}
 	res := resTmp.(*model.Position)
 	fc.Result = res
-	return ec.marshalOPosition2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐPosition(ctx, field.Selections, res)
+	return ec.marshalOPosition2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐPosition(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Constellation_region_id(ctx context.Context, field graphql.CollectedField, obj *model.Constellation) (ret graphql.Marshaler) {
@@ -5723,7 +5723,7 @@ func (ec *executionContext) _Constellation_region(ctx context.Context, field gra
 	}
 	res := resTmp.(*model.Region)
 	fc.Result = res
-	return ec.marshalORegion2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐRegion(ctx, field.Selections, res)
+	return ec.marshalORegion2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐRegion(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Constellation_systems(ctx context.Context, field graphql.CollectedField, obj *model.Constellation) (ret graphql.Marshaler) {
@@ -5787,7 +5787,7 @@ func (ec *executionContext) _Constellation_solar_systems(ctx context.Context, fi
 	}
 	res := resTmp.([]*model.System)
 	fc.Result = res
-	return ec.marshalOSystem2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystem(ctx, field.Selections, res)
+	return ec.marshalOSystem2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Corporation_alliance(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
@@ -5819,7 +5819,7 @@ func (ec *executionContext) _Corporation_alliance(ctx context.Context, field gra
 	}
 	res := resTmp.(*model.Alliance)
 	fc.Result = res
-	return ec.marshalOAlliance2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐAlliance(ctx, field.Selections, res)
+	return ec.marshalOAlliance2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐAlliance(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Corporation_alliance_id(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
@@ -5883,7 +5883,7 @@ func (ec *executionContext) _Corporation_ceo(ctx context.Context, field graphql.
 	}
 	res := resTmp.(*model.Character)
 	fc.Result = res
-	return ec.marshalOCharacter2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCharacter(ctx, field.Selections, res)
+	return ec.marshalOCharacter2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCharacter(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Corporation_ceo_id(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
@@ -5947,7 +5947,7 @@ func (ec *executionContext) _Corporation_creator(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.Character)
 	fc.Result = res
-	return ec.marshalOCharacter2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCharacter(ctx, field.Selections, res)
+	return ec.marshalOCharacter2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCharacter(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Corporation_creator_id(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
@@ -6075,7 +6075,7 @@ func (ec *executionContext) _Corporation_faction(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.Faction)
 	fc.Result = res
-	return ec.marshalOFaction2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐFaction(ctx, field.Selections, res)
+	return ec.marshalOFaction2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐFaction(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Corporation_faction_id(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
@@ -6139,7 +6139,7 @@ func (ec *executionContext) _Corporation_home_station(ctx context.Context, field
 	}
 	res := resTmp.(*model.Station)
 	fc.Result = res
-	return ec.marshalOStation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStation(ctx, field.Selections, res)
+	return ec.marshalOStation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐStation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Corporation_home_station_id(ctx context.Context, field graphql.CollectedField, obj *model.Corporation) (ret graphql.Marshaler) {
@@ -6427,7 +6427,7 @@ func (ec *executionContext) _Dogma_attribute_attribute(ctx context.Context, fiel
 	}
 	res := resTmp.(*model.DogmaAttributeDetail)
 	fc.Result = res
-	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
+	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Dogma_attribute_attribute_id(ctx context.Context, field graphql.CollectedField, obj *model.DogmaAttribute) (ret graphql.Marshaler) {
@@ -6683,7 +6683,7 @@ func (ec *executionContext) _Dogma_attribute_detail_icon(ctx context.Context, fi
 	}
 	res := resTmp.(*model.Icon)
 	fc.Result = res
-	return ec.marshalOIcon2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐIcon(ctx, field.Selections, res)
+	return ec.marshalOIcon2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐIcon(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Dogma_attribute_detail_name(ctx context.Context, field graphql.CollectedField, obj *model.DogmaAttributeDetail) (ret graphql.Marshaler) {
@@ -6811,7 +6811,7 @@ func (ec *executionContext) _Dogma_attribute_detail_unit(ctx context.Context, fi
 	}
 	res := resTmp.(*model.Unit)
 	fc.Result = res
-	return ec.marshalOUnit2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐUnit(ctx, field.Selections, res)
+	return ec.marshalOUnit2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐUnit(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Dogma_effect_effect_id(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffect) (ret graphql.Marshaler) {
@@ -6875,7 +6875,7 @@ func (ec *executionContext) _Dogma_effect_effect(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.DogmaEffectDetail)
 	fc.Result = res
-	return ec.marshalODogma_effect_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaEffectDetail(ctx, field.Selections, res)
+	return ec.marshalODogma_effect_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaEffectDetail(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Dogma_effect_is_default(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffect) (ret graphql.Marshaler) {
@@ -7035,7 +7035,7 @@ func (ec *executionContext) _Dogma_effect_detail_discharge_attribute(ctx context
 	}
 	res := resTmp.(*model.DogmaAttributeDetail)
 	fc.Result = res
-	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
+	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Dogma_effect_detail_display_name(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
@@ -7131,7 +7131,7 @@ func (ec *executionContext) _Dogma_effect_detail_duration_attribute(ctx context.
 	}
 	res := resTmp.(*model.DogmaAttributeDetail)
 	fc.Result = res
-	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
+	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Dogma_effect_detail_effect_category(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
@@ -7291,7 +7291,7 @@ func (ec *executionContext) _Dogma_effect_detail_falloff_attribute(ctx context.C
 	}
 	res := resTmp.(*model.DogmaAttributeDetail)
 	fc.Result = res
-	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
+	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Dogma_effect_detail_icon(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
@@ -7323,7 +7323,7 @@ func (ec *executionContext) _Dogma_effect_detail_icon(ctx context.Context, field
 	}
 	res := resTmp.(*model.Icon)
 	fc.Result = res
-	return ec.marshalOIcon2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐIcon(ctx, field.Selections, res)
+	return ec.marshalOIcon2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐIcon(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Dogma_effect_detail_is_assistance(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
@@ -7451,7 +7451,7 @@ func (ec *executionContext) _Dogma_effect_detail_modifiers(ctx context.Context, 
 	}
 	res := resTmp.([]*model.Modifier)
 	fc.Result = res
-	return ec.marshalOModifier2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐModifier(ctx, field.Selections, res)
+	return ec.marshalOModifier2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐModifier(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Dogma_effect_detail_name(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
@@ -7643,7 +7643,7 @@ func (ec *executionContext) _Dogma_effect_detail_range_attribute(ctx context.Con
 	}
 	res := resTmp.(*model.DogmaAttributeDetail)
 	fc.Result = res
-	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
+	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Dogma_effect_detail_range_change(ctx context.Context, field graphql.CollectedField, obj *model.DogmaEffectDetail) (ret graphql.Marshaler) {
@@ -7739,7 +7739,7 @@ func (ec *executionContext) _Dogma_effect_detail_tracking_speed_attribute(ctx co
 	}
 	res := resTmp.(*model.DogmaAttributeDetail)
 	fc.Result = res
-	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
+	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Faction_corporation_id(ctx context.Context, field graphql.CollectedField, obj *model.Faction) (ret graphql.Marshaler) {
@@ -7803,7 +7803,7 @@ func (ec *executionContext) _Faction_corporation(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.Corporation)
 	fc.Result = res
-	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCorporation(ctx, field.Selections, res)
+	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCorporation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Faction_description(ctx context.Context, field graphql.CollectedField, obj *model.Faction) (ret graphql.Marshaler) {
@@ -7963,7 +7963,7 @@ func (ec *executionContext) _Faction_militia_corporation(ctx context.Context, fi
 	}
 	res := resTmp.(*model.Corporation)
 	fc.Result = res
-	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCorporation(ctx, field.Selections, res)
+	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCorporation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Faction_name(ctx context.Context, field graphql.CollectedField, obj *model.Faction) (ret graphql.Marshaler) {
@@ -8091,7 +8091,7 @@ func (ec *executionContext) _Faction_solar_system(ctx context.Context, field gra
 	}
 	res := resTmp.(*model.System)
 	fc.Result = res
-	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystem(ctx, field.Selections, res)
+	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Faction_station_count(ctx context.Context, field graphql.CollectedField, obj *model.Faction) (ret graphql.Marshaler) {
@@ -8475,7 +8475,7 @@ func (ec *executionContext) _Group_category(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(*model.Category)
 	fc.Result = res
-	return ec.marshalOCategory2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCategory(ctx, field.Selections, res)
+	return ec.marshalOCategory2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCategory(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Group_group_id(ctx context.Context, field graphql.CollectedField, obj *model.Group) (ret graphql.Marshaler) {
@@ -8635,7 +8635,7 @@ func (ec *executionContext) _Group_item_types(ctx context.Context, field graphql
 	}
 	res := resTmp.([]*model.ItemType)
 	fc.Result = res
-	return ec.marshalOItem_type2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐItemType(ctx, field.Selections, res)
+	return ec.marshalOItem_type2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐItemType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Icon_id(ctx context.Context, field graphql.CollectedField, obj *model.Icon) (ret graphql.Marshaler) {
@@ -8795,7 +8795,7 @@ func (ec *executionContext) _Item_type_dogma_attributes(ctx context.Context, fie
 	}
 	res := resTmp.([]*model.DogmaAttribute)
 	fc.Result = res
-	return ec.marshalODogma_attribute2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttribute(ctx, field.Selections, res)
+	return ec.marshalODogma_attribute2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaAttribute(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Item_type_dogma_effects(ctx context.Context, field graphql.CollectedField, obj *model.ItemType) (ret graphql.Marshaler) {
@@ -8827,7 +8827,7 @@ func (ec *executionContext) _Item_type_dogma_effects(ctx context.Context, field 
 	}
 	res := resTmp.([]*model.DogmaEffect)
 	fc.Result = res
-	return ec.marshalODogma_effect2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaEffect(ctx, field.Selections, res)
+	return ec.marshalODogma_effect2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaEffect(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Item_type_graphic_id(ctx context.Context, field graphql.CollectedField, obj *model.ItemType) (ret graphql.Marshaler) {
@@ -8891,7 +8891,7 @@ func (ec *executionContext) _Item_type_graphic(ctx context.Context, field graphq
 	}
 	res := resTmp.(*model.Graphic)
 	fc.Result = res
-	return ec.marshalOGraphic2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐGraphic(ctx, field.Selections, res)
+	return ec.marshalOGraphic2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐGraphic(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Item_type_group_id(ctx context.Context, field graphql.CollectedField, obj *model.ItemType) (ret graphql.Marshaler) {
@@ -8955,7 +8955,7 @@ func (ec *executionContext) _Item_type_group(ctx context.Context, field graphql.
 	}
 	res := resTmp.(*model.Group)
 	fc.Result = res
-	return ec.marshalOGroup2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐGroup(ctx, field.Selections, res)
+	return ec.marshalOGroup2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐGroup(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Item_type_icon_id(ctx context.Context, field graphql.CollectedField, obj *model.ItemType) (ret graphql.Marshaler) {
@@ -9051,7 +9051,7 @@ func (ec *executionContext) _Item_type_market_group(ctx context.Context, field g
 	}
 	res := resTmp.(*model.MarketGroup)
 	fc.Result = res
-	return ec.marshalOMarket_group2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐMarketGroup(ctx, field.Selections, res)
+	return ec.marshalOMarket_group2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐMarketGroup(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Item_type_mass(ctx context.Context, field graphql.CollectedField, obj *model.ItemType) (ret graphql.Marshaler) {
@@ -9435,7 +9435,7 @@ func (ec *executionContext) _Market_group_parent_group(ctx context.Context, fiel
 	}
 	res := resTmp.(*model.Group)
 	fc.Result = res
-	return ec.marshalOGroup2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐGroup(ctx, field.Selections, res)
+	return ec.marshalOGroup2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐGroup(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Market_group_types(ctx context.Context, field graphql.CollectedField, obj *model.MarketGroup) (ret graphql.Marshaler) {
@@ -9499,7 +9499,7 @@ func (ec *executionContext) _Market_group_types_details(ctx context.Context, fie
 	}
 	res := resTmp.([]*model.ItemType)
 	fc.Result = res
-	return ec.marshalOItem_type2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐItemType(ctx, field.Selections, res)
+	return ec.marshalOItem_type2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐItemType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Modifier_domain(ctx context.Context, field graphql.CollectedField, obj *model.Modifier) (ret graphql.Marshaler) {
@@ -9659,7 +9659,7 @@ func (ec *executionContext) _Modifier_modified_attribute(ctx context.Context, fi
 	}
 	res := resTmp.(*model.DogmaAttributeDetail)
 	fc.Result = res
-	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
+	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Modifier_modifying_attribute_id(ctx context.Context, field graphql.CollectedField, obj *model.Modifier) (ret graphql.Marshaler) {
@@ -9723,7 +9723,7 @@ func (ec *executionContext) _Modifier_modifying_attribute(ctx context.Context, f
 	}
 	res := resTmp.(*model.DogmaAttributeDetail)
 	fc.Result = res
-	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
+	return ec.marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaAttributeDetail(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Modifier_operator(ctx context.Context, field graphql.CollectedField, obj *model.Modifier) (ret graphql.Marshaler) {
@@ -9851,7 +9851,7 @@ func (ec *executionContext) _Moon_position(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.(*model.Position)
 	fc.Result = res
-	return ec.marshalOPosition2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐPosition(ctx, field.Selections, res)
+	return ec.marshalOPosition2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐPosition(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Moon_system_id(ctx context.Context, field graphql.CollectedField, obj *model.Moon) (ret graphql.Marshaler) {
@@ -9915,7 +9915,7 @@ func (ec *executionContext) _Moon_system(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*model.System)
 	fc.Result = res
-	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystem(ctx, field.Selections, res)
+	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Order_duration(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
@@ -10043,7 +10043,7 @@ func (ec *executionContext) _Order_location(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(*model.Station)
 	fc.Result = res
-	return ec.marshalOStation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStation(ctx, field.Selections, res)
+	return ec.marshalOStation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐStation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Order_location_id(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
@@ -10206,7 +10206,7 @@ func (ec *executionContext) _Order_range(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*model.Range)
 	fc.Result = res
-	return ec.marshalORange2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐRange(ctx, field.Selections, res)
+	return ec.marshalORange2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐRange(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Order_system(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
@@ -10238,7 +10238,7 @@ func (ec *executionContext) _Order_system(ctx context.Context, field graphql.Col
 	}
 	res := resTmp.(*model.System)
 	fc.Result = res
-	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystem(ctx, field.Selections, res)
+	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Order_system_id(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
@@ -10302,7 +10302,7 @@ func (ec *executionContext) _Order_item_type(ctx context.Context, field graphql.
 	}
 	res := resTmp.(*model.ItemType)
 	fc.Result = res
-	return ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐItemType(ctx, field.Selections, res)
+	return ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐItemType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Order_type_id(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
@@ -10654,7 +10654,7 @@ func (ec *executionContext) _OrderWrapper_list(ctx context.Context, field graphq
 	}
 	res := resTmp.([]*model.Order)
 	fc.Result = res
-	return ec.marshalOOrder2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrder(ctx, field.Selections, res)
+	return ec.marshalOOrder2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐOrder(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Planet_name(ctx context.Context, field graphql.CollectedField, obj *model.Planet) (ret graphql.Marshaler) {
@@ -10750,7 +10750,7 @@ func (ec *executionContext) _Planet_position(ctx context.Context, field graphql.
 	}
 	res := resTmp.(*model.Position)
 	fc.Result = res
-	return ec.marshalOPosition2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐPosition(ctx, field.Selections, res)
+	return ec.marshalOPosition2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐPosition(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Planet_system(ctx context.Context, field graphql.CollectedField, obj *model.Planet) (ret graphql.Marshaler) {
@@ -10782,7 +10782,7 @@ func (ec *executionContext) _Planet_system(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.(*model.System)
 	fc.Result = res
-	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystem(ctx, field.Selections, res)
+	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Planet_system_id(ctx context.Context, field graphql.CollectedField, obj *model.Planet) (ret graphql.Marshaler) {
@@ -10846,7 +10846,7 @@ func (ec *executionContext) _Planet_item_type(ctx context.Context, field graphql
 	}
 	res := resTmp.(*model.ItemType)
 	fc.Result = res
-	return ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐItemType(ctx, field.Selections, res)
+	return ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐItemType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Planet_type_id(ctx context.Context, field graphql.CollectedField, obj *model.Planet) (ret graphql.Marshaler) {
@@ -11013,7 +11013,7 @@ func (ec *executionContext) _Query_ordersForRegion(ctx context.Context, field gr
 	}
 	res := resTmp.(*model.OrderWrapper)
 	fc.Result = res
-	return ec.marshalOOrderWrapper2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrderWrapper(ctx, field.Selections, res)
+	return ec.marshalOOrderWrapper2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐOrderWrapper(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_ordersForRegionByName(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -11052,7 +11052,7 @@ func (ec *executionContext) _Query_ordersForRegionByName(ctx context.Context, fi
 	}
 	res := resTmp.(*model.OrderWrapper)
 	fc.Result = res
-	return ec.marshalOOrderWrapper2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrderWrapper(ctx, field.Selections, res)
+	return ec.marshalOOrderWrapper2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐOrderWrapper(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_systemById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -11091,7 +11091,7 @@ func (ec *executionContext) _Query_systemById(ctx context.Context, field graphql
 	}
 	res := resTmp.(*model.System)
 	fc.Result = res
-	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystem(ctx, field.Selections, res)
+	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_stationById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -11130,7 +11130,7 @@ func (ec *executionContext) _Query_stationById(ctx context.Context, field graphq
 	}
 	res := resTmp.(*model.Station)
 	fc.Result = res
-	return ec.marshalOStation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStation(ctx, field.Selections, res)
+	return ec.marshalOStation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐStation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_planetById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -11169,7 +11169,7 @@ func (ec *executionContext) _Query_planetById(ctx context.Context, field graphql
 	}
 	res := resTmp.(*model.Planet)
 	fc.Result = res
-	return ec.marshalOPlanet2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐPlanet(ctx, field.Selections, res)
+	return ec.marshalOPlanet2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐPlanet(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_corporationById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -11208,7 +11208,7 @@ func (ec *executionContext) _Query_corporationById(ctx context.Context, field gr
 	}
 	res := resTmp.(*model.Corporation)
 	fc.Result = res
-	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCorporation(ctx, field.Selections, res)
+	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCorporation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_factionByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -11247,7 +11247,7 @@ func (ec *executionContext) _Query_factionByID(ctx context.Context, field graphq
 	}
 	res := resTmp.(*model.Faction)
 	fc.Result = res
-	return ec.marshalOFaction2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐFaction(ctx, field.Selections, res)
+	return ec.marshalOFaction2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐFaction(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_orderHistory(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -11286,7 +11286,7 @@ func (ec *executionContext) _Query_orderHistory(ctx context.Context, field graph
 	}
 	res := resTmp.([]*model.OrderHistory)
 	fc.Result = res
-	return ec.marshalOOrderHistory2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrderHistory(ctx, field.Selections, res)
+	return ec.marshalOOrderHistory2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐOrderHistory(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -11389,7 +11389,7 @@ func (ec *executionContext) _Race_alliance(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.(*model.Alliance)
 	fc.Result = res
-	return ec.marshalOAlliance2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐAlliance(ctx, field.Selections, res)
+	return ec.marshalOAlliance2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐAlliance(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Race_description(ctx context.Context, field graphql.CollectedField, obj *model.Race) (ret graphql.Marshaler) {
@@ -11549,7 +11549,7 @@ func (ec *executionContext) _Region_constellation_list(ctx context.Context, fiel
 	}
 	res := resTmp.([]*model.Constellation)
 	fc.Result = res
-	return ec.marshalOConstellation2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐConstellation(ctx, field.Selections, res)
+	return ec.marshalOConstellation2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐConstellation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Region_description(ctx context.Context, field graphql.CollectedField, obj *model.Region) (ret graphql.Marshaler) {
@@ -11837,7 +11837,7 @@ func (ec *executionContext) _Star_solar_system(ctx context.Context, field graphq
 	}
 	res := resTmp.(*model.System)
 	fc.Result = res
-	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystem(ctx, field.Selections, res)
+	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Star_spectral_class(ctx context.Context, field graphql.CollectedField, obj *model.Star) (ret graphql.Marshaler) {
@@ -11869,7 +11869,7 @@ func (ec *executionContext) _Star_spectral_class(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.SpectralClass)
 	fc.Result = res
-	return ec.marshalOSpectral_class2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSpectralClass(ctx, field.Selections, res)
+	return ec.marshalOSpectral_class2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSpectralClass(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Star_star_id(ctx context.Context, field graphql.CollectedField, obj *model.Star) (ret graphql.Marshaler) {
@@ -11997,7 +11997,7 @@ func (ec *executionContext) _Star_item_type(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(*model.ItemType)
 	fc.Result = res
-	return ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐItemType(ctx, field.Selections, res)
+	return ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐItemType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Stargate_destination(ctx context.Context, field graphql.CollectedField, obj *model.Stargate) (ret graphql.Marshaler) {
@@ -12029,7 +12029,7 @@ func (ec *executionContext) _Stargate_destination(ctx context.Context, field gra
 	}
 	res := resTmp.(*model.StargateDestination)
 	fc.Result = res
-	return ec.marshalOStargateDestination2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStargateDestination(ctx, field.Selections, res)
+	return ec.marshalOStargateDestination2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐStargateDestination(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Stargate_name(ctx context.Context, field graphql.CollectedField, obj *model.Stargate) (ret graphql.Marshaler) {
@@ -12093,7 +12093,7 @@ func (ec *executionContext) _Stargate_position(ctx context.Context, field graphq
 	}
 	res := resTmp.(*model.Position)
 	fc.Result = res
-	return ec.marshalOPosition2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐPosition(ctx, field.Selections, res)
+	return ec.marshalOPosition2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐPosition(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Stargate_stargate_id(ctx context.Context, field graphql.CollectedField, obj *model.Stargate) (ret graphql.Marshaler) {
@@ -12157,7 +12157,7 @@ func (ec *executionContext) _Stargate_system(ctx context.Context, field graphql.
 	}
 	res := resTmp.(*model.System)
 	fc.Result = res
-	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystem(ctx, field.Selections, res)
+	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Stargate_type_id(ctx context.Context, field graphql.CollectedField, obj *model.Stargate) (ret graphql.Marshaler) {
@@ -12221,7 +12221,7 @@ func (ec *executionContext) _Stargate_item_type(ctx context.Context, field graph
 	}
 	res := resTmp.(*model.ItemType)
 	fc.Result = res
-	return ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐItemType(ctx, field.Selections, res)
+	return ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐItemType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _StargateDestination_stargate_id(ctx context.Context, field graphql.CollectedField, obj *model.StargateDestination) (ret graphql.Marshaler) {
@@ -12285,7 +12285,7 @@ func (ec *executionContext) _StargateDestination_stargate(ctx context.Context, f
 	}
 	res := resTmp.(*model.Stargate)
 	fc.Result = res
-	return ec.marshalOStargate2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStargate(ctx, field.Selections, res)
+	return ec.marshalOStargate2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐStargate(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _StargateDestination_system_id(ctx context.Context, field graphql.CollectedField, obj *model.StargateDestination) (ret graphql.Marshaler) {
@@ -12349,7 +12349,7 @@ func (ec *executionContext) _StargateDestination_system(ctx context.Context, fie
 	}
 	res := resTmp.(*model.System)
 	fc.Result = res
-	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystem(ctx, field.Selections, res)
+	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Station_max_dockable_ship_volume(ctx context.Context, field graphql.CollectedField, obj *model.Station) (ret graphql.Marshaler) {
@@ -12509,7 +12509,7 @@ func (ec *executionContext) _Station_owning_corporation(ctx context.Context, fie
 	}
 	res := resTmp.(*model.Corporation)
 	fc.Result = res
-	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCorporation(ctx, field.Selections, res)
+	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCorporation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Station_position(ctx context.Context, field graphql.CollectedField, obj *model.Station) (ret graphql.Marshaler) {
@@ -12541,7 +12541,7 @@ func (ec *executionContext) _Station_position(ctx context.Context, field graphql
 	}
 	res := resTmp.(*model.Position)
 	fc.Result = res
-	return ec.marshalOPosition2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐPosition(ctx, field.Selections, res)
+	return ec.marshalOPosition2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐPosition(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Station_race_id(ctx context.Context, field graphql.CollectedField, obj *model.Station) (ret graphql.Marshaler) {
@@ -12605,7 +12605,7 @@ func (ec *executionContext) _Station_race(ctx context.Context, field graphql.Col
 	}
 	res := resTmp.(*model.Race)
 	fc.Result = res
-	return ec.marshalORace2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐRace(ctx, field.Selections, res)
+	return ec.marshalORace2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐRace(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Station_reprocessing_efficiency(ctx context.Context, field graphql.CollectedField, obj *model.Station) (ret graphql.Marshaler) {
@@ -12701,7 +12701,7 @@ func (ec *executionContext) _Station_services(ctx context.Context, field graphql
 	}
 	res := resTmp.([]*model.Services)
 	fc.Result = res
-	return ec.marshalOServices2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐServices(ctx, field.Selections, res)
+	return ec.marshalOServices2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐServices(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Station_station_id(ctx context.Context, field graphql.CollectedField, obj *model.Station) (ret graphql.Marshaler) {
@@ -12797,7 +12797,7 @@ func (ec *executionContext) _Station_system(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(*model.System)
 	fc.Result = res
-	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystem(ctx, field.Selections, res)
+	return ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Station_type_id(ctx context.Context, field graphql.CollectedField, obj *model.Station) (ret graphql.Marshaler) {
@@ -12861,7 +12861,7 @@ func (ec *executionContext) _Station_station_type(ctx context.Context, field gra
 	}
 	res := resTmp.(*model.ItemType)
 	fc.Result = res
-	return ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐItemType(ctx, field.Selections, res)
+	return ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐItemType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _System_constellation_id(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
@@ -12925,7 +12925,7 @@ func (ec *executionContext) _System_constellation(ctx context.Context, field gra
 	}
 	res := resTmp.(*model.Constellation)
 	fc.Result = res
-	return ec.marshalOConstellation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐConstellation(ctx, field.Selections, res)
+	return ec.marshalOConstellation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐConstellation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _System_name(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
@@ -12989,7 +12989,7 @@ func (ec *executionContext) _System_planets(ctx context.Context, field graphql.C
 	}
 	res := resTmp.([]*model.SystemPlanet)
 	fc.Result = res
-	return ec.marshalOSystem_planet2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystemPlanet(ctx, field.Selections, res)
+	return ec.marshalOSystem_planet2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystemPlanet(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _System_position(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
@@ -13021,7 +13021,7 @@ func (ec *executionContext) _System_position(ctx context.Context, field graphql.
 	}
 	res := resTmp.(*model.Position)
 	fc.Result = res
-	return ec.marshalOPosition2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐPosition(ctx, field.Selections, res)
+	return ec.marshalOPosition2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐPosition(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _System_security_class(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
@@ -13117,7 +13117,7 @@ func (ec *executionContext) _System_star(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*model.Star)
 	fc.Result = res
-	return ec.marshalOStar2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStar(ctx, field.Selections, res)
+	return ec.marshalOStar2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐStar(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _System_stargates(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
@@ -13181,7 +13181,7 @@ func (ec *executionContext) _System_stargate_list(ctx context.Context, field gra
 	}
 	res := resTmp.([]*model.Stargate)
 	fc.Result = res
-	return ec.marshalOStargate2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStargate(ctx, field.Selections, res)
+	return ec.marshalOStargate2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐStargate(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _System_stations(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
@@ -13245,7 +13245,7 @@ func (ec *executionContext) _System_station_list(ctx context.Context, field grap
 	}
 	res := resTmp.([]*model.Station)
 	fc.Result = res
-	return ec.marshalOStation2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStation(ctx, field.Selections, res)
+	return ec.marshalOStation2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐStation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _System_system_id(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
@@ -13309,7 +13309,7 @@ func (ec *executionContext) _System_planet_asteroid_belts_properties(ctx context
 	}
 	res := resTmp.([]*model.AsteroidBelt)
 	fc.Result = res
-	return ec.marshalOAsteroid_belt2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐAsteroidBelt(ctx, field.Selections, res)
+	return ec.marshalOAsteroid_belt2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐAsteroidBelt(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _System_planet_asteroid_belts(ctx context.Context, field graphql.CollectedField, obj *model.SystemPlanet) (ret graphql.Marshaler) {
@@ -13405,7 +13405,7 @@ func (ec *executionContext) _System_planet_moon_details(ctx context.Context, fie
 	}
 	res := resTmp.([]*model.Moon)
 	fc.Result = res
-	return ec.marshalOMoon2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐMoon(ctx, field.Selections, res)
+	return ec.marshalOMoon2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐMoon(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _System_planet_planet_properties(ctx context.Context, field graphql.CollectedField, obj *model.SystemPlanet) (ret graphql.Marshaler) {
@@ -13437,7 +13437,7 @@ func (ec *executionContext) _System_planet_planet_properties(ctx context.Context
 	}
 	res := resTmp.(*model.Planet)
 	fc.Result = res
-	return ec.marshalOPlanet2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐPlanet(ctx, field.Selections, res)
+	return ec.marshalOPlanet2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐPlanet(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _System_planet_planet_id(ctx context.Context, field graphql.CollectedField, obj *model.SystemPlanet) (ret graphql.Marshaler) {
@@ -16920,13 +16920,13 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) unmarshalNOrdertype2githubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrdertype(ctx context.Context, v interface{}) (model.Ordertype, error) {
+func (ec *executionContext) unmarshalNOrdertype2githubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐOrdertype(ctx context.Context, v interface{}) (model.Ordertype, error) {
 	var res model.Ordertype
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNOrdertype2githubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrdertype(ctx context.Context, sel ast.SelectionSet, v model.Ordertype) graphql.Marshaler {
+func (ec *executionContext) marshalNOrdertype2githubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐOrdertype(ctx context.Context, sel ast.SelectionSet, v model.Ordertype) graphql.Marshaler {
 	return v
 }
 
@@ -17202,21 +17202,21 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalOAlliance2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐAlliance(ctx context.Context, sel ast.SelectionSet, v *model.Alliance) graphql.Marshaler {
+func (ec *executionContext) marshalOAlliance2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐAlliance(ctx context.Context, sel ast.SelectionSet, v *model.Alliance) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Alliance(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOAncestry2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐAncestry(ctx context.Context, sel ast.SelectionSet, v *model.Ancestry) graphql.Marshaler {
+func (ec *executionContext) marshalOAncestry2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐAncestry(ctx context.Context, sel ast.SelectionSet, v *model.Ancestry) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Ancestry(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOAsteroid_belt2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐAsteroidBelt(ctx context.Context, sel ast.SelectionSet, v []*model.AsteroidBelt) graphql.Marshaler {
+func (ec *executionContext) marshalOAsteroid_belt2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐAsteroidBelt(ctx context.Context, sel ast.SelectionSet, v []*model.AsteroidBelt) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -17243,7 +17243,7 @@ func (ec *executionContext) marshalOAsteroid_belt2ᚕᚖgithubᚗcomᚋcryanbrow
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOAsteroid_belt2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐAsteroidBelt(ctx, sel, v[i])
+			ret[i] = ec.marshalOAsteroid_belt2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐAsteroidBelt(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17257,14 +17257,14 @@ func (ec *executionContext) marshalOAsteroid_belt2ᚕᚖgithubᚗcomᚋcryanbrow
 	return ret
 }
 
-func (ec *executionContext) marshalOAsteroid_belt2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐAsteroidBelt(ctx context.Context, sel ast.SelectionSet, v *model.AsteroidBelt) graphql.Marshaler {
+func (ec *executionContext) marshalOAsteroid_belt2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐAsteroidBelt(ctx context.Context, sel ast.SelectionSet, v *model.AsteroidBelt) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Asteroid_belt(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOBloodline2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐBloodline(ctx context.Context, sel ast.SelectionSet, v *model.Bloodline) graphql.Marshaler {
+func (ec *executionContext) marshalOBloodline2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐBloodline(ctx context.Context, sel ast.SelectionSet, v *model.Bloodline) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -17295,21 +17295,21 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return graphql.MarshalBoolean(*v)
 }
 
-func (ec *executionContext) marshalOCategory2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCategory(ctx context.Context, sel ast.SelectionSet, v *model.Category) graphql.Marshaler {
+func (ec *executionContext) marshalOCategory2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCategory(ctx context.Context, sel ast.SelectionSet, v *model.Category) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Category(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOCharacter2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCharacter(ctx context.Context, sel ast.SelectionSet, v *model.Character) graphql.Marshaler {
+func (ec *executionContext) marshalOCharacter2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCharacter(ctx context.Context, sel ast.SelectionSet, v *model.Character) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Character(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOConstellation2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐConstellation(ctx context.Context, sel ast.SelectionSet, v []*model.Constellation) graphql.Marshaler {
+func (ec *executionContext) marshalOConstellation2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐConstellation(ctx context.Context, sel ast.SelectionSet, v []*model.Constellation) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -17336,7 +17336,7 @@ func (ec *executionContext) marshalOConstellation2ᚕᚖgithubᚗcomᚋcryanbrow
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOConstellation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐConstellation(ctx, sel, v[i])
+			ret[i] = ec.marshalOConstellation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐConstellation(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17350,21 +17350,21 @@ func (ec *executionContext) marshalOConstellation2ᚕᚖgithubᚗcomᚋcryanbrow
 	return ret
 }
 
-func (ec *executionContext) marshalOConstellation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐConstellation(ctx context.Context, sel ast.SelectionSet, v *model.Constellation) graphql.Marshaler {
+func (ec *executionContext) marshalOConstellation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐConstellation(ctx context.Context, sel ast.SelectionSet, v *model.Constellation) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Constellation(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐCorporation(ctx context.Context, sel ast.SelectionSet, v *model.Corporation) graphql.Marshaler {
+func (ec *executionContext) marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCorporation(ctx context.Context, sel ast.SelectionSet, v *model.Corporation) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Corporation(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalODogma_attribute2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttribute(ctx context.Context, sel ast.SelectionSet, v []*model.DogmaAttribute) graphql.Marshaler {
+func (ec *executionContext) marshalODogma_attribute2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaAttribute(ctx context.Context, sel ast.SelectionSet, v []*model.DogmaAttribute) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -17391,7 +17391,7 @@ func (ec *executionContext) marshalODogma_attribute2ᚕᚖgithubᚗcomᚋcryanbr
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalODogma_attribute2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttribute(ctx, sel, v[i])
+			ret[i] = ec.marshalODogma_attribute2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaAttribute(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17405,21 +17405,21 @@ func (ec *executionContext) marshalODogma_attribute2ᚕᚖgithubᚗcomᚋcryanbr
 	return ret
 }
 
-func (ec *executionContext) marshalODogma_attribute2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttribute(ctx context.Context, sel ast.SelectionSet, v *model.DogmaAttribute) graphql.Marshaler {
+func (ec *executionContext) marshalODogma_attribute2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaAttribute(ctx context.Context, sel ast.SelectionSet, v *model.DogmaAttribute) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Dogma_attribute(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaAttributeDetail(ctx context.Context, sel ast.SelectionSet, v *model.DogmaAttributeDetail) graphql.Marshaler {
+func (ec *executionContext) marshalODogma_attribute_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaAttributeDetail(ctx context.Context, sel ast.SelectionSet, v *model.DogmaAttributeDetail) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Dogma_attribute_detail(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalODogma_effect2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaEffect(ctx context.Context, sel ast.SelectionSet, v []*model.DogmaEffect) graphql.Marshaler {
+func (ec *executionContext) marshalODogma_effect2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaEffect(ctx context.Context, sel ast.SelectionSet, v []*model.DogmaEffect) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -17446,7 +17446,7 @@ func (ec *executionContext) marshalODogma_effect2ᚕᚖgithubᚗcomᚋcryanbrow�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalODogma_effect2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaEffect(ctx, sel, v[i])
+			ret[i] = ec.marshalODogma_effect2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaEffect(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17460,21 +17460,21 @@ func (ec *executionContext) marshalODogma_effect2ᚕᚖgithubᚗcomᚋcryanbrow�
 	return ret
 }
 
-func (ec *executionContext) marshalODogma_effect2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaEffect(ctx context.Context, sel ast.SelectionSet, v *model.DogmaEffect) graphql.Marshaler {
+func (ec *executionContext) marshalODogma_effect2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaEffect(ctx context.Context, sel ast.SelectionSet, v *model.DogmaEffect) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Dogma_effect(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalODogma_effect_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐDogmaEffectDetail(ctx context.Context, sel ast.SelectionSet, v *model.DogmaEffectDetail) graphql.Marshaler {
+func (ec *executionContext) marshalODogma_effect_detail2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaEffectDetail(ctx context.Context, sel ast.SelectionSet, v *model.DogmaEffectDetail) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Dogma_effect_detail(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOFaction2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐFaction(ctx context.Context, sel ast.SelectionSet, v *model.Faction) graphql.Marshaler {
+func (ec *executionContext) marshalOFaction2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐFaction(ctx context.Context, sel ast.SelectionSet, v *model.Faction) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -17496,7 +17496,7 @@ func (ec *executionContext) marshalOFloat2ᚖfloat64(ctx context.Context, sel as
 	return graphql.MarshalFloat(*v)
 }
 
-func (ec *executionContext) unmarshalOGender2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐGender(ctx context.Context, v interface{}) (*model.Gender, error) {
+func (ec *executionContext) unmarshalOGender2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐGender(ctx context.Context, v interface{}) (*model.Gender, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -17505,21 +17505,21 @@ func (ec *executionContext) unmarshalOGender2ᚖgithubᚗcomᚋcryanbrowᚋeve�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOGender2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐGender(ctx context.Context, sel ast.SelectionSet, v *model.Gender) graphql.Marshaler {
+func (ec *executionContext) marshalOGender2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐGender(ctx context.Context, sel ast.SelectionSet, v *model.Gender) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return v
 }
 
-func (ec *executionContext) marshalOGraphic2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐGraphic(ctx context.Context, sel ast.SelectionSet, v *model.Graphic) graphql.Marshaler {
+func (ec *executionContext) marshalOGraphic2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐGraphic(ctx context.Context, sel ast.SelectionSet, v *model.Graphic) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Graphic(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOGroup2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐGroup(ctx context.Context, sel ast.SelectionSet, v []*model.Group) graphql.Marshaler {
+func (ec *executionContext) marshalOGroup2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐGroup(ctx context.Context, sel ast.SelectionSet, v []*model.Group) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -17546,7 +17546,7 @@ func (ec *executionContext) marshalOGroup2ᚕᚖgithubᚗcomᚋcryanbrowᚋeve�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOGroup2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐGroup(ctx, sel, v[i])
+			ret[i] = ec.marshalOGroup2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐGroup(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17560,14 +17560,14 @@ func (ec *executionContext) marshalOGroup2ᚕᚖgithubᚗcomᚋcryanbrowᚋeve�
 	return ret
 }
 
-func (ec *executionContext) marshalOGroup2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐGroup(ctx context.Context, sel ast.SelectionSet, v *model.Group) graphql.Marshaler {
+func (ec *executionContext) marshalOGroup2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐGroup(ctx context.Context, sel ast.SelectionSet, v *model.Group) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Group(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOIcon2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐIcon(ctx context.Context, sel ast.SelectionSet, v *model.Icon) graphql.Marshaler {
+func (ec *executionContext) marshalOIcon2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐIcon(ctx context.Context, sel ast.SelectionSet, v *model.Icon) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -17625,7 +17625,7 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return graphql.MarshalInt(*v)
 }
 
-func (ec *executionContext) marshalOItem_type2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐItemType(ctx context.Context, sel ast.SelectionSet, v []*model.ItemType) graphql.Marshaler {
+func (ec *executionContext) marshalOItem_type2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐItemType(ctx context.Context, sel ast.SelectionSet, v []*model.ItemType) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -17652,7 +17652,7 @@ func (ec *executionContext) marshalOItem_type2ᚕᚖgithubᚗcomᚋcryanbrowᚋe
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐItemType(ctx, sel, v[i])
+			ret[i] = ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐItemType(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17666,21 +17666,21 @@ func (ec *executionContext) marshalOItem_type2ᚕᚖgithubᚗcomᚋcryanbrowᚋe
 	return ret
 }
 
-func (ec *executionContext) marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐItemType(ctx context.Context, sel ast.SelectionSet, v *model.ItemType) graphql.Marshaler {
+func (ec *executionContext) marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐItemType(ctx context.Context, sel ast.SelectionSet, v *model.ItemType) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Item_type(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOMarket_group2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐMarketGroup(ctx context.Context, sel ast.SelectionSet, v *model.MarketGroup) graphql.Marshaler {
+func (ec *executionContext) marshalOMarket_group2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐMarketGroup(ctx context.Context, sel ast.SelectionSet, v *model.MarketGroup) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Market_group(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOModifier2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐModifier(ctx context.Context, sel ast.SelectionSet, v []*model.Modifier) graphql.Marshaler {
+func (ec *executionContext) marshalOModifier2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐModifier(ctx context.Context, sel ast.SelectionSet, v []*model.Modifier) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -17707,7 +17707,7 @@ func (ec *executionContext) marshalOModifier2ᚕᚖgithubᚗcomᚋcryanbrowᚋev
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOModifier2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐModifier(ctx, sel, v[i])
+			ret[i] = ec.marshalOModifier2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐModifier(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17721,14 +17721,14 @@ func (ec *executionContext) marshalOModifier2ᚕᚖgithubᚗcomᚋcryanbrowᚋev
 	return ret
 }
 
-func (ec *executionContext) marshalOModifier2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐModifier(ctx context.Context, sel ast.SelectionSet, v *model.Modifier) graphql.Marshaler {
+func (ec *executionContext) marshalOModifier2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐModifier(ctx context.Context, sel ast.SelectionSet, v *model.Modifier) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Modifier(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOMoon2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐMoon(ctx context.Context, sel ast.SelectionSet, v []*model.Moon) graphql.Marshaler {
+func (ec *executionContext) marshalOMoon2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐMoon(ctx context.Context, sel ast.SelectionSet, v []*model.Moon) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -17755,7 +17755,7 @@ func (ec *executionContext) marshalOMoon2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑ
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOMoon2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐMoon(ctx, sel, v[i])
+			ret[i] = ec.marshalOMoon2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐMoon(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17769,14 +17769,14 @@ func (ec *executionContext) marshalOMoon2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑ
 	return ret
 }
 
-func (ec *executionContext) marshalOMoon2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐMoon(ctx context.Context, sel ast.SelectionSet, v *model.Moon) graphql.Marshaler {
+func (ec *executionContext) marshalOMoon2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐMoon(ctx context.Context, sel ast.SelectionSet, v *model.Moon) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Moon(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOOrder2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrder(ctx context.Context, sel ast.SelectionSet, v []*model.Order) graphql.Marshaler {
+func (ec *executionContext) marshalOOrder2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐOrder(ctx context.Context, sel ast.SelectionSet, v []*model.Order) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -17803,7 +17803,7 @@ func (ec *executionContext) marshalOOrder2ᚕᚖgithubᚗcomᚋcryanbrowᚋeve�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOOrder2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrder(ctx, sel, v[i])
+			ret[i] = ec.marshalOOrder2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐOrder(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17817,14 +17817,14 @@ func (ec *executionContext) marshalOOrder2ᚕᚖgithubᚗcomᚋcryanbrowᚋeve�
 	return ret
 }
 
-func (ec *executionContext) marshalOOrder2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrder(ctx context.Context, sel ast.SelectionSet, v *model.Order) graphql.Marshaler {
+func (ec *executionContext) marshalOOrder2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐOrder(ctx context.Context, sel ast.SelectionSet, v *model.Order) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Order(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOOrderHistory2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrderHistory(ctx context.Context, sel ast.SelectionSet, v []*model.OrderHistory) graphql.Marshaler {
+func (ec *executionContext) marshalOOrderHistory2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐOrderHistory(ctx context.Context, sel ast.SelectionSet, v []*model.OrderHistory) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -17851,7 +17851,7 @@ func (ec *executionContext) marshalOOrderHistory2ᚕᚖgithubᚗcomᚋcryanbrow�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOOrderHistory2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrderHistory(ctx, sel, v[i])
+			ret[i] = ec.marshalOOrderHistory2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐOrderHistory(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17865,42 +17865,42 @@ func (ec *executionContext) marshalOOrderHistory2ᚕᚖgithubᚗcomᚋcryanbrow�
 	return ret
 }
 
-func (ec *executionContext) marshalOOrderHistory2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrderHistory(ctx context.Context, sel ast.SelectionSet, v *model.OrderHistory) graphql.Marshaler {
+func (ec *executionContext) marshalOOrderHistory2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐOrderHistory(ctx context.Context, sel ast.SelectionSet, v *model.OrderHistory) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._OrderHistory(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOOrderWrapper2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐOrderWrapper(ctx context.Context, sel ast.SelectionSet, v *model.OrderWrapper) graphql.Marshaler {
+func (ec *executionContext) marshalOOrderWrapper2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐOrderWrapper(ctx context.Context, sel ast.SelectionSet, v *model.OrderWrapper) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._OrderWrapper(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOPlanet2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐPlanet(ctx context.Context, sel ast.SelectionSet, v *model.Planet) graphql.Marshaler {
+func (ec *executionContext) marshalOPlanet2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐPlanet(ctx context.Context, sel ast.SelectionSet, v *model.Planet) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Planet(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOPosition2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐPosition(ctx context.Context, sel ast.SelectionSet, v *model.Position) graphql.Marshaler {
+func (ec *executionContext) marshalOPosition2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐPosition(ctx context.Context, sel ast.SelectionSet, v *model.Position) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Position(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalORace2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐRace(ctx context.Context, sel ast.SelectionSet, v *model.Race) graphql.Marshaler {
+func (ec *executionContext) marshalORace2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐRace(ctx context.Context, sel ast.SelectionSet, v *model.Race) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Race(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalORange2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐRange(ctx context.Context, v interface{}) (*model.Range, error) {
+func (ec *executionContext) unmarshalORange2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐRange(ctx context.Context, v interface{}) (*model.Range, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -17909,21 +17909,21 @@ func (ec *executionContext) unmarshalORange2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑ
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalORange2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐRange(ctx context.Context, sel ast.SelectionSet, v *model.Range) graphql.Marshaler {
+func (ec *executionContext) marshalORange2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐRange(ctx context.Context, sel ast.SelectionSet, v *model.Range) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return v
 }
 
-func (ec *executionContext) marshalORegion2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐRegion(ctx context.Context, sel ast.SelectionSet, v *model.Region) graphql.Marshaler {
+func (ec *executionContext) marshalORegion2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐRegion(ctx context.Context, sel ast.SelectionSet, v *model.Region) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Region(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOServices2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐServices(ctx context.Context, v interface{}) ([]*model.Services, error) {
+func (ec *executionContext) unmarshalOServices2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐServices(ctx context.Context, v interface{}) ([]*model.Services, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -17939,7 +17939,7 @@ func (ec *executionContext) unmarshalOServices2ᚕᚖgithubᚗcomᚋcryanbrowᚋ
 	res := make([]*model.Services, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalOServices2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐServices(ctx, vSlice[i])
+		res[i], err = ec.unmarshalOServices2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐServices(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -17947,7 +17947,7 @@ func (ec *executionContext) unmarshalOServices2ᚕᚖgithubᚗcomᚋcryanbrowᚋ
 	return res, nil
 }
 
-func (ec *executionContext) marshalOServices2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐServices(ctx context.Context, sel ast.SelectionSet, v []*model.Services) graphql.Marshaler {
+func (ec *executionContext) marshalOServices2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐServices(ctx context.Context, sel ast.SelectionSet, v []*model.Services) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -17974,7 +17974,7 @@ func (ec *executionContext) marshalOServices2ᚕᚖgithubᚗcomᚋcryanbrowᚋev
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOServices2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐServices(ctx, sel, v[i])
+			ret[i] = ec.marshalOServices2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐServices(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17988,7 +17988,7 @@ func (ec *executionContext) marshalOServices2ᚕᚖgithubᚗcomᚋcryanbrowᚋev
 	return ret
 }
 
-func (ec *executionContext) unmarshalOServices2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐServices(ctx context.Context, v interface{}) (*model.Services, error) {
+func (ec *executionContext) unmarshalOServices2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐServices(ctx context.Context, v interface{}) (*model.Services, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -17997,14 +17997,14 @@ func (ec *executionContext) unmarshalOServices2ᚖgithubᚗcomᚋcryanbrowᚋeve
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOServices2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐServices(ctx context.Context, sel ast.SelectionSet, v *model.Services) graphql.Marshaler {
+func (ec *executionContext) marshalOServices2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐServices(ctx context.Context, sel ast.SelectionSet, v *model.Services) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return v
 }
 
-func (ec *executionContext) unmarshalOSpectral_class2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSpectralClass(ctx context.Context, v interface{}) (*model.SpectralClass, error) {
+func (ec *executionContext) unmarshalOSpectral_class2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSpectralClass(ctx context.Context, v interface{}) (*model.SpectralClass, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -18013,21 +18013,21 @@ func (ec *executionContext) unmarshalOSpectral_class2ᚖgithubᚗcomᚋcryanbrow
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOSpectral_class2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSpectralClass(ctx context.Context, sel ast.SelectionSet, v *model.SpectralClass) graphql.Marshaler {
+func (ec *executionContext) marshalOSpectral_class2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSpectralClass(ctx context.Context, sel ast.SelectionSet, v *model.SpectralClass) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return v
 }
 
-func (ec *executionContext) marshalOStar2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStar(ctx context.Context, sel ast.SelectionSet, v *model.Star) graphql.Marshaler {
+func (ec *executionContext) marshalOStar2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐStar(ctx context.Context, sel ast.SelectionSet, v *model.Star) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Star(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOStargate2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStargate(ctx context.Context, sel ast.SelectionSet, v []*model.Stargate) graphql.Marshaler {
+func (ec *executionContext) marshalOStargate2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐStargate(ctx context.Context, sel ast.SelectionSet, v []*model.Stargate) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -18054,7 +18054,7 @@ func (ec *executionContext) marshalOStargate2ᚕᚖgithubᚗcomᚋcryanbrowᚋev
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOStargate2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStargate(ctx, sel, v[i])
+			ret[i] = ec.marshalOStargate2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐStargate(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -18068,21 +18068,21 @@ func (ec *executionContext) marshalOStargate2ᚕᚖgithubᚗcomᚋcryanbrowᚋev
 	return ret
 }
 
-func (ec *executionContext) marshalOStargate2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStargate(ctx context.Context, sel ast.SelectionSet, v *model.Stargate) graphql.Marshaler {
+func (ec *executionContext) marshalOStargate2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐStargate(ctx context.Context, sel ast.SelectionSet, v *model.Stargate) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Stargate(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOStargateDestination2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStargateDestination(ctx context.Context, sel ast.SelectionSet, v *model.StargateDestination) graphql.Marshaler {
+func (ec *executionContext) marshalOStargateDestination2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐStargateDestination(ctx context.Context, sel ast.SelectionSet, v *model.StargateDestination) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._StargateDestination(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOStation2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStation(ctx context.Context, sel ast.SelectionSet, v []*model.Station) graphql.Marshaler {
+func (ec *executionContext) marshalOStation2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐStation(ctx context.Context, sel ast.SelectionSet, v []*model.Station) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -18109,7 +18109,7 @@ func (ec *executionContext) marshalOStation2ᚕᚖgithubᚗcomᚋcryanbrowᚋeve
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOStation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStation(ctx, sel, v[i])
+			ret[i] = ec.marshalOStation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐStation(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -18123,7 +18123,7 @@ func (ec *executionContext) marshalOStation2ᚕᚖgithubᚗcomᚋcryanbrowᚋeve
 	return ret
 }
 
-func (ec *executionContext) marshalOStation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐStation(ctx context.Context, sel ast.SelectionSet, v *model.Station) graphql.Marshaler {
+func (ec *executionContext) marshalOStation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐStation(ctx context.Context, sel ast.SelectionSet, v *model.Station) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -18154,7 +18154,7 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return graphql.MarshalString(*v)
 }
 
-func (ec *executionContext) marshalOSystem2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystem(ctx context.Context, sel ast.SelectionSet, v []*model.System) graphql.Marshaler {
+func (ec *executionContext) marshalOSystem2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystem(ctx context.Context, sel ast.SelectionSet, v []*model.System) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -18181,7 +18181,7 @@ func (ec *executionContext) marshalOSystem2ᚕᚖgithubᚗcomᚋcryanbrowᚋeve�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystem(ctx, sel, v[i])
+			ret[i] = ec.marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystem(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -18195,14 +18195,14 @@ func (ec *executionContext) marshalOSystem2ᚕᚖgithubᚗcomᚋcryanbrowᚋeve�
 	return ret
 }
 
-func (ec *executionContext) marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystem(ctx context.Context, sel ast.SelectionSet, v *model.System) graphql.Marshaler {
+func (ec *executionContext) marshalOSystem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystem(ctx context.Context, sel ast.SelectionSet, v *model.System) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._System(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOSystem_planet2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystemPlanet(ctx context.Context, sel ast.SelectionSet, v []*model.SystemPlanet) graphql.Marshaler {
+func (ec *executionContext) marshalOSystem_planet2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystemPlanet(ctx context.Context, sel ast.SelectionSet, v []*model.SystemPlanet) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -18229,7 +18229,7 @@ func (ec *executionContext) marshalOSystem_planet2ᚕᚖgithubᚗcomᚋcryanbrow
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOSystem_planet2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystemPlanet(ctx, sel, v[i])
+			ret[i] = ec.marshalOSystem_planet2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystemPlanet(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -18243,14 +18243,14 @@ func (ec *executionContext) marshalOSystem_planet2ᚕᚖgithubᚗcomᚋcryanbrow
 	return ret
 }
 
-func (ec *executionContext) marshalOSystem_planet2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐSystemPlanet(ctx context.Context, sel ast.SelectionSet, v *model.SystemPlanet) graphql.Marshaler {
+func (ec *executionContext) marshalOSystem_planet2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSystemPlanet(ctx context.Context, sel ast.SelectionSet, v *model.SystemPlanet) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._System_planet(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOUnit2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋmodelᚐUnit(ctx context.Context, sel ast.SelectionSet, v *model.Unit) graphql.Marshaler {
+func (ec *executionContext) marshalOUnit2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐUnit(ctx context.Context, sel ast.SelectionSet, v *model.Unit) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

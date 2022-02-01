@@ -9,8 +9,8 @@ import (
 	"strconv"
 
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
+	"github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
-	"github.com/cryanbrow/eve-graphql-go/graph/model"
 	log "github.com/sirupsen/logrus"
 )
 

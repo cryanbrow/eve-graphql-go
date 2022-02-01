@@ -10,8 +10,9 @@ import (
 
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
+	model "github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
-	"github.com/cryanbrow/eve-graphql-go/graph/model"
+	local_model "github.com/cryanbrow/eve-graphql-go/graph/model"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -76,11 +77,11 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int, pag
 }
 
 func OrdersForRegionByName(region *string, orderType *model.Ordertype, typeName *string, page *int) (*model.OrderWrapper, error) {
-	regionID, err := universe.IdForName(region, model.REGIONS)
+	regionID, err := universe.IdForName(region, local_model.REGIONS)
 	if err != nil {
 		return nil, errors.New("unknown name for region")
 	}
-	typeID, err := universe.IdForName(typeName, model.INVENTORY_TYPES)
+	typeID, err := universe.IdForName(typeName, local_model.INVENTORY_TYPES)
 	if err != nil {
 		return nil, errors.New("unknown name for typeName")
 	}

@@ -10,10 +10,10 @@ import (
 
 	"github.com/cryanbrow/eve-graphql-go/graph/caching"
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
+	model "github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
+	local_model "github.com/cryanbrow/eve-graphql-go/graph/model"
 	log "github.com/sirupsen/logrus"
-
-	"github.com/cryanbrow/eve-graphql-go/graph/model"
 )
 
 func AncestryByID(id *int) (*model.Ancestry, error) {
@@ -326,7 +326,7 @@ func GroupByID(id *int) (*model.Group, error) {
 }
 
 func IdForName(name *string, name_type string) (int, error) {
-	var ids *model.Names = new(model.Names)
+	var ids *local_model.Names = new(local_model.Names)
 	base_url := fmt.Sprintf("%s/universe/ids/", configuration.AppConfig.Esi.Default.Url)
 	if name == nil {
 		return 0, errors.New("nil name")
@@ -352,23 +352,23 @@ func IdForName(name *string, name_type string) (int, error) {
 	}
 
 	switch name_type {
-	case model.AGENTS:
+	case local_model.AGENTS:
 		return *ids.Agents[0].ID, nil
-	case model.ALLIANCES:
+	case local_model.ALLIANCES:
 		return *ids.Alliances[0].ID, nil
-	case model.CHARACTERS:
+	case local_model.CHARACTERS:
 		return *ids.Characters[0].ID, nil
-	case model.CONSTELLATIONS:
+	case local_model.CONSTELLATIONS:
 		return *ids.Constellations[0].ID, nil
-	case model.CORPORATIONS:
+	case local_model.CORPORATIONS:
 		return *ids.Corporations[0].ID, nil
-	case model.FACTIONS:
+	case local_model.FACTIONS:
 		return *ids.Factions[0].ID, nil
-	case model.INVENTORY_TYPES:
+	case local_model.INVENTORY_TYPES:
 		return *ids.InventoryTypes[0].ID, nil
-	case model.REGIONS:
+	case local_model.REGIONS:
 		return *ids.Regions[0].ID, nil
-	case model.SYSTEMS:
+	case local_model.SYSTEMS:
 		return *ids.Systems[0].ID, nil
 	default:
 		return 0, errors.New("all fields nil")

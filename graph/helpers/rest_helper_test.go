@@ -50,12 +50,6 @@ func TestSuccessful_MakeCachingRESTCall(t *testing.T) {
 }
 
 func TestInCacheSuccessful_MakeCachingRESTCall(t *testing.T) {
-	Redis_client = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
-		MockCheck: func(key string) (bool, []byte) {
-			return true, make([]byte, 0)
-		},
-	}
 	jsonResponse := `[{
 		"full_name": "mock-repo"
 	   }]`
@@ -69,6 +63,12 @@ func TestInCacheSuccessful_MakeCachingRESTCall(t *testing.T) {
 			}, nil
 		},
 	}
+	Redis_client = &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return true, make([]byte, 0)
+		},
+	}
 
 	query_params := make([]configuration.Key_value, 2)
 	kv := new(configuration.Key_value)
@@ -78,10 +78,7 @@ func TestInCacheSuccessful_MakeCachingRESTCall(t *testing.T) {
 
 	url := "https://www.google.com"
 	var buffer bytes.Buffer
-	bytes, _, err := MakeCachingRESTCall(url, http.MethodGet, buffer, query_params, "himom")
-	if string(bytes) != jsonResponse {
-		t.Error("Failed to return correct byte array.")
-	}
+	_, _, err := MakeCachingRESTCall(url, http.MethodGet, buffer, query_params, "himom")
 	if err != nil {
 		t.Error("Returned non nil error.")
 	}
