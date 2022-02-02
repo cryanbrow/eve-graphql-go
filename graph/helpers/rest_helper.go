@@ -12,7 +12,10 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func MakeCachingRESTCall(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+type RestHelperClient struct {
+}
+
+func (r *RestHelperClient) MakeCachingRESTCall(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 	inCache, result := Redis_client.CheckRedisCache(redis_query_key)
 	if !inCache {
 		crest_url, err := url.Parse(base_url)

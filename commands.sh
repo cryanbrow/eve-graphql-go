@@ -1,0 +1,3 @@
+go test -race -coverpkg $(go list ./... | grep -v generated | tr '\n' ',') -coverprofile cover.out ./...
+go tool cover --html=cover.out
+cp /tmp/cover2079476039/coverage.html /mnt/c/Users/Bryan/Documents/workspace/eve-graphql-go/
