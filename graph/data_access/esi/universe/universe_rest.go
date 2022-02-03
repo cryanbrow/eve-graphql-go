@@ -48,7 +48,7 @@ func ancestryByArray(id *int) (*model.Ancestry, error) {
 	base_url := fmt.Sprintf("%s/universe/ancestries/", configuration.AppConfig.Esi.Default.Url)
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, headers, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +96,7 @@ func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
 	redis_key := "AsteroidBeltByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return asteroidBelt, err
 	}
@@ -143,7 +143,7 @@ func bloodlineByArray(id *int) (*model.Bloodline, error) {
 	redis_key := "BloodlineByID"
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, headers, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return nil, err
 	}
@@ -177,7 +177,7 @@ func CategoryByID(id *int) (*model.Category, error) {
 	redis_key := "CategoryByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return category, err
 	}
@@ -212,7 +212,7 @@ func ConstellationByID(id *int) (*model.Constellation, error) {
 	redis_key := "ConstellationByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return constellation, err
 	}
@@ -256,7 +256,7 @@ func factionByArray(id *int) (*model.Faction, error) {
 	redis_key := "FactionByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, headers, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return nil, err
 	}
@@ -290,7 +290,7 @@ func GraphicByID(id *int) (*model.Graphic, error) {
 	redis_key := "GraphicByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return graphic, err
 	}
@@ -312,7 +312,7 @@ func GroupByID(id *int) (*model.Group, error) {
 	redis_key := "GroupByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return group, err
 	}
@@ -341,7 +341,7 @@ func IdForName(name *string, name_type string) (int, error) {
 		return 0, err
 	}
 
-	responseBytes, _, err := helpers.MakeCachingRESTCall(base_url, http.MethodPost, buf, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodPost, buf, nil, redis_key)
 	if err != nil {
 		return 0, err
 	}
@@ -398,7 +398,7 @@ func ItemTypeByID(id *int) (*model.ItemType, error) {
 	redis_key := "ItemTypeByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return itemType, err
 	}
@@ -433,7 +433,7 @@ func MoonByID(id *int) (*model.Moon, error) {
 	redis_key := "MoonByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return moon, err
 	}
@@ -455,7 +455,7 @@ func PlanetByID(id *int) (*model.Planet, error) {
 	redis_key := "PlanetByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return planet, err
 	}
@@ -501,7 +501,7 @@ func raceByArray(id *int) (*model.Race, error) {
 	redis_key := "RaceByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, headers, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return nil, err
 	}
@@ -535,7 +535,7 @@ func RegionByID(id *int) (*model.Region, error) {
 	redis_key := "RegionByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return region, err
 	}
@@ -557,7 +557,7 @@ func StarByID(id *int) (*model.Star, error) {
 	redis_key := "StarByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return star, err
 	}
@@ -592,7 +592,7 @@ func StargateByID(id *int) (*model.Stargate, error) {
 	redis_key := "StargateByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return stargate, err
 	}
@@ -630,7 +630,7 @@ func StationByID(id *int) (*model.Station, error) {
 	redis_key := "StationByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return station, err
 	}
@@ -665,7 +665,7 @@ func SystemByID(id *int) (*model.System, error) {
 	redis_key := "SystemByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return system, err
 	}
@@ -689,4 +689,16 @@ var (
 
 func SetupUniverseRest() {
 	Redis_client = &caching.Client{}
+}
+
+type RestHelper interface {
+	MakeCachingRESTCall(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error)
+}
+
+var (
+	rest_helper RestHelper
+)
+
+func SetupDogmaRest() {
+	rest_helper = &helpers.RestHelperClient{}
 }

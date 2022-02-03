@@ -23,7 +23,7 @@ func CorporationByID(id *int) (*model.Corporation, error) {
 	redis_key := "CorporationByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return corporation, err
 	}
@@ -34,4 +34,16 @@ func CorporationByID(id *int) (*model.Corporation, error) {
 	}
 
 	return corporation, nil
+}
+
+type RestHelper interface {
+	MakeCachingRESTCall(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error)
+}
+
+var (
+	rest_helper RestHelper
+)
+
+func SetupDogmaRest() {
+	rest_helper = &helpers.RestHelperClient{}
 }

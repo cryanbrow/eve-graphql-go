@@ -25,7 +25,7 @@ func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 	redis_key := "MarketGroupByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return marketGroup, err
 	}
@@ -97,7 +97,7 @@ func ordersForRegionREST(url string, additional_query_params []configuration.Key
 	var orders []*model.Order
 	var pages = 0
 	var buffer bytes.Buffer
-	responseBytes, header, err := helpers.MakeCachingRESTCall(url, http.MethodGet, buffer, additional_query_params, redis_key)
+	responseBytes, header, err := rest_helper.MakeCachingRESTCall(url, http.MethodGet, buffer, additional_query_params, redis_key)
 	if err != nil {
 		return orders, 0, err
 	}
@@ -121,7 +121,7 @@ func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 	redis_key := "OrderHistoryByID:" + strconv.Itoa(*regionID) + ":" + strconv.Itoa(*typeID)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := helpers.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
 	if err != nil {
 		return orderHistory, err
 	}
@@ -132,4 +132,16 @@ func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 	}
 
 	return orderHistory, nil
+}
+
+type RestHelper interface {
+	MakeCachingRESTCall(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error)
+}
+
+var (
+	rest_helper RestHelper
+)
+
+func SetupDogmaRest() {
+	rest_helper = &helpers.RestHelperClient{}
 }
