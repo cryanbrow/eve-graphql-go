@@ -23,7 +23,7 @@ jobs:
       run: go test -race -coverpkg $(go list ./... | grep -v generated | tr '\n' ',') -coverprofile cover.out ./...
 
     - name: coverage-output
-      run: go tool cover -func=cover.out
+      run: go tool cover -func=cover.out | grep total
 
     - name: html-report
       run: go tool cover --html=cover.out -o coverage.html
