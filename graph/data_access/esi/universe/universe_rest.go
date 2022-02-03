@@ -685,6 +685,7 @@ type RedisClient interface {
 
 var (
 	Redis_client RedisClient
+	rest_helper  RestHelper
 )
 
 func SetupUniverseRest() {
@@ -695,7 +696,3 @@ func SetupUniverseRest() {
 type RestHelper interface {
 	MakeCachingRESTCall(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error)
 }
-
-var (
-	rest_helper RestHelper
-)
