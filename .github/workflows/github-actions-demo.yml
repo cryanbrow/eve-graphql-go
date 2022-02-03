@@ -20,7 +20,10 @@ jobs:
       run: go test -v ./...
 
     - name: cover
-      run: go test -race -coverpkg $(go list ./... | grep -v generated | tr '\n' ',') -coverprofile cover.out ./... && go tool cover --html=cover.out
+      run: go test -race -coverpkg $(go list ./... | grep -v generated | tr '\n' ',') -coverprofile cover.out ./...
+
+    - name: html-report
+      run: go tool cover --html=cover.out
 
     - name: Archive code coverage results
       uses: actions/upload-artifact@v2
