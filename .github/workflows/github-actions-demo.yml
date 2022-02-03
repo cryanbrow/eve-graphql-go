@@ -22,9 +22,6 @@ jobs:
     - name: cover
       run: go test -race -coverpkg $(go list ./... | grep -v generated | tr '\n' ',') -coverprofile cover.out ./...
 
-    - name: cat-test
-      run: cat cover.out
-
     - name: html-report
       run: go tool cover --html=cover.out -o coverage.html
 
