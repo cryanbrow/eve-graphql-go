@@ -26,7 +26,7 @@ jobs:
       run: cat cover.out
 
     - name: html-report
-      run: go tool cover --html=cover.out
+      run: go tool cover --html=cover.out -o coverage.html
 
     - name: Archive code coverage results
       uses: actions/upload-artifact@v2
