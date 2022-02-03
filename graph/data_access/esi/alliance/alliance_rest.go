@@ -44,6 +44,6 @@ var (
 	rest_helper RestHelper
 )
 
-func SetupDogmaRest() {
+func SetupAllianceRest() {
 	rest_helper = &helpers.RestHelperClient{}
 }

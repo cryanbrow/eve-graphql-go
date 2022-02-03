@@ -689,6 +689,7 @@ var (
 
 func SetupUniverseRest() {
 	Redis_client = &caching.Client{}
+	rest_helper = &helpers.RestHelperClient{}
 }
 
 type RestHelper interface {
@@ -698,7 +699,3 @@ type RestHelper interface {
 var (
 	rest_helper RestHelper
 )
-
-func SetupDogmaRest() {
-	rest_helper = &helpers.RestHelperClient{}
-}

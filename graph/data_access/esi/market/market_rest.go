@@ -142,6 +142,6 @@ var (
 	rest_helper RestHelper
 )
 
-func SetupDogmaRest() {
+func SetupMarketRest() {
 	rest_helper = &helpers.RestHelperClient{}
 }

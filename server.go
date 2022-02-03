@@ -13,6 +13,11 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph"
 	"github.com/cryanbrow/eve-graphql-go/graph/caching"
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
+	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/alliance"
+	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/character"
+	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/corporation"
+	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/dogma"
+	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/market"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
 	"github.com/cryanbrow/eve-graphql-go/graph/generated"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
@@ -69,5 +74,11 @@ func setupDependencies() {
 	configuration.LoadConfiguration()
 	helpers.SetupRestHelper()
 	caching.ConfigureRedisClient()
+	universe.SetupUniverseRest()
+	alliance.SetupAllianceRest()
+	character.SetupCharacterRest()
+	corporation.SetupCorporationRest()
+	dogma.SetupDogmaRest()
+	market.SetupMarketRest()
 	universe.SetupUniverseRest()
 }
