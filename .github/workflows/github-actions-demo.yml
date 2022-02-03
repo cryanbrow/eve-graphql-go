@@ -21,3 +21,9 @@ jobs:
 
     - name: cover
       run: go test -race -coverpkg $(go list ./... | grep -v generated | tr '\n' ',') -coverprofile cover.out ./... && go tool cover --html=cover.out
+
+    - name: Archive code coverage results
+      uses: actions/upload-artifact@v2
+      with:
+        name: code-coverage-report
+        path: coverage.html
