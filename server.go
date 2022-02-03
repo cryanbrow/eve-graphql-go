@@ -61,7 +61,7 @@ func main() {
 	})
 	http.FileServer(http.FS(res))
 
-	log.Infoln("connect to http://localhost:%s/ for GraphQL playground", port)
+	log.Infof("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatalln(http.ListenAndServe(":"+port, nil))
 }
 
