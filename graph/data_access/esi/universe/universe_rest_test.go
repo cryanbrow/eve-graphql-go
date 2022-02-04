@@ -9,17 +9,6 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 )
 
-var ancestriesJsonResponse string = `[
-	{
-	  "bloodline_id": 7,
-	  "description": "The Gallente prize political activism more so than other Empires. Many devote their efforts towards one or more causes that suit their ambitions. Activists understand that things will never change for the better unless someone has the courage to fight the good fight.",
-	  "icon_id": 1653,
-	  "id": 13,
-	  "name": "Activists",
-	  "short_description": "Making the universe a better place, one fight at a time."
-	}
-  ]`
-
 func TestSuccessfulInCache_AncestryByID(t *testing.T) {
 	jsonResponse := `{
 		"bloodline_id": 7,
@@ -51,6 +40,16 @@ func TestSuccessfulInCache_AncestryByID(t *testing.T) {
 }
 
 func TestSuccessfulNotInCache_AncestryByID(t *testing.T) {
+	var ancestriesJsonResponse string = `[
+	{
+	  "bloodline_id": 7,
+	  "description": "The Gallente prize political activism more so than other Empires. Many devote their efforts towards one or more causes that suit their ambitions. Activists understand that things will never change for the better unless someone has the courage to fight the good fight.",
+	  "icon_id": 1653,
+	  "id": 13,
+	  "name": "Activists",
+	  "short_description": "Making the universe a better place, one fight at a time."
+	}
+  ]`
 	b := []byte(ancestriesJsonResponse)
 	mock_redis_client := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
@@ -104,6 +103,40 @@ func TestFailUnmarshalInCache_AncestryByID(t *testing.T) {
 		},
 	}
 	Redis_client = mock_redis_client
+
+	var test_id int = 13
+	_, err := AncestryByID(&test_id)
+	if err == nil {
+		t.Errorf("Error is nil")
+	}
+}
+
+func TestFailUnmarshalNotInCache_AncestryByID(t *testing.T) {
+	var ancestriesJsonResponse string = `[
+	{{
+	  "bloodline_id": 7,
+	  "description": "The Gallente prize political activism more so than other Empires. Many devote their efforts towards one or more causes that suit their ambitions. Activists understand that things will never change for the better unless someone has the courage to fight the good fight.",
+	  "icon_id": 1653,
+	  "id": 13,
+	  "name": "Activists",
+	  "short_description": "Making the universe a better place, one fight at a time."
+	}
+  ]`
+	b := []byte(ancestriesJsonResponse)
+	mock_redis_client := &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return false, nil
+		},
+	}
+	Redis_client = mock_redis_client
+
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+	rest_helper = mock_rest_helper
 
 	var test_id int = 13
 	_, err := AncestryByID(&test_id)
