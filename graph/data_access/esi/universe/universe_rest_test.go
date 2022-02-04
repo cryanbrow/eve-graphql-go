@@ -50,6 +50,34 @@ func TestSuccessfulInCache_AncestryByID(t *testing.T) {
 	}
 }
 
+func TestSuccessfulNotInCache_AncestryByID(t *testing.T) {
+	b := []byte(ancestriesJsonResponse)
+	mock_redis_client := &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return false, nil
+		},
+	}
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+
+	Redis_client = mock_redis_client
+	rest_helper = mock_rest_helper
+
+	var test_id int = 13
+	resp, err := AncestryByID(&test_id)
+	if err != nil {
+		t.Errorf("Error was not nil, %v", err)
+	}
+	var resp_name string = "Activists"
+	if *resp.Name != resp_name {
+		t.Errorf("Response was not as expected")
+	}
+}
+
 func TestSuccessful_AsteroidBeltByID(t *testing.T) {
 	jsonResponse := `{
 		"name": "Inaro IX - Asteroid Belt 1",
