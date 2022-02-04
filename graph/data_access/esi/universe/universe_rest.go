@@ -20,7 +20,7 @@ func AncestryByID(id *int) (*model.Ancestry, error) {
 	var ancestry *model.Ancestry = new(model.Ancestry)
 	var err error
 	if id == nil {
-		return nil, nil
+		return nil, errors.New("nil id")
 	}
 
 	inCache, result := Redis_client.CheckRedisCache("AncestryByID:" + strconv.Itoa(*id))

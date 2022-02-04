@@ -78,6 +78,40 @@ func TestSuccessfulNotInCache_AncestryByID(t *testing.T) {
 	}
 }
 
+func TestFailNilID_AncestryByID(t *testing.T) {
+	var test_id *int = nil
+	_, err := AncestryByID(test_id)
+	if err == nil {
+		t.Errorf("Error is nil")
+	}
+}
+
+func TestFailUnmarshalInCache_AncestryByID(t *testing.T) {
+	jsonResponse := `{{
+		"bloodline_id": 7,
+		"description": "The Gallente prize political activism more so than other Empires. Many devote their efforts towards one or more causes that suit their ambitions. Activists understand that things will never change for the better unless someone has the courage to fight the good fight.",
+		"icon_id": 1653,
+		"id": 13,
+		"name": "Activists",
+		"short_description": "Making the universe a better place, one fight at a time."
+	  }`
+	b := []byte(jsonResponse)
+
+	mock_redis_client := &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return true, b
+		},
+	}
+	Redis_client = mock_redis_client
+
+	var test_id int = 13
+	_, err := AncestryByID(&test_id)
+	if err == nil {
+		t.Errorf("Error is nil")
+	}
+}
+
 func TestSuccessful_AsteroidBeltByID(t *testing.T) {
 	jsonResponse := `{
 		"name": "Inaro IX - Asteroid Belt 1",
