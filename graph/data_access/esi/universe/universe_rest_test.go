@@ -112,6 +112,29 @@ func TestFailUnmarshalInCache_AncestryByID(t *testing.T) {
 	}
 }
 
+func TestFailRestNotInCache_AncestryByID(t *testing.T) {
+	mock_redis_client := &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return false, nil
+		},
+	}
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return nil, nil, errors.New("failure")
+		},
+	}
+
+	Redis_client = mock_redis_client
+	rest_helper = mock_rest_helper
+
+	var test_id int = 13
+	_, err := AncestryByID(&test_id)
+	if err == nil {
+		t.Errorf("Error was nil")
+	}
+}
+
 func TestSuccessful_AsteroidBeltByID(t *testing.T) {
 	jsonResponse := `{
 		"name": "Inaro IX - Asteroid Belt 1",
