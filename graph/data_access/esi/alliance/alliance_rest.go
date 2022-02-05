@@ -19,11 +19,11 @@ func AllianceByID(id *int) (*model.Alliance, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	base_url := fmt.Sprintf("%s/alliances/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
+	baseUrl := fmt.Sprintf("%s/alliances/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "AllianceByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return alliance, err
 	}
@@ -37,7 +37,7 @@ func AllianceByID(id *int) (*model.Alliance, error) {
 }
 
 type RestHelper interface {
-	MakeCachingRESTCall(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error)
+	MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error)
 }
 
 var (

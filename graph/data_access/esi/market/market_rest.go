@@ -21,11 +21,11 @@ func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 	if id == nil {
 		return nil, errors.New("nil id")
 	}
-	base_url := fmt.Sprintf("%s/markets/groups/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
+	baseUrl := fmt.Sprintf("%s/markets/groups/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "MarketGroupByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return marketGroup, err
 	}
@@ -41,7 +41,7 @@ func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int, page *int) (*model.OrderWrapper, error) {
 	log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID, "orderType": orderType}).Info("OrdersForRegion Called")
 	orderList := make([]*model.Order, 0)
-	base_url := fmt.Sprintf("%s/markets/%s/orders/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*regionID))
+	baseUrl := fmt.Sprintf("%s/markets/%s/orders/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*regionID))
 
 	redisKey := "OrdersForRegion:" + strconv.Itoa(*regionID) + ":" + orderType.String()
 
@@ -60,7 +60,7 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int, pag
 
 	redisKey = redisKey + ":" + strconv.Itoa(*page)
 
-	orderResult, pages, err := ordersForRegionREST(base_url, query_params, redisKey)
+	orderResult, pages, err := ordersForRegionREST(baseUrl, query_params, redisKey)
 
 	if err == nil {
 		orderList = append(orderList, orderResult...)
@@ -117,11 +117,11 @@ func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 		return nil, errors.New("nil id")
 	}
 	var orderHistory []*model.OrderHistory = make([]*model.OrderHistory, 0)
-	base_url := fmt.Sprintf("%s/markets/%s/history", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*regionID))
+	baseUrl := fmt.Sprintf("%s/markets/%s/history", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*regionID))
 	redisKey := "OrderHistoryByID:" + strconv.Itoa(*regionID) + ":" + strconv.Itoa(*typeID)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return orderHistory, err
 	}
@@ -135,7 +135,7 @@ func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 }
 
 type RestHelper interface {
-	MakeCachingRESTCall(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error)
+	MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error)
 }
 
 var (

@@ -15,12 +15,12 @@ import (
 type RestHelperClient struct {
 }
 
-func (r *RestHelperClient) MakeCachingRESTCall(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+func (r *RestHelperClient) MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 	inCache, result := Redis_client.CheckRedisCache(redis_query_key)
 	if !inCache {
-		crest_url, err := url.Parse(base_url)
+		crest_url, err := url.Parse(baseUrl)
 		if err != nil {
-			log.WithFields(log.Fields{"base_url": base_url, "verb": verb}).Errorf("Failed to Parse URL with Error : %v", err)
+			log.WithFields(log.Fields{"baseUrl": baseUrl, "verb": verb}).Errorf("Failed to Parse URL with Error : %v", err)
 			return nil, nil, err
 		}
 		queryParameters := crest_url.Query()
