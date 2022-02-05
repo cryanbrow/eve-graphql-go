@@ -19,7 +19,7 @@ import (
 func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 	var marketGroup *model.MarketGroup = new(model.MarketGroup)
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/markets/groups/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "MarketGroupByID:" + strconv.Itoa(*id)
@@ -114,7 +114,7 @@ func ordersForRegionREST(url string, additionalQueryParams []configuration.Key_v
 
 func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 	if regionID == nil || typeID == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	var orderHistory []*model.OrderHistory = make([]*model.OrderHistory, 0)
 	baseUrl := fmt.Sprintf("%s/markets/%s/history", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*regionID))

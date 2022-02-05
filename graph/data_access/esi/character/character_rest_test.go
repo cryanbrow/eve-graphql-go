@@ -70,7 +70,7 @@ func TestFailNilID_CharacterByID(t *testing.T) {
 	_, err := CharacterByID(testId)
 	if err == nil {
 		t.Error(helpers.NilError)
-	} else if err.Error() != "nil id" {
+	} else if err.Error() != helpers.NilId {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
 

@@ -17,7 +17,7 @@ import (
 func CharacterByID(id *int) (*model.Character, error) {
 	var character *model.Character = new(model.Character)
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/characters/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "CharacterByID:" + strconv.Itoa(*id)

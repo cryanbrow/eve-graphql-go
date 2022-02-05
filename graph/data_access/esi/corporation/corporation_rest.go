@@ -17,7 +17,7 @@ import (
 func CorporationByID(id *int) (*model.Corporation, error) {
 	var corporation *model.Corporation = new(model.Corporation)
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/corporations/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "CorporationByID:" + strconv.Itoa(*id)

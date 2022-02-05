@@ -76,7 +76,7 @@ func TestFailNilID_CorporationByID(t *testing.T) {
 	_, err := CorporationByID(testId)
 	if err == nil {
 		t.Error(helpers.NilError)
-	} else if err.Error() != "nil id" {
+	} else if err.Error() != helpers.NilId {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
 

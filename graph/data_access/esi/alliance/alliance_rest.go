@@ -17,7 +17,7 @@ import (
 func AllianceByID(id *int) (*model.Alliance, error) {
 	var alliance *model.Alliance = new(model.Alliance)
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/alliances/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "AllianceByID:" + strconv.Itoa(*id)

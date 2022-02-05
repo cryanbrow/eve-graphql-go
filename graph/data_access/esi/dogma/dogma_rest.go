@@ -17,7 +17,7 @@ import (
 func DogmaAttributeByID(id *int) (*model.DogmaAttributeDetail, error) {
 	var dogmaAttribute *model.DogmaAttributeDetail = new(model.DogmaAttributeDetail)
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/dogma/attributes/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "DogmaAttributeByID:" + strconv.Itoa(*id)
@@ -39,7 +39,7 @@ func DogmaAttributeByID(id *int) (*model.DogmaAttributeDetail, error) {
 func DogmaEffectByID(id *int) (*model.DogmaEffectDetail, error) {
 	var dogmaEffect *model.DogmaEffectDetail = new(model.DogmaEffectDetail)
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/dogma/effects/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "DogmaEffectByID:" + strconv.Itoa(*id)

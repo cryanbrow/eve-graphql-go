@@ -305,7 +305,7 @@ func TestFailNilID_AsteroidBeltByID(t *testing.T) {
 	_, err := AsteroidBeltByID(testId)
 	if err == nil {
 		t.Error(helpers.NilError)
-	} else if err.Error() != "nil id" {
+	} else if err.Error() != helpers.NilId {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
 
@@ -618,7 +618,7 @@ func TestFailNilID_CategoryByID(t *testing.T) {
 	_, err := CategoryByID(testId)
 	if err == nil {
 		t.Error(helpers.NilError)
-	} else if err.Error() != "nil id" {
+	} else if err.Error() != helpers.NilId {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
 
@@ -855,7 +855,7 @@ func TestFailNilID_ConstellationByID(t *testing.T) {
 	_, err := ConstellationByID(testId)
 	if err == nil {
 		t.Error(helpers.NilError)
-	} else if err.Error() != "nil id" {
+	} else if err.Error() != helpers.NilId {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
 
@@ -1155,7 +1155,7 @@ func TestFailNilID_GraphicByID(t *testing.T) {
 	_, err := GraphicByID(testId)
 	if err == nil {
 		t.Error(helpers.NilError)
-	} else if err.Error() != "nil id" {
+	} else if err.Error() != helpers.NilId {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
 
@@ -1424,7 +1424,7 @@ func TestFailNilID_GroupByID(t *testing.T) {
 	_, err := GroupByID(testId)
 	if err == nil {
 		t.Error(helpers.NilError)
-	} else if err.Error() != "nil id" {
+	} else if err.Error() != helpers.NilId {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
 

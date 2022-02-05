@@ -20,7 +20,7 @@ func AncestryByID(id *int) (*model.Ancestry, error) {
 	var ancestry *model.Ancestry = new(model.Ancestry)
 	var err error
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 
 	inCache, result := Redis_client.CheckRedisCache("AncestryByID:" + strconv.Itoa(*id))
@@ -90,7 +90,7 @@ func AsteroidBeltDetails(asteroidBelts []*int) ([]*model.AsteroidBelt, error) {
 func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
 	var asteroidBelt *model.AsteroidBelt = new(model.AsteroidBelt)
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/universe/asteroid_belts/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "AsteroidBeltByID:" + strconv.Itoa(*id)
@@ -171,7 +171,7 @@ func bloodlineByArray(id *int) (*model.Bloodline, error) {
 func CategoryByID(id *int) (*model.Category, error) {
 	var category *model.Category = new(model.Category)
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/universe/categories/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "CategoryByID:" + strconv.Itoa(*id)
@@ -206,7 +206,7 @@ func ConstellationsByIDs(ids []*int) ([]*model.Constellation, error) {
 func ConstellationByID(id *int) (*model.Constellation, error) {
 	var constellation *model.Constellation = new(model.Constellation)
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/universe/constellations/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "ConstellationByID:" + strconv.Itoa(*id)
@@ -228,7 +228,7 @@ func ConstellationByID(id *int) (*model.Constellation, error) {
 func FactionByID(id *int) (*model.Faction, error) {
 	var faction *model.Faction = new(model.Faction)
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 
 	inCache, result := Redis_client.CheckRedisCache("FactionByID:" + strconv.Itoa(*id))
@@ -284,7 +284,7 @@ func factionByArray(id *int) (*model.Faction, error) {
 func GraphicByID(id *int) (*model.Graphic, error) {
 	var graphic *model.Graphic = new(model.Graphic)
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/universe/graphics/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "GraphicByID:" + strconv.Itoa(*id)
@@ -306,7 +306,7 @@ func GraphicByID(id *int) (*model.Graphic, error) {
 func GroupByID(id *int) (*model.Group, error) {
 	var group *model.Group = new(model.Group)
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/universe/groups/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "GroupByID:" + strconv.Itoa(*id)
@@ -392,7 +392,7 @@ func ItemTypesByIDs(itemTypes []*int) ([]*model.ItemType, error) {
 func ItemTypeByID(id *int) (*model.ItemType, error) {
 	var itemType *model.ItemType = new(model.ItemType)
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/universe/types/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "ItemTypeByID:" + strconv.Itoa(*id)
@@ -427,7 +427,7 @@ func MoonDetails(moons []*int) ([]*model.Moon, error) {
 func MoonByID(id *int) (*model.Moon, error) {
 	var moon *model.Moon = new(model.Moon)
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/universe/moons/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "MoonByID:" + strconv.Itoa(*id)
@@ -449,7 +449,7 @@ func MoonByID(id *int) (*model.Moon, error) {
 func PlanetByID(id *int) (*model.Planet, error) {
 	var planet *model.Planet = new(model.Planet)
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/universe/planets/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "PlanetByID:" + strconv.Itoa(*id)
@@ -551,7 +551,7 @@ func RegionByID(id *int) (*model.Region, error) {
 func StarByID(id *int) (*model.Star, error) {
 	var star *model.Star = new(model.Star)
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/universe/stars/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "StarByID:" + strconv.Itoa(*id)
@@ -586,7 +586,7 @@ func StargateDetails(stargates []*int) ([]*model.Stargate, error) {
 func StargateByID(id *int) (*model.Stargate, error) {
 	var stargate *model.Stargate = new(model.Stargate)
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/universe/stargates/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "StargateByID:" + strconv.Itoa(*id)
@@ -620,7 +620,7 @@ func StationByArray(ids []*int) ([]*model.Station, error) {
 
 func StationByID(id *int) (*model.Station, error) {
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	if *id > 2147483647 {
 		return nil, nil
@@ -658,7 +658,7 @@ func SystemByArray(ids []*int) ([]*model.System, error) {
 
 func SystemByID(id *int) (*model.System, error) {
 	if id == nil {
-		return nil, errors.New("nil id")
+		return nil, errors.New(helpers.NilId)
 	}
 	var system *model.System = new(model.System)
 	baseUrl := fmt.Sprintf("%s/universe/systems/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
