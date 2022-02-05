@@ -16,6 +16,10 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const ancestryRedisKey string = "AncestryByID:"
+const asteroidBeltRedisKey string = "AsteroidBeltByID:"
+const bloodlineRedisKey string = "BloodlineByID:"
+
 func AncestryByID(id *int) (*model.Ancestry, error) {
 	var ancestry *model.Ancestry = new(model.Ancestry)
 	var err error
@@ -23,7 +27,7 @@ func AncestryByID(id *int) (*model.Ancestry, error) {
 		return nil, errors.New(helpers.NilId)
 	}
 
-	inCache, result := Redis_client.CheckRedisCache("AncestryByID:" + strconv.Itoa(*id))
+	inCache, result := Redis_client.CheckRedisCache(ancestryRedisKey + strconv.Itoa(*id))
 	if !inCache {
 		ancestry, err = ancestryByArray(id)
 		if err != nil {
@@ -44,7 +48,7 @@ func AncestryByID(id *int) (*model.Ancestry, error) {
 func ancestryByArray(id *int) (*model.Ancestry, error) {
 	var ancestries []*model.Ancestry = make([]*model.Ancestry, 0)
 	var returnAncestry *model.Ancestry
-	var redisKey = "AncestryByID:" + strconv.Itoa(*id)
+	var redisKey = ancestryRedisKey + strconv.Itoa(*id)
 	baseUrl := fmt.Sprintf("%s/universe/ancestries/", configuration.AppConfig.Esi.Default.Url)
 
 	var buffer bytes.Buffer
@@ -65,7 +69,7 @@ func ancestryByArray(id *int) (*model.Ancestry, error) {
 		}
 		ancestryBytes, err := json.Marshal(*ancestry)
 		if err == nil {
-			Redis_client.AddToRedisCache("AncestryByID:"+strconv.Itoa(*ancestry.ID), ancestryBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+			Redis_client.AddToRedisCache(ancestryRedisKey+strconv.Itoa(*ancestry.ID), ancestryBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
 		} else {
 			log.Errorf("Failure Marshalling: %v", err)
 		}
@@ -93,7 +97,7 @@ func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
 		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/universe/asteroid_belts/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
-	redisKey := "AsteroidBeltByID:" + strconv.Itoa(*id)
+	redisKey := asteroidBeltRedisKey + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
 	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
@@ -118,7 +122,7 @@ func BloodlineByID(id *int) (*model.Bloodline, error) {
 		return nil, nil
 	}
 
-	inCache, result := Redis_client.CheckRedisCache("BloodlineByID:" + strconv.Itoa(*id))
+	inCache, result := Redis_client.CheckRedisCache(bloodlineRedisKey + strconv.Itoa(*id))
 	if !inCache {
 		bloodline, err = bloodlineByArray(id)
 		if err != nil {
@@ -140,7 +144,7 @@ func bloodlineByArray(id *int) (*model.Bloodline, error) {
 	var bloodlines []*model.Bloodline = make([]*model.Bloodline, 0)
 	var returnBloodline *model.Bloodline
 	baseUrl := fmt.Sprintf("%s/universe/bloodlines/", configuration.AppConfig.Esi.Default.Url)
-	redisKey := "BloodlineByID"
+	redisKey := bloodlineRedisKey
 
 	var buffer bytes.Buffer
 	responseBytes, headers, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
@@ -160,7 +164,7 @@ func bloodlineByArray(id *int) (*model.Bloodline, error) {
 		}
 		bloodlineBytes, err := json.Marshal(*bloodline)
 		if err == nil {
-			Redis_client.AddToRedisCache("BloodlineByID:"+strconv.Itoa(*bloodline.BloodlineID), bloodlineBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+			Redis_client.AddToRedisCache(bloodlineRedisKey+strconv.Itoa(*bloodline.BloodlineID), bloodlineBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
 		} else {
 			log.Errorf("Failure Marshalling: %v", err)
 		}
