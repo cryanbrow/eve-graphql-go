@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
+	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
 func TestSuccessful_DogmaEffectByID(t *testing.T) {
@@ -82,7 +83,7 @@ func TestFailNilID_DogmaEffectByID(t *testing.T) {
 
 	_, err := DogmaEffectByID(test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -100,7 +101,7 @@ func TestFailRestCall_DogmaEffectByID(t *testing.T) {
 
 	_, err := DogmaEffectByID(&test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -138,7 +139,7 @@ func TestFailUnmarshal_DogmaEffectByID(t *testing.T) {
 
 	_, err := DogmaEffectByID(&test_id)
 	if err == nil {
-		t.Errorf("Error is nil")
+		t.Errorf(helpers.NilError)
 	}
 }
 
@@ -203,7 +204,7 @@ func TestFailNilID_DogmaAttributeByID(t *testing.T) {
 
 	_, err := DogmaAttributeByID(test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -222,7 +223,7 @@ func TestFailRestCall_DogmaAttributeByID(t *testing.T) {
 
 	_, err := DogmaAttributeByID(&test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -255,7 +256,7 @@ func TestFailUnmarshal_DogmaAttributeByID(t *testing.T) {
 
 	_, err := DogmaAttributeByID(&test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	}
 
 }

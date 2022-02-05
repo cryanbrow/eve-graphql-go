@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
+	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
 func TestSuccessful_AllianceByID(t *testing.T) {
@@ -64,7 +65,7 @@ func TestFailNilID_AllianceByID(t *testing.T) {
 
 	_, err := AllianceByID(test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -83,7 +84,7 @@ func TestFailRestCall_AllianceByID(t *testing.T) {
 
 	_, err := AllianceByID(&test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -113,7 +114,7 @@ func TestFailUnmarshal_AllianceByID(t *testing.T) {
 
 	_, err := AllianceByID(&test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	}
 
 }

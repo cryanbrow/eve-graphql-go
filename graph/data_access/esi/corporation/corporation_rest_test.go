@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
+	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
 func TestSuccessful_CorporationByID(t *testing.T) {
@@ -74,7 +75,7 @@ func TestFailNilID_CorporationByID(t *testing.T) {
 
 	_, err := CorporationByID(test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -93,7 +94,7 @@ func TestFailRestCall_CorporationByID(t *testing.T) {
 
 	_, err := CorporationByID(&test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -128,7 +129,7 @@ func TestFailUnmarshal_CorporationByID(t *testing.T) {
 
 	_, err := CorporationByID(&test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	}
 
 }

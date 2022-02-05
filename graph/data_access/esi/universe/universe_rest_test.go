@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
+	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
 /***************************************
@@ -85,7 +86,7 @@ func TestFailNilID_AncestryByID(t *testing.T) {
 	var test_id *int = nil
 	_, err := AncestryByID(test_id)
 	if err == nil {
-		t.Errorf("Error is nil")
+		t.Errorf(helpers.NilError)
 	}
 }
 
@@ -111,7 +112,7 @@ func TestFailUnmarshalInCache_AncestryByID(t *testing.T) {
 	var test_id int = 13
 	_, err := AncestryByID(&test_id)
 	if err == nil {
-		t.Errorf("Error is nil")
+		t.Errorf(helpers.NilError)
 	}
 }
 
@@ -145,7 +146,7 @@ func TestFailUnmarshalNotInCache_AncestryByID(t *testing.T) {
 	var test_id int = 13
 	_, err := AncestryByID(&test_id)
 	if err == nil {
-		t.Errorf("Error is nil")
+		t.Errorf(helpers.NilError)
 	}
 }
 
@@ -303,7 +304,7 @@ func TestFailNilID_AsteroidBeltByID(t *testing.T) {
 
 	_, err := AsteroidBeltByID(test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -322,7 +323,7 @@ func TestFailRestCall_AsteroidBeltByID(t *testing.T) {
 
 	_, err := AsteroidBeltByID(&test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -353,7 +354,7 @@ func TestFailUnmarshal_AsteroidBeltByID(t *testing.T) {
 
 	_, err := AsteroidBeltByID(&test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	}
 
 }
@@ -444,7 +445,7 @@ func TestFailNilID_BloodlineByID(t *testing.T) {
 	var test_id *int = nil
 	_, err := AncestryByID(test_id)
 	if err == nil {
-		t.Errorf("Error is nil")
+		t.Errorf(helpers.NilError)
 	}
 }
 
@@ -475,7 +476,7 @@ func TestFailUnmarshalInCache_BloodlineByID(t *testing.T) {
 	var test_id int = 5
 	_, err := BloodlineByID(&test_id)
 	if err == nil {
-		t.Errorf("Error is nil")
+		t.Errorf(helpers.NilError)
 	}
 }
 
@@ -514,7 +515,7 @@ func TestFailUnmarshalNotInCache_BloodlineByID(t *testing.T) {
 	var test_id int = 5
 	_, err := BloodlineByID(&test_id)
 	if err == nil {
-		t.Errorf("Error is nil")
+		t.Errorf(helpers.NilError)
 	}
 }
 
@@ -616,7 +617,7 @@ func TestFailNilID_CategoryByID(t *testing.T) {
 
 	_, err := CategoryByID(test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -635,7 +636,7 @@ func TestFailRestCall_CategoryByID(t *testing.T) {
 
 	_, err := CategoryByID(&test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -673,7 +674,7 @@ func TestFailUnmarshal_CategoryByID(t *testing.T) {
 
 	_, err := CategoryByID(&test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	}
 
 }
@@ -853,7 +854,7 @@ func TestFailNilID_ConstellationByID(t *testing.T) {
 
 	_, err := ConstellationByID(test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -872,7 +873,7 @@ func TestFailRestCall_ConstellationByID(t *testing.T) {
 
 	_, err := ConstellationByID(&test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -914,7 +915,7 @@ func TestFailUnmarshal_ConstellationByID(t *testing.T) {
 
 	_, err := ConstellationByID(&test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	}
 
 }
@@ -1003,7 +1004,7 @@ func TestFailNilID_FactionByID(t *testing.T) {
 	var test_id *int = nil
 	_, err := FactionByID(test_id)
 	if err == nil {
-		t.Errorf("Error is nil")
+		t.Errorf(helpers.NilError)
 	}
 }
 
@@ -1033,7 +1034,7 @@ func TestFailUnmarshalInCache_FactionByID(t *testing.T) {
 	var test_id int = 500003
 	_, err := FactionByID(&test_id)
 	if err == nil {
-		t.Errorf("Error is nil")
+		t.Errorf(helpers.NilError)
 	}
 }
 
@@ -1071,7 +1072,7 @@ func TestFailUnmarshalNotInCache_FactionByID(t *testing.T) {
 	var test_id int = 500003
 	_, err := FactionByID(&test_id)
 	if err == nil {
-		t.Errorf("Error is nil")
+		t.Errorf(helpers.NilError)
 	}
 }
 
@@ -1153,7 +1154,7 @@ func TestFailNilID_GraphicByID(t *testing.T) {
 
 	_, err := GraphicByID(test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -1172,7 +1173,7 @@ func TestFailRestCall_GraphicByID(t *testing.T) {
 
 	_, err := GraphicByID(&test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -1200,7 +1201,7 @@ func TestFailUnmarshal_GraphicByID(t *testing.T) {
 
 	_, err := GraphicByID(&test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	}
 
 }
@@ -1422,7 +1423,7 @@ func TestFailNilID_GroupByID(t *testing.T) {
 
 	_, err := GroupByID(test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -1441,7 +1442,7 @@ func TestFailRestCall_GroupByID(t *testing.T) {
 
 	_, err := GroupByID(&test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
 		t.Errorf("Wrong error text: %s", err.Error())
 	}
@@ -1550,7 +1551,7 @@ func TestFailUnmarshal_GroupByID(t *testing.T) {
 
 	_, err := GroupByID(&test_id)
 	if err == nil {
-		t.Error("Error is nil")
+		t.Error(helpers.NilError)
 	}
 
 }
