@@ -171,7 +171,7 @@ func bloodlineByArray(id *int) (*model.Bloodline, error) {
 func CategoryByID(id *int) (*model.Category, error) {
 	var category *model.Category = new(model.Category)
 	if id == nil {
-		return nil, nil
+		return nil, errors.New("nil id")
 	}
 	base_url := fmt.Sprintf("%s/universe/categories/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redis_key := "CategoryByID:" + strconv.Itoa(*id)
