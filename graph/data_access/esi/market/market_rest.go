@@ -69,11 +69,11 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int, pag
 		println(err)
 	}
 
-	return_orders := new(model.OrderWrapper)
-	return_orders.List = orderList
-	return_orders.Xpages = &pages
+	returnOrders := new(model.OrderWrapper)
+	returnOrders.List = orderList
+	returnOrders.Xpages = &pages
 
-	return return_orders, nil
+	return returnOrders, nil
 }
 
 func OrdersForRegionByName(region *string, orderType *model.Ordertype, typeName *string, page *int) (*model.OrderWrapper, error) {
