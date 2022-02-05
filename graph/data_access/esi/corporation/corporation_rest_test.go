@@ -10,7 +10,7 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
-func TestSuccessful_CorporationByID(t *testing.T) {
+func TestSuccessfulCorporationByID(t *testing.T) {
 	jsonResponse := `{
 		"ceo_id": 3018996,
 		"creator_id": 1,
@@ -47,7 +47,7 @@ func TestSuccessful_CorporationByID(t *testing.T) {
 
 }
 
-func TestFailNilID_CorporationByID(t *testing.T) {
+func TestFailNilIDCorporationByID(t *testing.T) {
 	jsonResponse := `{
 		"ceo_id": 3018996,
 		"creator_id": 1,
@@ -82,7 +82,7 @@ func TestFailNilID_CorporationByID(t *testing.T) {
 
 }
 
-func TestFailRestCall_CorporationByID(t *testing.T) {
+func TestFailRestCallCorporationByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -101,7 +101,7 @@ func TestFailRestCall_CorporationByID(t *testing.T) {
 
 }
 
-func TestFailUnmarshal_CorporationByID(t *testing.T) {
+func TestFailUnmarshalCorporationByID(t *testing.T) {
 	jsonResponse := `{{
 		"ceo_id": 3018996,
 		"creator_id": 1,
