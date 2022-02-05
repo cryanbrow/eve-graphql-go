@@ -1099,6 +1099,113 @@ func TestFailRestNotInCache_FactionByID(t *testing.T) {
 }
 
 /***************************************
+*             GraphicByID              *
+***************************************/
+
+func TestSuccessful_GraphicByID(t *testing.T) {
+	jsonResponse := `{
+		"graphic_file": "res:/dx9/model/Turret/Energy/Pulse/M/Pulse_Heavy_T1.red",
+		"graphic_id": 21573,
+		"sof_fation_name": "amarrnavy",
+		"sof_race_name": "amarr"
+	  }`
+
+	b := []byte(jsonResponse)
+
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+	rest_helper = mock_rest_helper
+
+	var test_id int = 21573
+
+	resp, err := GraphicByID(&test_id)
+	if err != nil {
+		t.Errorf("Error was not nil, %v", err)
+	}
+	var resp_name string = "amarrnavy"
+	if *resp.SofFationName != resp_name {
+		t.Errorf("Response was not as expected")
+	}
+
+}
+
+func TestFailNilID_GraphicByID(t *testing.T) {
+	jsonResponse := `{
+		"graphic_file": "res:/dx9/model/Turret/Energy/Pulse/M/Pulse_Heavy_T1.red",
+		"graphic_id": 21573,
+		"sof_fation_name": "amarrnavy",
+		"sof_race_name": "amarr"
+	  }`
+
+	b := []byte(jsonResponse)
+
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+	rest_helper = mock_rest_helper
+
+	var test_id *int = nil
+
+	_, err := GraphicByID(test_id)
+	if err == nil {
+		t.Error("Error is nil")
+	} else if err.Error() != "nil id" {
+		t.Errorf("Wrong error text: %s", err.Error())
+	}
+
+}
+
+func TestFailRestCall_GraphicByID(t *testing.T) {
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return nil, nil, errors.New("failure")
+		},
+	}
+	rest_helper = mock_rest_helper
+
+	var test_id int = 21573
+
+	_, err := GraphicByID(&test_id)
+	if err == nil {
+		t.Error("Error is nil")
+	} else if err.Error() != "failure" {
+		t.Errorf("Wrong error text: %s", err.Error())
+	}
+
+}
+
+func TestFailUnmarshal_GraphicByID(t *testing.T) {
+	jsonResponse := `{{
+		"graphic_file": "res:/dx9/model/Turret/Energy/Pulse/M/Pulse_Heavy_T1.red",
+		"graphic_id": 21573,
+		"sof_fation_name": "amarrnavy",
+		"sof_race_name": "amarr"
+	  }`
+
+	b := []byte(jsonResponse)
+
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+	rest_helper = mock_rest_helper
+
+	var test_id int = 21573
+
+	_, err := GraphicByID(&test_id)
+	if err == nil {
+		t.Error("Error is nil")
+	}
+
+}
+
+/***************************************
 *             MOCK SECTION             *
 ***************************************/
 

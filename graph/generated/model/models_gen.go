@@ -187,14 +187,14 @@ type Faction struct {
 }
 
 type Graphic struct {
-	CollisionFile  *string `json:"collision_file"`
-	GraphicFile    *string `json:"graphic_file"`
-	GraphicID      *int    `json:"graphic_id"`
-	IconFolder     *string `json:"icon_folder"`
-	SofDna         *string `json:"sof_dna"`
-	SofFactionName *string `json:"sof_faction_name"`
-	SofHullName    *string `json:"sof_hull_name"`
-	SofRaceName    *string `json:"sof_race_name"`
+	CollisionFile *string `json:"collision_file"`
+	GraphicFile   *string `json:"graphic_file"`
+	GraphicID     *int    `json:"graphic_id"`
+	IconFolder    *string `json:"icon_folder"`
+	SofDna        *string `json:"sof_dna"`
+	SofFationName *string `json:"sof_fation_name"`
+	SofHullName   *string `json:"sof_hull_name"`
+	SofRaceName   *string `json:"sof_race_name"`
 }
 
 type Group struct {

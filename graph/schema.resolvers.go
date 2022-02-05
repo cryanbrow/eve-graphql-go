@@ -13,7 +13,7 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/market"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
 	"github.com/cryanbrow/eve-graphql-go/graph/generated"
-	model "github.com/cryanbrow/eve-graphql-go/graph/generated/model"
+	"github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 )
 
 func (r *allianceResolver) CreatorCorporation(ctx context.Context, obj *model.Alliance) (*model.Corporation, error) {

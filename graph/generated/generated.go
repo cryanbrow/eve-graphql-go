@@ -245,14 +245,14 @@ type ComplexityRoot struct {
 	}
 
 	Graphic struct {
-		CollisionFile  func(childComplexity int) int
-		GraphicFile    func(childComplexity int) int
-		GraphicID      func(childComplexity int) int
-		IconFolder     func(childComplexity int) int
-		SofDna         func(childComplexity int) int
-		SofFactionName func(childComplexity int) int
-		SofHullName    func(childComplexity int) int
-		SofRaceName    func(childComplexity int) int
+		CollisionFile func(childComplexity int) int
+		GraphicFile   func(childComplexity int) int
+		GraphicID     func(childComplexity int) int
+		IconFolder    func(childComplexity int) int
+		SofDna        func(childComplexity int) int
+		SofFationName func(childComplexity int) int
+		SofHullName   func(childComplexity int) int
+		SofRaceName   func(childComplexity int) int
 	}
 
 	Group struct {
@@ -1653,12 +1653,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Graphic.SofDna(childComplexity), true
 
-	case "Graphic.sof_faction_name":
-		if e.complexity.Graphic.SofFactionName == nil {
+	case "Graphic.sof_fation_name":
+		if e.complexity.Graphic.SofFationName == nil {
 			break
 		}
 
-		return e.complexity.Graphic.SofFactionName(childComplexity), true
+		return e.complexity.Graphic.SofFationName(childComplexity), true
 
 	case "Graphic.sof_hull_name":
 		if e.complexity.Graphic.SofHullName == nil {
@@ -3169,7 +3169,7 @@ type Graphic{
 	graphic_id: Int
 	icon_folder: String
 	sof_dna: String
-	sof_faction_name: String
+	sof_fation_name: String
 	sof_hull_name: String
 	sof_race_name: String
 }
@@ -8318,7 +8318,7 @@ func (ec *executionContext) _Graphic_sof_dna(ctx context.Context, field graphql.
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Graphic_sof_faction_name(ctx context.Context, field graphql.CollectedField, obj *model.Graphic) (ret graphql.Marshaler) {
+func (ec *executionContext) _Graphic_sof_fation_name(ctx context.Context, field graphql.CollectedField, obj *model.Graphic) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8336,7 +8336,7 @@ func (ec *executionContext) _Graphic_sof_faction_name(ctx context.Context, field
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.SofFactionName, nil
+		return obj.SofFationName, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -15480,8 +15480,8 @@ func (ec *executionContext) _Graphic(ctx context.Context, sel ast.SelectionSet, 
 			out.Values[i] = ec._Graphic_icon_folder(ctx, field, obj)
 		case "sof_dna":
 			out.Values[i] = ec._Graphic_sof_dna(ctx, field, obj)
-		case "sof_faction_name":
-			out.Values[i] = ec._Graphic_sof_faction_name(ctx, field, obj)
+		case "sof_fation_name":
+			out.Values[i] = ec._Graphic_sof_fation_name(ctx, field, obj)
 		case "sof_hull_name":
 			out.Values[i] = ec._Graphic_sof_hull_name(ctx, field, obj)
 		case "sof_race_name":

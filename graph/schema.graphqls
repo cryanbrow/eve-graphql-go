@@ -318,7 +318,7 @@ type Graphic{
 	graphic_id: Int
 	icon_folder: String
 	sof_dna: String
-	sof_faction_name: String
+	sof_fation_name: String
 	sof_hull_name: String
 	sof_race_name: String
 }
