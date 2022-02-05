@@ -10,7 +10,7 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
-func TestSuccessful_DogmaEffectByID(t *testing.T) {
+func TestSuccessfulDogmaEffectByID(t *testing.T) {
 	jsonResponse := `{
 		"description": "",
 		"display_name": "",
@@ -51,7 +51,7 @@ func TestSuccessful_DogmaEffectByID(t *testing.T) {
 
 }
 
-func TestFailNilID_DogmaEffectByID(t *testing.T) {
+func TestFailNilIDDogmaEffectByID(t *testing.T) {
 	jsonResponse := `{
 		"description": "",
 		"display_name": "",
@@ -89,7 +89,7 @@ func TestFailNilID_DogmaEffectByID(t *testing.T) {
 	}
 }
 
-func TestFailRestCall_DogmaEffectByID(t *testing.T) {
+func TestFailRestCallDogmaEffectByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -107,7 +107,7 @@ func TestFailRestCall_DogmaEffectByID(t *testing.T) {
 	}
 }
 
-func TestFailUnmarshal_DogmaEffectByID(t *testing.T) {
+func TestFailUnmarshalDogmaEffectByID(t *testing.T) {
 	jsonResponse := `{{
 		"description": "",
 		"display_name": "",
@@ -143,7 +143,7 @@ func TestFailUnmarshal_DogmaEffectByID(t *testing.T) {
 	}
 }
 
-func TestSuccessful_DogmaAttributeByID(t *testing.T) {
+func TestSuccessfulDogmaAttributeByID(t *testing.T) {
 	jsonResponse := `{
 		"attribute_id": 1966,
 		"default_value": 0,
@@ -178,7 +178,7 @@ func TestSuccessful_DogmaAttributeByID(t *testing.T) {
 
 }
 
-func TestFailNilID_DogmaAttributeByID(t *testing.T) {
+func TestFailNilIDDogmaAttributeByID(t *testing.T) {
 	jsonResponse := `{
 		"attribute_id": 1966,
 		"default_value": 0,
@@ -211,7 +211,7 @@ func TestFailNilID_DogmaAttributeByID(t *testing.T) {
 
 }
 
-func TestFailRestCall_DogmaAttributeByID(t *testing.T) {
+func TestFailRestCallDogmaAttributeByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -230,7 +230,7 @@ func TestFailRestCall_DogmaAttributeByID(t *testing.T) {
 
 }
 
-func TestFailUnmarshal_DogmaAttributeByID(t *testing.T) {
+func TestFailUnmarshalDogmaAttributeByID(t *testing.T) {
 	jsonResponse := `{
 		"attribute_id": 1966"hi",
 		"default_value": 0,

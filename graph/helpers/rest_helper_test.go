@@ -11,7 +11,7 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 )
 
-func TestSuccessful_MakeCachingRESTCall(t *testing.T) {
+func TestSuccessfulMakeCachingRESTCall(t *testing.T) {
 	Redis_client = &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
@@ -49,7 +49,7 @@ func TestSuccessful_MakeCachingRESTCall(t *testing.T) {
 	}
 }
 
-func TestInCacheSuccessful_MakeCachingRESTCall(t *testing.T) {
+func TestInCacheSuccessfulMakeCachingRESTCall(t *testing.T) {
 	jsonResponse := `[{
 		"full_name": "mock-repo"
 	   }]`
@@ -84,7 +84,7 @@ func TestInCacheSuccessful_MakeCachingRESTCall(t *testing.T) {
 	}
 }
 
-func TestSuccessfulWithDefaultParams_MakeCachingRESTCall(t *testing.T) {
+func TestSuccessfulWithDefaultParamsMakeCachingRESTCall(t *testing.T) {
 	Redis_client = &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
@@ -124,7 +124,7 @@ func TestSuccessfulWithDefaultParams_MakeCachingRESTCall(t *testing.T) {
 	}
 }
 
-func TestSuccessfulWithQueryParams_MakeCachingRESTCall(t *testing.T) {
+func TestSuccessfulWithQueryParamsMakeCachingRESTCall(t *testing.T) {
 	Redis_client = &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
@@ -156,7 +156,7 @@ func TestSuccessfulWithQueryParams_MakeCachingRESTCall(t *testing.T) {
 	}
 }
 
-func TestUnparseableURL_MakeCachingRESTCall(t *testing.T) {
+func TestUnparseableURLMakeCachingRESTCall(t *testing.T) {
 	Redis_client = &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
@@ -187,7 +187,7 @@ func TestUnparseableURL_MakeCachingRESTCall(t *testing.T) {
 	}
 }
 
-func TestNewRequestFailure_MakeCachingRESTCall(t *testing.T) {
+func TestNewRequestFailureMakeCachingRESTCall(t *testing.T) {
 	Redis_client = &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
@@ -216,7 +216,7 @@ func TestNewRequestFailure_MakeCachingRESTCall(t *testing.T) {
 	}
 }
 
-func TestDoFailure_MakeCachingRESTCall(t *testing.T) {
+func TestDoFailureMakeCachingRESTCall(t *testing.T) {
 	Redis_client = &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
@@ -245,7 +245,7 @@ func TestDoFailure_MakeCachingRESTCall(t *testing.T) {
 	}
 }
 
-func Test404Failure_MakeCachingRESTCall(t *testing.T) {
+func Test404FailureMakeCachingRESTCall(t *testing.T) {
 	Redis_client = &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {

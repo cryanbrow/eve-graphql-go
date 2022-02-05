@@ -14,7 +14,7 @@ import (
 *             AncestryByID             *
 ***************************************/
 
-func TestSuccessfulInCache_AncestryByID(t *testing.T) {
+func TestSuccessfulInCacheAncestryByID(t *testing.T) {
 	jsonResponse := `{
 		"bloodline_id": 7,
 		"description": "The Gallente prize political activism more so than other Empires. Many devote their efforts towards one or more causes that suit their ambitions. Activists understand that things will never change for the better unless someone has the courage to fight the good fight.",
@@ -44,7 +44,7 @@ func TestSuccessfulInCache_AncestryByID(t *testing.T) {
 	}
 }
 
-func TestSuccessfulNotInCache_AncestryByID(t *testing.T) {
+func TestSuccessfulNotInCacheAncestryByID(t *testing.T) {
 	var ancestriesJsonResponse string = `[
 	{
 	  "bloodline_id": 7,
@@ -82,7 +82,7 @@ func TestSuccessfulNotInCache_AncestryByID(t *testing.T) {
 	}
 }
 
-func TestFailNilID_AncestryByID(t *testing.T) {
+func TestFailNilIDAncestryByID(t *testing.T) {
 	var testId *int = nil
 	_, err := AncestryByID(testId)
 	if err == nil {
@@ -90,7 +90,7 @@ func TestFailNilID_AncestryByID(t *testing.T) {
 	}
 }
 
-func TestFailUnmarshalInCache_AncestryByID(t *testing.T) {
+func TestFailUnmarshalInCacheAncestryByID(t *testing.T) {
 	jsonResponse := `{{
 		"bloodline_id": 7,
 		"description": "The Gallente prize political activism more so than other Empires. Many devote their efforts towards one or more causes that suit their ambitions. Activists understand that things will never change for the better unless someone has the courage to fight the good fight.",
@@ -116,7 +116,7 @@ func TestFailUnmarshalInCache_AncestryByID(t *testing.T) {
 	}
 }
 
-func TestFailUnmarshalNotInCache_AncestryByID(t *testing.T) {
+func TestFailUnmarshalNotInCacheAncestryByID(t *testing.T) {
 	var ancestriesJsonResponse string = `[
 	{{
 	  "bloodline_id": 7,
@@ -150,7 +150,7 @@ func TestFailUnmarshalNotInCache_AncestryByID(t *testing.T) {
 	}
 }
 
-func TestFailRestNotInCache_AncestryByID(t *testing.T) {
+func TestFailRestNotInCacheAncestryByID(t *testing.T) {
 	mock_redis_client := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
@@ -177,7 +177,7 @@ func TestFailRestNotInCache_AncestryByID(t *testing.T) {
 *          AsteroidBeltDetails         *
 ***************************************/
 
-func TestSuccessful_AsteroidBeltDetails(t *testing.T) {
+func TestSuccessfulAsteroidBeltDetails(t *testing.T) {
 	jsonResponse := `{
 		"name": "Inaro IX - Asteroid Belt 1",
 		"position": {
@@ -212,7 +212,7 @@ func TestSuccessful_AsteroidBeltDetails(t *testing.T) {
 	}
 }
 
-func TestFailNilID_AsteroidBeltDetails(t *testing.T) {
+func TestFailNilIDAsteroidBeltDetails(t *testing.T) {
 	jsonResponse := `{
 		"name": "Inaro IX - Asteroid Belt 1",
 		"position": {
@@ -247,7 +247,7 @@ func TestFailNilID_AsteroidBeltDetails(t *testing.T) {
 *           AsteroidBeltByID           *
 ***************************************/
 
-func TestSuccessful_AsteroidBeltByID(t *testing.T) {
+func TestSuccessfulAsteroidBeltByID(t *testing.T) {
 	jsonResponse := `{
 		"name": "Inaro IX - Asteroid Belt 1",
 		"position": {
@@ -280,7 +280,7 @@ func TestSuccessful_AsteroidBeltByID(t *testing.T) {
 
 }
 
-func TestFailNilID_AsteroidBeltByID(t *testing.T) {
+func TestFailNilIDAsteroidBeltByID(t *testing.T) {
 	jsonResponse := `{
 		"name": "Inaro IX - Asteroid Belt 1",
 		"position": {
@@ -311,7 +311,7 @@ func TestFailNilID_AsteroidBeltByID(t *testing.T) {
 
 }
 
-func TestFailRestCall_AsteroidBeltByID(t *testing.T) {
+func TestFailRestCallAsteroidBeltByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -330,7 +330,7 @@ func TestFailRestCall_AsteroidBeltByID(t *testing.T) {
 
 }
 
-func TestFailUnmarshal_AsteroidBeltByID(t *testing.T) {
+func TestFailUnmarshalAsteroidBeltByID(t *testing.T) {
 	jsonResponse := `{{
 		"name": "Inaro IX - Asteroid Belt 1",
 		"position": {
@@ -363,7 +363,7 @@ func TestFailUnmarshal_AsteroidBeltByID(t *testing.T) {
 *          BloodlineBeltByID           *
 ***************************************/
 
-func TestSuccessfulInCache_BloodlineByID(t *testing.T) {
+func TestSuccessfulInCacheBloodlineByID(t *testing.T) {
 	jsonResponse := `{
 		"bloodline_id": 5,
 		"charisma": 3,
@@ -398,7 +398,7 @@ func TestSuccessfulInCache_BloodlineByID(t *testing.T) {
 	}
 }
 
-func TestSuccessfulNotInCache_BloodlineByID(t *testing.T) {
+func TestSuccessfulNotInCacheBloodlineByID(t *testing.T) {
 	var ancestriesJsonResponse string = `[
 		{
 			"bloodline_id": 5,
@@ -441,7 +441,7 @@ func TestSuccessfulNotInCache_BloodlineByID(t *testing.T) {
 	}
 }
 
-func TestFailNilID_BloodlineByID(t *testing.T) {
+func TestFailNilIDBloodlineByID(t *testing.T) {
 	var testId *int = nil
 	_, err := AncestryByID(testId)
 	if err == nil {
@@ -449,7 +449,7 @@ func TestFailNilID_BloodlineByID(t *testing.T) {
 	}
 }
 
-func TestFailUnmarshalInCache_BloodlineByID(t *testing.T) {
+func TestFailUnmarshalInCacheBBloodlineByID(t *testing.T) {
 	jsonResponse := `{{
 		"bloodline_id": 5,
 		"charisma": 3,
@@ -480,7 +480,7 @@ func TestFailUnmarshalInCache_BloodlineByID(t *testing.T) {
 	}
 }
 
-func TestFailUnmarshalNotInCache_BloodlineByID(t *testing.T) {
+func TestFailUnmarshalNotInCacheBloodlineByID(t *testing.T) {
 	var ancestriesJsonResponse string = `[
 	{{
 		"bloodline_id": 5,
@@ -519,7 +519,7 @@ func TestFailUnmarshalNotInCache_BloodlineByID(t *testing.T) {
 	}
 }
 
-func TestFailRestNotInCache_BloodlineByID(t *testing.T) {
+func TestFailRestNotInCacheBloodlineByID(t *testing.T) {
 	mock_redis_client := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
@@ -546,7 +546,7 @@ func TestFailRestNotInCache_BloodlineByID(t *testing.T) {
 *             CategoryByID             *
 ***************************************/
 
-func TestSuccessful_CategoryByID(t *testing.T) {
+func TestSuccessfulCategoryByID(t *testing.T) {
 	jsonResponse := `{
 		"category_id": 5,
 		"groups": [
@@ -586,7 +586,7 @@ func TestSuccessful_CategoryByID(t *testing.T) {
 
 }
 
-func TestFailNilID_CategoryByID(t *testing.T) {
+func TestFailNilIDCategoryByID(t *testing.T) {
 	jsonResponse := `{
 		"category_id": 5,
 		"groups": [
@@ -624,7 +624,7 @@ func TestFailNilID_CategoryByID(t *testing.T) {
 
 }
 
-func TestFailRestCall_CategoryByID(t *testing.T) {
+func TestFailRestCallCategoryByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -643,7 +643,7 @@ func TestFailRestCall_CategoryByID(t *testing.T) {
 
 }
 
-func TestFailUnmarshal_CategoryByID(t *testing.T) {
+func TestFailUnmarshalCategoryByID(t *testing.T) {
 	jsonResponse := `{{
 		"category_id": 5,
 		"groups": [
@@ -683,7 +683,7 @@ func TestFailUnmarshal_CategoryByID(t *testing.T) {
 *          ConstellationsByIDs         *
 ***************************************/
 
-func TestSuccessful_ConstellationsByIDs(t *testing.T) {
+func TestSuccessfulConstellationsByIDs(t *testing.T) {
 	jsonResponse := `{
 		"constellation_id": 20000019,
 		"name": "Ihilakken",
@@ -729,7 +729,7 @@ func TestSuccessful_ConstellationsByIDs(t *testing.T) {
 	}
 }
 
-func TestFailNilID_ConstellationsByIDs(t *testing.T) {
+func TestFailNilIDConstellationsByIDs(t *testing.T) {
 	jsonResponse := `{
 		"constellation_id": 20000019,
 		"name": "Ihilakken",
@@ -775,7 +775,7 @@ func TestFailNilID_ConstellationsByIDs(t *testing.T) {
 *          ConstellationByID           *
 ***************************************/
 
-func TestSuccessful_ConstellationByID(t *testing.T) {
+func TestSuccessfulConstellationByID(t *testing.T) {
 	jsonResponse := `{
 		"constellation_id": 20000019,
 		"name": "Ihilakken",
@@ -819,7 +819,7 @@ func TestSuccessful_ConstellationByID(t *testing.T) {
 
 }
 
-func TestFailNilID_ConstellationByID(t *testing.T) {
+func TestFailNilIDConstellationByID(t *testing.T) {
 	jsonResponse := `{
 		"constellation_id": 20000019,
 		"name": "Ihilakken",
@@ -861,7 +861,7 @@ func TestFailNilID_ConstellationByID(t *testing.T) {
 
 }
 
-func TestFailRestCall_ConstellationByID(t *testing.T) {
+func TestFailRestCallConstellationByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -880,7 +880,7 @@ func TestFailRestCall_ConstellationByID(t *testing.T) {
 
 }
 
-func TestFailUnmarshal_ConstellationByID(t *testing.T) {
+func TestFailUnmarshalConstellationByID(t *testing.T) {
 	jsonResponse := `{{
 		"constellation_id": 20000019,
 		"name": "Ihilakken",
@@ -924,7 +924,7 @@ func TestFailUnmarshal_ConstellationByID(t *testing.T) {
 *             FactionByID              *
 ***************************************/
 
-func TestSuccessfulInCache_FactionByID(t *testing.T) {
+func TestSuccessfulInCacheFactionByID(t *testing.T) {
 	jsonResponse := `{
 		"corporation_id": 1000084,
 		"description": "The largest of the five main empires, the Amarr Empire is a sprawling patch-work of feudal-like provinces held together by the might of the emperor. Religion has always played a big part in Amarrian politics and the Amarrians believe they are the rightful masters of the world, souring their relations with their neighbours. Another source of ill-feelings on part of the other empires is the fact that the Amarrians embrace slavery.",
@@ -1000,7 +1000,7 @@ func TestSuccessfulNotInCache_FactionByID(t *testing.T) {
 	}
 }
 
-func TestFailNilID_FactionByID(t *testing.T) {
+func TestFailNilIDFactionByID(t *testing.T) {
 	var testId *int = nil
 	_, err := FactionByID(testId)
 	if err == nil {
@@ -1008,7 +1008,7 @@ func TestFailNilID_FactionByID(t *testing.T) {
 	}
 }
 
-func TestFailUnmarshalInCache_FactionByID(t *testing.T) {
+func TestFailUnmarshalInCacheFactionByID(t *testing.T) {
 	jsonResponse := `{{
 		"corporation_id": 1000084,
 		"description": "The largest of the five main empires, the Amarr Empire is a sprawling patch-work of feudal-like provinces held together by the might of the emperor. Religion has always played a big part in Amarrian politics and the Amarrians believe they are the rightful masters of the world, souring their relations with their neighbours. Another source of ill-feelings on part of the other empires is the fact that the Amarrians embrace slavery.",
@@ -1038,7 +1038,7 @@ func TestFailUnmarshalInCache_FactionByID(t *testing.T) {
 	}
 }
 
-func TestFailUnmarshalNotInCache_FactionByID(t *testing.T) {
+func TestFailUnmarshalNotInCacheFactionByID(t *testing.T) {
 	var ancestriesJsonResponse string = `[
 	{{
 		"corporation_id": 1000084,
@@ -1076,7 +1076,7 @@ func TestFailUnmarshalNotInCache_FactionByID(t *testing.T) {
 	}
 }
 
-func TestFailRestNotInCache_FactionByID(t *testing.T) {
+func TestFailRestNotInCacheFactionByID(t *testing.T) {
 	mock_redis_client := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
@@ -1103,7 +1103,7 @@ func TestFailRestNotInCache_FactionByID(t *testing.T) {
 *             GraphicByID              *
 ***************************************/
 
-func TestSuccessful_GraphicByID(t *testing.T) {
+func TestSuccessfulGraphicByID(t *testing.T) {
 	jsonResponse := `{
 		"graphic_file": "res:/dx9/model/Turret/Energy/Pulse/M/Pulse_Heavy_T1.red",
 		"graphic_id": 21573,
@@ -1133,7 +1133,7 @@ func TestSuccessful_GraphicByID(t *testing.T) {
 
 }
 
-func TestFailNilID_GraphicByID(t *testing.T) {
+func TestFailNilIDGraphicByID(t *testing.T) {
 	jsonResponse := `{
 		"graphic_file": "res:/dx9/model/Turret/Energy/Pulse/M/Pulse_Heavy_T1.red",
 		"graphic_id": 21573,
@@ -1161,7 +1161,7 @@ func TestFailNilID_GraphicByID(t *testing.T) {
 
 }
 
-func TestFailRestCall_GraphicByID(t *testing.T) {
+func TestFailRestCallGraphicByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -1180,7 +1180,7 @@ func TestFailRestCall_GraphicByID(t *testing.T) {
 
 }
 
-func TestFailUnmarshal_GraphicByID(t *testing.T) {
+func TestFailUnmarshalGraphicByID(t *testing.T) {
 	jsonResponse := `{{
 		"graphic_file": "res:/dx9/model/Turret/Energy/Pulse/M/Pulse_Heavy_T1.red",
 		"graphic_id": 21573,
@@ -1210,7 +1210,7 @@ func TestFailUnmarshal_GraphicByID(t *testing.T) {
 *              GroupByID               *
 ***************************************/
 
-func TestSuccessful_GroupByID(t *testing.T) {
+func TestSuccessfulGroupByID(t *testing.T) {
 	jsonResponse := `{
 		"category_id": 6,
 		"group_id": 25,
@@ -1321,7 +1321,7 @@ func TestSuccessful_GroupByID(t *testing.T) {
 
 }
 
-func TestFailNilID_GroupByID(t *testing.T) {
+func TestFailNilIDGroupByID(t *testing.T) {
 	jsonResponse := `{
 		"category_id": 6,
 		"group_id": 25,
@@ -1430,7 +1430,7 @@ func TestFailNilID_GroupByID(t *testing.T) {
 
 }
 
-func TestFailRestCall_GroupByID(t *testing.T) {
+func TestFailRestCallGroupByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -1449,7 +1449,7 @@ func TestFailRestCall_GroupByID(t *testing.T) {
 
 }
 
-func TestFailUnmarshal_GroupByID(t *testing.T) {
+func TestFailUnmarshalGroupByID(t *testing.T) {
 	jsonResponse := `{{
 		"category_id": 6,
 		"group_id": 25,

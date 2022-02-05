@@ -10,7 +10,7 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
-func TestSuccessful_CharacterByID(t *testing.T) {
+func TestSuccessfulCharacterByID(t *testing.T) {
 	jsonResponse := `{
 		"birthday": "2008-04-01T10:24:00Z",
 		"bloodline_id": 3,
@@ -44,7 +44,7 @@ func TestSuccessful_CharacterByID(t *testing.T) {
 
 }
 
-func TestFailNilID_CharacterByID(t *testing.T) {
+func TestFailNilIDCharacterByID(t *testing.T) {
 	jsonResponse := `{
 		"birthday": "2008-04-01T10:24:00Z",
 		"bloodline_id": 3,
@@ -76,7 +76,7 @@ func TestFailNilID_CharacterByID(t *testing.T) {
 
 }
 
-func TestFailRestCall_CharacterByID(t *testing.T) {
+func TestFailRestCallCharacterByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -95,7 +95,7 @@ func TestFailRestCall_CharacterByID(t *testing.T) {
 
 }
 
-func TestFailUnmarshal_CharacterByID(t *testing.T) {
+func TestFailUnmarshalCharacterByID(t *testing.T) {
 	jsonResponse := `{{
 		"birthday": "2008-04-01T10:24:00Z",
 		"bloodline_id": 3,

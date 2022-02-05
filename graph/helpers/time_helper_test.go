@@ -8,7 +8,7 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 )
 
-func TestESI_ttl_to_millis_success(t *testing.T) {
+func TestEsiTtlToMillisSuccess(t *testing.T) {
 	now := time.Now().UTC()
 	now = now.Add(time.Millisecond * 50000)
 	now_string := now.Format(time.RFC1123)
@@ -20,7 +20,7 @@ func TestESI_ttl_to_millis_success(t *testing.T) {
 	}
 }
 
-func TestESI_ttl_to_millis_fail(t *testing.T) {
+func TestEsiTtlToMillisFail(t *testing.T) {
 	now := time.Now().UTC()
 	now = now.Add(time.Millisecond * 50000)
 	now_string := now.Format(time.RFC1123)
