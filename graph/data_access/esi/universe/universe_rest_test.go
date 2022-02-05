@@ -542,7 +542,7 @@ func TestFailRestNotInCache_BloodlineByID(t *testing.T) {
 }
 
 /***************************************
-*           CategoryBeltByID           *
+*             CategoryByID             *
 ***************************************/
 
 func TestSuccessful_CategoryByID(t *testing.T) {
@@ -672,6 +672,247 @@ func TestFailUnmarshal_CategoryByID(t *testing.T) {
 	var test_id int = 5
 
 	_, err := CategoryByID(&test_id)
+	if err == nil {
+		t.Error("Error is nil")
+	}
+
+}
+
+/***************************************
+*          ConstellationsByIDs         *
+***************************************/
+
+func TestSuccessful_ConstellationsByIDs(t *testing.T) {
+	jsonResponse := `{
+		"constellation_id": 20000019,
+		"name": "Ihilakken",
+		"position": {
+		  "x": -143645654698282130,
+		  "y": 52909580254258400,
+		  "z": 109619376865938180
+		},
+		"region_id": 10000002,
+		"systems": [
+		  30000132,
+		  30000133,
+		  30000134,
+		  30000135,
+		  30000136,
+		  30000137,
+		  30000138,
+		  30021407
+		]
+	  }`
+
+	b := []byte(jsonResponse)
+
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+	rest_helper = mock_rest_helper
+
+	var test_id *int = new(int)
+	*test_id = 20000019
+	var ids []*int = make([]*int, 1)
+	ids[0] = test_id
+
+	resp, err := ConstellationsByIDs(ids)
+	if err != nil {
+		t.Errorf("Error was not nil, %v", err)
+	}
+	var resp_name string = "Ihilakken"
+	if *resp[0].Name != resp_name {
+		t.Errorf("Response was not as expected")
+	}
+}
+
+func TestFailNilID_ConstellationsByIDs(t *testing.T) {
+	jsonResponse := `{
+		"constellation_id": 20000019,
+		"name": "Ihilakken",
+		"position": {
+		  "x": -143645654698282130,
+		  "y": 52909580254258400,
+		  "z": 109619376865938180
+		},
+		"region_id": 10000002,
+		"systems": [
+		  30000132,
+		  30000133,
+		  30000134,
+		  30000135,
+		  30000136,
+		  30000137,
+		  30000138,
+		  30021407
+		]
+	  }`
+
+	b := []byte(jsonResponse)
+
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+	rest_helper = mock_rest_helper
+
+	var test_id *int = new(int)
+	*test_id = 20000019
+	var ids []*int = make([]*int, 2)
+	ids[0] = test_id
+
+	_, err := ConstellationsByIDs(ids)
+	if err == nil {
+		t.Errorf("Error was nil")
+	}
+}
+
+/***************************************
+*          ConstellationByID           *
+***************************************/
+
+func TestSuccessful_ConstellationByID(t *testing.T) {
+	jsonResponse := `{
+		"constellation_id": 20000019,
+		"name": "Ihilakken",
+		"position": {
+		  "x": -143645654698282130,
+		  "y": 52909580254258400,
+		  "z": 109619376865938180
+		},
+		"region_id": 10000002,
+		"systems": [
+		  30000132,
+		  30000133,
+		  30000134,
+		  30000135,
+		  30000136,
+		  30000137,
+		  30000138,
+		  30021407
+		]
+	  }`
+
+	b := []byte(jsonResponse)
+
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+	rest_helper = mock_rest_helper
+
+	var test_id int = 20000019
+
+	resp, err := ConstellationByID(&test_id)
+	if err != nil {
+		t.Errorf("Error was not nil, %v", err)
+	}
+	var resp_name string = "Ihilakken"
+	if *resp.Name != resp_name {
+		t.Errorf("Response was not as expected")
+	}
+
+}
+
+func TestFailNilID_ConstellationByID(t *testing.T) {
+	jsonResponse := `{
+		"constellation_id": 20000019,
+		"name": "Ihilakken",
+		"position": {
+		  "x": -143645654698282130,
+		  "y": 52909580254258400,
+		  "z": 109619376865938180
+		},
+		"region_id": 10000002,
+		"systems": [
+		  30000132,
+		  30000133,
+		  30000134,
+		  30000135,
+		  30000136,
+		  30000137,
+		  30000138,
+		  30021407
+		]
+	  }`
+
+	b := []byte(jsonResponse)
+
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+	rest_helper = mock_rest_helper
+
+	var test_id *int = nil
+
+	_, err := ConstellationByID(test_id)
+	if err == nil {
+		t.Error("Error is nil")
+	} else if err.Error() != "nil id" {
+		t.Errorf("Wrong error text: %s", err.Error())
+	}
+
+}
+
+func TestFailRestCall_ConstellationByID(t *testing.T) {
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return nil, nil, errors.New("failure")
+		},
+	}
+	rest_helper = mock_rest_helper
+
+	var test_id int = 20000019
+
+	_, err := ConstellationByID(&test_id)
+	if err == nil {
+		t.Error("Error is nil")
+	} else if err.Error() != "failure" {
+		t.Errorf("Wrong error text: %s", err.Error())
+	}
+
+}
+
+func TestFailUnmarshal_ConstellationByID(t *testing.T) {
+	jsonResponse := `{{
+		"constellation_id": 20000019,
+		"name": "Ihilakken",
+		"position": {
+		  "x": -143645654698282130,
+		  "y": 52909580254258400,
+		  "z": 109619376865938180
+		},
+		"region_id": 10000002,
+		"systems": [
+		  30000132,
+		  30000133,
+		  30000134,
+		  30000135,
+		  30000136,
+		  30000137,
+		  30000138,
+		  30021407
+		]
+	  }`
+
+	b := []byte(jsonResponse)
+
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+	rest_helper = mock_rest_helper
+
+	var test_id int = 20000019
+
+	_, err := ConstellationByID(&test_id)
 	if err == nil {
 		t.Error("Error is nil")
 	}
