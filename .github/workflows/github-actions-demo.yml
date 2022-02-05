@@ -41,6 +41,7 @@ jobs:
         destination-repository-name: 'cryanbrow.github.io'
         user-email: cryanbrow@gmail.com
         target-branch: main
+        target-directory: 'eve-graphql-go/output'
 
     - name: Archive code coverage results
       uses: actions/upload-artifact@v2
