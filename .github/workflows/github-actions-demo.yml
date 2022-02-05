@@ -24,9 +24,23 @@ jobs:
 
     - name: coverage-output
       run: go tool cover -func=cover.out | grep total
+    
+    - name: build-output-directory
+      run: mkdir output
 
     - name: html-report
-      run: go tool cover --html=cover.out -o coverage.html
+      run: go tool cover --html=cover.out -o output/coverage.html
+
+    - name: push-coverage-to-gitlab-pages
+      uses: cpina/github-action-push-to-another-repository@main
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+      with:
+        source-directory: 'output'
+        destination-github-username: 'cryanbrow'
+        destination-repository-name: 'cryanbrow.github.io'
+        user-email: cryanbrow@gmail.com
+        target-branch: main
 
     - name: Archive code coverage results
       uses: actions/upload-artifact@v2
