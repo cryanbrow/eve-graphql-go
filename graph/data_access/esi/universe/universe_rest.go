@@ -27,7 +27,7 @@ func AncestryByID(id *int) (*model.Ancestry, error) {
 		return nil, errors.New(helpers.NilId)
 	}
 
-	inCache, result := Redis_client.CheckRedisCache(ancestryRedisKey + strconv.Itoa(*id))
+	inCache, result := RedisClient.CheckRedisCache(ancestryRedisKey + strconv.Itoa(*id))
 	if !inCache {
 		ancestry, err = ancestryByArray(id)
 		if err != nil {
@@ -69,7 +69,7 @@ func ancestryByArray(id *int) (*model.Ancestry, error) {
 		}
 		ancestryBytes, err := json.Marshal(*ancestry)
 		if err == nil {
-			Redis_client.AddToRedisCache(ancestryRedisKey+strconv.Itoa(*ancestry.ID), ancestryBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+			RedisClient.AddToRedisCache(ancestryRedisKey+strconv.Itoa(*ancestry.ID), ancestryBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
 		} else {
 			log.Errorf("Failure Marshalling: %v", err)
 		}
@@ -122,7 +122,7 @@ func BloodlineByID(id *int) (*model.Bloodline, error) {
 		return nil, nil
 	}
 
-	inCache, result := Redis_client.CheckRedisCache(bloodlineRedisKey + strconv.Itoa(*id))
+	inCache, result := RedisClient.CheckRedisCache(bloodlineRedisKey + strconv.Itoa(*id))
 	if !inCache {
 		bloodline, err = bloodlineByArray(id)
 		if err != nil {
@@ -164,7 +164,7 @@ func bloodlineByArray(id *int) (*model.Bloodline, error) {
 		}
 		bloodlineBytes, err := json.Marshal(*bloodline)
 		if err == nil {
-			Redis_client.AddToRedisCache(bloodlineRedisKey+strconv.Itoa(*bloodline.BloodlineID), bloodlineBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+			RedisClient.AddToRedisCache(bloodlineRedisKey+strconv.Itoa(*bloodline.BloodlineID), bloodlineBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
 		} else {
 			log.Errorf("Failure Marshalling: %v", err)
 		}
@@ -235,7 +235,7 @@ func FactionByID(id *int) (*model.Faction, error) {
 		return nil, errors.New(helpers.NilId)
 	}
 
-	inCache, result := Redis_client.CheckRedisCache("FactionByID:" + strconv.Itoa(*id))
+	inCache, result := RedisClient.CheckRedisCache("FactionByID:" + strconv.Itoa(*id))
 	if !inCache {
 		faction, err := factionByArray(id)
 		if err != nil {
@@ -277,7 +277,7 @@ func factionByArray(id *int) (*model.Faction, error) {
 		}
 		factionBytes, err := json.Marshal(*faction)
 		if err == nil {
-			Redis_client.AddToRedisCache("FactionByID:"+strconv.Itoa(*faction.FactionID), factionBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+			RedisClient.AddToRedisCache("FactionByID:"+strconv.Itoa(*faction.FactionID), factionBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
 		} else {
 			log.Errorf("Failure Marshalling: %v", err)
 		}
@@ -479,7 +479,7 @@ func RaceByID(id *int) (*model.Race, error) {
 		return nil, nil
 	}
 
-	inCache, result := Redis_client.CheckRedisCache("RaceByID:" + strconv.Itoa(*id))
+	inCache, result := RedisClient.CheckRedisCache("RaceByID:" + strconv.Itoa(*id))
 	if !inCache {
 		race, err = raceByArray(id)
 		if err != nil {
@@ -522,7 +522,7 @@ func raceByArray(id *int) (*model.Race, error) {
 		}
 		raceBytes, err := json.Marshal(*race)
 		if err == nil {
-			Redis_client.AddToRedisCache("RaceByID:"+strconv.Itoa(*race.RaceID), raceBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
+			RedisClient.AddToRedisCache("RaceByID:"+strconv.Itoa(*race.RaceID), raceBytes, helpers.ESI_ttl_to_millis(headers.Get("expires")))
 		} else {
 			log.Errorf("Failure Marshalling: %v", err)
 		}
@@ -682,18 +682,18 @@ func SystemByID(id *int) (*model.System, error) {
 	return system, nil
 }
 
-type RedisClient interface {
+type RedisClientInterface interface {
 	AddToRedisCache(key string, value []byte, ttl int64)
 	CheckRedisCache(key string) (bool, []byte)
 }
 
 var (
-	Redis_client RedisClient
-	restHelper   RestHelper
+	RedisClient RedisClientInterface
+	restHelper  RestHelper
 )
 
 func SetupUniverseRest() {
-	Redis_client = &caching.Client{}
+	RedisClient = &caching.Client{}
 	restHelper = &helpers.RestHelperClient{}
 }
 

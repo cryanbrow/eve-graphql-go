@@ -25,13 +25,13 @@ func TestSuccessfulInCacheAncestryByID(t *testing.T) {
 	  }`
 	b := []byte(jsonResponse)
 
-	mock_redis_client := &MockRedisClient{
+	mockRedisClient := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
 			return true, b
 		},
 	}
-	Redis_client = mock_redis_client
+	RedisClient = mockRedisClient
 
 	var testId int = 1
 	resp, err := AncestryByID(&testId)
@@ -56,7 +56,7 @@ func TestSuccessfulNotInCacheAncestryByID(t *testing.T) {
 	}
   ]`
 	b := []byte(ancestriesJsonResponse)
-	mock_redis_client := &MockRedisClient{
+	mockRedisClient := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
@@ -68,7 +68,7 @@ func TestSuccessfulNotInCacheAncestryByID(t *testing.T) {
 		},
 	}
 
-	Redis_client = mock_redis_client
+	RedisClient = mockRedisClient
 	restHelper = mockRestHelper
 
 	var testId int = 13
@@ -101,13 +101,13 @@ func TestFailUnmarshalInCacheAncestryByID(t *testing.T) {
 	  }`
 	b := []byte(jsonResponse)
 
-	mock_redis_client := &MockRedisClient{
+	mockRedisClient := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
 			return true, b
 		},
 	}
-	Redis_client = mock_redis_client
+	RedisClient = mockRedisClient
 
 	var testId int = 13
 	_, err := AncestryByID(&testId)
@@ -128,13 +128,13 @@ func TestFailUnmarshalNotInCacheAncestryByID(t *testing.T) {
 	}
   ]`
 	b := []byte(ancestriesJsonResponse)
-	mock_redis_client := &MockRedisClient{
+	mockRedisClient := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
 		},
 	}
-	Redis_client = mock_redis_client
+	RedisClient = mockRedisClient
 
 	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
@@ -151,7 +151,7 @@ func TestFailUnmarshalNotInCacheAncestryByID(t *testing.T) {
 }
 
 func TestFailRestNotInCacheAncestryByID(t *testing.T) {
-	mock_redis_client := &MockRedisClient{
+	mockRedisClient := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
@@ -163,7 +163,7 @@ func TestFailRestNotInCacheAncestryByID(t *testing.T) {
 		},
 	}
 
-	Redis_client = mock_redis_client
+	RedisClient = mockRedisClient
 	restHelper = mockRestHelper
 
 	var testId int = 13
@@ -379,13 +379,13 @@ func TestSuccessfulInCacheBloodlineByID(t *testing.T) {
 	  }`
 	b := []byte(jsonResponse)
 
-	mock_redis_client := &MockRedisClient{
+	mockRedisClient := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
 			return true, b
 		},
 	}
-	Redis_client = mock_redis_client
+	RedisClient = mockRedisClient
 
 	var testId int = 1
 	resp, err := BloodlineByID(&testId)
@@ -415,7 +415,7 @@ func TestSuccessfulNotInCacheBloodlineByID(t *testing.T) {
 		  }
   ]`
 	b := []byte(ancestriesJsonResponse)
-	mock_redis_client := &MockRedisClient{
+	mockRedisClient := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
@@ -427,7 +427,7 @@ func TestSuccessfulNotInCacheBloodlineByID(t *testing.T) {
 		},
 	}
 
-	Redis_client = mock_redis_client
+	RedisClient = mockRedisClient
 	restHelper = mockRestHelper
 
 	var testId int = 5
@@ -465,13 +465,13 @@ func TestFailUnmarshalInCacheBBloodlineByID(t *testing.T) {
 	  }`
 	b := []byte(jsonResponse)
 
-	mock_redis_client := &MockRedisClient{
+	mockRedisClient := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
 			return true, b
 		},
 	}
-	Redis_client = mock_redis_client
+	RedisClient = mockRedisClient
 
 	var testId int = 5
 	_, err := BloodlineByID(&testId)
@@ -497,13 +497,13 @@ func TestFailUnmarshalNotInCacheBloodlineByID(t *testing.T) {
 	  }
   ]`
 	b := []byte(ancestriesJsonResponse)
-	mock_redis_client := &MockRedisClient{
+	mockRedisClient := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
 		},
 	}
-	Redis_client = mock_redis_client
+	RedisClient = mockRedisClient
 
 	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
@@ -520,7 +520,7 @@ func TestFailUnmarshalNotInCacheBloodlineByID(t *testing.T) {
 }
 
 func TestFailRestNotInCacheBloodlineByID(t *testing.T) {
-	mock_redis_client := &MockRedisClient{
+	mockRedisClient := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
@@ -532,7 +532,7 @@ func TestFailRestNotInCacheBloodlineByID(t *testing.T) {
 		},
 	}
 
-	Redis_client = mock_redis_client
+	RedisClient = mockRedisClient
 	restHelper = mockRestHelper
 
 	var testId int = 5
@@ -939,13 +939,13 @@ func TestSuccessfulInCacheFactionByID(t *testing.T) {
 	  }`
 	b := []byte(jsonResponse)
 
-	mock_redis_client := &MockRedisClient{
+	mockRedisClient := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
 			return true, b
 		},
 	}
-	Redis_client = mock_redis_client
+	RedisClient = mockRedisClient
 
 	var testId int = 500003
 	resp, err := FactionByID(&testId)
@@ -974,7 +974,7 @@ func TestSuccessfulNotInCache_FactionByID(t *testing.T) {
 		  }
   ]`
 	b := []byte(ancestriesJsonResponse)
-	mock_redis_client := &MockRedisClient{
+	mockRedisClient := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
@@ -986,7 +986,7 @@ func TestSuccessfulNotInCache_FactionByID(t *testing.T) {
 		},
 	}
 
-	Redis_client = mock_redis_client
+	RedisClient = mockRedisClient
 	restHelper = mockRestHelper
 
 	var testId int = 500003
@@ -1023,13 +1023,13 @@ func TestFailUnmarshalInCacheFactionByID(t *testing.T) {
 	  }`
 	b := []byte(jsonResponse)
 
-	mock_redis_client := &MockRedisClient{
+	mockRedisClient := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
 			return true, b
 		},
 	}
-	Redis_client = mock_redis_client
+	RedisClient = mockRedisClient
 
 	var testId int = 500003
 	_, err := FactionByID(&testId)
@@ -1054,13 +1054,13 @@ func TestFailUnmarshalNotInCacheFactionByID(t *testing.T) {
 	  }
   ]`
 	b := []byte(ancestriesJsonResponse)
-	mock_redis_client := &MockRedisClient{
+	mockRedisClient := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
 		},
 	}
-	Redis_client = mock_redis_client
+	RedisClient = mockRedisClient
 
 	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
@@ -1077,7 +1077,7 @@ func TestFailUnmarshalNotInCacheFactionByID(t *testing.T) {
 }
 
 func TestFailRestNotInCacheFactionByID(t *testing.T) {
-	mock_redis_client := &MockRedisClient{
+	mockRedisClient := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
@@ -1089,7 +1089,7 @@ func TestFailRestNotInCacheFactionByID(t *testing.T) {
 		},
 	}
 
-	Redis_client = mock_redis_client
+	RedisClient = mockRedisClient
 	restHelper = mockRestHelper
 
 	var testId int = 500003
