@@ -20,10 +20,10 @@ func CorporationByID(id *int) (*model.Corporation, error) {
 		return nil, errors.New("nil id")
 	}
 	base_url := fmt.Sprintf("%s/corporations/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
-	redis_key := "CorporationByID:" + strconv.Itoa(*id)
+	redisKey := "CorporationByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return corporation, err
 	}

@@ -42,7 +42,7 @@ jobs:
         destination-repository-name: 'cryanbrow.github.io'
         user-email: cryanbrow@gmail.com
         target-branch: main
-        target-directory: 'eve-graphql-go/latest/output'
+        target-directory: 'eve-graphql-go/latest'
     
     - name: push-coverage-to-gitlab-pages
       uses: cpina/github-action-push-to-another-repository@main
@@ -54,4 +54,4 @@ jobs:
         destination-repository-name: 'cryanbrow.github.io'
         user-email: cryanbrow@gmail.com
         target-branch: main
-        target-directory: 'eve-graphql-go/${{ steps.vars.outputs.sha_short }}/output'
+        target-directory: 'eve-graphql-go/${{ steps.vars.outputs.sha_short }}'

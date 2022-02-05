@@ -22,10 +22,10 @@ func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 		return nil, errors.New("nil id")
 	}
 	base_url := fmt.Sprintf("%s/markets/groups/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
-	redis_key := "MarketGroupByID:" + strconv.Itoa(*id)
+	redisKey := "MarketGroupByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return marketGroup, err
 	}
@@ -43,7 +43,7 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int, pag
 	orderList := make([]*model.Order, 0)
 	base_url := fmt.Sprintf("%s/markets/%s/orders/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*regionID))
 
-	redis_key := "OrdersForRegion:" + strconv.Itoa(*regionID) + ":" + orderType.String()
+	redisKey := "OrdersForRegion:" + strconv.Itoa(*regionID) + ":" + orderType.String()
 
 	query_params := make([]configuration.Key_value, 2)
 	kv := new(configuration.Key_value)
@@ -52,15 +52,15 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int, pag
 	query_params = append(query_params, *kv)
 
 	if typeID != nil {
-		redis_key = redis_key + ":" + strconv.Itoa(*typeID)
+		redisKey = redisKey + ":" + strconv.Itoa(*typeID)
 		kv.Key = "type_id"
 		kv.Value = strconv.Itoa(*typeID)
 		query_params = append(query_params, *kv)
 	}
 
-	redis_key = redis_key + ":" + strconv.Itoa(*page)
+	redisKey = redisKey + ":" + strconv.Itoa(*page)
 
-	orderResult, pages, err := ordersForRegionREST(base_url, query_params, redis_key)
+	orderResult, pages, err := ordersForRegionREST(base_url, query_params, redisKey)
 
 	if err == nil {
 		orderList = append(orderList, orderResult...)
@@ -93,11 +93,11 @@ func OrdersForRegionByName(region *string, orderType *model.Ordertype, typeName 
 	return orders, nil
 }
 
-func ordersForRegionREST(url string, additional_query_params []configuration.Key_value, redis_key string) ([]*model.Order, int, error) {
+func ordersForRegionREST(url string, additional_query_params []configuration.Key_value, redisKey string) ([]*model.Order, int, error) {
 	var orders []*model.Order
 	var pages = 0
 	var buffer bytes.Buffer
-	responseBytes, header, err := rest_helper.MakeCachingRESTCall(url, http.MethodGet, buffer, additional_query_params, redis_key)
+	responseBytes, header, err := rest_helper.MakeCachingRESTCall(url, http.MethodGet, buffer, additional_query_params, redisKey)
 	if err != nil {
 		return orders, 0, err
 	}
@@ -118,10 +118,10 @@ func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 	}
 	var orderHistory []*model.OrderHistory = make([]*model.OrderHistory, 0)
 	base_url := fmt.Sprintf("%s/markets/%s/history", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*regionID))
-	redis_key := "OrderHistoryByID:" + strconv.Itoa(*regionID) + ":" + strconv.Itoa(*typeID)
+	redisKey := "OrderHistoryByID:" + strconv.Itoa(*regionID) + ":" + strconv.Itoa(*typeID)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redis_key)
+	responseBytes, _, err := rest_helper.MakeCachingRESTCall(base_url, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return orderHistory, err
 	}
