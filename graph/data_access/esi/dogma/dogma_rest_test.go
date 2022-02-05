@@ -32,7 +32,7 @@ func TestSuccessful_DogmaEffectByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -73,7 +73,7 @@ func TestFailNilID_DogmaEffectByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -91,7 +91,7 @@ func TestFailNilID_DogmaEffectByID(t *testing.T) {
 
 func TestFailRestCall_DogmaEffectByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -129,7 +129,7 @@ func TestFailUnmarshal_DogmaEffectByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -159,7 +159,7 @@ func TestSuccessful_DogmaAttributeByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -194,7 +194,7 @@ func TestFailNilID_DogmaAttributeByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -213,7 +213,7 @@ func TestFailNilID_DogmaAttributeByID(t *testing.T) {
 
 func TestFailRestCall_DogmaAttributeByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -246,7 +246,7 @@ func TestFailUnmarshal_DogmaAttributeByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -261,12 +261,12 @@ func TestFailUnmarshal_DogmaAttributeByID(t *testing.T) {
 
 }
 
-type MockMakeCachingRESTCallType func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error)
+type MockMakeCachingRESTCallType func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error)
 
 type MockRestHelper struct {
 	MockMakeCachingRESTCall MockMakeCachingRESTCallType
 }
 
-func (m *MockRestHelper) MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
-	return m.MockMakeCachingRESTCall(baseUrl, verb, body, additional_query_params, redisQueryKey)
+func (m *MockRestHelper) MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+	return m.MockMakeCachingRESTCall(baseUrl, verb, body, additionalQueryParams, redisQueryKey)
 }

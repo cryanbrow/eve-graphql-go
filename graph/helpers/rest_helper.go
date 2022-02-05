@@ -15,7 +15,7 @@ import (
 type RestHelperClient struct {
 }
 
-func (r *RestHelperClient) MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+func (r *RestHelperClient) MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 	inCache, result := Redis_client.CheckRedisCache(redisQueryKey)
 	if !inCache {
 		crest_url, err := url.Parse(baseUrl)
@@ -27,7 +27,7 @@ func (r *RestHelperClient) MakeCachingRESTCall(baseUrl string, verb string, body
 		for _, kv := range configuration.AppConfig.Esi.Default.Query_params {
 			queryParameters.Add(kv.Key, kv.Value)
 		}
-		for _, kv := range additional_query_params {
+		for _, kv := range additionalQueryParams {
 			queryParameters.Add(kv.Key, kv.Value)
 		}
 

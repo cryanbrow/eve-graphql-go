@@ -93,11 +93,11 @@ func OrdersForRegionByName(region *string, orderType *model.Ordertype, typeName 
 	return orders, nil
 }
 
-func ordersForRegionREST(url string, additional_query_params []configuration.Key_value, redisKey string) ([]*model.Order, int, error) {
+func ordersForRegionREST(url string, additionalQueryParams []configuration.Key_value, redisKey string) ([]*model.Order, int, error) {
 	var orders []*model.Order
 	var pages = 0
 	var buffer bytes.Buffer
-	responseBytes, header, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, additional_query_params, redisKey)
+	responseBytes, header, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, additionalQueryParams, redisKey)
 	if err != nil {
 		return orders, 0, err
 	}
@@ -135,7 +135,7 @@ func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 }
 
 type RestHelper interface {
-	MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error)
+	MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error)
 }
 
 var (
