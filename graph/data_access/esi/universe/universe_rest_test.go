@@ -9,6 +9,10 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 )
 
+/***************************************
+*             AncestryByID             *
+***************************************/
+
 func TestSuccessfulInCache_AncestryByID(t *testing.T) {
 	jsonResponse := `{
 		"bloodline_id": 7,
@@ -168,6 +172,10 @@ func TestFailRestNotInCache_AncestryByID(t *testing.T) {
 	}
 }
 
+/***************************************
+*          AsteroidBeltDetails         *
+***************************************/
+
 func TestSuccessful_AsteroidBeltDetails(t *testing.T) {
 	jsonResponse := `{
 		"name": "Inaro IX - Asteroid Belt 1",
@@ -233,6 +241,10 @@ func TestFailNilID_AsteroidBeltDetails(t *testing.T) {
 		t.Errorf("Error was nil")
 	}
 }
+
+/***************************************
+*           AsteroidBeltByID           *
+***************************************/
 
 func TestSuccessful_AsteroidBeltByID(t *testing.T) {
 	jsonResponse := `{
@@ -345,6 +357,193 @@ func TestFailUnmarshal_AsteroidBeltByID(t *testing.T) {
 	}
 
 }
+
+/***************************************
+*          BloodlineBeltByID           *
+***************************************/
+
+func TestSuccessfulInCache_BloodlineByID(t *testing.T) {
+	jsonResponse := `{
+		"bloodline_id": 5,
+		"charisma": 3,
+		"corporation_id": 1000066,
+		"description": "True Amarrians are proud and supercilious, with a great sense of tradition and ancestry. They are considered arrogant and tyrannical by most others. The Empire's defeat at the hands of the mysterious Jovians, and the Minmatar uprising that followed, left an indelible mark on Amarrian culture. This double failure, a turning point in their history, has shaped an entire generation of policy and philosophy among the imperial elite.",
+		"intelligence": 7,
+		"memory": 6,
+		"name": "Amarr",
+		"perception": 4,
+		"race_id": 4,
+		"ship_type_id": 596,
+		"willpower": 10
+	  }`
+	b := []byte(jsonResponse)
+
+	mock_redis_client := &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return true, b
+		},
+	}
+	Redis_client = mock_redis_client
+
+	var test_id int = 1
+	resp, err := BloodlineByID(&test_id)
+	if err != nil {
+		t.Errorf("Error was not nil, %v", err)
+	}
+	var resp_name string = "Amarr"
+	if *resp.Name != resp_name {
+		t.Errorf("Response was not as expected")
+	}
+}
+
+func TestSuccessfulNotInCache_BloodlineByID(t *testing.T) {
+	var ancestriesJsonResponse string = `[
+		{
+			"bloodline_id": 5,
+			"charisma": 3,
+			"corporation_id": 1000066,
+			"description": "True Amarrians are proud and supercilious, with a great sense of tradition and ancestry. They are considered arrogant and tyrannical by most others. The Empire's defeat at the hands of the mysterious Jovians, and the Minmatar uprising that followed, left an indelible mark on Amarrian culture. This double failure, a turning point in their history, has shaped an entire generation of policy and philosophy among the imperial elite.",
+			"intelligence": 7,
+			"memory": 6,
+			"name": "Amarr",
+			"perception": 4,
+			"race_id": 4,
+			"ship_type_id": 596,
+			"willpower": 10
+		  }
+  ]`
+	b := []byte(ancestriesJsonResponse)
+	mock_redis_client := &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return false, nil
+		},
+	}
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+
+	Redis_client = mock_redis_client
+	rest_helper = mock_rest_helper
+
+	var test_id int = 5
+	resp, err := BloodlineByID(&test_id)
+	if err != nil {
+		t.Errorf("Error was not nil, %v", err)
+	}
+	var resp_name string = "Amarr"
+	if *resp.Name != resp_name {
+		t.Errorf("Response was not as expected")
+	}
+}
+
+func TestFailNilID_BloodlineByID(t *testing.T) {
+	var test_id *int = nil
+	_, err := AncestryByID(test_id)
+	if err == nil {
+		t.Errorf("Error is nil")
+	}
+}
+
+func TestFailUnmarshalInCache_BloodlineByID(t *testing.T) {
+	jsonResponse := `{{
+		"bloodline_id": 5,
+		"charisma": 3,
+		"corporation_id": 1000066,
+		"description": "True Amarrians are proud and supercilious, with a great sense of tradition and ancestry. They are considered arrogant and tyrannical by most others. The Empire's defeat at the hands of the mysterious Jovians, and the Minmatar uprising that followed, left an indelible mark on Amarrian culture. This double failure, a turning point in their history, has shaped an entire generation of policy and philosophy among the imperial elite.",
+		"intelligence": 7,
+		"memory": 6,
+		"name": "Amarr",
+		"perception": 4,
+		"race_id": 4,
+		"ship_type_id": 596,
+		"willpower": 10
+	  }`
+	b := []byte(jsonResponse)
+
+	mock_redis_client := &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return true, b
+		},
+	}
+	Redis_client = mock_redis_client
+
+	var test_id int = 5
+	_, err := BloodlineByID(&test_id)
+	if err == nil {
+		t.Errorf("Error is nil")
+	}
+}
+
+func TestFailUnmarshalNotInCache_BloodlineByID(t *testing.T) {
+	var ancestriesJsonResponse string = `[
+	{{
+		"bloodline_id": 5,
+		"charisma": 3,
+		"corporation_id": 1000066,
+		"description": "True Amarrians are proud and supercilious, with a great sense of tradition and ancestry. They are considered arrogant and tyrannical by most others. The Empire's defeat at the hands of the mysterious Jovians, and the Minmatar uprising that followed, left an indelible mark on Amarrian culture. This double failure, a turning point in their history, has shaped an entire generation of policy and philosophy among the imperial elite.",
+		"intelligence": 7,
+		"memory": 6,
+		"name": "Amarr",
+		"perception": 4,
+		"race_id": 4,
+		"ship_type_id": 596,
+		"willpower": 10
+	  }
+  ]`
+	b := []byte(ancestriesJsonResponse)
+	mock_redis_client := &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return false, nil
+		},
+	}
+	Redis_client = mock_redis_client
+
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+	rest_helper = mock_rest_helper
+
+	var test_id int = 5
+	_, err := BloodlineByID(&test_id)
+	if err == nil {
+		t.Errorf("Error is nil")
+	}
+}
+
+func TestFailRestNotInCache_BloodlineByID(t *testing.T) {
+	mock_redis_client := &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return false, nil
+		},
+	}
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return nil, nil, errors.New("failure")
+		},
+	}
+
+	Redis_client = mock_redis_client
+	rest_helper = mock_rest_helper
+
+	var test_id int = 5
+	_, err := BloodlineByID(&test_id)
+	if err == nil {
+		t.Errorf("Error was nil")
+	}
+}
+
+/***************************************
+*             MOCK SECTION             *
+***************************************/
 
 type MockAddToRedisCacheType func(key string, value []byte, ttl int64)
 type MockCheckRedisCacheType func(key string) (bool, []byte)
