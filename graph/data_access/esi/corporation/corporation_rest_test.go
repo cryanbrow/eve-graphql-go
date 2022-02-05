@@ -27,16 +27,16 @@ func TestSuccessful_CorporationByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 1
+	var testId int = 1
 
-	resp, err := CorporationByID(&test_id)
+	resp, err := CorporationByID(&testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -64,16 +64,16 @@ func TestFailNilID_CorporationByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id *int = nil
+	var testId *int = nil
 
-	_, err := CorporationByID(test_id)
+	_, err := CorporationByID(testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
@@ -83,16 +83,16 @@ func TestFailNilID_CorporationByID(t *testing.T) {
 }
 
 func TestFailRestCall_CorporationByID(t *testing.T) {
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 1
+	var testId int = 1
 
-	_, err := CorporationByID(&test_id)
+	_, err := CorporationByID(&testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -118,16 +118,16 @@ func TestFailUnmarshal_CorporationByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 1
+	var testId int = 1
 
-	_, err := CorporationByID(&test_id)
+	_, err := CorporationByID(&testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

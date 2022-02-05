@@ -23,7 +23,7 @@ func AllianceByID(id *int) (*model.Alliance, error) {
 	redisKey := "AllianceByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := rest_helper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return alliance, err
 	}
@@ -41,9 +41,9 @@ type RestHelper interface {
 }
 
 var (
-	rest_helper RestHelper
+	restHelper RestHelper
 )
 
 func SetupAllianceRest() {
-	rest_helper = &helpers.RestHelperClient{}
+	restHelper = &helpers.RestHelperClient{}
 }

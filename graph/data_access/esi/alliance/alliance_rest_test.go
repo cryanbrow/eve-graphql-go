@@ -10,7 +10,7 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
-func TestSuccessful_AllianceByID(t *testing.T) {
+func TestSuccessfulAllianceByID(t *testing.T) {
 	jsonResponse := `{
 		"creator_corporation_id": 98007669,
 		"creator_id": 1973270502,
@@ -22,16 +22,16 @@ func TestSuccessful_AllianceByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 1
+	var testId int = 1
 
-	resp, err := AllianceByID(&test_id)
+	resp, err := AllianceByID(&testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -42,7 +42,7 @@ func TestSuccessful_AllianceByID(t *testing.T) {
 
 }
 
-func TestFailNilID_AllianceByID(t *testing.T) {
+func TestFailNilIDAllianceByID(t *testing.T) {
 	jsonResponse := `{
 		"creator_corporation_id": 98007669,
 		"creator_id": 1973270502,
@@ -54,16 +54,16 @@ func TestFailNilID_AllianceByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id *int = nil
+	var testId *int = nil
 
-	_, err := AllianceByID(test_id)
+	_, err := AllianceByID(testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
@@ -72,17 +72,17 @@ func TestFailNilID_AllianceByID(t *testing.T) {
 
 }
 
-func TestFailRestCall_AllianceByID(t *testing.T) {
-	mock_rest_helper := &MockRestHelper{
+func TestFailRestCallAllianceByID(t *testing.T) {
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 1
+	var testId int = 1
 
-	_, err := AllianceByID(&test_id)
+	_, err := AllianceByID(&testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -91,7 +91,7 @@ func TestFailRestCall_AllianceByID(t *testing.T) {
 
 }
 
-func TestFailUnmarshal_AllianceByID(t *testing.T) {
+func TestFailUnmarshalAllianceByID(t *testing.T) {
 	jsonResponse := `{{
 		"creator_corporation_id": 98007669,
 		"creator_id": 1973270502,
@@ -103,16 +103,16 @@ func TestFailUnmarshal_AllianceByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 1
+	var testId int = 1
 
-	_, err := AllianceByID(&test_id)
+	_, err := AllianceByID(&testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

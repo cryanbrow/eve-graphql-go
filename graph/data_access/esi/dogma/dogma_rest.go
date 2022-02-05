@@ -23,7 +23,7 @@ func DogmaAttributeByID(id *int) (*model.DogmaAttributeDetail, error) {
 	redisKey := "DogmaAttributeByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := rest_helper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return dogmaAttribute, err
 	}
@@ -45,7 +45,7 @@ func DogmaEffectByID(id *int) (*model.DogmaEffectDetail, error) {
 	redisKey := "DogmaEffectByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := rest_helper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return dogmaEffect, err
 	}
@@ -63,9 +63,9 @@ type RestHelper interface {
 }
 
 var (
-	rest_helper RestHelper
+	restHelper RestHelper
 )
 
 func SetupDogmaRest() {
-	rest_helper = &helpers.RestHelperClient{}
+	restHelper = &helpers.RestHelperClient{}
 }

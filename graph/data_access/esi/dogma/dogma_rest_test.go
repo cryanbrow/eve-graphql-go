@@ -31,16 +31,16 @@ func TestSuccessful_DogmaEffectByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 1
+	var testId int = 1
 
-	resp, err := DogmaEffectByID(&test_id)
+	resp, err := DogmaEffectByID(&testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -72,16 +72,16 @@ func TestFailNilID_DogmaEffectByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id *int = nil
+	var testId *int = nil
 
-	_, err := DogmaEffectByID(test_id)
+	_, err := DogmaEffectByID(testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
@@ -90,16 +90,16 @@ func TestFailNilID_DogmaEffectByID(t *testing.T) {
 }
 
 func TestFailRestCall_DogmaEffectByID(t *testing.T) {
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 1
+	var testId int = 1
 
-	_, err := DogmaEffectByID(&test_id)
+	_, err := DogmaEffectByID(&testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -128,16 +128,16 @@ func TestFailUnmarshal_DogmaEffectByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 1
+	var testId int = 1
 
-	_, err := DogmaEffectByID(&test_id)
+	_, err := DogmaEffectByID(&testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -158,16 +158,16 @@ func TestSuccessful_DogmaAttributeByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 1
+	var testId int = 1
 
-	resp, err := DogmaAttributeByID(&test_id)
+	resp, err := DogmaAttributeByID(&testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -193,16 +193,16 @@ func TestFailNilID_DogmaAttributeByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id *int = nil
+	var testId *int = nil
 
-	_, err := DogmaAttributeByID(test_id)
+	_, err := DogmaAttributeByID(testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
@@ -212,16 +212,16 @@ func TestFailNilID_DogmaAttributeByID(t *testing.T) {
 }
 
 func TestFailRestCall_DogmaAttributeByID(t *testing.T) {
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 1
+	var testId int = 1
 
-	_, err := DogmaAttributeByID(&test_id)
+	_, err := DogmaAttributeByID(&testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -245,16 +245,16 @@ func TestFailUnmarshal_DogmaAttributeByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 1
+	var testId int = 1
 
-	_, err := DogmaAttributeByID(&test_id)
+	_, err := DogmaAttributeByID(&testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

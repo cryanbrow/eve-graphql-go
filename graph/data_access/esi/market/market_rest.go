@@ -25,7 +25,7 @@ func MarketGroupByID(id *int) (*model.MarketGroup, error) {
 	redisKey := "MarketGroupByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := rest_helper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return marketGroup, err
 	}
@@ -97,7 +97,7 @@ func ordersForRegionREST(url string, additional_query_params []configuration.Key
 	var orders []*model.Order
 	var pages = 0
 	var buffer bytes.Buffer
-	responseBytes, header, err := rest_helper.MakeCachingRESTCall(url, http.MethodGet, buffer, additional_query_params, redisKey)
+	responseBytes, header, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, additional_query_params, redisKey)
 	if err != nil {
 		return orders, 0, err
 	}
@@ -121,7 +121,7 @@ func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 	redisKey := "OrderHistoryByID:" + strconv.Itoa(*regionID) + ":" + strconv.Itoa(*typeID)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := rest_helper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return orderHistory, err
 	}
@@ -139,9 +139,9 @@ type RestHelper interface {
 }
 
 var (
-	rest_helper RestHelper
+	restHelper RestHelper
 )
 
 func SetupMarketRest() {
-	rest_helper = &helpers.RestHelperClient{}
+	restHelper = &helpers.RestHelperClient{}
 }

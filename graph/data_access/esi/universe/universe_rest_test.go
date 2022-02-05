@@ -33,8 +33,8 @@ func TestSuccessfulInCache_AncestryByID(t *testing.T) {
 	}
 	Redis_client = mock_redis_client
 
-	var test_id int = 1
-	resp, err := AncestryByID(&test_id)
+	var testId int = 1
+	resp, err := AncestryByID(&testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -62,17 +62,17 @@ func TestSuccessfulNotInCache_AncestryByID(t *testing.T) {
 			return false, nil
 		},
 	}
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 
 	Redis_client = mock_redis_client
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 13
-	resp, err := AncestryByID(&test_id)
+	var testId int = 13
+	resp, err := AncestryByID(&testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -83,8 +83,8 @@ func TestSuccessfulNotInCache_AncestryByID(t *testing.T) {
 }
 
 func TestFailNilID_AncestryByID(t *testing.T) {
-	var test_id *int = nil
-	_, err := AncestryByID(test_id)
+	var testId *int = nil
+	_, err := AncestryByID(testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -109,8 +109,8 @@ func TestFailUnmarshalInCache_AncestryByID(t *testing.T) {
 	}
 	Redis_client = mock_redis_client
 
-	var test_id int = 13
-	_, err := AncestryByID(&test_id)
+	var testId int = 13
+	_, err := AncestryByID(&testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -136,15 +136,15 @@ func TestFailUnmarshalNotInCache_AncestryByID(t *testing.T) {
 	}
 	Redis_client = mock_redis_client
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 13
-	_, err := AncestryByID(&test_id)
+	var testId int = 13
+	_, err := AncestryByID(&testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -157,17 +157,17 @@ func TestFailRestNotInCache_AncestryByID(t *testing.T) {
 			return false, nil
 		},
 	}
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
 
 	Redis_client = mock_redis_client
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 13
-	_, err := AncestryByID(&test_id)
+	var testId int = 13
+	_, err := AncestryByID(&testId)
 	if err == nil {
 		t.Errorf("Error was nil")
 	}
@@ -190,17 +190,17 @@ func TestSuccessful_AsteroidBeltDetails(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id *int = new(int)
-	*test_id = 1
+	var testId *int = new(int)
+	*testId = 1
 	var ids []*int = make([]*int, 1)
-	ids[0] = test_id
+	ids[0] = testId
 
 	resp, err := AsteroidBeltDetails(ids)
 	if err != nil {
@@ -225,17 +225,17 @@ func TestFailNilID_AsteroidBeltDetails(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id *int = new(int)
-	*test_id = 1
+	var testId *int = new(int)
+	*testId = 1
 	var ids []*int = make([]*int, 2)
-	ids[0] = test_id
+	ids[0] = testId
 
 	_, err := AsteroidBeltDetails(ids)
 	if err == nil {
@@ -260,16 +260,16 @@ func TestSuccessful_AsteroidBeltByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 1
+	var testId int = 1
 
-	resp, err := AsteroidBeltByID(&test_id)
+	resp, err := AsteroidBeltByID(&testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -293,16 +293,16 @@ func TestFailNilID_AsteroidBeltByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id *int = nil
+	var testId *int = nil
 
-	_, err := AsteroidBeltByID(test_id)
+	_, err := AsteroidBeltByID(testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
@@ -312,16 +312,16 @@ func TestFailNilID_AsteroidBeltByID(t *testing.T) {
 }
 
 func TestFailRestCall_AsteroidBeltByID(t *testing.T) {
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 1
+	var testId int = 1
 
-	_, err := AsteroidBeltByID(&test_id)
+	_, err := AsteroidBeltByID(&testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -343,16 +343,16 @@ func TestFailUnmarshal_AsteroidBeltByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 1
+	var testId int = 1
 
-	_, err := AsteroidBeltByID(&test_id)
+	_, err := AsteroidBeltByID(&testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
@@ -387,8 +387,8 @@ func TestSuccessfulInCache_BloodlineByID(t *testing.T) {
 	}
 	Redis_client = mock_redis_client
 
-	var test_id int = 1
-	resp, err := BloodlineByID(&test_id)
+	var testId int = 1
+	resp, err := BloodlineByID(&testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -421,17 +421,17 @@ func TestSuccessfulNotInCache_BloodlineByID(t *testing.T) {
 			return false, nil
 		},
 	}
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 
 	Redis_client = mock_redis_client
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 5
-	resp, err := BloodlineByID(&test_id)
+	var testId int = 5
+	resp, err := BloodlineByID(&testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -442,8 +442,8 @@ func TestSuccessfulNotInCache_BloodlineByID(t *testing.T) {
 }
 
 func TestFailNilID_BloodlineByID(t *testing.T) {
-	var test_id *int = nil
-	_, err := AncestryByID(test_id)
+	var testId *int = nil
+	_, err := AncestryByID(testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -473,8 +473,8 @@ func TestFailUnmarshalInCache_BloodlineByID(t *testing.T) {
 	}
 	Redis_client = mock_redis_client
 
-	var test_id int = 5
-	_, err := BloodlineByID(&test_id)
+	var testId int = 5
+	_, err := BloodlineByID(&testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -505,15 +505,15 @@ func TestFailUnmarshalNotInCache_BloodlineByID(t *testing.T) {
 	}
 	Redis_client = mock_redis_client
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 5
-	_, err := BloodlineByID(&test_id)
+	var testId int = 5
+	_, err := BloodlineByID(&testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -526,17 +526,17 @@ func TestFailRestNotInCache_BloodlineByID(t *testing.T) {
 			return false, nil
 		},
 	}
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
 
 	Redis_client = mock_redis_client
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 5
-	_, err := BloodlineByID(&test_id)
+	var testId int = 5
+	_, err := BloodlineByID(&testId)
 	if err == nil {
 		t.Errorf("Error was nil")
 	}
@@ -566,16 +566,16 @@ func TestSuccessful_CategoryByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 5
+	var testId int = 5
 
-	resp, err := CategoryByID(&test_id)
+	resp, err := CategoryByID(&testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -606,16 +606,16 @@ func TestFailNilID_CategoryByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id *int = nil
+	var testId *int = nil
 
-	_, err := CategoryByID(test_id)
+	_, err := CategoryByID(testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
@@ -625,16 +625,16 @@ func TestFailNilID_CategoryByID(t *testing.T) {
 }
 
 func TestFailRestCall_CategoryByID(t *testing.T) {
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 1
+	var testId int = 1
 
-	_, err := CategoryByID(&test_id)
+	_, err := CategoryByID(&testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -663,16 +663,16 @@ func TestFailUnmarshal_CategoryByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 5
+	var testId int = 5
 
-	_, err := CategoryByID(&test_id)
+	_, err := CategoryByID(&testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
@@ -707,17 +707,17 @@ func TestSuccessful_ConstellationsByIDs(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id *int = new(int)
-	*test_id = 20000019
+	var testId *int = new(int)
+	*testId = 20000019
 	var ids []*int = make([]*int, 1)
-	ids[0] = test_id
+	ids[0] = testId
 
 	resp, err := ConstellationsByIDs(ids)
 	if err != nil {
@@ -753,17 +753,17 @@ func TestFailNilID_ConstellationsByIDs(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id *int = new(int)
-	*test_id = 20000019
+	var testId *int = new(int)
+	*testId = 20000019
 	var ids []*int = make([]*int, 2)
-	ids[0] = test_id
+	ids[0] = testId
 
 	_, err := ConstellationsByIDs(ids)
 	if err == nil {
@@ -799,16 +799,16 @@ func TestSuccessful_ConstellationByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 20000019
+	var testId int = 20000019
 
-	resp, err := ConstellationByID(&test_id)
+	resp, err := ConstellationByID(&testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -843,16 +843,16 @@ func TestFailNilID_ConstellationByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id *int = nil
+	var testId *int = nil
 
-	_, err := ConstellationByID(test_id)
+	_, err := ConstellationByID(testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
@@ -862,16 +862,16 @@ func TestFailNilID_ConstellationByID(t *testing.T) {
 }
 
 func TestFailRestCall_ConstellationByID(t *testing.T) {
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 20000019
+	var testId int = 20000019
 
-	_, err := ConstellationByID(&test_id)
+	_, err := ConstellationByID(&testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -904,16 +904,16 @@ func TestFailUnmarshal_ConstellationByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 20000019
+	var testId int = 20000019
 
-	_, err := ConstellationByID(&test_id)
+	_, err := ConstellationByID(&testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
@@ -947,8 +947,8 @@ func TestSuccessfulInCache_FactionByID(t *testing.T) {
 	}
 	Redis_client = mock_redis_client
 
-	var test_id int = 500003
-	resp, err := FactionByID(&test_id)
+	var testId int = 500003
+	resp, err := FactionByID(&testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -980,17 +980,17 @@ func TestSuccessfulNotInCache_FactionByID(t *testing.T) {
 			return false, nil
 		},
 	}
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 
 	Redis_client = mock_redis_client
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 500003
-	resp, err := FactionByID(&test_id)
+	var testId int = 500003
+	resp, err := FactionByID(&testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -1001,8 +1001,8 @@ func TestSuccessfulNotInCache_FactionByID(t *testing.T) {
 }
 
 func TestFailNilID_FactionByID(t *testing.T) {
-	var test_id *int = nil
-	_, err := FactionByID(test_id)
+	var testId *int = nil
+	_, err := FactionByID(testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -1031,8 +1031,8 @@ func TestFailUnmarshalInCache_FactionByID(t *testing.T) {
 	}
 	Redis_client = mock_redis_client
 
-	var test_id int = 500003
-	_, err := FactionByID(&test_id)
+	var testId int = 500003
+	_, err := FactionByID(&testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -1062,15 +1062,15 @@ func TestFailUnmarshalNotInCache_FactionByID(t *testing.T) {
 	}
 	Redis_client = mock_redis_client
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 500003
-	_, err := FactionByID(&test_id)
+	var testId int = 500003
+	_, err := FactionByID(&testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -1083,17 +1083,17 @@ func TestFailRestNotInCache_FactionByID(t *testing.T) {
 			return false, nil
 		},
 	}
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
 
 	Redis_client = mock_redis_client
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 500003
-	_, err := FactionByID(&test_id)
+	var testId int = 500003
+	_, err := FactionByID(&testId)
 	if err == nil {
 		t.Errorf("Error was nil")
 	}
@@ -1113,16 +1113,16 @@ func TestSuccessful_GraphicByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 21573
+	var testId int = 21573
 
-	resp, err := GraphicByID(&test_id)
+	resp, err := GraphicByID(&testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -1143,16 +1143,16 @@ func TestFailNilID_GraphicByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id *int = nil
+	var testId *int = nil
 
-	_, err := GraphicByID(test_id)
+	_, err := GraphicByID(testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
@@ -1162,16 +1162,16 @@ func TestFailNilID_GraphicByID(t *testing.T) {
 }
 
 func TestFailRestCall_GraphicByID(t *testing.T) {
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 21573
+	var testId int = 21573
 
-	_, err := GraphicByID(&test_id)
+	_, err := GraphicByID(&testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -1190,16 +1190,16 @@ func TestFailUnmarshal_GraphicByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 21573
+	var testId int = 21573
 
-	_, err := GraphicByID(&test_id)
+	_, err := GraphicByID(&testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
@@ -1301,16 +1301,16 @@ func TestSuccessful_GroupByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 25
+	var testId int = 25
 
-	resp, err := GroupByID(&test_id)
+	resp, err := GroupByID(&testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -1412,16 +1412,16 @@ func TestFailNilID_GroupByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id *int = nil
+	var testId *int = nil
 
-	_, err := GroupByID(test_id)
+	_, err := GroupByID(testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "nil id" {
@@ -1431,16 +1431,16 @@ func TestFailNilID_GroupByID(t *testing.T) {
 }
 
 func TestFailRestCall_GroupByID(t *testing.T) {
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 25
+	var testId int = 25
 
-	_, err := GroupByID(&test_id)
+	_, err := GroupByID(&testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -1540,16 +1540,16 @@ func TestFailUnmarshal_GroupByID(t *testing.T) {
 
 	b := []byte(jsonResponse)
 
-	mock_rest_helper := &MockRestHelper{
+	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
-	rest_helper = mock_rest_helper
+	restHelper = mockRestHelper
 
-	var test_id int = 25
+	var testId int = 25
 
-	_, err := GroupByID(&test_id)
+	_, err := GroupByID(&testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

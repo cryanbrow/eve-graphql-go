@@ -40,7 +40,7 @@ func TestSuccessful_MakeCachingRESTCall(t *testing.T) {
 
 	url := "https://www.google.com"
 	var buffer bytes.Buffer
-	bytes, _, err := rest_helper.MakeCachingRESTCall(url, http.MethodGet, buffer, query_params, "himom")
+	bytes, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, query_params, "himom")
 	if string(bytes) != jsonResponse {
 		t.Error("Failed to return correct byte array.")
 	}
@@ -78,7 +78,7 @@ func TestInCacheSuccessful_MakeCachingRESTCall(t *testing.T) {
 
 	url := "https://www.google.com"
 	var buffer bytes.Buffer
-	_, _, err := rest_helper.MakeCachingRESTCall(url, http.MethodGet, buffer, query_params, "himom")
+	_, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, query_params, "himom")
 	if err != nil {
 		t.Error("Returned non nil error.")
 	}
@@ -115,7 +115,7 @@ func TestSuccessfulWithDefaultParams_MakeCachingRESTCall(t *testing.T) {
 
 	url := "https://www.google.com"
 	var buffer bytes.Buffer
-	bytes, _, err := rest_helper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
+	bytes, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
 	if string(bytes) != jsonResponse {
 		t.Error("Failed to return correct byte array.")
 	}
@@ -147,7 +147,7 @@ func TestSuccessfulWithQueryParams_MakeCachingRESTCall(t *testing.T) {
 
 	url := "https://www.google.com"
 	var buffer bytes.Buffer
-	bytes, _, err := rest_helper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
+	bytes, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
 	if string(bytes) != jsonResponse {
 		t.Error("Failed to return correct byte array.")
 	}
@@ -181,7 +181,7 @@ func TestUnparseableURL_MakeCachingRESTCall(t *testing.T) {
 	myslice[0] = 0x7f
 	url := string(myslice)
 	var buffer bytes.Buffer
-	_, _, err := rest_helper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
+	_, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
 	if err == nil {
 		t.Error("Returned nil error.")
 	}
@@ -210,7 +210,7 @@ func TestNewRequestFailure_MakeCachingRESTCall(t *testing.T) {
 
 	url := ""
 	var buffer bytes.Buffer
-	_, _, err := rest_helper.MakeCachingRESTCall(url, "Ы", buffer, nil, "himom")
+	_, _, err := restHelper.MakeCachingRESTCall(url, "Ы", buffer, nil, "himom")
 	if err == nil {
 		t.Error("Returned nil error.")
 	}
@@ -239,7 +239,7 @@ func TestDoFailure_MakeCachingRESTCall(t *testing.T) {
 
 	url := ""
 	var buffer bytes.Buffer
-	_, _, err := rest_helper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
+	_, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
 	if err == nil {
 		t.Error("Returned nil error.")
 	}
@@ -268,7 +268,7 @@ func Test404Failure_MakeCachingRESTCall(t *testing.T) {
 
 	url := ""
 	var buffer bytes.Buffer
-	_, _, err := rest_helper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
+	_, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
 	if err == nil {
 		t.Error("Returned nil error.")
 	}
@@ -304,9 +304,9 @@ type RestHelper interface {
 }
 
 var (
-	rest_helper RestHelper
+	restHelper RestHelper
 )
 
 func init() {
-	rest_helper = &RestHelperClient{}
+	restHelper = &RestHelperClient{}
 }
