@@ -168,6 +168,72 @@ func TestFailRestNotInCache_AncestryByID(t *testing.T) {
 	}
 }
 
+func TestSuccessful_AsteroidBeltDetails(t *testing.T) {
+	jsonResponse := `{
+		"name": "Inaro IX - Asteroid Belt 1",
+		"position": {
+		  "x": 809389301760,
+		  "y": 151954759680,
+		  "z": -221539000320
+		},
+		"system_id": 30002788
+	  }`
+
+	b := []byte(jsonResponse)
+
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+	rest_helper = mock_rest_helper
+
+	var test_id *int = new(int)
+	*test_id = 1
+	var ids []*int = make([]*int, 1)
+	ids[0] = test_id
+
+	resp, err := AsteroidBeltDetails(ids)
+	if err != nil {
+		t.Errorf("Error was not nil, %v", err)
+	}
+	var resp_name string = "Inaro IX - Asteroid Belt 1"
+	if *resp[0].Name != resp_name {
+		t.Errorf("Response was not as expected")
+	}
+}
+
+func TestFailNilID_AsteroidBeltDetails(t *testing.T) {
+	jsonResponse := `{
+		"name": "Inaro IX - Asteroid Belt 1",
+		"position": {
+		  "x": 809389301760,
+		  "y": 151954759680,
+		  "z": -221539000320
+		},
+		"system_id": 30002788
+	  }`
+
+	b := []byte(jsonResponse)
+
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+	rest_helper = mock_rest_helper
+
+	var test_id *int = new(int)
+	*test_id = 1
+	var ids []*int = make([]*int, 2)
+	ids[0] = test_id
+
+	_, err := AsteroidBeltDetails(ids)
+	if err == nil {
+		t.Errorf("Error was nil")
+	}
+}
+
 func TestSuccessful_AsteroidBeltByID(t *testing.T) {
 	jsonResponse := `{
 		"name": "Inaro IX - Asteroid Belt 1",
