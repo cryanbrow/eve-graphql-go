@@ -26,7 +26,9 @@ func TestSuccessfulInCacheAncestryByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return true, b
 		},
@@ -57,7 +59,9 @@ func TestSuccessfulNotInCacheAncestryByID(t *testing.T) {
   ]`
 	b := []byte(ancestriesJsonResponse)
 	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
 		},
@@ -102,7 +106,9 @@ func TestFailUnmarshalInCacheAncestryByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return true, b
 		},
@@ -129,7 +135,9 @@ func TestFailUnmarshalNotInCacheAncestryByID(t *testing.T) {
   ]`
 	b := []byte(ancestriesJsonResponse)
 	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
 		},
@@ -152,7 +160,9 @@ func TestFailUnmarshalNotInCacheAncestryByID(t *testing.T) {
 
 func TestFailRestNotInCacheAncestryByID(t *testing.T) {
 	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
 		},
@@ -380,7 +390,9 @@ func TestSuccessfulInCacheBloodlineByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return true, b
 		},
@@ -416,7 +428,9 @@ func TestSuccessfulNotInCacheBloodlineByID(t *testing.T) {
   ]`
 	b := []byte(ancestriesJsonResponse)
 	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation,
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
 		},
@@ -466,7 +480,9 @@ func TestFailUnmarshalInCacheBBloodlineByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return true, b
 		},
@@ -498,7 +514,9 @@ func TestFailUnmarshalNotInCacheBloodlineByID(t *testing.T) {
   ]`
 	b := []byte(ancestriesJsonResponse)
 	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
 		},
@@ -521,7 +539,9 @@ func TestFailUnmarshalNotInCacheBloodlineByID(t *testing.T) {
 
 func TestFailRestNotInCacheBloodlineByID(t *testing.T) {
 	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
 		},
@@ -940,7 +960,9 @@ func TestSuccessfulInCacheFactionByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return true, b
 		},
@@ -975,7 +997,9 @@ func TestSuccessfulNotInCache_FactionByID(t *testing.T) {
   ]`
 	b := []byte(ancestriesJsonResponse)
 	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
 		},
@@ -1024,7 +1048,9 @@ func TestFailUnmarshalInCacheFactionByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return true, b
 		},
@@ -1055,7 +1081,9 @@ func TestFailUnmarshalNotInCacheFactionByID(t *testing.T) {
   ]`
 	b := []byte(ancestriesJsonResponse)
 	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
 		},
@@ -1078,7 +1106,9 @@ func TestFailUnmarshalNotInCacheFactionByID(t *testing.T) {
 
 func TestFailRestNotInCacheFactionByID(t *testing.T) {
 	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
 		},
