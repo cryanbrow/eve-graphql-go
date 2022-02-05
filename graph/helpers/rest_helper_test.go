@@ -32,15 +32,15 @@ func TestSuccessful_MakeCachingRESTCall(t *testing.T) {
 		},
 	}
 
-	query_params := make([]configuration.Key_value, 2)
+	queryParams := make([]configuration.Key_value, 2)
 	kv := new(configuration.Key_value)
 	kv.Key = "page"
 	kv.Value = strconv.Itoa(1)
-	query_params = append(query_params, *kv)
+	queryParams = append(queryParams, *kv)
 
 	url := "https://www.google.com"
 	var buffer bytes.Buffer
-	bytes, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, query_params, "himom")
+	bytes, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, queryParams, "himom")
 	if string(bytes) != jsonResponse {
 		t.Error("Failed to return correct byte array.")
 	}
@@ -70,15 +70,15 @@ func TestInCacheSuccessful_MakeCachingRESTCall(t *testing.T) {
 		},
 	}
 
-	query_params := make([]configuration.Key_value, 2)
+	queryParams := make([]configuration.Key_value, 2)
 	kv := new(configuration.Key_value)
 	kv.Key = "page"
 	kv.Value = strconv.Itoa(1)
-	query_params = append(query_params, *kv)
+	queryParams = append(queryParams, *kv)
 
 	url := "https://www.google.com"
 	var buffer bytes.Buffer
-	_, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, query_params, "himom")
+	_, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, queryParams, "himom")
 	if err != nil {
 		t.Error("Returned non nil error.")
 	}
@@ -105,13 +105,13 @@ func TestSuccessfulWithDefaultParams_MakeCachingRESTCall(t *testing.T) {
 		},
 	}
 
-	query_params := make([]configuration.Key_value, 2)
+	queryParams := make([]configuration.Key_value, 2)
 	kv := new(configuration.Key_value)
 	kv.Key = "page"
 	kv.Value = strconv.Itoa(1)
-	query_params = append(query_params, *kv)
+	queryParams = append(queryParams, *kv)
 
-	configuration.AppConfig.Esi.Default.Query_params = query_params
+	configuration.AppConfig.Esi.Default.queryParams = queryParams
 
 	url := "https://www.google.com"
 	var buffer bytes.Buffer

@@ -7,7 +7,7 @@ redis:
   port: '30893'
 esi:
   default:
-    query_params:
+    queryParams:
     - key: 'datasource'
       value: 'tranquility'
     - key: 'language'

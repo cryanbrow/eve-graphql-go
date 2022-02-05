@@ -45,22 +45,22 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int, pag
 
 	redisKey := "OrdersForRegion:" + strconv.Itoa(*regionID) + ":" + orderType.String()
 
-	query_params := make([]configuration.Key_value, 2)
+	queryParams := make([]configuration.Key_value, 2)
 	kv := new(configuration.Key_value)
 	kv.Key = "page"
 	kv.Value = strconv.Itoa(*page)
-	query_params = append(query_params, *kv)
+	queryParams = append(queryParams, *kv)
 
 	if typeID != nil {
 		redisKey = redisKey + ":" + strconv.Itoa(*typeID)
 		kv.Key = "type_id"
 		kv.Value = strconv.Itoa(*typeID)
-		query_params = append(query_params, *kv)
+		queryParams = append(queryParams, *kv)
 	}
 
 	redisKey = redisKey + ":" + strconv.Itoa(*page)
 
-	orderResult, pages, err := ordersForRegionREST(baseUrl, query_params, redisKey)
+	orderResult, pages, err := ordersForRegionREST(baseUrl, queryParams, redisKey)
 
 	if err == nil {
 		orderList = append(orderList, orderResult...)

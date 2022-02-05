@@ -24,7 +24,7 @@ func (r *RestHelperClient) MakeCachingRESTCall(baseUrl string, verb string, body
 			return nil, nil, err
 		}
 		queryParameters := crest_url.Query()
-		for _, kv := range configuration.AppConfig.Esi.Default.Query_params {
+		for _, kv := range configuration.AppConfig.Esi.Default.queryParams {
 			queryParameters.Add(kv.Key, kv.Value)
 		}
 		for _, kv := range additionalQueryParams {
