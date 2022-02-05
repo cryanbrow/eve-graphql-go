@@ -920,6 +920,185 @@ func TestFailUnmarshal_ConstellationByID(t *testing.T) {
 }
 
 /***************************************
+*             FactionByID              *
+***************************************/
+
+func TestSuccessfulInCache_FactionByID(t *testing.T) {
+	jsonResponse := `{
+		"corporation_id": 1000084,
+		"description": "The largest of the five main empires, the Amarr Empire is a sprawling patch-work of feudal-like provinces held together by the might of the emperor. Religion has always played a big part in Amarrian politics and the Amarrians believe they are the rightful masters of the world, souring their relations with their neighbours. Another source of ill-feelings on part of the other empires is the fact that the Amarrians embrace slavery.",
+		"faction_id": 500003,
+		"is_unique": true,
+		"militia_corporation_id": 1000179,
+		"name": "Amarr Empire",
+		"size_factor": 5,
+		"solar_system_id": 30002187,
+		"station_count": 1031,
+		"station_system_count": 508
+	  }`
+	b := []byte(jsonResponse)
+
+	mock_redis_client := &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return true, b
+		},
+	}
+	Redis_client = mock_redis_client
+
+	var test_id int = 500003
+	resp, err := FactionByID(&test_id)
+	if err != nil {
+		t.Errorf("Error was not nil, %v", err)
+	}
+	var resp_name string = "Amarr Empire"
+	if *resp.Name != resp_name {
+		t.Errorf("Response was not as expected")
+	}
+}
+
+func TestSuccessfulNotInCache_FactionByID(t *testing.T) {
+	var ancestriesJsonResponse string = `[
+		{
+			"corporation_id": 1000084,
+			"description": "The largest of the five main empires, the Amarr Empire is a sprawling patch-work of feudal-like provinces held together by the might of the emperor. Religion has always played a big part in Amarrian politics and the Amarrians believe they are the rightful masters of the world, souring their relations with their neighbours. Another source of ill-feelings on part of the other empires is the fact that the Amarrians embrace slavery.",
+			"faction_id": 500003,
+			"is_unique": true,
+			"militia_corporation_id": 1000179,
+			"name": "Amarr Empire",
+			"size_factor": 5,
+			"solar_system_id": 30002187,
+			"station_count": 1031,
+			"station_system_count": 508
+		  }
+  ]`
+	b := []byte(ancestriesJsonResponse)
+	mock_redis_client := &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return false, nil
+		},
+	}
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+
+	Redis_client = mock_redis_client
+	rest_helper = mock_rest_helper
+
+	var test_id int = 500003
+	resp, err := FactionByID(&test_id)
+	if err != nil {
+		t.Errorf("Error was not nil, %v", err)
+	}
+	var resp_name string = "Amarr Empire"
+	if *resp.Name != resp_name {
+		t.Errorf("Response was not as expected")
+	}
+}
+
+func TestFailNilID_FactionByID(t *testing.T) {
+	var test_id *int = nil
+	_, err := FactionByID(test_id)
+	if err == nil {
+		t.Errorf("Error is nil")
+	}
+}
+
+func TestFailUnmarshalInCache_FactionByID(t *testing.T) {
+	jsonResponse := `{{
+		"corporation_id": 1000084,
+		"description": "The largest of the five main empires, the Amarr Empire is a sprawling patch-work of feudal-like provinces held together by the might of the emperor. Religion has always played a big part in Amarrian politics and the Amarrians believe they are the rightful masters of the world, souring their relations with their neighbours. Another source of ill-feelings on part of the other empires is the fact that the Amarrians embrace slavery.",
+		"faction_id": 500003,
+		"is_unique": true,
+		"militia_corporation_id": 1000179,
+		"name": "Amarr Empire",
+		"size_factor": 5,
+		"solar_system_id": 30002187,
+		"station_count": 1031,
+		"station_system_count": 508
+	  }`
+	b := []byte(jsonResponse)
+
+	mock_redis_client := &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return true, b
+		},
+	}
+	Redis_client = mock_redis_client
+
+	var test_id int = 500003
+	_, err := FactionByID(&test_id)
+	if err == nil {
+		t.Errorf("Error is nil")
+	}
+}
+
+func TestFailUnmarshalNotInCache_FactionByID(t *testing.T) {
+	var ancestriesJsonResponse string = `[
+	{{
+		"corporation_id": 1000084,
+		"description": "The largest of the five main empires, the Amarr Empire is a sprawling patch-work of feudal-like provinces held together by the might of the emperor. Religion has always played a big part in Amarrian politics and the Amarrians believe they are the rightful masters of the world, souring their relations with their neighbours. Another source of ill-feelings on part of the other empires is the fact that the Amarrians embrace slavery.",
+		"faction_id": 500003,
+		"is_unique": true,
+		"militia_corporation_id": 1000179,
+		"name": "Amarr Empire",
+		"size_factor": 5,
+		"solar_system_id": 30002187,
+		"station_count": 1031,
+		"station_system_count": 508
+	  }
+  ]`
+	b := []byte(ancestriesJsonResponse)
+	mock_redis_client := &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return false, nil
+		},
+	}
+	Redis_client = mock_redis_client
+
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+	rest_helper = mock_rest_helper
+
+	var test_id int = 500003
+	_, err := FactionByID(&test_id)
+	if err == nil {
+		t.Errorf("Error is nil")
+	}
+}
+
+func TestFailRestNotInCache_FactionByID(t *testing.T) {
+	mock_redis_client := &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return false, nil
+		},
+	}
+	mock_rest_helper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error) {
+			return nil, nil, errors.New("failure")
+		},
+	}
+
+	Redis_client = mock_redis_client
+	rest_helper = mock_rest_helper
+
+	var test_id int = 500003
+	_, err := FactionByID(&test_id)
+	if err == nil {
+		t.Errorf("Error was nil")
+	}
+}
+
+/***************************************
 *             MOCK SECTION             *
 ***************************************/
 

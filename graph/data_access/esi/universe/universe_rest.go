@@ -228,7 +228,7 @@ func ConstellationByID(id *int) (*model.Constellation, error) {
 func FactionByID(id *int) (*model.Faction, error) {
 	var faction *model.Faction = new(model.Faction)
 	if id == nil {
-		return nil, nil
+		return nil, errors.New("nil id")
 	}
 
 	inCache, result := Redis_client.CheckRedisCache("FactionByID:" + strconv.Itoa(*id))
