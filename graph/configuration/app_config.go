@@ -24,7 +24,7 @@ type Config struct {
 	} `yaml:"redis"`
 	Esi struct {
 		Default struct {
-			queryParams []Key_value `yaml:"queryParams"`
+			QueryParams []Key_value `yaml:"queryParams"`
 			Url         string      `yaml:"url"`
 		} `yaml:"default"`
 	} `yaml:"esi"`

@@ -111,7 +111,7 @@ func TestSuccessfulWithDefaultParams_MakeCachingRESTCall(t *testing.T) {
 	kv.Value = strconv.Itoa(1)
 	queryParams = append(queryParams, *kv)
 
-	configuration.AppConfig.Esi.Default.queryParams = queryParams
+	configuration.AppConfig.Esi.Default.QueryParams = queryParams
 
 	url := "https://www.google.com"
 	var buffer bytes.Buffer
