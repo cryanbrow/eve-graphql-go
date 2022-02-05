@@ -13,7 +13,9 @@ import (
 
 func TestSuccessfulMakeCachingRESTCall(t *testing.T) {
 	Redis_client = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, make([]byte, 0)
 		},
@@ -64,7 +66,9 @@ func TestInCacheSuccessfulMakeCachingRESTCall(t *testing.T) {
 		},
 	}
 	Redis_client = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return true, make([]byte, 0)
 		},
@@ -86,7 +90,9 @@ func TestInCacheSuccessfulMakeCachingRESTCall(t *testing.T) {
 
 func TestSuccessfulWithDefaultParamsMakeCachingRESTCall(t *testing.T) {
 	Redis_client = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, make([]byte, 0)
 		},
@@ -126,7 +132,9 @@ func TestSuccessfulWithDefaultParamsMakeCachingRESTCall(t *testing.T) {
 
 func TestSuccessfulWithQueryParamsMakeCachingRESTCall(t *testing.T) {
 	Redis_client = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, make([]byte, 0)
 		},
@@ -158,7 +166,9 @@ func TestSuccessfulWithQueryParamsMakeCachingRESTCall(t *testing.T) {
 
 func TestUnparseableURLMakeCachingRESTCall(t *testing.T) {
 	Redis_client = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, make([]byte, 0)
 		},
@@ -189,7 +199,9 @@ func TestUnparseableURLMakeCachingRESTCall(t *testing.T) {
 
 func TestNewRequestFailureMakeCachingRESTCall(t *testing.T) {
 	Redis_client = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, make([]byte, 0)
 		},
@@ -218,7 +230,9 @@ func TestNewRequestFailureMakeCachingRESTCall(t *testing.T) {
 
 func TestDoFailureMakeCachingRESTCall(t *testing.T) {
 	Redis_client = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, make([]byte, 0)
 		},
@@ -247,7 +261,9 @@ func TestDoFailureMakeCachingRESTCall(t *testing.T) {
 
 func Test404FailureMakeCachingRESTCall(t *testing.T) {
 	Redis_client = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, make([]byte, 0)
 		},
@@ -308,5 +324,7 @@ var (
 )
 
 func init() {
-	restHelper = &RestHelperClient{}
+	restHelper = &RestHelperClient{
+		//Method returns nothing so needs no implementation
+	}
 }
