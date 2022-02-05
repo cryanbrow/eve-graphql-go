@@ -55,9 +55,3 @@ jobs:
         user-email: cryanbrow@gmail.com
         target-branch: main
         target-directory: 'eve-graphql-go/${{ steps.vars.outputs.sha_short }}/output'
-
-    - name: Archive code coverage results
-      uses: actions/upload-artifact@v2
-      with:
-        name: code-coverage-report
-        path: coverage.html
