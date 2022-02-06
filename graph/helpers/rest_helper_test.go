@@ -12,7 +12,10 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 )
 
+const byteArrayFail string = "Failed to return correct byte array."
+
 var jsonResponse string
+var testUrl string
 
 func TestSuccessfulMakeCachingRESTCall(t *testing.T) {
 	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
@@ -32,14 +35,13 @@ func TestSuccessfulMakeCachingRESTCall(t *testing.T) {
 	kv.Value = strconv.Itoa(1)
 	queryParams = append(queryParams, *kv)
 
-	url := "https://www.google.com"
 	var buffer bytes.Buffer
-	bytes, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, queryParams, "himom")
+	bytes, _, err := restHelper.MakeCachingRESTCall(testUrl, http.MethodGet, buffer, queryParams, "himom")
 	if string(bytes) != jsonResponse {
-		t.Error("Failed to return correct byte array.")
+		t.Error(byteArrayFail)
 	}
 	if err != nil {
-		t.Error("Returned non nil error.")
+		t.Errorf(ErrorWasNotNil, err)
 	}
 }
 
@@ -68,11 +70,10 @@ func TestInCacheSuccessfulMakeCachingRESTCall(t *testing.T) {
 	kv.Value = strconv.Itoa(1)
 	queryParams = append(queryParams, *kv)
 
-	url := "https://www.google.com"
 	var buffer bytes.Buffer
-	_, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, queryParams, "himom")
+	_, _, err := restHelper.MakeCachingRESTCall(testUrl, http.MethodGet, buffer, queryParams, "himom")
 	if err != nil {
-		t.Error("Returned non nil error.")
+		t.Errorf(ErrorWasNotNil, err)
 	}
 }
 
@@ -96,16 +97,15 @@ func TestSuccessfulWithDefaultParamsMakeCachingRESTCall(t *testing.T) {
 
 	configuration.AppConfig.Esi.Default.QueryParams = queryParams
 
-	url := "https://www.google.com"
 	var buffer bytes.Buffer
-	bytes4, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
+	bytes4, _, err := restHelper.MakeCachingRESTCall(testUrl, http.MethodGet, buffer, nil, "himom")
 	byteString := string(bytes4)
 	if byteString != jsonResponse {
 		fmt.Printf("expected: %s : actual %s", jsonResponse, byteString)
-		t.Error("Failed to return correct byte array.")
+		t.Error(byteArrayFail)
 	}
 	if err != nil {
-		t.Error("Returned non nil error.")
+		t.Errorf(ErrorWasNotNil, err)
 	}
 }
 
@@ -121,14 +121,13 @@ func TestSuccessfulWithQueryParamsMakeCachingRESTCall(t *testing.T) {
 		},
 	}
 
-	url := "https://www.google.com"
 	var buffer bytes.Buffer
-	bytes, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
+	bytes, _, err := restHelper.MakeCachingRESTCall(testUrl, http.MethodGet, buffer, nil, "himom")
 	if string(bytes) != jsonResponse {
-		t.Error("Failed to return correct byte array.")
+		t.Error(byteArrayFail)
 	}
 	if err != nil {
-		t.Error("Returned non nil error.")
+		t.Errorf(ErrorWasNotNil, err)
 	}
 }
 
@@ -150,7 +149,7 @@ func TestUnparseableURLMakeCachingRESTCall(t *testing.T) {
 	var buffer bytes.Buffer
 	_, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
 	if err == nil {
-		t.Error("Returned nil error.")
+		t.Error(NilError)
 	}
 }
 
@@ -170,7 +169,7 @@ func TestNewRequestFailureMakeCachingRESTCall(t *testing.T) {
 	var buffer bytes.Buffer
 	_, _, err := restHelper.MakeCachingRESTCall(url, "Ы", buffer, nil, "himom")
 	if err == nil {
-		t.Error("Returned nil error.")
+		t.Error(NilError)
 	}
 }
 
@@ -190,7 +189,7 @@ func TestDoFailureMakeCachingRESTCall(t *testing.T) {
 	var buffer bytes.Buffer
 	_, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
 	if err == nil {
-		t.Error("Returned nil error.")
+		t.Error(NilError)
 	}
 }
 
@@ -210,7 +209,7 @@ func Test404FailureMakeCachingRESTCall(t *testing.T) {
 	var buffer bytes.Buffer
 	_, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
 	if err == nil {
-		t.Error("Returned nil error.")
+		t.Error(NilError)
 	}
 }
 
@@ -252,6 +251,7 @@ func init() {
 	jsonResponse = `[{
 		"full_name": "mock-repo"
 	   }]`
+	testUrl = "https://www.google.com"
 }
 
 func setRedisClient() {
