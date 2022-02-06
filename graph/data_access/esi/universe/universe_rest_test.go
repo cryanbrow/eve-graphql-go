@@ -1795,6 +1795,103 @@ func TestSuccessfulSystemIDForName(t *testing.T) {
 	}
 }
 
+func TestFailNilNameTypeIDForName(t *testing.T) {
+	jsonResponse := `{
+		"bryans": [
+		  {
+			"id": 2112625428,
+			"name": "System CCP Zoetrope"
+		  }
+		]
+	  }`
+
+	b := []byte(jsonResponse)
+
+	mockRestHelper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+	restHelper = mockRestHelper
+
+	var testName string = "System CCP Zoetrope"
+
+	_, err := IdForName(&testName, "bryans")
+	if err == nil {
+		t.Error(helpers.NilError)
+	}
+}
+
+func TestFailNilNameIDForName(t *testing.T) {
+	jsonResponse := `{
+		"agents": [
+		  {
+			"id": 2112625428,
+			"name": "System CCP Zoetrope"
+		  }
+		]
+	  }`
+
+	b := []byte(jsonResponse)
+
+	mockRestHelper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+	restHelper = mockRestHelper
+
+	var testName *string = nil
+
+	_, err := IdForName(testName, model.AGENTS)
+	if err == nil {
+		t.Error(helpers.NilError)
+	}
+}
+
+func TestFailRESTFailureIDForName(t *testing.T) {
+	mockRestHelper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+			return nil, nil, errors.New("failure")
+		},
+	}
+	restHelper = mockRestHelper
+
+	var testName string = "bryan"
+
+	_, err := IdForName(&testName, model.AGENTS)
+	if err == nil {
+		t.Error(helpers.NilError)
+	}
+}
+
+func TestFailureUnmarshalIDForName(t *testing.T) {
+	jsonResponse := `{{
+		"regions": [
+		  {
+			"id": 2112625428,
+			"name": "Region CCP Zoetrope"
+		  }
+		]
+	  }`
+
+	b := []byte(jsonResponse)
+
+	mockRestHelper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+	restHelper = mockRestHelper
+
+	var testName string = "Region CCP Zoetrope"
+
+	_, err := IdForName(&testName, model.REGIONS)
+	if err == nil {
+		t.Error(helpers.NilError)
+	}
+}
+
 /***************************************
 *             MOCK SECTION             *
 ***************************************/
