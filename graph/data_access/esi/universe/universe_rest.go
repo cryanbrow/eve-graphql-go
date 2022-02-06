@@ -382,19 +382,6 @@ func IdForName(name *string, nameType string) (int, error) {
 
 }
 
-func ItemTypesByIDs(itemTypes []*int) ([]*model.ItemType, error) {
-	itemTypeDetails := make([]*model.ItemType, 0)
-	for _, element := range itemTypes {
-		itemType, err := ItemTypeByID(element)
-		if err == nil {
-			itemTypeDetails = append(itemTypeDetails, itemType)
-		} else {
-			return nil, err
-		}
-	}
-	return itemTypeDetails, nil
-}
-
 func ItemTypeByID(id *int) (*model.ItemType, error) {
 	var itemType *model.ItemType = new(model.ItemType)
 	if id == nil {
@@ -415,6 +402,19 @@ func ItemTypeByID(id *int) (*model.ItemType, error) {
 	}
 
 	return itemType, nil
+}
+
+func ItemTypesByIDs(itemTypes []*int) ([]*model.ItemType, error) {
+	itemTypeDetails := make([]*model.ItemType, 0)
+	for _, element := range itemTypes {
+		itemType, err := ItemTypeByID(element)
+		if err == nil {
+			itemTypeDetails = append(itemTypeDetails, itemType)
+		} else {
+			return nil, err
+		}
+	}
+	return itemTypeDetails, nil
 }
 
 func MoonDetails(moons []*int) ([]*model.Moon, error) {
