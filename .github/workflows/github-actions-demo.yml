@@ -13,20 +13,22 @@ jobs:
       with:
         go-version: 1.17
 
+    - name: make-output-directory
+      run: mkdir output
+
     - name: Build
       run: go build -v ./...
 
     - name: Test
-      run: go test -v ./...
+      run: go test -v ./... -json > output/test-report.out
 
     - name: cover
       run: |
-        go test -race -coverpkg $(go list ./... | grep -v generated | tr '\n' ',') -coverprofile cover.out ./...
-        go tool cover -func=cover.out | grep total
-        mkdir output
-        go tool cover --html=cover.out -o output/coverage.html
+        go test -race -coverpkg $(go list ./... | grep -v generated | tr '\n' ',') -coverprofile output/cover.out ./...
+        go tool cover -func=output/cover.out | grep total
+        go tool cover --html=output/cover.out -o output/coverage.html
 
-    - name: Declare some variables
+    - name: declare-sha-variable
       id: vars
       shell: bash
       run: |

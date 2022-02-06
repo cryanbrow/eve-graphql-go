@@ -119,7 +119,7 @@ func BloodlineByID(id *int) (*model.Bloodline, error) {
 	var bloodline *model.Bloodline = new(model.Bloodline)
 	var err error
 	if id == nil {
-		return nil, nil
+		return nil, errors.New(helpers.NilId)
 	}
 
 	inCache, result := RedisClient.CheckRedisCache(bloodlineRedisKey + strconv.Itoa(*id))

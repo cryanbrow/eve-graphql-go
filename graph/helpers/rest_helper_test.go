@@ -3,7 +3,7 @@ package helpers
 import (
 	"bytes"
 	"errors"
-	"io"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -12,13 +12,11 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 )
 
-var jsonResponse string = `[{
-	"full_name": "mock-repo"
-   }]`
-
-var r io.ReadCloser = ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
+var jsonResponse string
 
 func TestSuccessfulMakeCachingRESTCall(t *testing.T) {
+	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
+	setRedisClient()
 	Client = &MockClient{
 		MockDo: func(*http.Request) (*http.Response, error) {
 			return &http.Response{
@@ -46,6 +44,7 @@ func TestSuccessfulMakeCachingRESTCall(t *testing.T) {
 }
 
 func TestInCacheSuccessfulMakeCachingRESTCall(t *testing.T) {
+	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
 	Client = &MockClient{
 		MockDo: func(*http.Request) (*http.Response, error) {
 			return &http.Response{
@@ -54,7 +53,7 @@ func TestInCacheSuccessfulMakeCachingRESTCall(t *testing.T) {
 			}, nil
 		},
 	}
-	Redis_client = &MockRedisClient{
+	RedisClientVar = &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {
 			//Method returns nothing so needs no implementation
 		},
@@ -78,6 +77,8 @@ func TestInCacheSuccessfulMakeCachingRESTCall(t *testing.T) {
 }
 
 func TestSuccessfulWithDefaultParamsMakeCachingRESTCall(t *testing.T) {
+	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
+	setRedisClient()
 	Client = &MockClient{
 		MockDo: func(*http.Request) (*http.Response, error) {
 			return &http.Response{
@@ -97,8 +98,10 @@ func TestSuccessfulWithDefaultParamsMakeCachingRESTCall(t *testing.T) {
 
 	url := "https://www.google.com"
 	var buffer bytes.Buffer
-	bytes, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
-	if string(bytes) != jsonResponse {
+	bytes4, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
+	byteString := string(bytes4)
+	if byteString != jsonResponse {
+		fmt.Printf("expected: %s : actual %s", jsonResponse, byteString)
 		t.Error("Failed to return correct byte array.")
 	}
 	if err != nil {
@@ -107,6 +110,8 @@ func TestSuccessfulWithDefaultParamsMakeCachingRESTCall(t *testing.T) {
 }
 
 func TestSuccessfulWithQueryParamsMakeCachingRESTCall(t *testing.T) {
+	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
+	setRedisClient()
 	Client = &MockClient{
 		MockDo: func(*http.Request) (*http.Response, error) {
 			return &http.Response{
@@ -128,6 +133,8 @@ func TestSuccessfulWithQueryParamsMakeCachingRESTCall(t *testing.T) {
 }
 
 func TestUnparseableURLMakeCachingRESTCall(t *testing.T) {
+	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
+	setRedisClient()
 	Client = &MockClient{
 		MockDo: func(*http.Request) (*http.Response, error) {
 			return &http.Response{
@@ -148,6 +155,8 @@ func TestUnparseableURLMakeCachingRESTCall(t *testing.T) {
 }
 
 func TestNewRequestFailureMakeCachingRESTCall(t *testing.T) {
+	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
+	setRedisClient()
 	Client = &MockClient{
 		MockDo: func(*http.Request) (*http.Response, error) {
 			return &http.Response{
@@ -166,6 +175,8 @@ func TestNewRequestFailureMakeCachingRESTCall(t *testing.T) {
 }
 
 func TestDoFailureMakeCachingRESTCall(t *testing.T) {
+	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
+	setRedisClient()
 	Client = &MockClient{
 		MockDo: func(*http.Request) (*http.Response, error) {
 			return &http.Response{
@@ -184,6 +195,8 @@ func TestDoFailureMakeCachingRESTCall(t *testing.T) {
 }
 
 func Test404FailureMakeCachingRESTCall(t *testing.T) {
+	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
+	setRedisClient()
 	Client = &MockClient{
 		MockDo: func(*http.Request) (*http.Response, error) {
 			return &http.Response{
@@ -227,7 +240,7 @@ func (m *MockRedisClient) CheckRedisCache(key string) (bool, []byte) {
 }
 
 type RestHelper interface {
-	MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error)
+	MakeCachingRESTCall(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error)
 }
 
 var (
@@ -235,8 +248,17 @@ var (
 )
 
 func init() {
-	restHelper = &RestHelperClient{
-		//Method returns nothing so needs no implementation
-	}
+	restHelper = &RestHelperClient{}
+	jsonResponse = `[{
+		"full_name": "mock-repo"
+	   }]`
+}
 
+func setRedisClient() {
+	RedisClientVar = &MockRedisClient{
+		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockCheck: func(key string) (bool, []byte) {
+			return false, make([]byte, 0)
+		},
+	}
 }

@@ -16,7 +16,7 @@ type RestHelperClient struct {
 }
 
 func (r *RestHelperClient) MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
-	inCache, result := Redis_client.CheckRedisCache(redisQueryKey)
+	inCache, result := RedisClientVar.CheckRedisCache(redisQueryKey)
 	if !inCache {
 		crest_url, err := url.Parse(baseUrl)
 		if err != nil {
@@ -56,7 +56,7 @@ func (r *RestHelperClient) MakeCachingRESTCall(baseUrl string, verb string, body
 			log.WithFields(log.Fields{"url": url}).Errorf("Could not read response for body. : %v", err)
 			return make([]byte, 0), nil, err
 		}
-		Redis_client.AddToRedisCache(redisQueryKey, responseBytes, EsiTtlToMillis(h.Get("expires")))
+		RedisClientVar.AddToRedisCache(redisQueryKey, responseBytes, EsiTtlToMillis(h.Get("expires")))
 		return responseBytes, h, nil
 	}
 	return result, nil, nil
@@ -72,11 +72,11 @@ type RedisClient interface {
 }
 
 var (
-	Client       HTTPClient
-	Redis_client RedisClient
+	Client         HTTPClient
+	RedisClientVar RedisClient
 )
 
 func SetupRestHelper() {
 	Client = &http.Client{}
-	Redis_client = &cache.Client{}
+	RedisClientVar = &cache.Client{}
 }
