@@ -457,7 +457,7 @@ func TestSuccessfulNotInCacheBloodlineByID(t *testing.T) {
 
 func TestFailNilIDBloodlineByID(t *testing.T) {
 	var testId *int = nil
-	_, err := AncestryByID(testId)
+	_, err := BloodlineByID(testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
