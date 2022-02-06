@@ -256,7 +256,9 @@ func init() {
 
 func setRedisClient() {
 	RedisClientVar = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {},
+		MockAdd: func(key string, value []byte, ttl int64) {
+			//Method returns nothing so needs no implementation
+		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, make([]byte, 0)
 		},
