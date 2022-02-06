@@ -56,7 +56,7 @@ func (r *RestHelperClient) MakeCachingRESTCall(baseUrl string, verb string, body
 			log.WithFields(log.Fields{"url": url}).Errorf("Could not read response for body. : %v", err)
 			return make([]byte, 0), nil, err
 		}
-		Redis_client.AddToRedisCache(redisQueryKey, responseBytes, ESI_ttl_to_millis(h.Get("expires")))
+		Redis_client.AddToRedisCache(redisQueryKey, responseBytes, EsiTtlToMillis(h.Get("expires")))
 		return responseBytes, h, nil
 	}
 	return result, nil, nil

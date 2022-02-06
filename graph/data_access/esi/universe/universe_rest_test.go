@@ -463,7 +463,7 @@ func TestFailNilIDBloodlineByID(t *testing.T) {
 	}
 }
 
-func TestFailUnmarshalInCacheBBloodlineByID(t *testing.T) {
+func TestFailUnmarshalInCacheBloodlineByID(t *testing.T) {
 	jsonResponse := `{{
 		"bloodline_id": 5,
 		"charisma": 3,
@@ -980,7 +980,7 @@ func TestSuccessfulInCacheFactionByID(t *testing.T) {
 	}
 }
 
-func TestSuccessfulNotInCache_FactionByID(t *testing.T) {
+func TestSuccessfulNotInCacheFactionByID(t *testing.T) {
 	var ancestriesJsonResponse string = `[
 		{
 			"corporation_id": 1000084,

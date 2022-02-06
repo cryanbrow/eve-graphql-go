@@ -7,11 +7,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func ESI_ttl_to_millis(esi_time string) int64 {
-	log.WithFields(log.Fields{"time": esi_time}).Debugf("Parsing Time : %s", esi_time)
-	t, err := time.Parse(time.RFC1123, esi_time)
+func EsiTtlToMillis(esiTime string) int64 {
+	log.WithFields(log.Fields{"time": esiTime}).Debugf("Parsing Time : %s", esiTime)
+	t, err := time.Parse(time.RFC1123, esiTime)
 	if err != nil {
-		log.WithFields(log.Fields{"time": esi_time}).Errorf("Failed to Parse Time with Error : %v", err)
+		log.WithFields(log.Fields{"time": esiTime}).Errorf("Failed to Parse Time with Error : %v", err)
 		return 43200000
 	}
 

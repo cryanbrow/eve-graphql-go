@@ -11,8 +11,8 @@ import (
 func TestEsiTtlToMillisSuccess(t *testing.T) {
 	now := time.Now().UTC()
 	now = now.Add(time.Millisecond * 50000)
-	now_string := now.Format(time.RFC1123)
-	result := ESI_ttl_to_millis(now_string)
+	nowString := now.Format(time.RFC1123)
+	result := EsiTtlToMillis(nowString)
 	if result > 0 {
 		return
 	} else {
@@ -23,9 +23,9 @@ func TestEsiTtlToMillisSuccess(t *testing.T) {
 func TestEsiTtlToMillisFail(t *testing.T) {
 	now := time.Now().UTC()
 	now = now.Add(time.Millisecond * 50000)
-	now_string := now.Format(time.RFC1123)
-	now_string = now_string + "GARBAGE"
-	result := ESI_ttl_to_millis(now_string)
+	nowString := now.Format(time.RFC1123)
+	nowString = nowString + "GARBAGE"
+	result := EsiTtlToMillis(nowString)
 	if result == 43200000 {
 		return
 	} else {
