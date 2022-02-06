@@ -535,7 +535,7 @@ func raceByArray(id *int) (*model.Race, error) {
 func RegionByID(id *int) (*model.Region, error) {
 	var region *model.Region = new(model.Region)
 	if id == nil {
-		return nil, nil
+		return nil, errors.New(helpers.NilId)
 	}
 	baseUrl := fmt.Sprintf("%s/universe/regions/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
 	redisKey := "RegionByID:" + strconv.Itoa(*id)
