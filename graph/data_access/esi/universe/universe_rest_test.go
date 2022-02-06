@@ -38,11 +38,11 @@ func TestSuccessfulInCacheAncestryByID(t *testing.T) {
 	var testId int = 1
 	resp, err := AncestryByID(&testId)
 	if err != nil {
-		t.Errorf("Error was not nil, %v", err)
+		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
 	var responseName string = "Activists"
 	if *resp.Name != responseName {
-		t.Errorf("Response was not as expected")
+		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 }
 
@@ -78,11 +78,11 @@ func TestSuccessfulNotInCacheAncestryByID(t *testing.T) {
 	var testId int = 13
 	resp, err := AncestryByID(&testId)
 	if err != nil {
-		t.Errorf("Error was not nil, %v", err)
+		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
 	var responseName string = "Activists"
 	if *resp.Name != responseName {
-		t.Errorf("Response was not as expected")
+		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 }
 
@@ -179,7 +179,7 @@ func TestFailRestNotInCacheAncestryByID(t *testing.T) {
 	var testId int = 13
 	_, err := AncestryByID(&testId)
 	if err == nil {
-		t.Errorf("Error was nil")
+		t.Errorf(helpers.NilError)
 	}
 }
 
@@ -214,11 +214,11 @@ func TestSuccessfulAsteroidBeltDetails(t *testing.T) {
 
 	resp, err := AsteroidBeltDetails(ids)
 	if err != nil {
-		t.Errorf("Error was not nil, %v", err)
+		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
 	var responseName string = "Inaro IX - Asteroid Belt 1"
 	if *resp[0].Name != responseName {
-		t.Errorf("Response was not as expected")
+		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 }
 
@@ -249,7 +249,7 @@ func TestFailNilIDAsteroidBeltDetails(t *testing.T) {
 
 	_, err := AsteroidBeltDetails(ids)
 	if err == nil {
-		t.Errorf("Error was nil")
+		t.Errorf(helpers.NilError)
 	}
 }
 
@@ -281,11 +281,11 @@ func TestSuccessfulAsteroidBeltByID(t *testing.T) {
 
 	resp, err := AsteroidBeltByID(&testId)
 	if err != nil {
-		t.Errorf("Error was not nil, %v", err)
+		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
 	var responseName string = "Inaro IX - Asteroid Belt 1"
 	if *resp.Name != responseName {
-		t.Errorf("Response was not as expected")
+		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 
 }
@@ -316,7 +316,7 @@ func TestFailNilIDAsteroidBeltByID(t *testing.T) {
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
-		t.Errorf("Wrong error text: %s", err.Error())
+		t.Errorf(helpers.WrongErrorText, err.Error())
 	}
 
 }
@@ -335,7 +335,7 @@ func TestFailRestCallAsteroidBeltByID(t *testing.T) {
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
-		t.Errorf("Wrong error text: %s", err.Error())
+		t.Errorf(helpers.WrongErrorText, err.Error())
 	}
 
 }
@@ -402,11 +402,11 @@ func TestSuccessfulInCacheBloodlineByID(t *testing.T) {
 	var testId int = 1
 	resp, err := BloodlineByID(&testId)
 	if err != nil {
-		t.Errorf("Error was not nil, %v", err)
+		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
 	var responseName string = "Amarr"
 	if *resp.Name != responseName {
-		t.Errorf("Response was not as expected")
+		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 }
 
@@ -447,11 +447,11 @@ func TestSuccessfulNotInCacheBloodlineByID(t *testing.T) {
 	var testId int = 5
 	resp, err := BloodlineByID(&testId)
 	if err != nil {
-		t.Errorf("Error was not nil, %v", err)
+		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
 	var responseName string = "Amarr"
 	if *resp.Name != responseName {
-		t.Errorf("Response was not as expected")
+		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 }
 
@@ -558,7 +558,7 @@ func TestFailRestNotInCacheBloodlineByID(t *testing.T) {
 	var testId int = 5
 	_, err := BloodlineByID(&testId)
 	if err == nil {
-		t.Errorf("Error was nil")
+		t.Errorf(helpers.NilError)
 	}
 }
 
@@ -597,11 +597,11 @@ func TestSuccessfulCategoryByID(t *testing.T) {
 
 	resp, err := CategoryByID(&testId)
 	if err != nil {
-		t.Errorf("Error was not nil, %v", err)
+		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
 	var responseName string = "Accessories"
 	if *resp.Name != responseName {
-		t.Errorf("Response was not as expected")
+		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 
 }
@@ -639,7 +639,7 @@ func TestFailNilIDCategoryByID(t *testing.T) {
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
-		t.Errorf("Wrong error text: %s", err.Error())
+		t.Errorf(helpers.WrongErrorText, err.Error())
 	}
 
 }
@@ -658,7 +658,7 @@ func TestFailRestCallCategoryByID(t *testing.T) {
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
-		t.Errorf("Wrong error text: %s", err.Error())
+		t.Errorf(helpers.WrongErrorText, err.Error())
 	}
 
 }
@@ -741,11 +741,11 @@ func TestSuccessfulConstellationsByIDs(t *testing.T) {
 
 	resp, err := ConstellationsByIDs(ids)
 	if err != nil {
-		t.Errorf("Error was not nil, %v", err)
+		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
 	var responseName string = "Ihilakken"
 	if *resp[0].Name != responseName {
-		t.Errorf("Response was not as expected")
+		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 }
 
@@ -787,7 +787,7 @@ func TestFailNilIDConstellationsByIDs(t *testing.T) {
 
 	_, err := ConstellationsByIDs(ids)
 	if err == nil {
-		t.Errorf("Error was nil")
+		t.Errorf(helpers.NilError)
 	}
 }
 
@@ -830,11 +830,11 @@ func TestSuccessfulConstellationByID(t *testing.T) {
 
 	resp, err := ConstellationByID(&testId)
 	if err != nil {
-		t.Errorf("Error was not nil, %v", err)
+		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
 	var responseName string = "Ihilakken"
 	if *resp.Name != responseName {
-		t.Errorf("Response was not as expected")
+		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 
 }
@@ -876,7 +876,7 @@ func TestFailNilIDConstellationByID(t *testing.T) {
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
-		t.Errorf("Wrong error text: %s", err.Error())
+		t.Errorf(helpers.WrongErrorText, err.Error())
 	}
 
 }
@@ -895,7 +895,7 @@ func TestFailRestCallConstellationByID(t *testing.T) {
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
-		t.Errorf("Wrong error text: %s", err.Error())
+		t.Errorf(helpers.WrongErrorText, err.Error())
 	}
 
 }
@@ -972,11 +972,11 @@ func TestSuccessfulInCacheFactionByID(t *testing.T) {
 	var testId int = 500003
 	resp, err := FactionByID(&testId)
 	if err != nil {
-		t.Errorf("Error was not nil, %v", err)
+		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
 	var responseName string = "Amarr Empire"
 	if *resp.Name != responseName {
-		t.Errorf("Response was not as expected")
+		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 }
 
@@ -1016,11 +1016,11 @@ func TestSuccessfulNotInCacheFactionByID(t *testing.T) {
 	var testId int = 500003
 	resp, err := FactionByID(&testId)
 	if err != nil {
-		t.Errorf("Error was not nil, %v", err)
+		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
 	var responseName string = "Amarr Empire"
 	if *resp.Name != responseName {
-		t.Errorf("Response was not as expected")
+		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 }
 
@@ -1125,7 +1125,7 @@ func TestFailRestNotInCacheFactionByID(t *testing.T) {
 	var testId int = 500003
 	_, err := FactionByID(&testId)
 	if err == nil {
-		t.Errorf("Error was nil")
+		t.Errorf(helpers.NilError)
 	}
 }
 
@@ -1154,11 +1154,11 @@ func TestSuccessfulGraphicByID(t *testing.T) {
 
 	resp, err := GraphicByID(&testId)
 	if err != nil {
-		t.Errorf("Error was not nil, %v", err)
+		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
 	var responseName string = "amarrnavy"
 	if *resp.SofFationName != responseName {
-		t.Errorf("Response was not as expected")
+		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 
 }
@@ -1186,7 +1186,7 @@ func TestFailNilIDGraphicByID(t *testing.T) {
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
-		t.Errorf("Wrong error text: %s", err.Error())
+		t.Errorf(helpers.WrongErrorText, err.Error())
 	}
 
 }
@@ -1205,7 +1205,7 @@ func TestFailRestCallGraphicByID(t *testing.T) {
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
-		t.Errorf("Wrong error text: %s", err.Error())
+		t.Errorf(helpers.WrongErrorText, err.Error())
 	}
 
 }
@@ -1342,11 +1342,11 @@ func TestSuccessfulGroupByID(t *testing.T) {
 
 	resp, err := GroupByID(&testId)
 	if err != nil {
-		t.Errorf("Error was not nil, %v", err)
+		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
 	var responseName string = "Frigate"
 	if *resp.Name != responseName {
-		t.Errorf("Response was not as expected")
+		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 
 }
@@ -1455,7 +1455,7 @@ func TestFailNilIDGroupByID(t *testing.T) {
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
-		t.Errorf("Wrong error text: %s", err.Error())
+		t.Errorf(helpers.WrongErrorText, err.Error())
 	}
 
 }
@@ -1474,7 +1474,7 @@ func TestFailRestCallGroupByID(t *testing.T) {
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
-		t.Errorf("Wrong error text: %s", err.Error())
+		t.Errorf(helpers.WrongErrorText, err.Error())
 	}
 
 }
