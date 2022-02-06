@@ -478,7 +478,7 @@ func RaceByID(id *int) (*model.Race, error) {
 	var race *model.Race = new(model.Race)
 	var err error
 	if id == nil {
-		return nil, nil
+		return nil, errors.New(helpers.NilId)
 	}
 
 	inCache, result := RedisClient.CheckRedisCache(raceRedisKey + strconv.Itoa(*id))
