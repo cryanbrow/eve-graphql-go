@@ -18,6 +18,22 @@ var jsonResponse string
 var testUrl string
 
 func TestSuccessfulMakeCachingRESTCall(t *testing.T) {
+	queryParams, shouldReturn := setupSuccessfulRESTCall()
+	if shouldReturn {
+		return
+	}
+
+	var buffer bytes.Buffer
+	bytes, _, err := restHelper.MakeCachingRESTCall(testUrl, http.MethodGet, buffer, queryParams, "himom")
+	if string(bytes) != jsonResponse {
+		t.Error(byteArrayFail)
+	}
+	if err != nil {
+		t.Errorf(ErrorWasNotNil, err)
+	}
+}
+
+func setupSuccessfulRESTCall() ([]configuration.Key_value, bool) {
 	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
 	setRedisClient()
 	Client = &MockClient{
@@ -34,15 +50,7 @@ func TestSuccessfulMakeCachingRESTCall(t *testing.T) {
 	kv.Key = "page"
 	kv.Value = strconv.Itoa(1)
 	queryParams = append(queryParams, *kv)
-
-	var buffer bytes.Buffer
-	bytes, _, err := restHelper.MakeCachingRESTCall(testUrl, http.MethodGet, buffer, queryParams, "himom")
-	if string(bytes) != jsonResponse {
-		t.Error(byteArrayFail)
-	}
-	if err != nil {
-		t.Errorf(ErrorWasNotNil, err)
-	}
+	return queryParams, false
 }
 
 func TestInCacheSuccessfulMakeCachingRESTCall(t *testing.T) {
@@ -78,22 +86,10 @@ func TestInCacheSuccessfulMakeCachingRESTCall(t *testing.T) {
 }
 
 func TestSuccessfulWithDefaultParamsMakeCachingRESTCall(t *testing.T) {
-	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
-	setRedisClient()
-	Client = &MockClient{
-		MockDo: func(*http.Request) (*http.Response, error) {
-			return &http.Response{
-				StatusCode: 200,
-				Body:       r,
-			}, nil
-		},
+	queryParams, shouldReturn := setupSuccessfulRESTCall()
+	if shouldReturn {
+		return
 	}
-
-	queryParams := make([]configuration.Key_value, 2)
-	kv := new(configuration.Key_value)
-	kv.Key = "page"
-	kv.Value = strconv.Itoa(1)
-	queryParams = append(queryParams, *kv)
 
 	configuration.AppConfig.Esi.Default.QueryParams = queryParams
 
