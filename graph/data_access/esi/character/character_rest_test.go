@@ -25,7 +25,7 @@ func TestSuccessfulCharacterByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		CharacterMockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -59,7 +59,7 @@ func TestFailNilIDCharacterByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		CharacterMockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -78,7 +78,7 @@ func TestFailNilIDCharacterByID(t *testing.T) {
 
 func TestFailRestCallCharacterByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		CharacterMockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -110,7 +110,7 @@ func TestFailUnmarshalCharacterByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		CharacterMockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -125,12 +125,12 @@ func TestFailUnmarshalCharacterByID(t *testing.T) {
 
 }
 
-type MockMakeCachingRESTCallType func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error)
+type CharacterMockMakeCachingRESTCallType func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error)
 
 type MockRestHelper struct {
-	MockMakeCachingRESTCall MockMakeCachingRESTCallType
+	CharacterMockMakeCachingRESTCall CharacterMockMakeCachingRESTCallType
 }
 
 func (m *MockRestHelper) MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
-	return m.MockMakeCachingRESTCall(baseUrl, verb, body, additionalQueryParams, redisQueryKey)
+	return m.CharacterMockMakeCachingRESTCall(baseUrl, verb, body, additionalQueryParams, redisQueryKey)
 }
