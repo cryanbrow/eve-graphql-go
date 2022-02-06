@@ -74,11 +74,11 @@ func TestSuccessfulNotInCacheAncestryByID(t *testing.T) {
 	}
 }
 
-func setupNotInCacheRedis(ancestriesJsonResponse string) bool {
-	b := []byte(ancestriesJsonResponse)
+func setupNotInCacheRedis(jsonResponse string) bool {
+	b := []byte(jsonResponse)
 	mockRedisClient := &MockRedisClient{
 		MockAdd: func(key string, value []byte, ttl int64) {
-
+			//This method does nothing when mocked
 		},
 		MockCheck: func(key string) (bool, []byte) {
 			return false, nil
@@ -142,23 +142,10 @@ func TestFailUnmarshalNotInCacheAncestryByID(t *testing.T) {
 	  "short_description": "Making the universe a better place, one fight at a time."
 	}
   ]`
-	b := []byte(ancestriesJsonResponse)
-	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {
-			//Method returns nothing so needs no implementation
-		},
-		MockCheck: func(key string) (bool, []byte) {
-			return false, nil
-		},
+	shouldReturn := setupNotInCacheRedis(ancestriesJsonResponse)
+	if shouldReturn {
+		return
 	}
-	RedisClient = mockRedisClient
-
-	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
-			return b, nil, nil
-		},
-	}
-	restHelper = mockRestHelper
 
 	var testId int = 13
 	_, err := AncestryByID(&testId)
@@ -508,23 +495,10 @@ func TestFailUnmarshalNotInCacheBloodlineByID(t *testing.T) {
 		"willpower": 10
 	  }
   ]`
-	b := []byte(ancestriesJsonResponse)
-	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {
-			//Method returns nothing so needs no implementation
-		},
-		MockCheck: func(key string) (bool, []byte) {
-			return false, nil
-		},
+	shouldReturn := setupNotInCacheRedis(ancestriesJsonResponse)
+	if shouldReturn {
+		return
 	}
-	RedisClient = mockRedisClient
-
-	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
-			return b, nil, nil
-		},
-	}
-	restHelper = mockRestHelper
 
 	var testId int = 5
 	_, err := BloodlineByID(&testId)
@@ -1062,23 +1036,10 @@ func TestFailUnmarshalNotInCacheFactionByID(t *testing.T) {
 		"station_system_count": 508
 	  }
   ]`
-	b := []byte(ancestriesJsonResponse)
-	mockRedisClient := &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {
-			//Method returns nothing so needs no implementation
-		},
-		MockCheck: func(key string) (bool, []byte) {
-			return false, nil
-		},
+	shouldReturn := setupNotInCacheRedis(ancestriesJsonResponse)
+	if shouldReturn {
+		return
 	}
-	RedisClient = mockRedisClient
-
-	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
-			return b, nil, nil
-		},
-	}
-	restHelper = mockRestHelper
 
 	var testId int = 500003
 	_, err := FactionByID(&testId)
