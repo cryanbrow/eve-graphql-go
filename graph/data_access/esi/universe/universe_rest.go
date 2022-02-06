@@ -329,7 +329,7 @@ func GroupByID(id *int) (*model.Group, error) {
 	return group, nil
 }
 
-func IdForName(name *string, name_type string) (int, error) {
+func IdForName(name *string, nameType string) (int, error) {
 	var ids *local_model.Names = new(local_model.Names)
 	baseUrl := fmt.Sprintf("%s/universe/ids/", configuration.AppConfig.Esi.Default.Url)
 	if name == nil {
@@ -355,7 +355,7 @@ func IdForName(name *string, name_type string) (int, error) {
 		return 0, err
 	}
 
-	switch name_type {
+	switch nameType {
 	case local_model.AGENTS:
 		return *ids.Agents[0].ID, nil
 	case local_model.ALLIANCES:
