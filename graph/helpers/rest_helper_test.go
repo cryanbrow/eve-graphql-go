@@ -3,6 +3,7 @@ package helpers
 import (
 	"bytes"
 	"errors"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -11,20 +12,13 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 )
 
-func TestSuccessfulMakeCachingRESTCall(t *testing.T) {
-	Redis_client = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {
-			//Method returns nothing so needs no implementation
-		},
-		MockCheck: func(key string) (bool, []byte) {
-			return false, make([]byte, 0)
-		},
-	}
-	jsonResponse := `[{
-		"full_name": "mock-repo"
-	   }]`
-	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
+var jsonResponse string = `[{
+	"full_name": "mock-repo"
+   }]`
 
+var r io.ReadCloser = ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
+
+func TestSuccessfulMakeCachingRESTCall(t *testing.T) {
 	Client = &MockClient{
 		MockDo: func(*http.Request) (*http.Response, error) {
 			return &http.Response{
@@ -52,11 +46,6 @@ func TestSuccessfulMakeCachingRESTCall(t *testing.T) {
 }
 
 func TestInCacheSuccessfulMakeCachingRESTCall(t *testing.T) {
-	jsonResponse := `[{
-		"full_name": "mock-repo"
-	   }]`
-	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
-
 	Client = &MockClient{
 		MockDo: func(*http.Request) (*http.Response, error) {
 			return &http.Response{
@@ -89,19 +78,6 @@ func TestInCacheSuccessfulMakeCachingRESTCall(t *testing.T) {
 }
 
 func TestSuccessfulWithDefaultParamsMakeCachingRESTCall(t *testing.T) {
-	Redis_client = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {
-			//Method returns nothing so needs no implementation
-		},
-		MockCheck: func(key string) (bool, []byte) {
-			return false, make([]byte, 0)
-		},
-	}
-	jsonResponse := `[{
-		"full_name": "mock-repo"
-	   }]`
-	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
-
 	Client = &MockClient{
 		MockDo: func(*http.Request) (*http.Response, error) {
 			return &http.Response{
@@ -131,19 +107,6 @@ func TestSuccessfulWithDefaultParamsMakeCachingRESTCall(t *testing.T) {
 }
 
 func TestSuccessfulWithQueryParamsMakeCachingRESTCall(t *testing.T) {
-	Redis_client = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {
-			//Method returns nothing so needs no implementation
-		},
-		MockCheck: func(key string) (bool, []byte) {
-			return false, make([]byte, 0)
-		},
-	}
-	jsonResponse := `[{
-		"full_name": "mock-repo"
-	   }]`
-	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
-
 	Client = &MockClient{
 		MockDo: func(*http.Request) (*http.Response, error) {
 			return &http.Response{
@@ -165,19 +128,6 @@ func TestSuccessfulWithQueryParamsMakeCachingRESTCall(t *testing.T) {
 }
 
 func TestUnparseableURLMakeCachingRESTCall(t *testing.T) {
-	Redis_client = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {
-			//Method returns nothing so needs no implementation
-		},
-		MockCheck: func(key string) (bool, []byte) {
-			return false, make([]byte, 0)
-		},
-	}
-	jsonResponse := `[{
-		"full_name": "mock-repo"
-	   }]`
-	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
-
 	Client = &MockClient{
 		MockDo: func(*http.Request) (*http.Response, error) {
 			return &http.Response{
@@ -198,19 +148,6 @@ func TestUnparseableURLMakeCachingRESTCall(t *testing.T) {
 }
 
 func TestNewRequestFailureMakeCachingRESTCall(t *testing.T) {
-	Redis_client = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {
-			//Method returns nothing so needs no implementation
-		},
-		MockCheck: func(key string) (bool, []byte) {
-			return false, make([]byte, 0)
-		},
-	}
-	jsonResponse := `[{
-		"full_name": "mock-repo"
-	   }]`
-	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
-
 	Client = &MockClient{
 		MockDo: func(*http.Request) (*http.Response, error) {
 			return &http.Response{
@@ -229,19 +166,6 @@ func TestNewRequestFailureMakeCachingRESTCall(t *testing.T) {
 }
 
 func TestDoFailureMakeCachingRESTCall(t *testing.T) {
-	Redis_client = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {
-			//Method returns nothing so needs no implementation
-		},
-		MockCheck: func(key string) (bool, []byte) {
-			return false, make([]byte, 0)
-		},
-	}
-	jsonResponse := `[{
-		"full_name": "mock-repo"
-	   }]`
-	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
-
 	Client = &MockClient{
 		MockDo: func(*http.Request) (*http.Response, error) {
 			return &http.Response{
@@ -260,19 +184,6 @@ func TestDoFailureMakeCachingRESTCall(t *testing.T) {
 }
 
 func Test404FailureMakeCachingRESTCall(t *testing.T) {
-	Redis_client = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {
-			//Method returns nothing so needs no implementation
-		},
-		MockCheck: func(key string) (bool, []byte) {
-			return false, make([]byte, 0)
-		},
-	}
-	jsonResponse := `[{
-		"full_name": "mock-repo"
-	   }]`
-	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
-
 	Client = &MockClient{
 		MockDo: func(*http.Request) (*http.Response, error) {
 			return &http.Response{
@@ -327,4 +238,5 @@ func init() {
 	restHelper = &RestHelperClient{
 		//Method returns nothing so needs no implementation
 	}
+
 }

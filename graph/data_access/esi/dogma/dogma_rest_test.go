@@ -10,6 +10,8 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
+const wrongError string = "Wrong error text: %s"
+
 func TestSuccessfulDogmaEffectByID(t *testing.T) {
 	jsonResponse := `{
 		"description": "",
@@ -85,7 +87,7 @@ func TestFailNilIDDogmaEffectByID(t *testing.T) {
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
-		t.Errorf("Wrong error text: %s", err.Error())
+		t.Errorf(wrongError, err.Error())
 	}
 }
 
@@ -103,7 +105,7 @@ func TestFailRestCallDogmaEffectByID(t *testing.T) {
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
-		t.Errorf("Wrong error text: %s", err.Error())
+		t.Errorf(wrongError, err.Error())
 	}
 }
 
@@ -206,7 +208,7 @@ func TestFailNilIDDogmaAttributeByID(t *testing.T) {
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
-		t.Errorf("Wrong error text: %s", err.Error())
+		t.Errorf(wrongError, err.Error())
 	}
 
 }
@@ -225,7 +227,7 @@ func TestFailRestCallDogmaAttributeByID(t *testing.T) {
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
-		t.Errorf("Wrong error text: %s", err.Error())
+		t.Errorf(wrongError, err.Error())
 	}
 
 }
