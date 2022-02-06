@@ -32,7 +32,7 @@ jobs:
       run: |
         echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
-    - name: push-coverage-to-gitlab-pages
+    - name: push-coverage-to-gitlab-pages-latest
       uses: cpina/github-action-push-to-another-repository@main
       env:
         API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
@@ -44,7 +44,7 @@ jobs:
         target-branch: main
         target-directory: 'eve-graphql-go/latest'
     
-    - name: push-coverage-to-gitlab-pages
+    - name: push-coverage-to-gitlab-pages-hash
       uses: cpina/github-action-push-to-another-repository@main
       env:
         API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
@@ -55,3 +55,9 @@ jobs:
         user-email: cryanbrow@gmail.com
         target-branch: main
         target-directory: 'eve-graphql-go/${{ steps.vars.outputs.sha_short }}'
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
