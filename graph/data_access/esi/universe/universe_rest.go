@@ -611,7 +611,7 @@ func StargateByID(id *int) (*model.Stargate, error) {
 	return stargate, nil
 }
 
-func StationByArray(ids []*int) ([]*model.Station, error) {
+func StationsByIDs(ids []*int) ([]*model.Station, error) {
 	stationDetails := make([]*model.Station, 0)
 	for _, element := range ids {
 		station, err := StationByID(element)
@@ -649,7 +649,7 @@ func StationByID(id *int) (*model.Station, error) {
 	return station, nil
 }
 
-func SystemByArray(ids []*int) ([]*model.System, error) {
+func SystemsByIDs(ids []*int) ([]*model.System, error) {
 	systemDetails := make([]*model.System, 0)
 	for _, element := range ids {
 		system, err := SystemByID(element)

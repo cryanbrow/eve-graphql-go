@@ -69,7 +69,7 @@ func (r *constellationResolver) Region(ctx context.Context, obj *model.Constella
 }
 
 func (r *constellationResolver) SolarSystems(ctx context.Context, obj *model.Constellation) ([]*model.System, error) {
-	return universe.SystemByArray(obj.Systems)
+	return universe.SystemsByIDs(obj.Systems)
 }
 
 func (r *corporationResolver) Alliance(ctx context.Context, obj *model.Corporation) (*model.Alliance, error) {
@@ -277,7 +277,7 @@ func (r *systemResolver) StargateList(ctx context.Context, obj *model.System) ([
 }
 
 func (r *systemResolver) StationList(ctx context.Context, obj *model.System) ([]*model.Station, error) {
-	return universe.StationByArray(obj.Stations)
+	return universe.StationsByIDs(obj.Stations)
 }
 
 func (r *system_planetResolver) AsteroidBeltsProperties(ctx context.Context, obj *model.SystemPlanet) ([]*model.AsteroidBelt, error) {

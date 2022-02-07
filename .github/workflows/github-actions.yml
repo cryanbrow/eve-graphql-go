@@ -10,7 +10,7 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Set up Go
+    - name: set-up-go
       uses: actions/setup-go@v2
       with:
         go-version: 1.17
@@ -18,10 +18,10 @@ jobs:
     - name: make-output-directory
       run: mkdir output
 
-    - name: Build
+    - name: build
       run: go build -v ./...
 
-    - name: Test
+    - name: test
       run: go test -v ./... -json > output/test-report.out
 
     - name: cover
@@ -30,13 +30,7 @@ jobs:
         go tool cover -func=output/cover.out | grep total
         go tool cover --html=output/cover.out -o output/coverage.html
 
-    - name: declare-sha-variable
-      id: vars
-      shell: bash
-      run: |
-        echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-
-    - name: SonarCloud Scan
+    - name: sonar-cloud-scan
       uses: SonarSource/sonarcloud-github-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
