@@ -1,0 +1,65 @@
+package universe
+
+import (
+	"bytes"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
+
+	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
+	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
+	local_model "github.com/cryanbrow/eve-graphql-go/graph/model"
+	log "github.com/sirupsen/logrus"
+)
+
+func IdForName(name *string, nameType string) (int, error) {
+	var ids *local_model.Names = new(local_model.Names)
+	baseUrl := fmt.Sprintf("%s/universe/ids/", configuration.AppConfig.Esi.Default.Url)
+	if name == nil {
+		return 0, errors.New("nil name")
+	}
+	redisKey := "IDForName:" + *name
+	singleItemArray := []string{*name}
+
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(singleItemArray)
+	if err != nil {
+		log.Error(err)
+		return 0, err
+	}
+
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodPost, buf, nil, redisKey)
+	if err != nil {
+		return 0, err
+	}
+
+	if err := json.Unmarshal(responseBytes, &ids); err != nil {
+		log.WithFields(log.Fields{"name": *name}).Errorf(helpers.CouldNotUnmarshalResponseBytes, err)
+		return 0, err
+	}
+
+	switch nameType {
+	case local_model.AGENTS:
+		return *ids.Agents[0].ID, nil
+	case local_model.ALLIANCES:
+		return *ids.Alliances[0].ID, nil
+	case local_model.CHARACTERS:
+		return *ids.Characters[0].ID, nil
+	case local_model.CONSTELLATIONS:
+		return *ids.Constellations[0].ID, nil
+	case local_model.CORPORATIONS:
+		return *ids.Corporations[0].ID, nil
+	case local_model.FACTIONS:
+		return *ids.Factions[0].ID, nil
+	case local_model.INVENTORY_TYPES:
+		return *ids.InventoryTypes[0].ID, nil
+	case local_model.REGIONS:
+		return *ids.Regions[0].ID, nil
+	case local_model.SYSTEMS:
+		return *ids.Systems[0].ID, nil
+	default:
+		return 0, errors.New("all fields nil")
+	}
+
+}
