@@ -11,16 +11,19 @@ import (
 )
 
 /***************************************
-*             MarketGroupByID              *
+*             OrderHistory              *
 ***************************************/
 
-func TestSuccessfulMarketGroupByID(t *testing.T) {
-	jsonResponse := `{
-		"description": "Blueprints are data items used in industry for manufacturing, research and invention jobs",
-		"market_group_id": 2,
-		"name": "Blueprints & Reactions",
-		"types": []
-	  }`
+func TestSuccessfulOrderHistory(t *testing.T) {
+	jsonResponse := `[
+		{
+		  "average": 700000,
+		  "date": "2021-05-16",
+		  "highest": 700000,
+		  "lowest": 700000,
+		  "order_count": 1,
+		  "volume": 1
+		}]`
 
 	b := []byte(jsonResponse)
 
@@ -31,26 +34,30 @@ func TestSuccessfulMarketGroupByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 2
+	var regionId int = 10000008
+	var typeId int = 602
 
-	resp, err := MarketGroupByID(&testId)
+	resp, err := OrderHistory(&regionId, &typeId)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Blueprints & Reactions"
-	if *resp.Name != responseName {
+	var responseVolume int = 1
+	if *resp[0].Volume != responseVolume {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 
 }
 
-func TestFailNilIDMarketGroupByID(t *testing.T) {
-	jsonResponse := `{
-		"description": "Blueprints are data items used in industry for manufacturing, research and invention jobs",
-		"market_group_id": 2,
-		"name": "Blueprints & Reactions",
-		"types": []
-	  }`
+func TestFailNilRegionIDOrderHistory(t *testing.T) {
+	jsonResponse := `[
+		{
+		  "average": 700000,
+		  "date": "2021-05-16",
+		  "highest": 700000,
+		  "lowest": 700000,
+		  "order_count": 1,
+		  "volume": 1
+		}]`
 
 	b := []byte(jsonResponse)
 
@@ -61,9 +68,10 @@ func TestFailNilIDMarketGroupByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = nil
+	var regionId *int = nil
+	var typeId int = 602
 
-	_, err := MarketGroupByID(testId)
+	_, err := OrderHistory(regionId, &typeId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -72,32 +80,16 @@ func TestFailNilIDMarketGroupByID(t *testing.T) {
 
 }
 
-func TestFailRestCallMarketGroupByID(t *testing.T) {
-	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
-			return nil, nil, errors.New("failure")
-		},
-	}
-	restHelper = mockRestHelper
-
-	var testId int = 2
-
-	_, err := MarketGroupByID(&testId)
-	if err == nil {
-		t.Error(helpers.NilError)
-	} else if err.Error() != "failure" {
-		t.Errorf(helpers.WrongErrorText, err.Error())
-	}
-
-}
-
-func TestFailUnmarshalMarketGroupByID(t *testing.T) {
-	jsonResponse := `{{
-		"description": "Blueprints are data items used in industry for manufacturing, research and invention jobs",
-		"market_group_id": 2,
-		"name": "Blueprints & Reactions",
-		"types": []
-	  }`
+func TestFailNilTypeIDOrderHistory(t *testing.T) {
+	jsonResponse := `[
+		{
+		  "average": 700000,
+		  "date": "2021-05-16",
+		  "highest": 700000,
+		  "lowest": 700000,
+		  "order_count": 1,
+		  "volume": 1
+		}]`
 
 	b := []byte(jsonResponse)
 
@@ -108,9 +100,62 @@ func TestFailUnmarshalMarketGroupByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 2
+	var regionId int = 10000008
+	var typeId *int = nil
 
-	_, err := MarketGroupByID(&testId)
+	_, err := OrderHistory(&regionId, typeId)
+	if err == nil {
+		t.Error(helpers.NilError)
+	} else if err.Error() != helpers.NilId {
+		t.Errorf(helpers.WrongErrorText, err.Error())
+	}
+
+}
+
+func TestFailRestCallOrderHistory(t *testing.T) {
+	mockRestHelper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+			return nil, nil, errors.New("failure")
+		},
+	}
+	restHelper = mockRestHelper
+
+	var regionId int = 2
+	var typeId int = 2
+
+	_, err := OrderHistory(&regionId, &typeId)
+	if err == nil {
+		t.Error(helpers.NilError)
+	} else if err.Error() != "failure" {
+		t.Errorf(helpers.WrongErrorText, err.Error())
+	}
+
+}
+
+func TestFailUnmarshalOrderHistory(t *testing.T) {
+	jsonResponse := `[{
+		{
+		  "average": 700000,
+		  "date": "2021-05-16",
+		  "highest": 700000,
+		  "lowest": 700000,
+		  "order_count": 1,
+		  "volume": 1
+		}]`
+
+	b := []byte(jsonResponse)
+
+	mockRestHelper := &MockRestHelper{
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+			return b, nil, nil
+		},
+	}
+	restHelper = mockRestHelper
+
+	var regionId int = 10000008
+	var typeId int = 602
+
+	_, err := OrderHistory(&regionId, &typeId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

@@ -90,28 +90,6 @@ func ordersForRegionREST(url string, additionalQueryParams []configuration.Key_v
 	return orders, pages, nil
 }
 
-func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
-	if regionID == nil || typeID == nil {
-		return nil, errors.New(helpers.NilId)
-	}
-	var orderHistory []*model.OrderHistory = make([]*model.OrderHistory, 0)
-	baseUrl := fmt.Sprintf("%s/markets/%s/history", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*regionID))
-	redisKey := "OrderHistoryByID:" + strconv.Itoa(*regionID) + ":" + strconv.Itoa(*typeID)
-
-	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
-	if err != nil {
-		return orderHistory, err
-	}
-
-	if err := json.Unmarshal(responseBytes, &orderHistory); err != nil {
-		log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID}).Errorf("Could not unmarshal reponseBytes. %v", err)
-		return orderHistory, err
-	}
-
-	return orderHistory, nil
-}
-
 type RestHelper interface {
 	MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error)
 }
