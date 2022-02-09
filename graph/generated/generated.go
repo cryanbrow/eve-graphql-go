@@ -41,6 +41,7 @@ type ResolverRoot interface {
 	Character() CharacterResolver
 	Constellation() ConstellationResolver
 	Corporation() CorporationResolver
+	Corporation_history() Corporation_historyResolver
 	Dogma_attribute() Dogma_attributeResolver
 	Dogma_effect() Dogma_effectResolver
 	Dogma_effect_detail() Dogma_effect_detailResolver
@@ -172,6 +173,13 @@ type ComplexityRoot struct {
 		Ticker        func(childComplexity int) int
 		URL           func(childComplexity int) int
 		WarEligible   func(childComplexity int) int
+	}
+
+	CorporationHistory struct {
+		CorporationID func(childComplexity int) int
+		Employer      func(childComplexity int) int
+		RecordID      func(childComplexity int) int
+		StartDate     func(childComplexity int) int
 	}
 
 	DogmaAttribute struct {
@@ -369,14 +377,15 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		CorporationByID       func(childComplexity int, id *int) int
-		FactionByID           func(childComplexity int, id *int) int
-		OrderHistory          func(childComplexity int, regionID *int, typeID *int) int
-		OrdersForRegion       func(childComplexity int, regionID int, orderType model.Ordertype, typeID *int, page int) int
-		OrdersForRegionByName func(childComplexity int, region string, orderType model.Ordertype, typeName *string, page int) int
-		PlanetByID            func(childComplexity int, id *int) int
-		StationByID           func(childComplexity int, id *int) int
-		SystemByID            func(childComplexity int, id *int) int
+		CorporationByID                  func(childComplexity int, id *int) int
+		CorporationHistoryForCharacterID func(childComplexity int, id *int) int
+		FactionByID                      func(childComplexity int, id *int) int
+		OrderHistory                     func(childComplexity int, regionID *int, typeID *int) int
+		OrdersForRegion                  func(childComplexity int, regionID int, orderType model.Ordertype, typeID *int, page int) int
+		OrdersForRegionByName            func(childComplexity int, region string, orderType model.Ordertype, typeName *string, page int) int
+		PlanetByID                       func(childComplexity int, id *int) int
+		StationByID                      func(childComplexity int, id *int) int
+		SystemByID                       func(childComplexity int, id *int) int
 	}
 
 	Race struct {
@@ -518,6 +527,9 @@ type CorporationResolver interface {
 
 	HomeStation(ctx context.Context, obj *model.Corporation) (*model.Station, error)
 }
+type Corporation_historyResolver interface {
+	Employer(ctx context.Context, obj *model.CorporationHistory) (*model.Corporation, error)
+}
 type Dogma_attributeResolver interface {
 	Attribute(ctx context.Context, obj *model.DogmaAttribute) (*model.DogmaAttributeDetail, error)
 }
@@ -586,6 +598,7 @@ type QueryResolver interface {
 	StationByID(ctx context.Context, id *int) (*model.Station, error)
 	PlanetByID(ctx context.Context, id *int) (*model.Planet, error)
 	CorporationByID(ctx context.Context, id *int) (*model.Corporation, error)
+	CorporationHistoryForCharacterID(ctx context.Context, id *int) ([]*model.CorporationHistory, error)
 	FactionByID(ctx context.Context, id *int) (*model.Faction, error)
 	OrderHistory(ctx context.Context, regionID *int, typeID *int) ([]*model.OrderHistory, error)
 }
@@ -1232,6 +1245,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Corporation.WarEligible(childComplexity), true
+
+	case "Corporation_history.corporation_id":
+		if e.complexity.CorporationHistory.CorporationID == nil {
+			break
+		}
+
+		return e.complexity.CorporationHistory.CorporationID(childComplexity), true
+
+	case "Corporation_history.employer":
+		if e.complexity.CorporationHistory.Employer == nil {
+			break
+		}
+
+		return e.complexity.CorporationHistory.Employer(childComplexity), true
+
+	case "Corporation_history.record_id":
+		if e.complexity.CorporationHistory.RecordID == nil {
+			break
+		}
+
+		return e.complexity.CorporationHistory.RecordID(childComplexity), true
+
+	case "Corporation_history.start_date":
+		if e.complexity.CorporationHistory.StartDate == nil {
+			break
+		}
+
+		return e.complexity.CorporationHistory.StartDate(childComplexity), true
 
 	case "Dogma_attribute.attribute":
 		if e.complexity.DogmaAttribute.Attribute == nil {
@@ -2246,6 +2287,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.CorporationByID(childComplexity, args["id"].(*int)), true
 
+	case "Query.corporationHistoryForCharacterId":
+		if e.complexity.Query.CorporationHistoryForCharacterID == nil {
+			break
+		}
+
+		args, err := ec.field_Query_corporationHistoryForCharacterId_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CorporationHistoryForCharacterID(childComplexity, args["id"].(*int)), true
+
 	case "Query.factionByID":
 		if e.complexity.Query.FactionByID == nil {
 			break
@@ -2871,6 +2924,8 @@ var sources = []*ast.Source{
 	planetById(id: Int): Planet
 	"""Public information about a corporation"""
 	corporationById(id: Int): Corporation
+	"""List of corporations a character has belonged to."""
+	corporationHistoryForCharacterId(id: Int): [Corporation_history]
 	"""Get information on a faction"""
 	factionByID(id: Int): Faction
 	"""Get history of orders for region and type id"""
@@ -2878,6 +2933,7 @@ var sources = []*ast.Source{
 		region_id: Int
 		type_id: Int
 	): [OrderHistory]
+	
 }
 
 enum Ordertype {
@@ -2997,6 +3053,18 @@ type Corporation{
 	ticker: String
 	url: String
 	war_eligible: Boolean
+}
+
+"""A single corporation that a player has been part of."""
+type Corporation_history {
+	"""unique id of the corporation"""
+	corporation_id: Int
+	"""unique id of the employment of the character"""
+	record_id: Int
+	"""date the player started in RFC1123"""
+	start_date: String
+	"""corporation the player was employed by"""
+	employer: Corporation
 }
 
 type Alliance{
@@ -3490,6 +3558,21 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 }
 
 func (ec *executionContext) field_Query_corporationById_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_corporationHistoryForCharacterId_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *int
@@ -6396,6 +6479,134 @@ func (ec *executionContext) _Corporation_war_eligible(ctx context.Context, field
 	res := resTmp.(*bool)
 	fc.Result = res
 	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Corporation_history_corporation_id(ctx context.Context, field graphql.CollectedField, obj *model.CorporationHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Corporation_history",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CorporationID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Corporation_history_record_id(ctx context.Context, field graphql.CollectedField, obj *model.CorporationHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Corporation_history",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.RecordID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Corporation_history_start_date(ctx context.Context, field graphql.CollectedField, obj *model.CorporationHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Corporation_history",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StartDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Corporation_history_employer(ctx context.Context, field graphql.CollectedField, obj *model.CorporationHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Corporation_history",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Corporation_history().Employer(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Corporation)
+	fc.Result = res
+	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCorporation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Dogma_attribute_attribute(ctx context.Context, field graphql.CollectedField, obj *model.DogmaAttribute) (ret graphql.Marshaler) {
@@ -11211,6 +11422,45 @@ func (ec *executionContext) _Query_corporationById(ctx context.Context, field gr
 	return ec.marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCorporation(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_corporationHistoryForCharacterId(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_corporationHistoryForCharacterId_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CorporationHistoryForCharacterID(rctx, args["id"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.CorporationHistory)
+	fc.Result = res
+	return ec.marshalOCorporation_history2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCorporationHistory(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_factionByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -15149,6 +15399,45 @@ func (ec *executionContext) _Corporation(ctx context.Context, sel ast.SelectionS
 	return out
 }
 
+var corporation_historyImplementors = []string{"Corporation_history"}
+
+func (ec *executionContext) _Corporation_history(ctx context.Context, sel ast.SelectionSet, obj *model.CorporationHistory) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, corporation_historyImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Corporation_history")
+		case "corporation_id":
+			out.Values[i] = ec._Corporation_history_corporation_id(ctx, field, obj)
+		case "record_id":
+			out.Values[i] = ec._Corporation_history_record_id(ctx, field, obj)
+		case "start_date":
+			out.Values[i] = ec._Corporation_history_start_date(ctx, field, obj)
+		case "employer":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Corporation_history_employer(ctx, field, obj)
+				return res
+			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var dogma_attributeImplementors = []string{"Dogma_attribute"}
 
 func (ec *executionContext) _Dogma_attribute(ctx context.Context, sel ast.SelectionSet, obj *model.DogmaAttribute) graphql.Marshaler {
@@ -16116,6 +16405,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_corporationById(ctx, field)
+				return res
+			})
+		case "corporationHistoryForCharacterId":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_corporationHistoryForCharacterId(ctx, field)
 				return res
 			})
 		case "factionByID":
@@ -17362,6 +17662,54 @@ func (ec *executionContext) marshalOCorporation2ᚖgithubᚗcomᚋcryanbrowᚋev
 		return graphql.Null
 	}
 	return ec._Corporation(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOCorporation_history2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCorporationHistory(ctx context.Context, sel ast.SelectionSet, v []*model.CorporationHistory) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOCorporation_history2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCorporationHistory(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
+func (ec *executionContext) marshalOCorporation_history2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCorporationHistory(ctx context.Context, sel ast.SelectionSet, v *model.CorporationHistory) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Corporation_history(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalODogma_attribute2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐDogmaAttribute(ctx context.Context, sel ast.SelectionSet, v []*model.DogmaAttribute) graphql.Marshaler {

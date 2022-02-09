@@ -92,6 +92,10 @@ func (r *corporationResolver) HomeStation(ctx context.Context, obj *model.Corpor
 	return universe.StationByID(obj.HomeStationID)
 }
 
+func (r *corporation_historyResolver) Employer(ctx context.Context, obj *model.CorporationHistory) (*model.Corporation, error) {
+	return corporation.CorporationByID(obj.CorporationID)
+}
+
 func (r *dogma_attributeResolver) Attribute(ctx context.Context, obj *model.DogmaAttribute) (*model.DogmaAttributeDetail, error) {
 	return dogma.DogmaAttributeByID(obj.AttributeID)
 }
@@ -216,6 +220,10 @@ func (r *queryResolver) CorporationByID(ctx context.Context, id *int) (*model.Co
 	return corporation.CorporationByID(id)
 }
 
+func (r *queryResolver) CorporationHistoryForCharacterID(ctx context.Context, id *int) ([]*model.CorporationHistory, error) {
+	return character.CorporationHistory(id)
+}
+
 func (r *queryResolver) FactionByID(ctx context.Context, id *int) (*model.Faction, error) {
 	return universe.FactionByID(id)
 }
@@ -310,6 +318,11 @@ func (r *Resolver) Constellation() generated.ConstellationResolver { return &con
 // Corporation returns generated.CorporationResolver implementation.
 func (r *Resolver) Corporation() generated.CorporationResolver { return &corporationResolver{r} }
 
+// Corporation_history returns generated.Corporation_historyResolver implementation.
+func (r *Resolver) Corporation_history() generated.Corporation_historyResolver {
+	return &corporation_historyResolver{r}
+}
+
 // Dogma_attribute returns generated.Dogma_attributeResolver implementation.
 func (r *Resolver) Dogma_attribute() generated.Dogma_attributeResolver {
 	return &dogma_attributeResolver{r}
@@ -379,6 +392,7 @@ type asteroid_beltResolver struct{ *Resolver }
 type characterResolver struct{ *Resolver }
 type constellationResolver struct{ *Resolver }
 type corporationResolver struct{ *Resolver }
+type corporation_historyResolver struct{ *Resolver }
 type dogma_attributeResolver struct{ *Resolver }
 type dogma_effectResolver struct{ *Resolver }
 type dogma_effect_detailResolver struct{ *Resolver }

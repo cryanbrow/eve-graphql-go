@@ -116,6 +116,18 @@ type Corporation struct {
 	WarEligible   *bool      `json:"war_eligible"`
 }
 
+// A single corporation that a player has been part of.
+type CorporationHistory struct {
+	// unique id of the corporation
+	CorporationID *int `json:"corporation_id"`
+	// unique id of the employment of the character
+	RecordID *int `json:"record_id"`
+	// date the player started in RFC1123
+	StartDate *string `json:"start_date"`
+	// corporation the player was employed by
+	Employer *Corporation `json:"employer"`
+}
+
 type DogmaAttribute struct {
 	Attribute   *DogmaAttributeDetail `json:"attribute"`
 	AttributeID *int                  `json:"attribute_id"`

@@ -20,6 +20,8 @@ type Query{
 	planetById(id: Int): Planet
 	"""Public information about a corporation"""
 	corporationById(id: Int): Corporation
+	"""List of corporations a character has belonged to."""
+	corporationHistoryForCharacterId(id: Int): [Corporation_history]
 	"""Get information on a faction"""
 	factionByID(id: Int): Faction
 	"""Get history of orders for region and type id"""
@@ -27,6 +29,7 @@ type Query{
 		region_id: Int
 		type_id: Int
 	): [OrderHistory]
+	
 }
 
 enum Ordertype {
@@ -146,6 +149,18 @@ type Corporation{
 	ticker: String
 	url: String
 	war_eligible: Boolean
+}
+
+"""A single corporation that a player has been part of."""
+type Corporation_history {
+	"""unique id of the corporation"""
+	corporation_id: Int
+	"""unique id of the employment of the character"""
+	record_id: Int
+	"""date the player started in RFC1123"""
+	start_date: String
+	"""corporation the player was employed by"""
+	employer: Corporation
 }
 
 type Alliance{

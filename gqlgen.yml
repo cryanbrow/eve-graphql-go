@@ -213,6 +213,10 @@ models:
         resolver: true
       item_type:
         resolver: true
+  Corporation_history:
+    fields:
+      employer:
+        resolver: true
   ID:
     model:
       - github.com/99designs/gqlgen/graphql.ID
