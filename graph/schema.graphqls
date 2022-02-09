@@ -22,6 +22,7 @@ type Query{
 	corporationById(id: Int): Corporation
 	"""List of corporations a character has belonged to."""
 	corporationHistoryForCharacterId(id: Int): [Corporation_history]
+	characterPortraitByID(id: Int): Character_portrait
 	"""Get information on a faction"""
 	factionByID(id: Int): Faction
 	"""Get history of orders for region and type id"""
@@ -196,6 +197,13 @@ type Character{
 	race: Race
 	security_status: Float
 	title: String
+}
+
+type Character_portrait{
+	px128x128: String
+	px256x256: String
+	px512x512: String
+	px64x64: String
 }
 
 type Ancestry{

@@ -84,6 +84,13 @@ type Character struct {
 	Title          *string      `json:"title"`
 }
 
+type CharacterPortrait struct {
+	Px128x128 *string `json:"px128x128"`
+	Px256x256 *string `json:"px256x256"`
+	Px512x512 *string `json:"px512x512"`
+	Px64x64   *string `json:"px64x64"`
+}
+
 type Constellation struct {
 	ConstellationID *int      `json:"constellation_id"`
 	Name            *string   `json:"name"`

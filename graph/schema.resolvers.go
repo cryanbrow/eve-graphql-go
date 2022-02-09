@@ -224,6 +224,10 @@ func (r *queryResolver) CorporationHistoryForCharacterID(ctx context.Context, id
 	return character.CorporationHistory(id)
 }
 
+func (r *queryResolver) CharacterPortraitByID(ctx context.Context, id *int) (*model.CharacterPortrait, error) {
+	return character.CharacterPortraitByID(id)
+}
+
 func (r *queryResolver) FactionByID(ctx context.Context, id *int) (*model.Faction, error) {
 	return universe.FactionByID(id)
 }

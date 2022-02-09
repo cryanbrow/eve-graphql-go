@@ -143,6 +143,13 @@ type ComplexityRoot struct {
 		Title          func(childComplexity int) int
 	}
 
+	CharacterPortrait struct {
+		Px128x128 func(childComplexity int) int
+		Px256x256 func(childComplexity int) int
+		Px512x512 func(childComplexity int) int
+		Px64x64   func(childComplexity int) int
+	}
+
 	Constellation struct {
 		ConstellationID func(childComplexity int) int
 		Name            func(childComplexity int) int
@@ -377,6 +384,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
+		CharacterPortraitByID            func(childComplexity int, id *int) int
 		CorporationByID                  func(childComplexity int, id *int) int
 		CorporationHistoryForCharacterID func(childComplexity int, id *int) int
 		FactionByID                      func(childComplexity int, id *int) int
@@ -599,6 +607,7 @@ type QueryResolver interface {
 	PlanetByID(ctx context.Context, id *int) (*model.Planet, error)
 	CorporationByID(ctx context.Context, id *int) (*model.Corporation, error)
 	CorporationHistoryForCharacterID(ctx context.Context, id *int) ([]*model.CorporationHistory, error)
+	CharacterPortraitByID(ctx context.Context, id *int) (*model.CharacterPortrait, error)
 	FactionByID(ctx context.Context, id *int) (*model.Faction, error)
 	OrderHistory(ctx context.Context, regionID *int, typeID *int) ([]*model.OrderHistory, error)
 }
@@ -1063,6 +1072,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Character.Title(childComplexity), true
+
+	case "Character_portrait.px128x128":
+		if e.complexity.CharacterPortrait.Px128x128 == nil {
+			break
+		}
+
+		return e.complexity.CharacterPortrait.Px128x128(childComplexity), true
+
+	case "Character_portrait.px256x256":
+		if e.complexity.CharacterPortrait.Px256x256 == nil {
+			break
+		}
+
+		return e.complexity.CharacterPortrait.Px256x256(childComplexity), true
+
+	case "Character_portrait.px512x512":
+		if e.complexity.CharacterPortrait.Px512x512 == nil {
+			break
+		}
+
+		return e.complexity.CharacterPortrait.Px512x512(childComplexity), true
+
+	case "Character_portrait.px64x64":
+		if e.complexity.CharacterPortrait.Px64x64 == nil {
+			break
+		}
+
+		return e.complexity.CharacterPortrait.Px64x64(childComplexity), true
 
 	case "Constellation.constellation_id":
 		if e.complexity.Constellation.ConstellationID == nil {
@@ -2275,6 +2312,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Position.Z(childComplexity), true
 
+	case "Query.characterPortraitByID":
+		if e.complexity.Query.CharacterPortraitByID == nil {
+			break
+		}
+
+		args, err := ec.field_Query_characterPortraitByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CharacterPortraitByID(childComplexity, args["id"].(*int)), true
+
 	case "Query.corporationById":
 		if e.complexity.Query.CorporationByID == nil {
 			break
@@ -2926,6 +2975,7 @@ var sources = []*ast.Source{
 	corporationById(id: Int): Corporation
 	"""List of corporations a character has belonged to."""
 	corporationHistoryForCharacterId(id: Int): [Corporation_history]
+	characterPortraitByID(id: Int): Character_portrait
 	"""Get information on a faction"""
 	factionByID(id: Int): Faction
 	"""Get history of orders for region and type id"""
@@ -3100,6 +3150,13 @@ type Character{
 	race: Race
 	security_status: Float
 	title: String
+}
+
+type Character_portrait{
+	px128x128: String
+	px256x256: String
+	px512x512: String
+	px64x64: String
 }
 
 type Ancestry{
@@ -3554,6 +3611,21 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_characterPortraitByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -5636,6 +5708,134 @@ func (ec *executionContext) _Character_title(ctx context.Context, field graphql.
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Title, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Character_portrait_px128x128(ctx context.Context, field graphql.CollectedField, obj *model.CharacterPortrait) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Character_portrait",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Px128x128, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Character_portrait_px256x256(ctx context.Context, field graphql.CollectedField, obj *model.CharacterPortrait) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Character_portrait",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Px256x256, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Character_portrait_px512x512(ctx context.Context, field graphql.CollectedField, obj *model.CharacterPortrait) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Character_portrait",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Px512x512, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Character_portrait_px64x64(ctx context.Context, field graphql.CollectedField, obj *model.CharacterPortrait) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Character_portrait",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Px64x64, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11461,6 +11661,45 @@ func (ec *executionContext) _Query_corporationHistoryForCharacterId(ctx context.
 	return ec.marshalOCorporation_history2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCorporationHistory(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_characterPortraitByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_characterPortraitByID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CharacterPortraitByID(rctx, args["id"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.CharacterPortrait)
+	fc.Result = res
+	return ec.marshalOCharacter_portrait2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCharacterPortrait(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_factionByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -15240,6 +15479,36 @@ func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet
 	return out
 }
 
+var character_portraitImplementors = []string{"Character_portrait"}
+
+func (ec *executionContext) _Character_portrait(ctx context.Context, sel ast.SelectionSet, obj *model.CharacterPortrait) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, character_portraitImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Character_portrait")
+		case "px128x128":
+			out.Values[i] = ec._Character_portrait_px128x128(ctx, field, obj)
+		case "px256x256":
+			out.Values[i] = ec._Character_portrait_px256x256(ctx, field, obj)
+		case "px512x512":
+			out.Values[i] = ec._Character_portrait_px512x512(ctx, field, obj)
+		case "px64x64":
+			out.Values[i] = ec._Character_portrait_px64x64(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var constellationImplementors = []string{"Constellation"}
 
 func (ec *executionContext) _Constellation(ctx context.Context, sel ast.SelectionSet, obj *model.Constellation) graphql.Marshaler {
@@ -16416,6 +16685,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_corporationHistoryForCharacterId(ctx, field)
+				return res
+			})
+		case "characterPortraitByID":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_characterPortraitByID(ctx, field)
 				return res
 			})
 		case "factionByID":
@@ -17607,6 +17887,13 @@ func (ec *executionContext) marshalOCharacter2ᚖgithubᚗcomᚋcryanbrowᚋeve�
 		return graphql.Null
 	}
 	return ec._Character(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOCharacter_portrait2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐCharacterPortrait(ctx context.Context, sel ast.SelectionSet, v *model.CharacterPortrait) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Character_portrait(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOConstellation2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐConstellation(ctx context.Context, sel ast.SelectionSet, v []*model.Constellation) graphql.Marshaler {
