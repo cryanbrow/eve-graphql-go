@@ -1,3 +1,6 @@
+application:
+  name: 'eve-graphql-go'
+  environment: 'test'
 server:
   port: 8080
 redis:
@@ -13,3 +16,8 @@ esi:
     - key: 'language'
       value: 'en'
     url: 'https://esi.evetech.net/latest'
+jaeger:
+  protocol: 'http'
+  hostname: 'localhost'
+  port: '14268'
+  route: 'api/traces'

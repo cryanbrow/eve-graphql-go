@@ -81,4 +81,5 @@ func setupDependencies() {
 	dogma.SetupDogmaRest()
 	market.SetupMarketRest()
 	universe.SetupUniverseRest()
+	graph.SetupResolver()
 }

@@ -3,6 +3,7 @@ package graph
 import (
 	"log"
 
+	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/jaeger"
@@ -22,9 +23,7 @@ type Resolver struct{}
 const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph"
 
 const (
-	service     = "eve-graphql"
-	environment = "production"
-	id          = 1
+	id = 1
 )
 
 func tracerProvider(url string) (*tracesdk.TracerProvider, error) {
@@ -39,8 +38,8 @@ func tracerProvider(url string) (*tracesdk.TracerProvider, error) {
 		// Record information about this application in a Resource.
 		tracesdk.WithResource(resource.NewWithAttributes(
 			semconv.SchemaURL,
-			semconv.ServiceNameKey.String(service),
-			attribute.String("environment", environment),
+			semconv.ServiceNameKey.String(configuration.AppConfig.Application.Name),
+			attribute.String("environment", configuration.AppConfig.Application.Environment),
 			attribute.Int64("ID", id),
 		)),
 		tracesdk.WithSampler(tracesdk.AlwaysSample()),
@@ -48,9 +47,10 @@ func tracerProvider(url string) (*tracesdk.TracerProvider, error) {
 	return tp, nil
 }
 
-func init() {
+func SetupResolver() {
 	var err error = nil
-	traceProvider, err = tracerProvider("http://localhost:14268/api/traces")
+	traceProvider, err = tracerProvider(configuration.AppConfig.Jaeger.Protocol + "://" + configuration.AppConfig.Jaeger.Hostname + ":" + configuration.AppConfig.Jaeger.Port + "/" + configuration.AppConfig.Jaeger.Route)
+	//"http://localhost:14268/api/traces"
 	if err != nil {
 		log.Fatal(err)
 	}

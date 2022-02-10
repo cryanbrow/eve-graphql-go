@@ -13,9 +13,13 @@ const configPath = "config.yml"
 var TestConfigPath string
 
 type Config struct {
+	Application struct {
+		Name        string `yaml:"name"`
+		Environment string `yaml:"environment"`
+	} `yaml:"application"`
 	Server struct {
 		Port string `yaml:"port"`
-	}
+	} `yaml:"server"`
 	Redis struct {
 		Url      string `yaml:"url"`
 		Port     string `yaml:"port"`
@@ -28,6 +32,12 @@ type Config struct {
 			Url         string      `yaml:"url"`
 		} `yaml:"default"`
 	} `yaml:"esi"`
+	Jaeger struct {
+		Hostname string `yaml:"hostname"`
+		Port     string `yaml:"port"`
+		Protocol string `yaml:"protocol"`
+		Route    string `yaml:"route"`
+	} `yaml:"jaeger"`
 }
 
 type Key_value struct {
