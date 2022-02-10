@@ -42,7 +42,7 @@ func tracerProvider(url string) (*tracesdk.TracerProvider, error) {
 			attribute.String("environment", configuration.AppConfig.Application.Environment),
 			attribute.Int64("ID", id),
 		)),
-		tracesdk.WithSampler(tracesdk.AlwaysSample()),
+		tracesdk.WithSampler(tracesdk.TraceIDRatioBased(configuration.AppConfig.Jaeger.Sample.Percent)),
 	)
 	return tp, nil
 }

@@ -37,6 +37,9 @@ type Config struct {
 		Port     string `yaml:"port"`
 		Protocol string `yaml:"protocol"`
 		Route    string `yaml:"route"`
+		Sample   struct {
+			Percent float64 `yaml:"percent"`
+		} `yaml:"sample"`
 	} `yaml:"jaeger"`
 }
 

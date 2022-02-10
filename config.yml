@@ -21,3 +21,5 @@ jaeger:
   hostname: 'localhost'
   port: '14268'
   route: 'api/traces'
+  sample:
+    percent: 0.1
