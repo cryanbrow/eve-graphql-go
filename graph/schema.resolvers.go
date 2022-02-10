@@ -17,7 +17,9 @@ import (
 )
 
 func (r *allianceResolver) CreatorCorporation(ctx context.Context, obj *model.Alliance) (*model.Corporation, error) {
-	return corporation.CorporationByID(obj.CreatorCorporationID)
+	newCtx, span := traceProvider.Tracer(tracer_name).Start(ctx, "CreatorCorporation")
+	defer span.End()
+	return corporation.CorporationByID(obj.CreatorCorporationID, newCtx)
 }
 
 func (r *allianceResolver) Creator(ctx context.Context, obj *model.Alliance) (*model.Character, error) {
@@ -25,7 +27,9 @@ func (r *allianceResolver) Creator(ctx context.Context, obj *model.Alliance) (*m
 }
 
 func (r *allianceResolver) ExecutorCorporation(ctx context.Context, obj *model.Alliance) (*model.Corporation, error) {
-	return corporation.CorporationByID(obj.ExecutorCorporationID)
+	newCtx, span := traceProvider.Tracer(tracer_name).Start(ctx, "ExecutorCorporation")
+	defer span.End()
+	return corporation.CorporationByID(obj.ExecutorCorporationID, newCtx)
 }
 
 func (r *allianceResolver) Faction(ctx context.Context, obj *model.Alliance) (*model.Faction, error) {
@@ -53,7 +57,9 @@ func (r *characterResolver) Bloodline(ctx context.Context, obj *model.Character)
 }
 
 func (r *characterResolver) Corporation(ctx context.Context, obj *model.Character) (*model.Corporation, error) {
-	return corporation.CorporationByID(obj.CorporationID)
+	newCtx, span := traceProvider.Tracer(tracer_name).Start(ctx, "CharacterCorporation")
+	defer span.End()
+	return corporation.CorporationByID(obj.CorporationID, newCtx)
 }
 
 func (r *characterResolver) Faction(ctx context.Context, obj *model.Character) (*model.Faction, error) {
@@ -93,7 +99,9 @@ func (r *corporationResolver) HomeStation(ctx context.Context, obj *model.Corpor
 }
 
 func (r *corporation_historyResolver) Employer(ctx context.Context, obj *model.CorporationHistory) (*model.Corporation, error) {
-	return corporation.CorporationByID(obj.CorporationID)
+	newCtx, span := traceProvider.Tracer(tracer_name).Start(ctx, "Employer")
+	defer span.End()
+	return corporation.CorporationByID(obj.CorporationID, newCtx)
 }
 
 func (r *dogma_attributeResolver) Attribute(ctx context.Context, obj *model.DogmaAttribute) (*model.DogmaAttributeDetail, error) {
@@ -125,11 +133,15 @@ func (r *dogma_effect_detailResolver) TrackingSpeedAttribute(ctx context.Context
 }
 
 func (r *factionResolver) Corporation(ctx context.Context, obj *model.Faction) (*model.Corporation, error) {
-	return corporation.CorporationByID(obj.CorporationID)
+	newCtx, span := traceProvider.Tracer(tracer_name).Start(ctx, "FactionCorporation")
+	defer span.End()
+	return corporation.CorporationByID(obj.CorporationID, newCtx)
 }
 
 func (r *factionResolver) MilitiaCorporation(ctx context.Context, obj *model.Faction) (*model.Corporation, error) {
-	return corporation.CorporationByID(obj.MilitiaCorporationID)
+	newCtx, span := traceProvider.Tracer(tracer_name).Start(ctx, "MilitiaCorporation")
+	defer span.End()
+	return corporation.CorporationByID(obj.MilitiaCorporationID, newCtx)
 }
 
 func (r *factionResolver) SolarSystem(ctx context.Context, obj *model.Faction) (*model.System, error) {
@@ -217,7 +229,9 @@ func (r *queryResolver) PlanetByID(ctx context.Context, id *int) (*model.Planet,
 }
 
 func (r *queryResolver) CorporationByID(ctx context.Context, id *int) (*model.Corporation, error) {
-	return corporation.CorporationByID(id)
+	newCtx, span := traceProvider.Tracer(tracer_name).Start(ctx, "CorporationByID")
+	defer span.End()
+	return corporation.CorporationByID(id, newCtx)
 }
 
 func (r *queryResolver) CorporationHistoryForCharacterID(ctx context.Context, id *int) ([]*model.CorporationHistory, error) {
@@ -261,7 +275,9 @@ func (r *stargateDestinationResolver) System(ctx context.Context, obj *model.Sta
 }
 
 func (r *stationResolver) OwningCorporation(ctx context.Context, obj *model.Station) (*model.Corporation, error) {
-	return corporation.CorporationByID(obj.Owner)
+	newCtx, span := traceProvider.Tracer(tracer_name).Start(ctx, "OwningCorporation")
+	defer span.End()
+	return corporation.CorporationByID(obj.Owner, newCtx)
 }
 
 func (r *stationResolver) Race(ctx context.Context, obj *model.Station) (*model.Race, error) {

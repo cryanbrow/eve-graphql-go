@@ -2,6 +2,7 @@ package corporation
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"net/http"
 	"testing"
@@ -36,7 +37,7 @@ func TestSuccessfulCorporationByID(t *testing.T) {
 
 	var testId int = 1
 
-	resp, err := CorporationByID(&testId)
+	resp, err := CorporationByID(&testId, context.Background())
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -73,7 +74,7 @@ func TestFailNilIDCorporationByID(t *testing.T) {
 
 	var testId *int = nil
 
-	_, err := CorporationByID(testId)
+	_, err := CorporationByID(testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -92,7 +93,7 @@ func TestFailRestCallCorporationByID(t *testing.T) {
 
 	var testId int = 1
 
-	_, err := CorporationByID(&testId)
+	_, err := CorporationByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -127,7 +128,7 @@ func TestFailUnmarshalCorporationByID(t *testing.T) {
 
 	var testId int = 1
 
-	_, err := CorporationByID(&testId)
+	_, err := CorporationByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

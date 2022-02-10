@@ -2,6 +2,7 @@ package corporation
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,9 +13,15 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
-func CorporationByID(id *int) (*model.Corporation, error) {
+const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph/corporation"
+
+func CorporationByID(id *int, ctx context.Context) (*model.Corporation, error) {
+	_, span := otel.Tracer(tracer_name).Start(ctx, "CorporationByID")
+	defer span.End()
 	var corporation *model.Corporation = new(model.Corporation)
 	if id == nil {
 		return nil, errors.New(helpers.NilId)
@@ -33,6 +40,7 @@ func CorporationByID(id *int) (*model.Corporation, error) {
 		return corporation, err
 	}
 
+	span.SetAttributes(attribute.Int("request.id", *id))
 	return corporation, nil
 }
 
