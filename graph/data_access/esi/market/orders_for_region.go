@@ -41,6 +41,7 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int, pag
 	}
 
 	redisKey = redisKey + ":" + strconv.Itoa(*page)
+	log.Debugf("Here: %s", redisKey)
 
 	orderResult, pages, err := ordersForRegionREST(baseUrl, queryParams, redisKey, newCtx)
 

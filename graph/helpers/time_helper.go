@@ -1,13 +1,17 @@
 package helpers
 
 import (
+	"context"
 	"strconv"
 	"time"
 
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
 )
 
-func EsiTtlToMillis(esiTime string) int64 {
+func EsiTtlToMillis(esiTime string, ctx context.Context) int64 {
+	_, span := otel.Tracer(tracer_name).Start(ctx, "EsiTtlToMillis")
+	defer span.End()
 	log.WithFields(log.Fields{"time": esiTime}).Debugf("Parsing Time : %s", esiTime)
 	t, err := time.Parse(time.RFC1123, esiTime)
 	if err != nil {

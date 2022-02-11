@@ -28,7 +28,7 @@ func FactionByID(id *int, ctx context.Context) (*model.Faction, error) {
 	}
 
 	span.SetAttributes(attribute.Int("request.id", *id))
-	inCache, result := RedisClient.CheckRedisCache(factionRedisKey + strconv.Itoa(*id))
+	inCache, result := RedisClient.CheckRedisCache(factionRedisKey+strconv.Itoa(*id), newCtx)
 	if !inCache {
 		faction, err := factionByArray(id, newCtx)
 		if err != nil {
@@ -47,7 +47,7 @@ func FactionByID(id *int, ctx context.Context) (*model.Faction, error) {
 }
 
 func factionByArray(id *int, ctx context.Context) (*model.Faction, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "CorporationByID")
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "factionByArray")
 	defer span.End()
 	var factions []*model.Faction = make([]*model.Faction, 0)
 	var returnFaction *model.Faction
@@ -72,7 +72,7 @@ func factionByArray(id *int, ctx context.Context) (*model.Faction, error) {
 		}
 		factionBytes, err := json.Marshal(*faction)
 		if err == nil {
-			RedisClient.AddToRedisCache(factionRedisKey+strconv.Itoa(*faction.FactionID), factionBytes, helpers.EsiTtlToMillis(headers.Get("expires")))
+			RedisClient.AddToRedisCache(factionRedisKey+strconv.Itoa(*faction.FactionID), factionBytes, helpers.EsiTtlToMillis(headers.Get("expires"), newCtx), newCtx)
 		} else {
 			log.Errorf(helpers.FailureMarshaling, err)
 		}

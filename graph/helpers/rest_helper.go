@@ -21,10 +21,10 @@ type RestHelperClient struct {
 const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph/helpers"
 
 func (r *RestHelperClient) MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
-	_, span := otel.Tracer(tracer_name).Start(ctx, "CorporationByID")
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "MakeCachingRESTCall")
 	span.SetAttributes(attribute.String("baseUrl", baseUrl), attribute.String("verb", verb), attribute.String("redisKey", redisQueryKey))
 	defer span.End()
-	inCache, result := RedisClientVar.CheckRedisCache(redisQueryKey)
+	inCache, result := RedisClientVar.CheckRedisCache(redisQueryKey, newCtx)
 	if !inCache {
 		crest_url, err := url.Parse(baseUrl)
 		if err != nil {
@@ -64,7 +64,7 @@ func (r *RestHelperClient) MakeCachingRESTCall(baseUrl string, verb string, body
 			log.WithFields(log.Fields{"url": url}).Errorf("Could not read response for body. : %v", err)
 			return make([]byte, 0), nil, err
 		}
-		RedisClientVar.AddToRedisCache(redisQueryKey, responseBytes, EsiTtlToMillis(h.Get("expires")))
+		RedisClientVar.AddToRedisCache(redisQueryKey, responseBytes, EsiTtlToMillis(h.Get("expires"), newCtx), newCtx)
 		return responseBytes, h, nil
 	}
 	return result, nil, nil
@@ -75,8 +75,8 @@ type HTTPClient interface {
 }
 
 type RedisClient interface {
-	AddToRedisCache(key string, value []byte, ttl int64)
-	CheckRedisCache(key string) (bool, []byte)
+	AddToRedisCache(key string, value []byte, ttl int64, ctx context.Context)
+	CheckRedisCache(key string, ctx context.Context) (bool, []byte)
 }
 
 var (

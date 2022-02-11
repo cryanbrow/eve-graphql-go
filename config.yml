@@ -22,4 +22,4 @@ jaeger:
   port: '14268'
   route: 'api/traces'
   sample:
-    percent: 0.1
+    percent: 1

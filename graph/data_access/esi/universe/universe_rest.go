@@ -13,8 +13,8 @@ import (
 const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
 
 type RedisClientInterface interface {
-	AddToRedisCache(key string, value []byte, ttl int64)
-	CheckRedisCache(key string) (bool, []byte)
+	AddToRedisCache(key string, value []byte, ttl int64, ctx context.Context)
+	CheckRedisCache(key string, ctx context.Context) (bool, []byte)
 }
 
 var (

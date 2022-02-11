@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"context"
 	"strconv"
 	"testing"
 	"time"
@@ -12,7 +13,7 @@ func TestEsiTtlToMillisSuccess(t *testing.T) {
 	now := time.Now().UTC()
 	now = now.Add(time.Millisecond * 50000)
 	nowString := now.Format(time.RFC1123)
-	result := EsiTtlToMillis(nowString)
+	result := EsiTtlToMillis(nowString, context.Background())
 	if result > 0 {
 		return
 	} else {
@@ -25,7 +26,7 @@ func TestEsiTtlToMillisFail(t *testing.T) {
 	now = now.Add(time.Millisecond * 50000)
 	nowString := now.Format(time.RFC1123)
 	nowString = nowString + "GARBAGE"
-	result := EsiTtlToMillis(nowString)
+	result := EsiTtlToMillis(nowString, context.Background())
 	if result == 43200000 {
 		return
 	} else {

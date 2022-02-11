@@ -65,10 +65,10 @@ func TestInCacheSuccessfulMakeCachingRESTCall(t *testing.T) {
 		},
 	}
 	RedisClientVar = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {
+		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
 			//Method returns nothing so needs no implementation
 		},
-		MockCheck: func(key string) (bool, []byte) {
+		MockCheck: func(key string, ctx context.Context) (bool, []byte) {
 			return true, make([]byte, 0)
 		},
 	}
@@ -211,8 +211,8 @@ func Test404FailureMakeCachingRESTCall(t *testing.T) {
 }
 
 type MockDoType func(req *http.Request) (*http.Response, error)
-type MockAddToRedisCacheType func(key string, value []byte, ttl int64)
-type MockCheckRedisCacheType func(key string) (bool, []byte)
+type MockAddToRedisCacheType func(key string, value []byte, ttl int64, ctx context.Context)
+type MockCheckRedisCacheType func(key string, ctx context.Context) (bool, []byte)
 
 type MockClient struct {
 	MockDo MockDoType
@@ -227,12 +227,12 @@ func (m *MockClient) Do(req *http.Request) (*http.Response, error) {
 	return m.MockDo(req)
 }
 
-func (m *MockRedisClient) AddToRedisCache(key string, value []byte, ttl int64) {
-	m.MockAdd(key, value, ttl)
+func (m *MockRedisClient) AddToRedisCache(key string, value []byte, ttl int64, ctx context.Context) {
+	m.MockAdd(key, value, ttl, ctx)
 }
 
-func (m *MockRedisClient) CheckRedisCache(key string) (bool, []byte) {
-	return m.MockCheck(key)
+func (m *MockRedisClient) CheckRedisCache(key string, ctx context.Context) (bool, []byte) {
+	return m.MockCheck(key, ctx)
 }
 
 type RestHelper interface {
@@ -253,10 +253,10 @@ func init() {
 
 func setRedisClient() {
 	RedisClientVar = &MockRedisClient{
-		MockAdd: func(key string, value []byte, ttl int64) {
+		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
 			//Method returns nothing so needs no implementation
 		},
-		MockCheck: func(key string) (bool, []byte) {
+		MockCheck: func(key string, ctx context.Context) (bool, []byte) {
 			return false, make([]byte, 0)
 		},
 	}

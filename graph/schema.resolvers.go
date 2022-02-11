@@ -287,13 +287,13 @@ func (r *planetResolver) ItemType(ctx context.Context, obj *model.Planet) (*mode
 }
 
 func (r *queryResolver) OrdersForRegion(ctx context.Context, regionID int, orderType model.Ordertype, typeID *int, page int) (*model.OrderWrapper, error) {
-	newCtx, span := traceProvider.Tracer(tracer_name).Start(ctx, "OrdersForRegion")
+	newCtx, span := traceProvider.Tracer(tracer_name).Start(ctx, "ResolverOrdersForRegion")
 	defer span.End()
 	return market.OrdersForRegion(&regionID, &orderType, typeID, &page, newCtx)
 }
 
 func (r *queryResolver) OrdersForRegionByName(ctx context.Context, region string, orderType model.Ordertype, typeName *string, page int) (*model.OrderWrapper, error) {
-	newCtx, span := traceProvider.Tracer(tracer_name).Start(ctx, "OrdersForRegionByName")
+	newCtx, span := traceProvider.Tracer(tracer_name).Start(ctx, "ResolverOrdersForRegionByName")
 	defer span.End()
 	return market.OrdersForRegionByName(&region, &orderType, typeName, &page, newCtx)
 }
