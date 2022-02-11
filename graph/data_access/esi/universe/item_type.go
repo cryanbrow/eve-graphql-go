@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,9 +13,13 @@ import (
 	model "github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
-func ItemTypeByID(id *int) (*model.ItemType, error) {
+func ItemTypeByID(id *int, ctx context.Context) (*model.ItemType, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ItemTypeByID")
+	defer span.End()
 	var itemType *model.ItemType = new(model.ItemType)
 	if id == nil {
 		return nil, errors.New(helpers.NilId)
@@ -23,7 +28,7 @@ func ItemTypeByID(id *int) (*model.ItemType, error) {
 	redisKey := "ItemTypeByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
 	if err != nil {
 		return itemType, err
 	}
@@ -33,13 +38,16 @@ func ItemTypeByID(id *int) (*model.ItemType, error) {
 		return itemType, err
 	}
 
+	span.SetAttributes(attribute.Int("request.id", *id))
 	return itemType, nil
 }
 
-func ItemTypesByIDs(itemTypes []*int) ([]*model.ItemType, error) {
+func ItemTypesByIDs(itemTypes []*int, ctx context.Context) ([]*model.ItemType, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ItemTypesByIDs")
+	defer span.End()
 	itemTypeDetails := make([]*model.ItemType, 0)
 	for _, element := range itemTypes {
-		itemType, err := ItemTypeByID(element)
+		itemType, err := ItemTypeByID(element, newCtx)
 		if err == nil {
 			itemTypeDetails = append(itemTypeDetails, itemType)
 		} else {

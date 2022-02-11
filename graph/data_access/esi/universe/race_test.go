@@ -1,6 +1,7 @@
 package universe
 
 import (
+	"context"
 	"testing"
 
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
@@ -30,7 +31,7 @@ func TestSuccessfulInCacheRaceByID(t *testing.T) {
 	RedisClient = mockRedisClient
 
 	var testId int = 1
-	resp, err := RaceByID(&testId)
+	resp, err := RaceByID(&testId, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -54,7 +55,7 @@ func TestSuccessfulNotInCacheRaceByID(t *testing.T) {
 	}
 
 	var testId int = 1
-	resp, err := RaceByID(&testId)
+	resp, err := RaceByID(&testId, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -66,7 +67,7 @@ func TestSuccessfulNotInCacheRaceByID(t *testing.T) {
 
 func TestFailNilIDRaceByID(t *testing.T) {
 	var testId *int = nil
-	_, err := RaceByID(testId)
+	_, err := RaceByID(testId, context.Background())
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -92,7 +93,7 @@ func TestFailUnmarshalInCacheRaceByID(t *testing.T) {
 	RedisClient = mockRedisClient
 
 	var testId int = 1
-	_, err := RaceByID(&testId)
+	_, err := RaceByID(&testId, context.Background())
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -113,7 +114,7 @@ func TestFailUnmarshalNotInCacheRaceByID(t *testing.T) {
 	}
 
 	var testId int = 1
-	_, err := RaceByID(&testId)
+	_, err := RaceByID(&testId, context.Background())
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -127,7 +128,7 @@ func TestFailRestNotInCacheRaceByID(t *testing.T) {
 	}
 
 	var testId int = 1
-	_, err := RaceByID(&testId)
+	_, err := RaceByID(&testId, context.Background())
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}

@@ -2,6 +2,7 @@ package market
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,9 +13,13 @@ import (
 	model "github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
-func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
+func OrderHistory(regionID *int, typeID *int, ctx context.Context) ([]*model.OrderHistory, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "OrderHistory")
+	defer span.End()
 	if regionID == nil || typeID == nil {
 		return nil, errors.New(helpers.NilId)
 	}
@@ -23,7 +28,7 @@ func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 	redisKey := "OrderHistoryByID:" + strconv.Itoa(*regionID) + ":" + strconv.Itoa(*typeID)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
 	if err != nil {
 		return orderHistory, err
 	}
@@ -33,5 +38,6 @@ func OrderHistory(regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 		return orderHistory, err
 	}
 
+	span.SetAttributes(attribute.Int("request.regionID", *regionID), attribute.Int("request.typeID", *typeID))
 	return orderHistory, nil
 }

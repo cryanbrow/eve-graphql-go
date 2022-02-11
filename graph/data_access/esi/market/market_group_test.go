@@ -2,6 +2,7 @@ package market
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"net/http"
 	"testing"
@@ -25,7 +26,7 @@ func TestSuccessfulMarketGroupByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -33,7 +34,7 @@ func TestSuccessfulMarketGroupByID(t *testing.T) {
 
 	var testId int = 2
 
-	resp, err := MarketGroupByID(&testId)
+	resp, err := MarketGroupByID(&testId, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -55,7 +56,7 @@ func TestFailNilIDMarketGroupByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -63,7 +64,7 @@ func TestFailNilIDMarketGroupByID(t *testing.T) {
 
 	var testId *int = nil
 
-	_, err := MarketGroupByID(testId)
+	_, err := MarketGroupByID(testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -74,7 +75,7 @@ func TestFailNilIDMarketGroupByID(t *testing.T) {
 
 func TestFailRestCallMarketGroupByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -82,7 +83,7 @@ func TestFailRestCallMarketGroupByID(t *testing.T) {
 
 	var testId int = 2
 
-	_, err := MarketGroupByID(&testId)
+	_, err := MarketGroupByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -102,7 +103,7 @@ func TestFailUnmarshalMarketGroupByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -110,7 +111,7 @@ func TestFailUnmarshalMarketGroupByID(t *testing.T) {
 
 	var testId int = 2
 
-	_, err := MarketGroupByID(&testId)
+	_, err := MarketGroupByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

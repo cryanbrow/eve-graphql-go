@@ -2,6 +2,7 @@ package character
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,9 +13,13 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
-func CorporationHistory(id *int) ([]*model.CorporationHistory, error) {
+func CorporationHistory(id *int, ctx context.Context) ([]*model.CorporationHistory, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "CorporationHistory")
+	defer span.End()
 	var corpHistory []*model.CorporationHistory = make([]*model.CorporationHistory, 0)
 	if id == nil {
 		return nil, errors.New(helpers.NilId)
@@ -23,7 +28,7 @@ func CorporationHistory(id *int) ([]*model.CorporationHistory, error) {
 	redisKey := "CorporationHistory:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
 	if err != nil {
 		return corpHistory, err
 	}
@@ -33,5 +38,6 @@ func CorporationHistory(id *int) ([]*model.CorporationHistory, error) {
 		return corpHistory, err
 	}
 
+	span.SetAttributes(attribute.Int("request.id", *id))
 	return corpHistory, nil
 }

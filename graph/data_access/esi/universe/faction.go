@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,19 +13,24 @@ import (
 	model "github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 const factionRedisKey string = "FactionByID:"
 
-func FactionByID(id *int) (*model.Faction, error) {
+func FactionByID(id *int, ctx context.Context) (*model.Faction, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "CorporationByID")
+	defer span.End()
 	var faction *model.Faction = new(model.Faction)
 	if id == nil {
 		return nil, errors.New(helpers.NilId)
 	}
 
+	span.SetAttributes(attribute.Int("request.id", *id))
 	inCache, result := RedisClient.CheckRedisCache(factionRedisKey + strconv.Itoa(*id))
 	if !inCache {
-		faction, err := factionByArray(id)
+		faction, err := factionByArray(id, newCtx)
 		if err != nil {
 			return nil, err
 		} else {
@@ -40,14 +46,16 @@ func FactionByID(id *int) (*model.Faction, error) {
 	}
 }
 
-func factionByArray(id *int) (*model.Faction, error) {
+func factionByArray(id *int, ctx context.Context) (*model.Faction, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "CorporationByID")
+	defer span.End()
 	var factions []*model.Faction = make([]*model.Faction, 0)
 	var returnFaction *model.Faction
 	baseUrl := fmt.Sprintf("%s/universe/factions/", configuration.AppConfig.Esi.Default.Url)
 	redisKey := factionRedisKey + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, headers, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
 	if err != nil {
 		return nil, err
 	}
@@ -69,5 +77,6 @@ func factionByArray(id *int) (*model.Faction, error) {
 			log.Errorf(helpers.FailureMarshaling, err)
 		}
 	}
+	span.SetAttributes(attribute.Int("request.id", *id))
 	return returnFaction, nil
 }

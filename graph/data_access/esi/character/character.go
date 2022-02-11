@@ -2,6 +2,7 @@ package character
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,9 +13,13 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
-func CharacterByID(id *int) (*model.Character, error) {
+func CharacterByID(id *int, ctx context.Context) (*model.Character, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "CharacterByID")
+	defer span.End()
 	var character *model.Character = new(model.Character)
 	if id == nil {
 		return nil, errors.New(helpers.NilId)
@@ -23,7 +28,7 @@ func CharacterByID(id *int) (*model.Character, error) {
 	redisKey := "CharacterByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
 	if err != nil {
 		return character, err
 	}
@@ -33,5 +38,6 @@ func CharacterByID(id *int) (*model.Character, error) {
 		return character, err
 	}
 
+	span.SetAttributes(attribute.Int("request.id", *id))
 	return character, nil
 }

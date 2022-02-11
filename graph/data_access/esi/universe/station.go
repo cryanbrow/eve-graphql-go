@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,12 +13,16 @@ import (
 	model "github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
-func StationsByIDs(ids []*int) ([]*model.Station, error) {
+func StationsByIDs(ids []*int, ctx context.Context) ([]*model.Station, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "StationsByIDs")
+	defer span.End()
 	stationDetails := make([]*model.Station, 0)
 	for _, element := range ids {
-		station, err := StationByID(element)
+		station, err := StationByID(element, newCtx)
 		if err == nil {
 			stationDetails = append(stationDetails, station)
 		} else {
@@ -27,7 +32,9 @@ func StationsByIDs(ids []*int) ([]*model.Station, error) {
 	return stationDetails, nil
 }
 
-func StationByID(id *int) (*model.Station, error) {
+func StationByID(id *int, ctx context.Context) (*model.Station, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "StationByID")
+	defer span.End()
 	if id == nil {
 		return nil, errors.New(helpers.NilId)
 	}
@@ -39,7 +46,7 @@ func StationByID(id *int) (*model.Station, error) {
 	redisKey := "StationByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
 	if err != nil {
 		return station, err
 	}
@@ -49,5 +56,6 @@ func StationByID(id *int) (*model.Station, error) {
 		return station, err
 	}
 
+	span.SetAttributes(attribute.Int("request.id", *id))
 	return station, nil
 }

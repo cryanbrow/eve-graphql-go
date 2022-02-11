@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -11,9 +12,13 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	local_model "github.com/cryanbrow/eve-graphql-go/graph/model"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
-func IdForName(name *string, nameType string) (int, error) {
+func IdForName(name *string, nameType string, ctx context.Context) (int, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "IdForName")
+	defer span.End()
 	var ids *local_model.Names = new(local_model.Names)
 	baseUrl := fmt.Sprintf("%s/universe/ids/", configuration.AppConfig.Esi.Default.Url)
 	if name == nil {
@@ -29,7 +34,7 @@ func IdForName(name *string, nameType string) (int, error) {
 		return 0, err
 	}
 
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodPost, buf, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodPost, buf, nil, redisKey, newCtx)
 	if err != nil {
 		return 0, err
 	}
@@ -38,6 +43,8 @@ func IdForName(name *string, nameType string) (int, error) {
 		log.WithFields(log.Fields{"name": *name}).Errorf(helpers.CouldNotUnmarshalResponseBytes, err)
 		return 0, err
 	}
+
+	span.SetAttributes(attribute.String("request.name", *name), attribute.String("request.nameType", nameType))
 
 	switch nameType {
 	case local_model.AGENTS:

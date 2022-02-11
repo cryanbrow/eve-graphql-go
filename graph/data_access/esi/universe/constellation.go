@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,12 +13,16 @@ import (
 	model "github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
-func ConstellationsByIDs(ids []*int) ([]*model.Constellation, error) {
+func ConstellationsByIDs(ids []*int, ctx context.Context) ([]*model.Constellation, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ConstellationsByIDs")
+	defer span.End()
 	constellationDetails := make([]*model.Constellation, 0)
 	for _, element := range ids {
-		constellation, err := ConstellationByID(element)
+		constellation, err := ConstellationByID(element, newCtx)
 		if err == nil {
 			constellationDetails = append(constellationDetails, constellation)
 		} else {
@@ -27,7 +32,9 @@ func ConstellationsByIDs(ids []*int) ([]*model.Constellation, error) {
 	return constellationDetails, nil
 }
 
-func ConstellationByID(id *int) (*model.Constellation, error) {
+func ConstellationByID(id *int, ctx context.Context) (*model.Constellation, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ConstellationByID")
+	defer span.End()
 	var constellation *model.Constellation = new(model.Constellation)
 	if id == nil {
 		return nil, errors.New(helpers.NilId)
@@ -36,7 +43,7 @@ func ConstellationByID(id *int) (*model.Constellation, error) {
 	redisKey := "ConstellationByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
 	if err != nil {
 		return constellation, err
 	}
@@ -46,5 +53,6 @@ func ConstellationByID(id *int) (*model.Constellation, error) {
 		return constellation, err
 	}
 
+	span.SetAttributes(attribute.Int("request.id", *id))
 	return constellation, nil
 }

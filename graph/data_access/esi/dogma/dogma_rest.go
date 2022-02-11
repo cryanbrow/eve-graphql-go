@@ -2,6 +2,7 @@ package dogma
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,9 +13,15 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
-func DogmaAttributeByID(id *int) (*model.DogmaAttributeDetail, error) {
+const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/dogma"
+
+func DogmaAttributeByID(id *int, ctx context.Context) (*model.DogmaAttributeDetail, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "DogmaAttributeByID")
+	defer span.End()
 	var dogmaAttribute *model.DogmaAttributeDetail = new(model.DogmaAttributeDetail)
 	if id == nil {
 		return nil, errors.New(helpers.NilId)
@@ -23,7 +30,7 @@ func DogmaAttributeByID(id *int) (*model.DogmaAttributeDetail, error) {
 	redisKey := "DogmaAttributeByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
 	if err != nil {
 		return dogmaAttribute, err
 	}
@@ -33,10 +40,13 @@ func DogmaAttributeByID(id *int) (*model.DogmaAttributeDetail, error) {
 		return dogmaAttribute, err
 	}
 
+	span.SetAttributes(attribute.Int("request.id", *id))
 	return dogmaAttribute, nil
 }
 
-func DogmaEffectByID(id *int) (*model.DogmaEffectDetail, error) {
+func DogmaEffectByID(id *int, ctx context.Context) (*model.DogmaEffectDetail, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "DogmaEffectByID")
+	defer span.End()
 	var dogmaEffect *model.DogmaEffectDetail = new(model.DogmaEffectDetail)
 	if id == nil {
 		return nil, errors.New(helpers.NilId)
@@ -45,7 +55,7 @@ func DogmaEffectByID(id *int) (*model.DogmaEffectDetail, error) {
 	redisKey := "DogmaEffectByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
 	if err != nil {
 		return dogmaEffect, err
 	}
@@ -55,11 +65,12 @@ func DogmaEffectByID(id *int) (*model.DogmaEffectDetail, error) {
 		return dogmaEffect, err
 	}
 
+	span.SetAttributes(attribute.Int("request.id", *id))
 	return dogmaEffect, nil
 }
 
 type RestHelper interface {
-	MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error)
+	MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error)
 }
 
 var (

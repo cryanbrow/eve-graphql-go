@@ -22,10 +22,6 @@ type Resolver struct{}
 
 const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph"
 
-const (
-	id = 1
-)
-
 func tracerProvider(url string) (*tracesdk.TracerProvider, error) {
 	// Create the Jaeger exporter
 	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
@@ -40,7 +36,6 @@ func tracerProvider(url string) (*tracesdk.TracerProvider, error) {
 			semconv.SchemaURL,
 			semconv.ServiceNameKey.String(configuration.AppConfig.Application.Name),
 			attribute.String("environment", configuration.AppConfig.Application.Environment),
-			attribute.Int64("ID", id),
 		)),
 		tracesdk.WithSampler(tracesdk.TraceIDRatioBased(configuration.AppConfig.Jaeger.Sample.Percent)),
 	)

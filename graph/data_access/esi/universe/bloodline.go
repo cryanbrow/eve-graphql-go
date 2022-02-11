@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,20 +13,25 @@ import (
 	model "github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 const bloodlineRedisKey string = "BloodlineByID:"
 
-func BloodlineByID(id *int) (*model.Bloodline, error) {
+func BloodlineByID(id *int, ctx context.Context) (*model.Bloodline, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "BloodlineByID")
+	defer span.End()
 	var bloodline *model.Bloodline = new(model.Bloodline)
 	var err error
 	if id == nil {
 		return nil, errors.New(helpers.NilId)
 	}
 
+	span.SetAttributes(attribute.Int("request.id", *id))
 	inCache, result := RedisClient.CheckRedisCache(bloodlineRedisKey + strconv.Itoa(*id))
 	if !inCache {
-		bloodline, err = bloodlineByArray(id)
+		bloodline, err = bloodlineByArray(id, newCtx)
 		if err != nil {
 			return nil, err
 		} else {
@@ -41,14 +47,16 @@ func BloodlineByID(id *int) (*model.Bloodline, error) {
 	}
 }
 
-func bloodlineByArray(id *int) (*model.Bloodline, error) {
+func bloodlineByArray(id *int, ctx context.Context) (*model.Bloodline, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "bloodlineByArray")
+	defer span.End()
 	var bloodlines []*model.Bloodline = make([]*model.Bloodline, 0)
 	var returnBloodline *model.Bloodline
 	baseUrl := fmt.Sprintf("%s/universe/bloodlines/", configuration.AppConfig.Esi.Default.Url)
 	redisKey := bloodlineRedisKey
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, headers, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
 	if err != nil {
 		return nil, err
 	}
@@ -70,5 +78,6 @@ func bloodlineByArray(id *int) (*model.Bloodline, error) {
 			log.Errorf(helpers.FailureMarshaling, err)
 		}
 	}
+	span.SetAttributes(attribute.Int("request.id", *id))
 	return returnBloodline, nil
 }

@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"io/ioutil"
 	"net/http"
@@ -10,12 +11,19 @@ import (
 	cache "github.com/cryanbrow/eve-graphql-go/graph/caching"
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 type RestHelperClient struct {
 }
 
-func (r *RestHelperClient) MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph/helpers"
+
+func (r *RestHelperClient) MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+	_, span := otel.Tracer(tracer_name).Start(ctx, "CorporationByID")
+	span.SetAttributes(attribute.String("baseUrl", baseUrl), attribute.String("verb", verb), attribute.String("redisKey", redisQueryKey))
+	defer span.End()
 	inCache, result := RedisClientVar.CheckRedisCache(redisQueryKey)
 	if !inCache {
 		crest_url, err := url.Parse(baseUrl)

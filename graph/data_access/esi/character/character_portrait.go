@@ -2,6 +2,7 @@ package character
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,9 +13,13 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
-func CharacterPortraitByID(id *int) (*model.CharacterPortrait, error) {
+func CharacterPortraitByID(id *int, ctx context.Context) (*model.CharacterPortrait, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "CharacterPortraitByID")
+	defer span.End()
 	var characterPortrait *model.CharacterPortrait = new(model.CharacterPortrait)
 	if id == nil {
 		return nil, errors.New(helpers.NilId)
@@ -23,7 +28,7 @@ func CharacterPortraitByID(id *int) (*model.CharacterPortrait, error) {
 	redisKey := "CharacterPortraitByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
 	if err != nil {
 		return characterPortrait, err
 	}
@@ -33,5 +38,6 @@ func CharacterPortraitByID(id *int) (*model.CharacterPortrait, error) {
 		return characterPortrait, err
 	}
 
+	span.SetAttributes(attribute.Int("request.id", *id))
 	return characterPortrait, nil
 }

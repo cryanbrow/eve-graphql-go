@@ -2,6 +2,7 @@ package market
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"net/http"
 	"testing"
@@ -39,7 +40,7 @@ func TestSuccessfulOrdersForRegion(t *testing.T) {
 	}
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, header, nil
 		},
 	}
@@ -50,7 +51,7 @@ func TestSuccessfulOrdersForRegion(t *testing.T) {
 	var page int = 1
 	var orderType model.Ordertype = model.OrdertypeAll
 
-	resp, err := OrdersForRegion(&regionId, &orderType, &typeId, &page)
+	resp, err := OrdersForRegion(&regionId, &orderType, &typeId, &page, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -85,7 +86,7 @@ func TestFailNilTypeIDOrdersForRegion(t *testing.T) {
 	}
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, header, nil
 		},
 	}
@@ -96,7 +97,7 @@ func TestFailNilTypeIDOrdersForRegion(t *testing.T) {
 	var page int = 1
 	var orderType model.Ordertype = model.OrdertypeAll
 
-	resp, err := OrdersForRegion(&regionId, &orderType, typeId, &page)
+	resp, err := OrdersForRegion(&regionId, &orderType, typeId, &page, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -109,7 +110,7 @@ func TestFailNilTypeIDOrdersForRegion(t *testing.T) {
 
 func TestFailRestCallOrdersForRegion(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -120,7 +121,7 @@ func TestFailRestCallOrdersForRegion(t *testing.T) {
 	var page int = 1
 	var orderType model.Ordertype = model.OrdertypeAll
 
-	_, err := OrdersForRegion(&regionId, &orderType, &typeId, &page)
+	_, err := OrdersForRegion(&regionId, &orderType, &typeId, &page, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -149,7 +150,7 @@ func TestFailUnmarshalOrdersForRegion(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -160,7 +161,7 @@ func TestFailUnmarshalOrdersForRegion(t *testing.T) {
 	var page int = 1
 	var orderType model.Ordertype = model.OrdertypeAll
 
-	_, err := OrdersForRegion(&regionId, &orderType, &typeId, &page)
+	_, err := OrdersForRegion(&regionId, &orderType, &typeId, &page, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

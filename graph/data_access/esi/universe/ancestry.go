@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,20 +13,25 @@ import (
 	model "github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 const ancestryRedisKey string = "AncestryByID:"
 
-func AncestryByID(id *int) (*model.Ancestry, error) {
+func AncestryByID(id *int, ctx context.Context) (*model.Ancestry, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "AncestryByID")
+	defer span.End()
 	var ancestry *model.Ancestry = new(model.Ancestry)
 	var err error
 	if id == nil {
 		return nil, errors.New(helpers.NilId)
 	}
+	span.SetAttributes(attribute.Int("request.id", *id))
 
 	inCache, result := RedisClient.CheckRedisCache(ancestryRedisKey + strconv.Itoa(*id))
 	if !inCache {
-		ancestry, err = ancestryByArray(id)
+		ancestry, err = ancestryByArray(id, newCtx)
 		if err != nil {
 			return nil, err
 		} else {
@@ -41,14 +47,16 @@ func AncestryByID(id *int) (*model.Ancestry, error) {
 	}
 }
 
-func ancestryByArray(id *int) (*model.Ancestry, error) {
+func ancestryByArray(id *int, ctx context.Context) (*model.Ancestry, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ancestryByArray")
+	defer span.End()
 	var ancestries []*model.Ancestry = make([]*model.Ancestry, 0)
 	var returnAncestry *model.Ancestry
 	var redisKey = ancestryRedisKey + strconv.Itoa(*id)
 	baseUrl := fmt.Sprintf("%s/universe/ancestries/", configuration.AppConfig.Esi.Default.Url)
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, headers, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
 	if err != nil {
 		return nil, err
 	}
@@ -70,5 +78,6 @@ func ancestryByArray(id *int) (*model.Ancestry, error) {
 			log.Errorf(helpers.FailureMarshaling, err)
 		}
 	}
+	span.SetAttributes(attribute.Int("request.id", *id))
 	return returnAncestry, nil
 }

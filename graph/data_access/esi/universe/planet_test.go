@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"net/http"
 	"testing"
@@ -30,7 +31,7 @@ func TestSuccessfulPlanetByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -38,7 +39,7 @@ func TestSuccessfulPlanetByID(t *testing.T) {
 
 	var testId int = 40176876
 
-	resp, err := PlanetByID(&testId)
+	resp, err := PlanetByID(&testId, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -52,7 +53,7 @@ func TestSuccessfulPlanetByID(t *testing.T) {
 func TestFailNilIDPlanetByID(t *testing.T) {
 	var testId *int = nil
 
-	_, err := PlanetByID(testId)
+	_, err := PlanetByID(testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -63,7 +64,7 @@ func TestFailNilIDPlanetByID(t *testing.T) {
 
 func TestFailRestCallPlanetByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -71,7 +72,7 @@ func TestFailRestCallPlanetByID(t *testing.T) {
 
 	var testId int = 40176876
 
-	_, err := PlanetByID(&testId)
+	_, err := PlanetByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -96,7 +97,7 @@ func TestFailUnmarshalPlanetByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -104,7 +105,7 @@ func TestFailUnmarshalPlanetByID(t *testing.T) {
 
 	var testId int = 40176876
 
-	_, err := PlanetByID(&testId)
+	_, err := PlanetByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

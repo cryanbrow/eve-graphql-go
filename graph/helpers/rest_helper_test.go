@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -24,7 +25,7 @@ func TestSuccessfulMakeCachingRESTCall(t *testing.T) {
 	}
 
 	var buffer bytes.Buffer
-	bytes, _, err := restHelper.MakeCachingRESTCall(testUrl, http.MethodGet, buffer, queryParams, "himom")
+	bytes, _, err := restHelper.MakeCachingRESTCall(testUrl, http.MethodGet, buffer, queryParams, "himom", context.Background())
 	if string(bytes) != jsonResponse {
 		t.Error(byteArrayFail)
 	}
@@ -79,7 +80,7 @@ func TestInCacheSuccessfulMakeCachingRESTCall(t *testing.T) {
 	queryParams = append(queryParams, *kv)
 
 	var buffer bytes.Buffer
-	_, _, err := restHelper.MakeCachingRESTCall(testUrl, http.MethodGet, buffer, queryParams, "himom")
+	_, _, err := restHelper.MakeCachingRESTCall(testUrl, http.MethodGet, buffer, queryParams, "himom", context.Background())
 	if err != nil {
 		t.Errorf(ErrorWasNotNil, err)
 	}
@@ -94,7 +95,7 @@ func TestSuccessfulWithDefaultParamsMakeCachingRESTCall(t *testing.T) {
 	configuration.AppConfig.Esi.Default.QueryParams = queryParams
 
 	var buffer bytes.Buffer
-	bytes4, _, err := restHelper.MakeCachingRESTCall(testUrl, http.MethodGet, buffer, nil, "himom")
+	bytes4, _, err := restHelper.MakeCachingRESTCall(testUrl, http.MethodGet, buffer, nil, "himom", context.Background())
 	byteString := string(bytes4)
 	if byteString != jsonResponse {
 		fmt.Printf("expected: %s : actual %s", jsonResponse, byteString)
@@ -118,7 +119,7 @@ func TestSuccessfulWithQueryParamsMakeCachingRESTCall(t *testing.T) {
 	}
 
 	var buffer bytes.Buffer
-	bytes, _, err := restHelper.MakeCachingRESTCall(testUrl, http.MethodGet, buffer, nil, "himom")
+	bytes, _, err := restHelper.MakeCachingRESTCall(testUrl, http.MethodGet, buffer, nil, "himom", context.Background())
 	if string(bytes) != jsonResponse {
 		t.Error(byteArrayFail)
 	}
@@ -143,7 +144,7 @@ func TestUnparseableURLMakeCachingRESTCall(t *testing.T) {
 	myslice[0] = 0x7f
 	url := string(myslice)
 	var buffer bytes.Buffer
-	_, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
+	_, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom", context.Background())
 	if err == nil {
 		t.Error(NilError)
 	}
@@ -163,7 +164,7 @@ func TestNewRequestFailureMakeCachingRESTCall(t *testing.T) {
 
 	url := ""
 	var buffer bytes.Buffer
-	_, _, err := restHelper.MakeCachingRESTCall(url, "Ы", buffer, nil, "himom")
+	_, _, err := restHelper.MakeCachingRESTCall(url, "Ы", buffer, nil, "himom", context.Background())
 	if err == nil {
 		t.Error(NilError)
 	}
@@ -183,7 +184,7 @@ func TestDoFailureMakeCachingRESTCall(t *testing.T) {
 
 	url := ""
 	var buffer bytes.Buffer
-	_, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
+	_, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom", context.Background())
 	if err == nil {
 		t.Error(NilError)
 	}
@@ -203,7 +204,7 @@ func Test404FailureMakeCachingRESTCall(t *testing.T) {
 
 	url := ""
 	var buffer bytes.Buffer
-	_, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom")
+	_, _, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, nil, "himom", context.Background())
 	if err == nil {
 		t.Error(NilError)
 	}
@@ -235,7 +236,7 @@ func (m *MockRedisClient) CheckRedisCache(key string) (bool, []byte) {
 }
 
 type RestHelper interface {
-	MakeCachingRESTCall(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error)
+	MakeCachingRESTCall(base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string, ctx context.Context) ([]byte, http.Header, error)
 }
 
 var (

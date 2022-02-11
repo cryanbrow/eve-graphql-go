@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"net/http"
 	"testing"
@@ -406,7 +407,7 @@ func TestSuccessfulItemTypeByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -414,7 +415,7 @@ func TestSuccessfulItemTypeByID(t *testing.T) {
 
 	var testId int = 602
 
-	resp, err := ItemTypeByID(&testId)
+	resp, err := ItemTypeByID(&testId, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -428,7 +429,7 @@ func TestSuccessfulItemTypeByID(t *testing.T) {
 func TestFailNilIDItemTypeByID(t *testing.T) {
 	var testId *int = nil
 
-	_, err := ItemTypeByID(testId)
+	_, err := ItemTypeByID(testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -439,7 +440,7 @@ func TestFailNilIDItemTypeByID(t *testing.T) {
 
 func TestFailRestCallItemTypeByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -447,7 +448,7 @@ func TestFailRestCallItemTypeByID(t *testing.T) {
 
 	var testId int = 602
 
-	_, err := ItemTypeByID(&testId)
+	_, err := ItemTypeByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -470,7 +471,7 @@ func TestFailUnmarshalItemTypeByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -478,7 +479,7 @@ func TestFailUnmarshalItemTypeByID(t *testing.T) {
 
 	var testId int = 602
 
-	_, err := ItemTypeByID(&testId)
+	_, err := ItemTypeByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
@@ -877,7 +878,7 @@ func TestSuccessfulItemTypesByIDs(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -889,7 +890,7 @@ func TestSuccessfulItemTypesByIDs(t *testing.T) {
 	ids[0] = &testId1
 	ids[1] = &testId2
 
-	resp, err := ItemTypesByIDs(ids)
+	resp, err := ItemTypesByIDs(ids, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -901,7 +902,7 @@ func TestSuccessfulItemTypesByIDs(t *testing.T) {
 
 func TestFailureItemTypesByIDs(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -913,7 +914,7 @@ func TestFailureItemTypesByIDs(t *testing.T) {
 	ids[0] = &testId1
 	ids[1] = &testId2
 
-	_, err := ItemTypesByIDs(ids)
+	_, err := ItemTypesByIDs(ids, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

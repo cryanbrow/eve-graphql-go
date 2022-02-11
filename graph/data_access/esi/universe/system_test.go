@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"net/http"
 	"testing"
@@ -113,7 +114,7 @@ func TestSuccessfulSystemByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -121,7 +122,7 @@ func TestSuccessfulSystemByID(t *testing.T) {
 
 	var testId int = 30002094
 
-	resp, err := SystemByID(&testId)
+	resp, err := SystemByID(&testId, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -135,7 +136,7 @@ func TestSuccessfulSystemByID(t *testing.T) {
 func TestFailNilIDSystemByID(t *testing.T) {
 	var testId *int = nil
 
-	_, err := SystemByID(testId)
+	_, err := SystemByID(testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -146,7 +147,7 @@ func TestFailNilIDSystemByID(t *testing.T) {
 
 func TestFailRestCallSystemByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -154,7 +155,7 @@ func TestFailRestCallSystemByID(t *testing.T) {
 
 	var testId int = 30002094
 
-	_, err := SystemByID(&testId)
+	_, err := SystemByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -262,7 +263,7 @@ func TestFailUnmarshalSystemByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -270,7 +271,7 @@ func TestFailUnmarshalSystemByID(t *testing.T) {
 
 	var testId int = 30002094
 
-	_, err := SystemByID(&testId)
+	_, err := SystemByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
@@ -376,7 +377,7 @@ func TestSuccessfulSystemsByIDs(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -388,7 +389,7 @@ func TestSuccessfulSystemsByIDs(t *testing.T) {
 	ids[0] = &testId1
 	ids[1] = &testId2
 
-	resp, err := SystemsByIDs(ids)
+	resp, err := SystemsByIDs(ids, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -400,7 +401,7 @@ func TestSuccessfulSystemsByIDs(t *testing.T) {
 
 func TestFailureSystemsByIDs(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -412,7 +413,7 @@ func TestFailureSystemsByIDs(t *testing.T) {
 	ids[0] = &testId1
 	ids[1] = &testId2
 
-	_, err := SystemsByIDs(ids)
+	_, err := SystemsByIDs(ids, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

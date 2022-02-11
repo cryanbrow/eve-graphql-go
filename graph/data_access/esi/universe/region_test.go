@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"net/http"
 	"testing"
@@ -38,7 +39,7 @@ func TestSuccessfulRegionByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -46,7 +47,7 @@ func TestSuccessfulRegionByID(t *testing.T) {
 
 	var testId int = 10000008
 
-	resp, err := RegionByID(&testId)
+	resp, err := RegionByID(&testId, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -60,7 +61,7 @@ func TestSuccessfulRegionByID(t *testing.T) {
 func TestFailNilIDRegionByID(t *testing.T) {
 	var testId *int = nil
 
-	_, err := RegionByID(testId)
+	_, err := RegionByID(testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -71,7 +72,7 @@ func TestFailNilIDRegionByID(t *testing.T) {
 
 func TestFailRestCallRegionByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -79,7 +80,7 @@ func TestFailRestCallRegionByID(t *testing.T) {
 
 	var testId int = 10000008
 
-	_, err := RegionByID(&testId)
+	_, err := RegionByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -112,7 +113,7 @@ func TestFailUnmarshalRegionByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -120,7 +121,7 @@ func TestFailUnmarshalRegionByID(t *testing.T) {
 
 	var testId int = 10000008
 
-	_, err := RegionByID(&testId)
+	_, err := RegionByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

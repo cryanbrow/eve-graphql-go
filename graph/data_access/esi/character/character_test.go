@@ -2,6 +2,7 @@ package character
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"net/http"
 	"testing"
@@ -25,7 +26,7 @@ func TestSuccessfulCharacterByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		CharacterMockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		CharacterMockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -33,7 +34,7 @@ func TestSuccessfulCharacterByID(t *testing.T) {
 
 	var testId int = 1
 
-	resp, err := CharacterByID(&testId)
+	resp, err := CharacterByID(&testId, context.Background())
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -59,7 +60,7 @@ func TestFailNilIDCharacterByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		CharacterMockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		CharacterMockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -67,7 +68,7 @@ func TestFailNilIDCharacterByID(t *testing.T) {
 
 	var testId *int = nil
 
-	_, err := CharacterByID(testId)
+	_, err := CharacterByID(testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -78,7 +79,7 @@ func TestFailNilIDCharacterByID(t *testing.T) {
 
 func TestFailRestCallCharacterByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		CharacterMockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		CharacterMockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -86,7 +87,7 @@ func TestFailRestCallCharacterByID(t *testing.T) {
 
 	var testId int = 1
 
-	_, err := CharacterByID(&testId)
+	_, err := CharacterByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -110,7 +111,7 @@ func TestFailUnmarshalCharacterByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		CharacterMockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		CharacterMockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -118,7 +119,7 @@ func TestFailUnmarshalCharacterByID(t *testing.T) {
 
 	var testId int = 1
 
-	_, err := CharacterByID(&testId)
+	_, err := CharacterByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

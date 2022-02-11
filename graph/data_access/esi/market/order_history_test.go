@@ -2,6 +2,7 @@ package market
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"net/http"
 	"testing"
@@ -28,7 +29,7 @@ func TestSuccessfulOrderHistory(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -37,7 +38,7 @@ func TestSuccessfulOrderHistory(t *testing.T) {
 	var regionId int = 10000008
 	var typeId int = 602
 
-	resp, err := OrderHistory(&regionId, &typeId)
+	resp, err := OrderHistory(&regionId, &typeId, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -62,7 +63,7 @@ func TestFailNilRegionIDOrderHistory(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -71,7 +72,7 @@ func TestFailNilRegionIDOrderHistory(t *testing.T) {
 	var regionId *int = nil
 	var typeId int = 602
 
-	_, err := OrderHistory(regionId, &typeId)
+	_, err := OrderHistory(regionId, &typeId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -94,7 +95,7 @@ func TestFailNilTypeIDOrderHistory(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -103,7 +104,7 @@ func TestFailNilTypeIDOrderHistory(t *testing.T) {
 	var regionId int = 10000008
 	var typeId *int = nil
 
-	_, err := OrderHistory(&regionId, typeId)
+	_, err := OrderHistory(&regionId, typeId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -114,7 +115,7 @@ func TestFailNilTypeIDOrderHistory(t *testing.T) {
 
 func TestFailRestCallOrderHistory(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -123,7 +124,7 @@ func TestFailRestCallOrderHistory(t *testing.T) {
 	var regionId int = 2
 	var typeId int = 2
 
-	_, err := OrderHistory(&regionId, &typeId)
+	_, err := OrderHistory(&regionId, &typeId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -146,7 +147,7 @@ func TestFailUnmarshalOrderHistory(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -155,7 +156,7 @@ func TestFailUnmarshalOrderHistory(t *testing.T) {
 	var regionId int = 10000008
 	var typeId int = 602
 
-	_, err := OrderHistory(&regionId, &typeId)
+	_, err := OrderHistory(&regionId, &typeId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"net/http"
 	"testing"
@@ -29,7 +30,7 @@ func TestSuccessfulMoonDetails(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -40,7 +41,7 @@ func TestSuccessfulMoonDetails(t *testing.T) {
 	var ids []*int = make([]*int, 1)
 	ids[0] = testId
 
-	resp, err := MoonDetails(ids)
+	resp, err := MoonDetails(ids, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -65,7 +66,7 @@ func TestFailNilIDMoonDetails(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -76,7 +77,7 @@ func TestFailNilIDMoonDetails(t *testing.T) {
 	var ids []*int = make([]*int, 2)
 	ids[0] = testId
 
-	_, err := MoonDetails(ids)
+	_, err := MoonDetails(ids, context.Background())
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -101,7 +102,7 @@ func TestSuccessfulMoonByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -109,7 +110,7 @@ func TestSuccessfulMoonByID(t *testing.T) {
 
 	var testId int = 40176874
 
-	resp, err := MoonByID(&testId)
+	resp, err := MoonByID(&testId, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -135,7 +136,7 @@ func TestFailNilIDMoonByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -143,7 +144,7 @@ func TestFailNilIDMoonByID(t *testing.T) {
 
 	var testId *int = nil
 
-	_, err := MoonByID(testId)
+	_, err := MoonByID(testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -154,7 +155,7 @@ func TestFailNilIDMoonByID(t *testing.T) {
 
 func TestFailRestCallMoonByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -162,7 +163,7 @@ func TestFailRestCallMoonByID(t *testing.T) {
 
 	var testId int = 40176874
 
-	_, err := MoonByID(&testId)
+	_, err := MoonByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -186,7 +187,7 @@ func TestFailUnmarshalMoonByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -194,7 +195,7 @@ func TestFailUnmarshalMoonByID(t *testing.T) {
 
 	var testId int = 40176874
 
-	_, err := MoonByID(&testId)
+	_, err := MoonByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

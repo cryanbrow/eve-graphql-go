@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,12 +13,16 @@ import (
 	model "github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
-func MoonDetails(moons []*int) ([]*model.Moon, error) {
+func MoonDetails(moons []*int, ctx context.Context) ([]*model.Moon, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "MoonDetails")
+	defer span.End()
 	moonDetails := make([]*model.Moon, 0)
 	for _, element := range moons {
-		moon, err := MoonByID(element)
+		moon, err := MoonByID(element, newCtx)
 		if err == nil {
 			moonDetails = append(moonDetails, moon)
 		} else {
@@ -27,7 +32,9 @@ func MoonDetails(moons []*int) ([]*model.Moon, error) {
 	return moonDetails, nil
 }
 
-func MoonByID(id *int) (*model.Moon, error) {
+func MoonByID(id *int, ctx context.Context) (*model.Moon, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "MoonByID")
+	defer span.End()
 	var moon *model.Moon = new(model.Moon)
 	if id == nil {
 		return nil, errors.New(helpers.NilId)
@@ -36,7 +43,7 @@ func MoonByID(id *int) (*model.Moon, error) {
 	redisKey := "MoonByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
 	if err != nil {
 		return moon, err
 	}
@@ -46,5 +53,6 @@ func MoonByID(id *int) (*model.Moon, error) {
 		return moon, err
 	}
 
+	span.SetAttributes(attribute.Int("request.id", *id))
 	return moon, nil
 }

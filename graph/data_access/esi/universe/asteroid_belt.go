@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,14 +13,18 @@ import (
 	model "github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 const asteroidBeltRedisKey string = "AsteroidBeltByID:"
 
-func AsteroidBeltDetails(asteroidBelts []*int) ([]*model.AsteroidBelt, error) {
+func AsteroidBeltDetails(asteroidBelts []*int, ctx context.Context) ([]*model.AsteroidBelt, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "AsteroidBeltDetails")
+	defer span.End()
 	asteroidBeltDetails := make([]*model.AsteroidBelt, 0)
 	for _, element := range asteroidBelts {
-		asteroidBelt, err := AsteroidBeltByID(element)
+		asteroidBelt, err := AsteroidBeltByID(element, newCtx)
 		if err == nil {
 			asteroidBeltDetails = append(asteroidBeltDetails, asteroidBelt)
 		} else {
@@ -30,7 +35,9 @@ func AsteroidBeltDetails(asteroidBelts []*int) ([]*model.AsteroidBelt, error) {
 	return asteroidBeltDetails, nil
 }
 
-func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
+func AsteroidBeltByID(id *int, ctx context.Context) (*model.AsteroidBelt, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "AsteroidBeltByID")
+	defer span.End()
 	var asteroidBelt *model.AsteroidBelt = new(model.AsteroidBelt)
 	if id == nil {
 		return nil, errors.New(helpers.NilId)
@@ -39,7 +46,7 @@ func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
 	redisKey := asteroidBeltRedisKey + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
 	if err != nil {
 		return asteroidBelt, err
 	}
@@ -51,5 +58,6 @@ func AsteroidBeltByID(id *int) (*model.AsteroidBelt, error) {
 	}
 	log.Debug(*asteroidBelt.Name)
 
+	span.SetAttributes(attribute.Int("request.id", *id))
 	return asteroidBelt, nil
 }

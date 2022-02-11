@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,9 +13,13 @@ import (
 	model "github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
-func StarByID(id *int) (*model.Star, error) {
+func StarByID(id *int, ctx context.Context) (*model.Star, error) {
+	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "StarByID")
+	defer span.End()
 	var star *model.Star = new(model.Star)
 	if id == nil {
 		return nil, errors.New(helpers.NilId)
@@ -23,7 +28,7 @@ func StarByID(id *int) (*model.Star, error) {
 	redisKey := "StarByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
 	if err != nil {
 		return star, err
 	}
@@ -33,5 +38,6 @@ func StarByID(id *int) (*model.Star, error) {
 		return star, err
 	}
 
+	span.SetAttributes(attribute.Int("request.id", *id))
 	return star, nil
 }

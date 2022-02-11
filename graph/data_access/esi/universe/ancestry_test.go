@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"net/http"
 	"testing"
@@ -36,7 +37,7 @@ func TestSuccessfulInCacheAncestryByID(t *testing.T) {
 	RedisClient = mockRedisClient
 
 	var testId int = 1
-	resp, err := AncestryByID(&testId)
+	resp, err := AncestryByID(&testId, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -64,7 +65,7 @@ func TestSuccessfulNotInCacheAncestryByID(t *testing.T) {
 	}
 
 	var testId int = 13
-	resp, err := AncestryByID(&testId)
+	resp, err := AncestryByID(&testId, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -85,7 +86,7 @@ func setupNotInCacheRedis(jsonResponse string) bool {
 		},
 	}
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -97,7 +98,7 @@ func setupNotInCacheRedis(jsonResponse string) bool {
 
 func TestFailNilIDAncestryByID(t *testing.T) {
 	var testId *int = nil
-	_, err := AncestryByID(testId)
+	_, err := AncestryByID(testId, context.Background())
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -125,7 +126,7 @@ func TestFailUnmarshalInCacheAncestryByID(t *testing.T) {
 	RedisClient = mockRedisClient
 
 	var testId int = 13
-	_, err := AncestryByID(&testId)
+	_, err := AncestryByID(&testId, context.Background())
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -148,7 +149,7 @@ func TestFailUnmarshalNotInCacheAncestryByID(t *testing.T) {
 	}
 
 	var testId int = 13
-	_, err := AncestryByID(&testId)
+	_, err := AncestryByID(&testId, context.Background())
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -162,7 +163,7 @@ func TestFailRestNotInCacheAncestryByID(t *testing.T) {
 	}
 
 	var testId int = 13
-	_, err := AncestryByID(&testId)
+	_, err := AncestryByID(&testId, context.Background())
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -178,7 +179,7 @@ func setupRESTFailureNotInCache() bool {
 		},
 	}
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}

@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"net/http"
 	"testing"
@@ -34,7 +35,7 @@ func TestSuccessfulStargateDetails(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -45,7 +46,7 @@ func TestSuccessfulStargateDetails(t *testing.T) {
 	var ids []*int = make([]*int, 1)
 	ids[0] = testId
 
-	resp, err := StargateDetails(ids)
+	resp, err := StargateDetails(ids, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -75,7 +76,7 @@ func TestFailNilIDStargateDetails(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -86,7 +87,7 @@ func TestFailNilIDStargateDetails(t *testing.T) {
 	var ids []*int = make([]*int, 2)
 	ids[0] = testId
 
-	_, err := StargateDetails(ids)
+	_, err := StargateDetails(ids, context.Background())
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -116,7 +117,7 @@ func TestSuccessfulStargateByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -124,7 +125,7 @@ func TestSuccessfulStargateByID(t *testing.T) {
 
 	var testId int = 50003085
 
-	resp, err := StargateByID(&testId)
+	resp, err := StargateByID(&testId, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -155,7 +156,7 @@ func TestFailNilIDStargateByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -163,7 +164,7 @@ func TestFailNilIDStargateByID(t *testing.T) {
 
 	var testId *int = nil
 
-	_, err := StargateByID(testId)
+	_, err := StargateByID(testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -174,7 +175,7 @@ func TestFailNilIDStargateByID(t *testing.T) {
 
 func TestFailRestCallStargateByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -182,7 +183,7 @@ func TestFailRestCallStargateByID(t *testing.T) {
 
 	var testId int = 50003085
 
-	_, err := StargateByID(&testId)
+	_, err := StargateByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -211,7 +212,7 @@ func TestFailUnmarshalStargateByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -219,7 +220,7 @@ func TestFailUnmarshalStargateByID(t *testing.T) {
 
 	var testId int = 50003085
 
-	_, err := StargateByID(&testId)
+	_, err := StargateByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

@@ -2,6 +2,7 @@ package universe
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"net/http"
 	"testing"
@@ -39,7 +40,7 @@ func TestSuccessfulConstellationsByIDs(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -50,7 +51,7 @@ func TestSuccessfulConstellationsByIDs(t *testing.T) {
 	var ids []*int = make([]*int, 1)
 	ids[0] = testId
 
-	resp, err := ConstellationsByIDs(ids)
+	resp, err := ConstellationsByIDs(ids, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -85,7 +86,7 @@ func TestFailNilIDConstellationsByIDs(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -96,7 +97,7 @@ func TestFailNilIDConstellationsByIDs(t *testing.T) {
 	var ids []*int = make([]*int, 2)
 	ids[0] = testId
 
-	_, err := ConstellationsByIDs(ids)
+	_, err := ConstellationsByIDs(ids, context.Background())
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -131,7 +132,7 @@ func TestSuccessfulConstellationByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -139,7 +140,7 @@ func TestSuccessfulConstellationByID(t *testing.T) {
 
 	var testId int = 20000019
 
-	resp, err := ConstellationByID(&testId)
+	resp, err := ConstellationByID(&testId, context.Background())
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -175,7 +176,7 @@ func TestFailNilIDConstellationByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -183,7 +184,7 @@ func TestFailNilIDConstellationByID(t *testing.T) {
 
 	var testId *int = nil
 
-	_, err := ConstellationByID(testId)
+	_, err := ConstellationByID(testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -194,7 +195,7 @@ func TestFailNilIDConstellationByID(t *testing.T) {
 
 func TestFailRestCallConstellationByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -202,7 +203,7 @@ func TestFailRestCallConstellationByID(t *testing.T) {
 
 	var testId int = 20000019
 
-	_, err := ConstellationByID(&testId)
+	_, err := ConstellationByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -236,7 +237,7 @@ func TestFailUnmarshalConstellationByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -244,7 +245,7 @@ func TestFailUnmarshalConstellationByID(t *testing.T) {
 
 	var testId int = 20000019
 
-	_, err := ConstellationByID(&testId)
+	_, err := ConstellationByID(&testId, context.Background())
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
