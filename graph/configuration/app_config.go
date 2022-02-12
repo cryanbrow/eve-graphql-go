@@ -2,6 +2,7 @@ package configuration
 
 import (
 	"os"
+	"path/filepath"
 
 	"github.com/kelseyhightower/envconfig"
 	log "github.com/sirupsen/logrus"
@@ -57,10 +58,12 @@ func ReadFile() {
 	var file *os.File
 	var err error
 	if TestConfigPath == "" {
-		file, err = os.Open(configPath)
+		filePath := filepath.Join(filepath.Clean(configPath))
+		file, err = os.Open(filePath)
 	} else {
 		log.Debug("test config path is populated")
-		file, err = os.Open(TestConfigPath)
+		filePath := filepath.Join(filepath.Clean(TestConfigPath))
+		file, err = os.Open(filePath)
 	}
 	if err != nil {
 		if err.Error() == "open config.yml: The system cannot find the file specified." {
@@ -71,7 +74,11 @@ func ReadFile() {
 			processError(err)
 		}
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			log.Errorf("Error closing file: %s\n", err)
+		}
+	}()
 
 	decoder := yaml.NewDecoder(file)
 	err = decoder.Decode(&AppConfig)
