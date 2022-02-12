@@ -37,6 +37,7 @@ type Config struct {
 		} `yaml:"default"`
 	} `yaml:"esi"`
 	Jaeger struct {
+		Enabled  bool   `default:"false" yaml:"enabled"`
 		Hostname string `default:"localhost" yaml:"hostname"`
 		Port     string `default:"14268" yaml:"port"`
 		Protocol string `default:"http" yaml:"protocol"`

@@ -19,6 +19,7 @@ esi:
       value: 'en'
     url: 'https://esi.evetech.net/latest'
 jaeger:
+  enabled: true
   protocol: 'http'
   hostname: 'localhost'
   port: '14268'

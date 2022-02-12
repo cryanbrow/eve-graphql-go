@@ -21,6 +21,7 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
 	"github.com/cryanbrow/eve-graphql-go/graph/generated"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
+	"github.com/cryanbrow/eve-graphql-go/graph/tracing"
 )
 
 var (
@@ -81,5 +82,5 @@ func setupDependencies() {
 	dogma.SetupDogmaRest()
 	market.SetupMarketRest()
 	universe.SetupUniverseRest()
-	graph.SetupResolver()
+	tracing.SetupTracing()
 }
