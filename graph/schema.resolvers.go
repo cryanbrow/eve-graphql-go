@@ -62,7 +62,7 @@ func (r *characterResolver) Alliance(ctx context.Context, obj *model.Character) 
 func (r *characterResolver) Ancestry(ctx context.Context, obj *model.Character) (*model.Ancestry, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CharacterAncestry")
 	defer span.End()
-	return universe.AncestryByID(obj.AncestryID, newCtx)
+	return universe.AncestryByID(newCtx, obj.AncestryID)
 }
 
 func (r *characterResolver) Bloodline(ctx context.Context, obj *model.Character) (*model.Bloodline, error) {

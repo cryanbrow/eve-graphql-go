@@ -36,7 +36,7 @@ func tracerProvider(url string) (*tracesdk.TracerProvider, error) {
 
 func SetupTracing() {
 	if configuration.AppConfig.Jaeger.Enabled {
-		var err error = nil
+		var err error
 		//"http://localhost:14268/api/traces"
 		url := configuration.AppConfig.Jaeger.Protocol + "://" + configuration.AppConfig.Jaeger.Hostname + ":" + configuration.AppConfig.Jaeger.Port + "/" + configuration.AppConfig.Jaeger.Route
 		TraceProvider, err = tracerProvider(url)

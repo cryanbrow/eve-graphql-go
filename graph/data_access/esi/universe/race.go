@@ -34,16 +34,14 @@ func RaceByID(id *int, ctx context.Context) (*model.Race, error) {
 		race, err = raceByArray(id, newCtx)
 		if err != nil {
 			return nil, err
-		} else {
-			return race, nil
 		}
+		return race, nil
 	} else {
 		if err := json.Unmarshal(result, &race); err != nil {
 			log.WithFields(log.Fields{"id": id}).Errorf(helpers.CouldNotUnmarshalResponseBytes, err)
 			return race, err
-		} else {
-			return race, nil
 		}
+		return race, nil
 	}
 }
 
@@ -52,7 +50,7 @@ func raceByArray(id *int, ctx context.Context) (*model.Race, error) {
 	defer span.End()
 	var races []*model.Race = make([]*model.Race, 0)
 	var returnRace *model.Race
-	var headers http.Header = nil
+	var headers http.Header
 	baseUrl := fmt.Sprintf("%s/universe/races/", configuration.AppConfig.Esi.Default.Url)
 	redisKey := raceRedisKey + strconv.Itoa(*id)
 

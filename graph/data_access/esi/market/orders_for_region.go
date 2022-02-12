@@ -83,7 +83,7 @@ func ordersForRegionREST(url string, additionalQueryParams []configuration.Key_v
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ordersForRegionREST")
 	defer span.End()
 	var orders []*model.Order
-	var pages = 0
+	var pages int
 	var buffer bytes.Buffer
 	responseBytes, header, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, additionalQueryParams, redisKey, newCtx)
 	if err != nil {

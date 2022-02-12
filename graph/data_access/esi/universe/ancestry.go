@@ -19,7 +19,7 @@ import (
 
 const ancestryRedisKey string = "AncestryByID:"
 
-func AncestryByID(id *int, ctx context.Context) (*model.Ancestry, error) {
+func AncestryByID(ctx context.Context, id *int) (*model.Ancestry, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "AncestryByID")
 	defer span.End()
 	var ancestry *model.Ancestry = new(model.Ancestry)
@@ -31,23 +31,21 @@ func AncestryByID(id *int, ctx context.Context) (*model.Ancestry, error) {
 
 	inCache, result := CachingClient.CheckCache(ancestryRedisKey+strconv.Itoa(*id), newCtx)
 	if !inCache {
-		ancestry, err = ancestryByArray(id, newCtx)
+		ancestry, err = ancestryByArray(newCtx, id)
 		if err != nil {
 			return nil, err
-		} else {
-			return ancestry, nil
 		}
+		return ancestry, nil
 	} else {
 		if err := json.Unmarshal(result, &ancestry); err != nil {
 			log.WithFields(log.Fields{"id": id}).Errorf(helpers.CouldNotUnmarshalResponseBytes, err)
 			return ancestry, err
-		} else {
-			return ancestry, nil
 		}
+		return ancestry, nil
 	}
 }
 
-func ancestryByArray(id *int, ctx context.Context) (*model.Ancestry, error) {
+func ancestryByArray(ctx context.Context, id *int) (*model.Ancestry, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ancestryByArray")
 	defer span.End()
 	var ancestries []*model.Ancestry = make([]*model.Ancestry, 0)
