@@ -48,4 +48,5 @@ jobs:
       run: |
         docker buildx build --push \
           --tag cryanbrow/eve-graphql:latest \
+          --tag cryanbrow/eve-graphql:0.0.1 \
           --platform linux/amd64,linux/arm/v7,linux/arm64 .
