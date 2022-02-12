@@ -9,6 +9,11 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Run Gosec Security Scanner
+      uses: securego/gosec@master
+      with:
+        args: ./...
+
     - name: set-up-go
       uses: actions/setup-go@v2
       with:
@@ -16,11 +21,6 @@ jobs:
 
     - name: make-output-directory
       run: mkdir output
-
-    - name: Run Gosec Security Scanner
-      uses: securego/gosec@master
-      with:
-        args: ./...
 
     - name: build
       run: go build -v ./...
