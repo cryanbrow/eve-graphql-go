@@ -4,6 +4,8 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      GO111MODULE: on
     steps:
     - uses: actions/checkout@v2
       with:
@@ -16,6 +18,11 @@ jobs:
 
     - name: make-output-directory
       run: mkdir output
+
+    - name: Run Gosec Security Scanner
+        uses: securego/gosec@master
+        with:
+          args: ./...
 
     - name: build
       run: go build -v ./...
