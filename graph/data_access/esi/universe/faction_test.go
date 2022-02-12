@@ -26,7 +26,7 @@ func TestSuccessfulInCacheFactionByID(t *testing.T) {
 	  }`
 	b := []byte(jsonResponse)
 
-	mockRedisClient := &MockRedisClient{
+	mockCachingClient := &MockCachingClient{
 		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
 			//Method returns nothing so needs no implementation
 		},
@@ -34,7 +34,7 @@ func TestSuccessfulInCacheFactionByID(t *testing.T) {
 			return true, b
 		},
 	}
-	RedisClient = mockRedisClient
+	CachingClient = mockCachingClient
 
 	var testId int = 500003
 	resp, err := FactionByID(&testId, context.Background())
@@ -101,7 +101,7 @@ func TestFailUnmarshalInCacheFactionByID(t *testing.T) {
 	  }`
 	b := []byte(jsonResponse)
 
-	mockRedisClient := &MockRedisClient{
+	mockCachingClient := &MockCachingClient{
 		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
 			//Method returns nothing so needs no implementation
 		},
@@ -109,7 +109,7 @@ func TestFailUnmarshalInCacheFactionByID(t *testing.T) {
 			return true, b
 		},
 	}
-	RedisClient = mockRedisClient
+	CachingClient = mockCachingClient
 
 	var testId int = 500003
 	_, err := FactionByID(&testId, context.Background())

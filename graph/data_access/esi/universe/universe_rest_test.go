@@ -12,19 +12,19 @@ import (
 *             MOCK SECTION             *
 ***************************************/
 
-type MockAddToRedisCacheType func(key string, value []byte, ttl int64, ctx context.Context)
-type MockCheckRedisCacheType func(key string, ctx context.Context) (bool, []byte)
+type MockAddToCacheType func(key string, value []byte, ttl int64, ctx context.Context)
+type MockCheckCacheType func(key string, ctx context.Context) (bool, []byte)
 
-type MockRedisClient struct {
-	MockAdd   MockAddToRedisCacheType
-	MockCheck MockCheckRedisCacheType
+type MockCachingClient struct {
+	MockAdd   MockAddToCacheType
+	MockCheck MockCheckCacheType
 }
 
-func (m *MockRedisClient) AddToRedisCache(key string, value []byte, ttl int64, ctx context.Context) {
+func (m *MockCachingClient) AddToCache(key string, value []byte, ttl int64, ctx context.Context) {
 	m.MockAdd(key, value, ttl, ctx)
 }
 
-func (m *MockRedisClient) CheckRedisCache(key string, ctx context.Context) (bool, []byte) {
+func (m *MockCachingClient) CheckCache(key string, ctx context.Context) (bool, []byte) {
 	return m.MockCheck(key, ctx)
 }
 

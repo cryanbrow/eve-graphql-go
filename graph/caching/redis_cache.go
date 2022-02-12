@@ -6,19 +6,18 @@ import (
 
 	"context"
 
-	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 	"github.com/go-redis/redis/v8"
 	log "github.com/sirupsen/logrus"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 )
 
-type Client struct {
+type RedisClient struct {
 }
 
 const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph/caching"
 
-func (c *Client) CheckRedisCache(key string, ctx context.Context) (bool, []byte) {
+func (c *RedisClient) CheckCache(key string, ctx context.Context) (bool, []byte) {
 	_, span := otel.Tracer(tracer_name).Start(ctx, "CheckRedisCache")
 	defer span.End()
 	log.Debugf("Checking Redis Cache for key: %s", key)
@@ -34,7 +33,7 @@ func (c *Client) CheckRedisCache(key string, ctx context.Context) (bool, []byte)
 	return true, []byte(val)
 }
 
-func (c *Client) AddToRedisCache(key string, value []byte, ttl int64, ctx context.Context) {
+func (c *RedisClient) AddToCache(key string, value []byte, ttl int64, ctx context.Context) {
 	_, span := otel.Tracer(tracer_name).Start(ctx, "AddToRedisCache")
 	defer span.End()
 	log.Debugf("Adding to Redis Cache: %s", key)
@@ -54,15 +53,6 @@ func (c *Client) AddToRedisCache(key string, value []byte, ttl int64, ctx contex
 		}
 	}
 	span.SetAttributes(attribute.String("key", key), attribute.Int64("ttl", ttl))
-}
-
-func ConfigureRedisClient() {
-	rdb = redis.NewClient(&redis.Options{
-		Addr:     configuration.AppConfig.Redis.Url + ":" + configuration.AppConfig.Redis.Port,
-		Username: configuration.AppConfig.Redis.User,
-		Password: configuration.AppConfig.Redis.Password,
-		DB:       0, // use default DB
-	})
 }
 
 var (

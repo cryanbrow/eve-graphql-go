@@ -64,7 +64,7 @@ func TestInCacheSuccessfulMakeCachingRESTCall(t *testing.T) {
 			}, nil
 		},
 	}
-	RedisClientVar = &MockRedisClient{
+	CachingClientVar = &MockCachingClient{
 		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
 			//Method returns nothing so needs no implementation
 		},
@@ -211,27 +211,27 @@ func Test404FailureMakeCachingRESTCall(t *testing.T) {
 }
 
 type MockDoType func(req *http.Request) (*http.Response, error)
-type MockAddToRedisCacheType func(key string, value []byte, ttl int64, ctx context.Context)
-type MockCheckRedisCacheType func(key string, ctx context.Context) (bool, []byte)
+type MockAddToCacheType func(key string, value []byte, ttl int64, ctx context.Context)
+type MockCheckCacheType func(key string, ctx context.Context) (bool, []byte)
 
 type MockClient struct {
 	MockDo MockDoType
 }
 
-type MockRedisClient struct {
-	MockAdd   MockAddToRedisCacheType
-	MockCheck MockCheckRedisCacheType
+type MockCachingClient struct {
+	MockAdd   MockAddToCacheType
+	MockCheck MockCheckCacheType
 }
 
 func (m *MockClient) Do(req *http.Request) (*http.Response, error) {
 	return m.MockDo(req)
 }
 
-func (m *MockRedisClient) AddToRedisCache(key string, value []byte, ttl int64, ctx context.Context) {
+func (m *MockCachingClient) AddToCache(key string, value []byte, ttl int64, ctx context.Context) {
 	m.MockAdd(key, value, ttl, ctx)
 }
 
-func (m *MockRedisClient) CheckRedisCache(key string, ctx context.Context) (bool, []byte) {
+func (m *MockCachingClient) CheckCache(key string, ctx context.Context) (bool, []byte) {
 	return m.MockCheck(key, ctx)
 }
 
@@ -252,7 +252,7 @@ func init() {
 }
 
 func setRedisClient() {
-	RedisClientVar = &MockRedisClient{
+	CachingClientVar = &MockCachingClient{
 		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
 			//Method returns nothing so needs no implementation
 		},

@@ -26,7 +26,7 @@ func TestSuccessfulInCacheAncestryByID(t *testing.T) {
 	  }`
 	b := []byte(jsonResponse)
 
-	mockRedisClient := &MockRedisClient{
+	mockCachingClient := &MockCachingClient{
 		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
 			//Method returns nothing so needs no implementation
 		},
@@ -34,7 +34,7 @@ func TestSuccessfulInCacheAncestryByID(t *testing.T) {
 			return true, b
 		},
 	}
-	RedisClient = mockRedisClient
+	CachingClient = mockCachingClient
 
 	var testId int = 1
 	resp, err := AncestryByID(&testId, context.Background())
@@ -77,7 +77,7 @@ func TestSuccessfulNotInCacheAncestryByID(t *testing.T) {
 
 func setupNotInCacheRedis(jsonResponse string) bool {
 	b := []byte(jsonResponse)
-	mockRedisClient := &MockRedisClient{
+	mockCachingClient := &MockCachingClient{
 		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
 			//This method does nothing when mocked
 		},
@@ -91,7 +91,7 @@ func setupNotInCacheRedis(jsonResponse string) bool {
 		},
 	}
 
-	RedisClient = mockRedisClient
+	CachingClient = mockCachingClient
 	restHelper = mockRestHelper
 	return false
 }
@@ -115,7 +115,7 @@ func TestFailUnmarshalInCacheAncestryByID(t *testing.T) {
 	  }`
 	b := []byte(jsonResponse)
 
-	mockRedisClient := &MockRedisClient{
+	mockCachingClient := &MockCachingClient{
 		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
 			//Method returns nothing so needs no implementation
 		},
@@ -123,7 +123,7 @@ func TestFailUnmarshalInCacheAncestryByID(t *testing.T) {
 			return true, b
 		},
 	}
-	RedisClient = mockRedisClient
+	CachingClient = mockCachingClient
 
 	var testId int = 13
 	_, err := AncestryByID(&testId, context.Background())
@@ -170,7 +170,7 @@ func TestFailRestNotInCacheAncestryByID(t *testing.T) {
 }
 
 func setupRESTFailureNotInCache() bool {
-	mockRedisClient := &MockRedisClient{
+	mockCachingClient := &MockCachingClient{
 		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
 			//Method returns nothing so needs no implementation
 		},
@@ -184,7 +184,7 @@ func setupRESTFailureNotInCache() bool {
 		},
 	}
 
-	RedisClient = mockRedisClient
+	CachingClient = mockCachingClient
 	restHelper = mockRestHelper
 	return false
 }

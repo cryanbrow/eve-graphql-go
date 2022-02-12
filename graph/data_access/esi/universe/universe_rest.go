@@ -12,18 +12,18 @@ import (
 
 const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
 
-type RedisClientInterface interface {
-	AddToRedisCache(key string, value []byte, ttl int64, ctx context.Context)
-	CheckRedisCache(key string, ctx context.Context) (bool, []byte)
+type CacheClientInterface interface {
+	AddToCache(key string, value []byte, ttl int64, ctx context.Context)
+	CheckCache(key string, ctx context.Context) (bool, []byte)
 }
 
 var (
-	RedisClient RedisClientInterface
-	restHelper  RestHelper
+	CachingClient CacheClientInterface
+	restHelper    RestHelper
 )
 
 func SetupUniverseRest() {
-	RedisClient = &caching.Client{}
+	CachingClient = caching.Cache
 	restHelper = &helpers.RestHelperClient{}
 }
 

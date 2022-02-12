@@ -72,8 +72,8 @@ func main() {
 
 func setupDependencies() {
 	configuration.LoadConfiguration()
+	caching.ConfigureCaching()
 	helpers.SetupRestHelper()
-	caching.ConfigureRedisClient()
 	universe.SetupUniverseRest()
 	alliance.SetupAllianceRest()
 	character.SetupCharacterRest()

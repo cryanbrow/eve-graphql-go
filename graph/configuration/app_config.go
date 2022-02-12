@@ -5,40 +5,44 @@ import (
 
 	"github.com/kelseyhightower/envconfig"
 	log "github.com/sirupsen/logrus"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 const configPath = "config.yml"
 
 var TestConfigPath string
+var AppConfig Config
 
 type Config struct {
 	Application struct {
-		Name        string `yaml:"name"`
-		Environment string `yaml:"environment"`
+		Name        string `default:"eve-graphql-go" yaml:"name"`
+		Environment string `default:"test" yaml:"environment"`
 	} `yaml:"application"`
 	Server struct {
-		Port string `yaml:"port"`
+		Port string `default:"8080" yaml:"port"`
 	} `yaml:"server"`
+	Caching struct {
+		Impl string `default:"memory" yaml:"impl"`
+	} `yaml:"cache"`
 	Redis struct {
-		Url      string `yaml:"url"`
-		Port     string `yaml:"port"`
-		User     string `yaml:"user"`
-		Password string `yaml:"password"`
+		Url      string `default:"localhost" yaml:"url"`
+		Port     string `default:"30893" yaml:"port"`
+		User     string `default:"" yaml:"user"`
+		Password string `default:"" yaml:"password"`
 	} `yaml:"redis"`
 	Esi struct {
 		Default struct {
 			QueryParams []Key_value `yaml:"queryParams"`
-			Url         string      `yaml:"url"`
+			Url         string      `default:"https://esi.evetech.net/latest" yaml:"url"`
 		} `yaml:"default"`
 	} `yaml:"esi"`
 	Jaeger struct {
-		Hostname string `yaml:"hostname"`
-		Port     string `yaml:"port"`
-		Protocol string `yaml:"protocol"`
-		Route    string `yaml:"route"`
+		Hostname string `default:"localhost" yaml:"hostname"`
+		Port     string `default:"14268" yaml:"port"`
+		Protocol string `default:"http" yaml:"protocol"`
+		Route    string `default:"api/traces" yaml:"route"`
 		Sample   struct {
-			Percent float64 `yaml:"percent"`
+			Percent int `default:"0" yaml:"percent"`
 		} `yaml:"sample"`
 	} `yaml:"jaeger"`
 }
@@ -47,8 +51,6 @@ type Key_value struct {
 	Key   string `yaml:"key"`
 	Value string `yaml:"value"`
 }
-
-var AppConfig Config
 
 func ReadFile() {
 	var file *os.File
@@ -92,5 +94,5 @@ func SetupLogging() {
 func LoadConfiguration() {
 	SetupLogging()
 	ReadFile()
-	ReadEnv()
+	//ReadEnv()
 }

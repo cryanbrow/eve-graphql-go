@@ -29,7 +29,7 @@ func BloodlineByID(id *int, ctx context.Context) (*model.Bloodline, error) {
 	}
 
 	span.SetAttributes(attribute.Int("request.id", *id))
-	inCache, result := RedisClient.CheckRedisCache(bloodlineRedisKey+strconv.Itoa(*id), newCtx)
+	inCache, result := CachingClient.CheckCache(bloodlineRedisKey+strconv.Itoa(*id), newCtx)
 	if !inCache {
 		bloodline, err = bloodlineByArray(id, newCtx)
 		if err != nil {
@@ -73,7 +73,7 @@ func bloodlineByArray(id *int, ctx context.Context) (*model.Bloodline, error) {
 		}
 		bloodlineBytes, err := json.Marshal(*bloodline)
 		if err == nil {
-			RedisClient.AddToRedisCache(bloodlineRedisKey+strconv.Itoa(*bloodline.BloodlineID), bloodlineBytes, helpers.EsiTtlToMillis(headers.Get("expires"), newCtx), newCtx)
+			CachingClient.AddToCache(bloodlineRedisKey+strconv.Itoa(*bloodline.BloodlineID), bloodlineBytes, helpers.EsiTtlToMillis(headers.Get("expires"), newCtx), newCtx)
 		} else {
 			log.Errorf(helpers.FailureMarshaling, err)
 		}

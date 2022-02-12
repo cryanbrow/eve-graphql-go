@@ -20,7 +20,7 @@ func TestSuccessfulInCacheRaceByID(t *testing.T) {
 	  }`
 	b := []byte(jsonResponse)
 
-	mockRedisClient := &MockRedisClient{
+	mockCachingClient := &MockCachingClient{
 		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
 			//Method returns nothing so needs no implementation
 		},
@@ -28,7 +28,7 @@ func TestSuccessfulInCacheRaceByID(t *testing.T) {
 			return true, b
 		},
 	}
-	RedisClient = mockRedisClient
+	CachingClient = mockCachingClient
 
 	var testId int = 1
 	resp, err := RaceByID(&testId, context.Background())
@@ -82,7 +82,7 @@ func TestFailUnmarshalInCacheRaceByID(t *testing.T) {
 	  }`
 	b := []byte(jsonResponse)
 
-	mockRedisClient := &MockRedisClient{
+	mockCachingClient := &MockCachingClient{
 		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
 			//Method returns nothing so needs no implementation
 		},
@@ -90,7 +90,7 @@ func TestFailUnmarshalInCacheRaceByID(t *testing.T) {
 			return true, b
 		},
 	}
-	RedisClient = mockRedisClient
+	CachingClient = mockCachingClient
 
 	var testId int = 1
 	_, err := RaceByID(&testId, context.Background())

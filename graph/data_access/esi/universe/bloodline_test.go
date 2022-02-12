@@ -27,7 +27,7 @@ func TestSuccessfulInCacheBloodlineByID(t *testing.T) {
 	  }`
 	b := []byte(jsonResponse)
 
-	mockRedisClient := &MockRedisClient{
+	mockCachingClient := &MockCachingClient{
 		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
 			//Method returns nothing so needs no implementation
 		},
@@ -35,7 +35,7 @@ func TestSuccessfulInCacheBloodlineByID(t *testing.T) {
 			return true, b
 		},
 	}
-	RedisClient = mockRedisClient
+	CachingClient = mockCachingClient
 
 	var testId int = 1
 	resp, err := BloodlineByID(&testId, context.Background())
@@ -104,7 +104,7 @@ func TestFailUnmarshalInCacheBloodlineByID(t *testing.T) {
 	  }`
 	b := []byte(jsonResponse)
 
-	mockRedisClient := &MockRedisClient{
+	mockCachingClient := &MockCachingClient{
 		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
 			//Method returns nothing so needs no implementation
 		},
@@ -112,7 +112,7 @@ func TestFailUnmarshalInCacheBloodlineByID(t *testing.T) {
 			return true, b
 		},
 	}
-	RedisClient = mockRedisClient
+	CachingClient = mockCachingClient
 
 	var testId int = 5
 	_, err := BloodlineByID(&testId, context.Background())

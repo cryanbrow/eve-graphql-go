@@ -29,7 +29,7 @@ func AncestryByID(id *int, ctx context.Context) (*model.Ancestry, error) {
 	}
 	span.SetAttributes(attribute.Int("request.id", *id))
 
-	inCache, result := RedisClient.CheckRedisCache(ancestryRedisKey+strconv.Itoa(*id), newCtx)
+	inCache, result := CachingClient.CheckCache(ancestryRedisKey+strconv.Itoa(*id), newCtx)
 	if !inCache {
 		ancestry, err = ancestryByArray(id, newCtx)
 		if err != nil {
@@ -73,7 +73,7 @@ func ancestryByArray(id *int, ctx context.Context) (*model.Ancestry, error) {
 		}
 		ancestryBytes, err := json.Marshal(*ancestry)
 		if err == nil {
-			RedisClient.AddToRedisCache(ancestryRedisKey+strconv.Itoa(*ancestry.ID), ancestryBytes, helpers.EsiTtlToMillis(headers.Get("expires"), newCtx), newCtx)
+			CachingClient.AddToCache(ancestryRedisKey+strconv.Itoa(*ancestry.ID), ancestryBytes, helpers.EsiTtlToMillis(headers.Get("expires"), newCtx), newCtx)
 		} else {
 			log.Errorf(helpers.FailureMarshaling, err)
 		}

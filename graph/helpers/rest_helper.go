@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"net/url"
 
-	cache "github.com/cryanbrow/eve-graphql-go/graph/caching"
+	"github.com/cryanbrow/eve-graphql-go/graph/caching"
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 	log "github.com/sirupsen/logrus"
 	"go.opentelemetry.io/otel"
@@ -24,7 +24,7 @@ func (r *RestHelperClient) MakeCachingRESTCall(baseUrl string, verb string, body
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "MakeCachingRESTCall")
 	span.SetAttributes(attribute.String("baseUrl", baseUrl), attribute.String("verb", verb), attribute.String("redisKey", redisQueryKey))
 	defer span.End()
-	inCache, result := RedisClientVar.CheckRedisCache(redisQueryKey, newCtx)
+	inCache, result := CachingClientVar.CheckCache(redisQueryKey, newCtx)
 	if !inCache {
 		crest_url, err := url.Parse(baseUrl)
 		if err != nil {
@@ -64,7 +64,7 @@ func (r *RestHelperClient) MakeCachingRESTCall(baseUrl string, verb string, body
 			log.WithFields(log.Fields{"url": url}).Errorf("Could not read response for body. : %v", err)
 			return make([]byte, 0), nil, err
 		}
-		RedisClientVar.AddToRedisCache(redisQueryKey, responseBytes, EsiTtlToMillis(h.Get("expires"), newCtx), newCtx)
+		CachingClientVar.AddToCache(redisQueryKey, responseBytes, EsiTtlToMillis(h.Get("expires"), newCtx), newCtx)
 		return responseBytes, h, nil
 	}
 	return result, nil, nil
@@ -74,17 +74,17 @@ type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
-type RedisClient interface {
-	AddToRedisCache(key string, value []byte, ttl int64, ctx context.Context)
-	CheckRedisCache(key string, ctx context.Context) (bool, []byte)
+type CachingClient interface {
+	AddToCache(key string, value []byte, ttl int64, ctx context.Context)
+	CheckCache(key string, ctx context.Context) (bool, []byte)
 }
 
 var (
-	Client         HTTPClient
-	RedisClientVar RedisClient
+	Client           HTTPClient
+	CachingClientVar CachingClient
 )
 
 func SetupRestHelper() {
 	Client = &http.Client{}
-	RedisClientVar = &cache.Client{}
+	CachingClientVar = caching.Cache
 }

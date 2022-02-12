@@ -8,6 +8,8 @@ redis:
   password: ''
   user: ''
   port: '30893'
+cache:
+  impl: 'redis'
 esi:
   default:
     queryParams:
@@ -22,4 +24,4 @@ jaeger:
   port: '14268'
   route: 'api/traces'
   sample:
-    percent: 1
+    percent: 99

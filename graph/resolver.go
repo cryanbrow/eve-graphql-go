@@ -28,6 +28,7 @@ func tracerProvider(url string) (*tracesdk.TracerProvider, error) {
 	if err != nil {
 		return nil, err
 	}
+	var samplePercentage float64 = float64(configuration.AppConfig.Jaeger.Sample.Percent) / float64(100)
 	tp := tracesdk.NewTracerProvider(
 		// Always be sure to batch in production.
 		tracesdk.WithBatcher(exp),
@@ -37,15 +38,17 @@ func tracerProvider(url string) (*tracesdk.TracerProvider, error) {
 			semconv.ServiceNameKey.String(configuration.AppConfig.Application.Name),
 			attribute.String("environment", configuration.AppConfig.Application.Environment),
 		)),
-		tracesdk.WithSampler(tracesdk.TraceIDRatioBased(configuration.AppConfig.Jaeger.Sample.Percent)),
+		tracesdk.WithSampler(tracesdk.TraceIDRatioBased(samplePercentage)),
 	)
+
 	return tp, nil
 }
 
 func SetupResolver() {
 	var err error = nil
-	traceProvider, err = tracerProvider(configuration.AppConfig.Jaeger.Protocol + "://" + configuration.AppConfig.Jaeger.Hostname + ":" + configuration.AppConfig.Jaeger.Port + "/" + configuration.AppConfig.Jaeger.Route)
 	//"http://localhost:14268/api/traces"
+	url := configuration.AppConfig.Jaeger.Protocol + "://" + configuration.AppConfig.Jaeger.Hostname + ":" + configuration.AppConfig.Jaeger.Port + "/" + configuration.AppConfig.Jaeger.Route
+	traceProvider, err = tracerProvider(url)
 	if err != nil {
 		log.Fatal(err)
 	}
