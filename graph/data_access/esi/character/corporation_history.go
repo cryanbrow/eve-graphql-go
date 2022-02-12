@@ -17,7 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-func CorporationHistory(id *int, ctx context.Context) ([]*model.CorporationHistory, error) {
+func CorporationHistory(ctx context.Context, id *int) ([]*model.CorporationHistory, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "CorporationHistory")
 	defer span.End()
 	var corpHistory []*model.CorporationHistory = make([]*model.CorporationHistory, 0)

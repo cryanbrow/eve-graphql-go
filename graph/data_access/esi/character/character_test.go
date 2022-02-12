@@ -34,7 +34,7 @@ func TestSuccessfulCharacterByID(t *testing.T) {
 
 	var testId int = 1
 
-	resp, err := CharacterByID(&testId, context.Background())
+	resp, err := CharacterByID(context.Background(), &testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -68,7 +68,7 @@ func TestFailNilIDCharacterByID(t *testing.T) {
 
 	var testId *int = nil
 
-	_, err := CharacterByID(testId, context.Background())
+	_, err := CharacterByID(context.Background(), testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -87,7 +87,7 @@ func TestFailRestCallCharacterByID(t *testing.T) {
 
 	var testId int = 1
 
-	_, err := CharacterByID(&testId, context.Background())
+	_, err := CharacterByID(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -119,7 +119,7 @@ func TestFailUnmarshalCharacterByID(t *testing.T) {
 
 	var testId int = 1
 
-	_, err := CharacterByID(&testId, context.Background())
+	_, err := CharacterByID(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

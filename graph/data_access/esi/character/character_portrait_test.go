@@ -30,7 +30,7 @@ func TestSuccessfulCharacterPortraitByID(t *testing.T) {
 
 	var testId int = 1
 
-	resp, err := CharacterPortraitByID(&testId, context.Background())
+	resp, err := CharacterPortraitByID(context.Background(), &testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -60,7 +60,7 @@ func TestFailNilIDCharacterPortraitByID(t *testing.T) {
 
 	var testId *int = nil
 
-	_, err := CharacterPortraitByID(testId, context.Background())
+	_, err := CharacterPortraitByID(context.Background(), testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -79,7 +79,7 @@ func TestFailRestCallCharacterPortraitByID(t *testing.T) {
 
 	var testId int = 1
 
-	_, err := CharacterPortraitByID(&testId, context.Background())
+	_, err := CharacterPortraitByID(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -107,7 +107,7 @@ func TestFailUnmarshalCharacterPortraitByID(t *testing.T) {
 
 	var testId int = 1
 
-	_, err := CharacterPortraitByID(&testId, context.Background())
+	_, err := CharacterPortraitByID(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

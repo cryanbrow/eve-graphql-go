@@ -17,7 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-func CharacterByID(id *int, ctx context.Context) (*model.Character, error) {
+func CharacterByID(ctx context.Context, id *int) (*model.Character, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "CharacterByID")
 	defer span.End()
 	var character *model.Character = new(model.Character)

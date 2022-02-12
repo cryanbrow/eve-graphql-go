@@ -30,7 +30,7 @@ func TestSuccessfulCorporationHistory(t *testing.T) {
 
 	var testId int = 1
 
-	resp, err := CorporationHistory(&testId, context.Background())
+	resp, err := CorporationHistory(context.Background(), &testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -60,7 +60,7 @@ func TestFailNilIDCorporationHistory(t *testing.T) {
 
 	var testId *int = nil
 
-	_, err := CorporationHistory(testId, context.Background())
+	_, err := CorporationHistory(context.Background(), testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -79,7 +79,7 @@ func TestFailRestCallCorporationHistory(t *testing.T) {
 
 	var testId int = 1
 
-	_, err := CorporationHistory(&testId, context.Background())
+	_, err := CorporationHistory(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -107,7 +107,7 @@ func TestFailUnmarshalCorporationHistory(t *testing.T) {
 
 	var testId int = 1
 
-	_, err := CorporationHistory(&testId, context.Background())
+	_, err := CorporationHistory(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

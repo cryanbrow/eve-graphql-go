@@ -26,7 +26,7 @@ func (r *allianceResolver) CreatorCorporation(ctx context.Context, obj *model.Al
 func (r *allianceResolver) Creator(ctx context.Context, obj *model.Alliance) (*model.Character, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "Creator")
 	defer span.End()
-	return character.CharacterByID(obj.CreatorID, newCtx)
+	return character.CharacterByID(newCtx, obj.CreatorID)
 }
 
 func (r *allianceResolver) ExecutorCorporation(ctx context.Context, obj *model.Alliance) (*model.Corporation, error) {
@@ -110,13 +110,13 @@ func (r *corporationResolver) Alliance(ctx context.Context, obj *model.Corporati
 func (r *corporationResolver) Ceo(ctx context.Context, obj *model.Corporation) (*model.Character, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CorporationCeo")
 	defer span.End()
-	return character.CharacterByID(obj.CeoID, newCtx)
+	return character.CharacterByID(newCtx, obj.CeoID)
 }
 
 func (r *corporationResolver) Creator(ctx context.Context, obj *model.Corporation) (*model.Character, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CorporationCreator")
 	defer span.End()
-	return character.CharacterByID(obj.CreatorID, newCtx)
+	return character.CharacterByID(newCtx, obj.CreatorID)
 }
 
 func (r *corporationResolver) Faction(ctx context.Context, obj *model.Corporation) (*model.Faction, error) {
@@ -326,13 +326,13 @@ func (r *queryResolver) CorporationByID(ctx context.Context, id *int) (*model.Co
 func (r *queryResolver) CorporationHistoryForCharacterID(ctx context.Context, id *int) ([]*model.CorporationHistory, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CorporationHistoryForCharacterID")
 	defer span.End()
-	return character.CorporationHistory(id, newCtx)
+	return character.CorporationHistory(newCtx, id)
 }
 
 func (r *queryResolver) CharacterPortraitByID(ctx context.Context, id *int) (*model.CharacterPortrait, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CharacterPortraitByID")
 	defer span.End()
-	return character.CharacterPortraitByID(id, newCtx)
+	return character.CharacterPortraitByID(newCtx, id)
 }
 
 func (r *queryResolver) FactionByID(ctx context.Context, id *int) (*model.Faction, error) {
