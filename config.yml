@@ -1,15 +1,19 @@
 application:
   name: 'eve-graphql-go'
   environment: 'test'
+
 server:
   port: 8080
+
 redis:
   url: '192.168.0.201'
   password: ''
   user: ''
   port: '30893'
+
 cache:
   impl: 'redis'
+
 esi:
   default:
     queryParams:
@@ -18,6 +22,7 @@ esi:
     - key: 'language'
       value: 'en'
     url: 'https://esi.evetech.net/latest'
+
 jaeger:
   enabled: true
   protocol: 'http'
