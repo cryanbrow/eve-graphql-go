@@ -17,6 +17,9 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+//CharacterPortraitByID returns the character portrait indicated by the id field, the context is
+//used for tracing. If the character portrait is cached the ESI will not be called until the ttl
+//and the cached instance will be returned.
 func CharacterPortraitByID(ctx context.Context, id *int) (*model.CharacterPortrait, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "CharacterPortraitByID")
 	defer span.End()

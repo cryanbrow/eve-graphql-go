@@ -32,7 +32,7 @@ func TestSuccessfulAllianceByID(t *testing.T) {
 
 	var testId int = 1
 
-	resp, err := AllianceByID(&testId, context.Background())
+	resp, err := AllianceByID(context.Background(), &testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -64,7 +64,7 @@ func TestFailNilIDAllianceByID(t *testing.T) {
 
 	var testId *int = nil
 
-	_, err := AllianceByID(testId, context.Background())
+	_, err := AllianceByID(context.Background(), testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -83,7 +83,7 @@ func TestFailRestCallAllianceByID(t *testing.T) {
 
 	var testId int = 1
 
-	_, err := AllianceByID(&testId, context.Background())
+	_, err := AllianceByID(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -113,7 +113,7 @@ func TestFailUnmarshalAllianceByID(t *testing.T) {
 
 	var testId int = 1
 
-	_, err := AllianceByID(&testId, context.Background())
+	_, err := AllianceByID(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

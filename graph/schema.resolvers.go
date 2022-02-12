@@ -56,7 +56,7 @@ func (r *asteroid_beltResolver) System(ctx context.Context, obj *model.AsteroidB
 func (r *characterResolver) Alliance(ctx context.Context, obj *model.Character) (*model.Alliance, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CharcterAlliance")
 	defer span.End()
-	return alliance.AllianceByID(obj.AllianceID, newCtx)
+	return alliance.AllianceByID(newCtx, obj.AllianceID)
 }
 
 func (r *characterResolver) Ancestry(ctx context.Context, obj *model.Character) (*model.Ancestry, error) {
@@ -104,7 +104,7 @@ func (r *constellationResolver) SolarSystems(ctx context.Context, obj *model.Con
 func (r *corporationResolver) Alliance(ctx context.Context, obj *model.Corporation) (*model.Alliance, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CorporationAlliance")
 	defer span.End()
-	return alliance.AllianceByID(obj.AllianceID, newCtx)
+	return alliance.AllianceByID(newCtx, obj.AllianceID)
 }
 
 func (r *corporationResolver) Ceo(ctx context.Context, obj *model.Corporation) (*model.Character, error) {
