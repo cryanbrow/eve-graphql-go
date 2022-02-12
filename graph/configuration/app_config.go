@@ -66,6 +66,7 @@ func ReadFile() {
 		if err.Error() == "open config.yml: The system cannot find the file specified." {
 			log.Warn("Did not find config file. Proceeding with default config.")
 			AppConfig = Config{}
+			return
 		} else {
 			processError(err)
 		}
