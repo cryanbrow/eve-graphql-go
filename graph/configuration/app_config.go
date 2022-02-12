@@ -63,7 +63,11 @@ func ReadFile() {
 		file, err = os.Open(TestConfigPath)
 	}
 	if err != nil {
-		processError(err)
+		if err.Error() == "open config.yml: The system cannot find the file specified." {
+			AppConfig = Config{}
+		} else {
+			processError(err)
+		}
 	}
 	defer file.Close()
 
