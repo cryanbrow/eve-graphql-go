@@ -431,7 +431,7 @@ func (r *systemResolver) StationList(ctx context.Context, obj *model.System) ([]
 }
 
 func (r *system_planetResolver) AsteroidBeltsProperties(ctx context.Context, obj *model.SystemPlanet) ([]*model.AsteroidBelt, error) {
-	newCtx, span := traceProvider.Tracer(tracer_name).Start(ctx, "Creator")
+	newCtx, span := traceProvider.Tracer(tracer_name).Start(ctx, "AsteroidBeltsProperties")
 	defer span.End()
 	return universe.AsteroidBeltDetails(obj.AsteroidBelts, newCtx)
 }
