@@ -58,12 +58,10 @@ func ReadFile() {
 	var file *os.File
 	var err error
 	if TestConfigPath == "" {
-		filePath := filepath.Join(filepath.Clean(configPath))
-		file, err = os.Open(filePath)
+		file, err = os.Open(filepath.Clean(configPath))
 	} else {
 		log.Debug("test config path is populated")
-		filePath := filepath.Join(filepath.Clean(TestConfigPath))
-		file, err = os.Open(filePath)
+		file, err = os.Open(filepath.Clean(TestConfigPath))
 	}
 	if err != nil {
 		if err.Error() == "open config.yml: The system cannot find the file specified." {
