@@ -2975,6 +2975,7 @@ var sources = []*ast.Source{
 	corporationById(id: Int): Corporation
 	"""List of corporations a character has belonged to."""
 	corporationHistoryForCharacterId(id: Int): [Corporation_history]
+	"""Returns URLs for portraits of characters."""
 	characterPortraitByID(id: Int): Character_portrait
 	"""Get information on a faction"""
 	factionByID(id: Int): Faction
@@ -3083,6 +3084,7 @@ type Station{
 	station_type: Item_type
 }
 
+"""A PC or NPC Corporation in EVE"""
 type Corporation{
 	alliance: Alliance
 	alliance_id: Int

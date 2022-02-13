@@ -34,7 +34,7 @@ func TestSuccessfulCorporationHistory(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
-	var responseName int = 1000049
+	var responseName = 1000049
 	if *resp[0].CorporationID != responseName {
 		t.Errorf("Response was not as expected")
 	}

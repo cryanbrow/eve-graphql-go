@@ -55,7 +55,7 @@ func TestSuccessfulOrdersForRegion(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName int = 30000732
+	var responseName = 30000732
 	if *resp.List[0].SystemID != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -101,7 +101,7 @@ func TestFailNilTypeIDOrdersForRegion(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName int = 30000732
+	var responseName = 30000732
 	if *resp.List[0].SystemID != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}

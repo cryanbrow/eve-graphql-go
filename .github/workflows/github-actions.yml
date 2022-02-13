@@ -45,7 +45,7 @@ jobs:
     - name: Run Revive Action by pulling pre-built image
       uses: docker://morphy/revive-action:v2
       with:
-        exclude: "models_gen.go;generated.go"
+        exclude: "models_gen.go;generated.go;schema.resolvers.go"
 
     - name: sonar-cloud-scan
       uses: SonarSource/sonarcloud-github-action@master

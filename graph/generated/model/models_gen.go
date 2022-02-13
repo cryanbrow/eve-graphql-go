@@ -101,6 +101,7 @@ type Constellation struct {
 	SolarSystems    []*System `json:"solar_systems"`
 }
 
+// A PC or NPC Corporation in EVE
 type Corporation struct {
 	Alliance      *Alliance  `json:"alliance"`
 	AllianceID    *int       `json:"alliance_id"`
