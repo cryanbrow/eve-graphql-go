@@ -41,7 +41,7 @@ func TestSuccessfulDogmaEffectByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 1
+	var testId = 1
 
 	resp, err := DogmaEffectByID(context.Background(), &testId)
 	if err != nil {
@@ -82,7 +82,7 @@ func TestFailNilIDDogmaEffectByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = nil
+	var testId *int
 
 	_, err := DogmaEffectByID(context.Background(), testId)
 	if err == nil {
@@ -100,7 +100,7 @@ func TestFailRestCallDogmaEffectByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 1
+	var testId = 1
 
 	_, err := DogmaEffectByID(context.Background(), &testId)
 	if err == nil {
@@ -138,7 +138,7 @@ func TestFailUnmarshalDogmaEffectByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 1
+	var testId = 1
 
 	_, err := DogmaEffectByID(context.Background(), &testId)
 	if err == nil {
@@ -168,7 +168,7 @@ func TestSuccessfulDogmaAttributeByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 1
+	var testId = 1
 
 	resp, err := DogmaAttributeByID(context.Background(), &testId)
 	if err != nil {
@@ -203,7 +203,7 @@ func TestFailNilIDDogmaAttributeByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = nil
+	var testId *int
 
 	_, err := DogmaAttributeByID(context.Background(), testId)
 	if err == nil {
@@ -222,7 +222,7 @@ func TestFailRestCallDogmaAttributeByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 1
+	var testId = 1
 
 	_, err := DogmaAttributeByID(context.Background(), &testId)
 	if err == nil {
@@ -255,7 +255,7 @@ func TestFailUnmarshalDogmaAttributeByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 1
+	var testId = 1
 
 	_, err := DogmaAttributeByID(context.Background(), &testId)
 	if err == nil {

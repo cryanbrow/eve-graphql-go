@@ -105,7 +105,7 @@ func TestSuccessfulAsteroidBeltByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 1
+	var testId = 1
 
 	resp, err := AsteroidBeltByID(context.Background(), &testId)
 	if err != nil {
@@ -138,7 +138,7 @@ func TestFailNilIDAsteroidBeltByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = nil
+	var testId *int
 
 	_, err := AsteroidBeltByID(context.Background(), testId)
 	if err == nil {
@@ -157,7 +157,7 @@ func TestFailRestCallAsteroidBeltByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 1
+	var testId = 1
 
 	_, err := AsteroidBeltByID(context.Background(), &testId)
 	if err == nil {
@@ -188,7 +188,7 @@ func TestFailUnmarshalAsteroidBeltByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 1
+	var testId = 1
 
 	_, err := AsteroidBeltByID(context.Background(), &testId)
 	if err == nil {

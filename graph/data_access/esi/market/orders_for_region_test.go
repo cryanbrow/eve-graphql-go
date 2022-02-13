@@ -46,9 +46,9 @@ func TestSuccessfulOrdersForRegion(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var regionId int = 10000008
-	var typeId int = 44992
-	var page int = 1
+	var regionId = 10000008
+	var typeId = 44992
+	var page = 1
 	var orderType model.Ordertype = model.OrdertypeAll
 
 	resp, err := OrdersForRegion(context.Background(), &regionId, &orderType, &typeId, &page)
@@ -92,9 +92,9 @@ func TestFailNilTypeIDOrdersForRegion(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var regionId int = 10000008
-	var typeId *int = nil
-	var page int = 1
+	var regionId = 10000008
+	var typeId *int
+	var page = 1
 	var orderType model.Ordertype = model.OrdertypeAll
 
 	resp, err := OrdersForRegion(context.Background(), &regionId, &orderType, typeId, &page)
@@ -116,9 +116,9 @@ func TestFailRestCallOrdersForRegion(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var regionId int = 10000008
-	var typeId int = 44992
-	var page int = 1
+	var regionId = 10000008
+	var typeId = 44992
+	var page = 1
 	var orderType model.Ordertype = model.OrdertypeAll
 
 	_, err := OrdersForRegion(context.Background(), &regionId, &orderType, &typeId, &page)
@@ -156,9 +156,9 @@ func TestFailUnmarshalOrdersForRegion(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var regionId int = 10000008
-	var typeId int = 44992
-	var page int = 1
+	var regionId = 10000008
+	var typeId = 44992
+	var page = 1
 	var orderType model.Ordertype = model.OrdertypeAll
 
 	_, err := OrdersForRegion(context.Background(), &regionId, &orderType, &typeId, &page)

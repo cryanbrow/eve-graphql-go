@@ -28,7 +28,7 @@ func TestSuccessfulCorporationHistory(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 1
+	var testId = 1
 
 	resp, err := CorporationHistory(context.Background(), &testId)
 	if err != nil {
@@ -58,7 +58,7 @@ func TestFailNilIDCorporationHistory(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = nil
+	var testId *int
 
 	_, err := CorporationHistory(context.Background(), testId)
 	if err == nil {
@@ -77,7 +77,7 @@ func TestFailRestCallCorporationHistory(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 1
+	var testId = 1
 
 	_, err := CorporationHistory(context.Background(), &testId)
 	if err == nil {
@@ -105,7 +105,7 @@ func TestFailUnmarshalCorporationHistory(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 1
+	var testId = 1
 
 	_, err := CorporationHistory(context.Background(), &testId)
 	if err == nil {

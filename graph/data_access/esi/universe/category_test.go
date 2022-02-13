@@ -42,7 +42,7 @@ func TestSuccessfulCategoryByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 5
+	var testId = 5
 
 	resp, err := CategoryByID(context.Background(), &testId)
 	if err != nil {
@@ -82,7 +82,7 @@ func TestFailNilIDCategoryByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = nil
+	var testId *int
 
 	_, err := CategoryByID(context.Background(), testId)
 	if err == nil {
@@ -101,7 +101,7 @@ func TestFailRestCallCategoryByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 1
+	var testId = 1
 
 	_, err := CategoryByID(context.Background(), &testId)
 	if err == nil {
@@ -139,7 +139,7 @@ func TestFailUnmarshalCategoryByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 5
+	var testId = 5
 
 	_, err := CategoryByID(context.Background(), &testId)
 	if err == nil {

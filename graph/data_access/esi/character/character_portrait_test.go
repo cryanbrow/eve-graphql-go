@@ -28,7 +28,7 @@ func TestSuccessfulCharacterPortraitByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 1
+	var testId = 1
 
 	resp, err := CharacterPortraitByID(context.Background(), &testId)
 	if err != nil {
@@ -58,7 +58,7 @@ func TestFailNilIDCharacterPortraitByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = nil
+	var testId *int
 
 	_, err := CharacterPortraitByID(context.Background(), testId)
 	if err == nil {
@@ -77,7 +77,7 @@ func TestFailRestCallCharacterPortraitByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 1
+	var testId = 1
 
 	_, err := CharacterPortraitByID(context.Background(), &testId)
 	if err == nil {
@@ -105,7 +105,7 @@ func TestFailUnmarshalCharacterPortraitByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 1
+	var testId = 1
 
 	_, err := CharacterPortraitByID(context.Background(), &testId)
 	if err == nil {
