@@ -49,7 +49,7 @@ func TestSuccessfulInCacheBloodlineByID(t *testing.T) {
 }
 
 func TestSuccessfulNotInCacheBloodlineByID(t *testing.T) {
-	var ancestriesJSONResponse string = `[
+	var ancestriesJSONResponse = `[
 		{
 			"bloodline_id": 5,
 			"charisma": 3,
@@ -122,7 +122,7 @@ func TestFailUnmarshalInCacheBloodlineByID(t *testing.T) {
 }
 
 func TestFailUnmarshalNotInCacheBloodlineByID(t *testing.T) {
-	var ancestriesJSONResponse string = `[
+	var ancestriesJSONResponse = `[
 	{{
 		"bloodline_id": 5,
 		"charisma": 3,

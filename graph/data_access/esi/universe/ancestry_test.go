@@ -48,7 +48,7 @@ func TestSuccessfulInCacheAncestryByID(t *testing.T) {
 }
 
 func TestSuccessfulNotInCacheAncestryByID(t *testing.T) {
-	var ancestriesJSONResponse string = `[
+	var ancestriesJSONResponse = `[
 	{
 	  "bloodline_id": 7,
 	  "description": "The Gallente prize political activism more so than other Empires. Many devote their efforts towards one or more causes that suit their ambitions. Activists understand that things will never change for the better unless someone has the courage to fight the good fight.",
@@ -133,7 +133,7 @@ func TestFailUnmarshalInCacheAncestryByID(t *testing.T) {
 }
 
 func TestFailUnmarshalNotInCacheAncestryByID(t *testing.T) {
-	var ancestriesJSONResponse string = `[
+	var ancestriesJSONResponse = `[
 	{{
 	  "bloodline_id": 7,
 	  "description": "The Gallente prize political activism more so than other Empires. Many devote their efforts towards one or more causes that suit their ambitions. Activists understand that things will never change for the better unless someone has the courage to fight the good fight.",

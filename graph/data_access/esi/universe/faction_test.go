@@ -48,7 +48,7 @@ func TestSuccessfulInCacheFactionByID(t *testing.T) {
 }
 
 func TestSuccessfulNotInCacheFactionByID(t *testing.T) {
-	var ancestriesJSONResponse string = `[
+	var ancestriesJSONResponse = `[
 		{
 			"corporation_id": 1000084,
 			"description": "The largest of the five main empires, the Amarr Empire is a sprawling patch-work of feudal-like provinces held together by the might of the emperor. Religion has always played a big part in Amarrian politics and the Amarrians believe they are the rightful masters of the world, souring their relations with their neighbours. Another source of ill-feelings on part of the other empires is the fact that the Amarrians embrace slavery.",
@@ -119,7 +119,7 @@ func TestFailUnmarshalInCacheFactionByID(t *testing.T) {
 }
 
 func TestFailUnmarshalNotInCacheFactionByID(t *testing.T) {
-	var ancestriesJSONResponse string = `[
+	var ancestriesJSONResponse = `[
 	{{
 		"corporation_id": 1000084,
 		"description": "The largest of the five main empires, the Amarr Empire is a sprawling patch-work of feudal-like provinces held together by the might of the emperor. Religion has always played a big part in Amarrian politics and the Amarrians believe they are the rightful masters of the world, souring their relations with their neighbours. Another source of ill-feelings on part of the other empires is the fact that the Amarrians embrace slavery.",

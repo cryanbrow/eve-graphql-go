@@ -203,9 +203,9 @@ func TestSuccessfulStationsByIDs(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testID1 int = 60015096
-	var testID2 int = 60015096
-	var ids []*int = make([]*int, 2)
+	var testID1 = 60015096
+	var testID2 = 60015096
+	var ids = make([]*int, 2)
 	ids[0] = &testID1
 	ids[1] = &testID2
 
@@ -227,9 +227,9 @@ func TestFailureStationsByIDs(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testID1 int = 60015096
-	var testID2 int = 60015096
-	var ids []*int = make([]*int, 2)
+	var testID1 = 60015096
+	var testID2 = 60015096
+	var ids = make([]*int, 2)
 	ids[0] = &testID1
 	ids[1] = &testID2
 

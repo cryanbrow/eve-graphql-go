@@ -35,9 +35,9 @@ func TestSuccessfulAsteroidBeltDetails(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testID *int = new(int)
+	var testID = new(int)
 	*testID = 1
-	var ids []*int = make([]*int, 1)
+	var ids = make([]*int, 1)
 	ids[0] = testID
 
 	resp, err := AsteroidBeltDetails(context.Background(), ids)
@@ -70,9 +70,9 @@ func TestFailNilIDAsteroidBeltDetails(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testID *int = new(int)
+	var testID = new(int)
 	*testID = 1
-	var ids []*int = make([]*int, 2)
+	var ids = make([]*int, 2)
 	ids[0] = testID
 
 	_, err := AsteroidBeltDetails(context.Background(), ids)

@@ -884,9 +884,9 @@ func TestSuccessfulItemTypesByIDs(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testID1 int = 602
-	var testID2 int = 602
-	var ids []*int = make([]*int, 2)
+	var testID1 = 602
+	var testID2 = 602
+	var ids = make([]*int, 2)
 	ids[0] = &testID1
 	ids[1] = &testID2
 
@@ -908,9 +908,9 @@ func TestFailureItemTypesByIDs(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testID1 int = 602
-	var testID2 int = 602
-	var ids []*int = make([]*int, 2)
+	var testID1 = 602
+	var testID2 = 602
+	var ids = make([]*int, 2)
 	ids[0] = &testID1
 	ids[1] = &testID2
 

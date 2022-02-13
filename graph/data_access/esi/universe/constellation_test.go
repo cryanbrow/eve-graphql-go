@@ -46,9 +46,9 @@ func TestSuccessfulConstellationsByIDs(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testID *int = new(int)
+	var testID = new(int)
 	*testID = 20000019
-	var ids []*int = make([]*int, 1)
+	var ids = make([]*int, 1)
 	ids[0] = testID
 
 	resp, err := ConstellationsByIDs(context.Background(), ids)
@@ -92,9 +92,9 @@ func TestFailNilIDConstellationsByIDs(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testID *int = new(int)
+	var testID = new(int)
 	*testID = 20000019
-	var ids []*int = make([]*int, 2)
+	var ids = make([]*int, 2)
 	ids[0] = testID
 
 	_, err := ConstellationsByIDs(context.Background(), ids)

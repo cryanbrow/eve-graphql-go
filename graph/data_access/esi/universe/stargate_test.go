@@ -41,9 +41,9 @@ func TestSuccessfulStargateDetails(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testID *int = new(int)
+	var testID = new(int)
 	*testID = 50003085
-	var ids []*int = make([]*int, 1)
+	var ids = make([]*int, 1)
 	ids[0] = testID
 
 	resp, err := StargateDetails(context.Background(), ids)
@@ -82,9 +82,9 @@ func TestFailNilIDStargateDetails(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testID *int = new(int)
+	var testID = new(int)
 	*testID = 50003085
-	var ids []*int = make([]*int, 2)
+	var ids = make([]*int, 2)
 	ids[0] = testID
 
 	_, err := StargateDetails(context.Background(), ids)

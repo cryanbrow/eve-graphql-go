@@ -37,7 +37,7 @@ func TestSuccessfulAgentIDForName(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseInt int = 2112625428
+	var responseInt = 2112625428
 	if resp != responseInt {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -68,7 +68,7 @@ func TestSuccessfulAllianceIDForName(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseInt int = 2112625428
+	var responseInt = 2112625428
 	if resp != responseInt {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -99,7 +99,7 @@ func TestSuccessfulCharacterIDForName(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseInt int = 2112625428
+	var responseInt = 2112625428
 	if resp != responseInt {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -130,7 +130,7 @@ func TestSuccessfulConstellationIDForName(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseInt int = 2112625428
+	var responseInt = 2112625428
 	if resp != responseInt {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -161,7 +161,7 @@ func TestSuccessfulCorporationIDForName(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseInt int = 2112625428
+	var responseInt = 2112625428
 	if resp != responseInt {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -192,7 +192,7 @@ func TestSuccessfulFactionIDForName(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseInt int = 2112625428
+	var responseInt = 2112625428
 	if resp != responseInt {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -223,7 +223,7 @@ func TestSuccessfulInventoryTypeIDForName(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseInt int = 2112625428
+	var responseInt = 2112625428
 	if resp != responseInt {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -254,7 +254,7 @@ func TestSuccessfulRegionIDForName(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseInt int = 2112625428
+	var responseInt = 2112625428
 	if resp != responseInt {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -285,7 +285,7 @@ func TestSuccessfulSystemIDForName(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseInt int = 2112625428
+	var responseInt = 2112625428
 	if resp != responseInt {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -337,7 +337,7 @@ func TestFailNilNameIDForName(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testName *string = nil
+	var testName *string
 
 	_, err := IdForName(context.Background(), testName, model.AGENTS)
 	if err == nil {

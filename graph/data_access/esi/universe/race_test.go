@@ -42,7 +42,7 @@ func TestSuccessfulInCacheRaceByID(t *testing.T) {
 }
 
 func TestSuccessfulNotInCacheRaceByID(t *testing.T) {
-	var ancestriesJSONResponse string = `[{
+	var ancestriesJSONResponse = `[{
 		"alliance_id": 500001,
 		"description": "Founded on the tenets of patriotism and hard work that carried its ancestors through hardships on an inhospitable homeworld, the Caldari State is today a corporate dictatorship, led by rulers who are determined to see it return to the meritocratic ideals of old. Ruthless and efficient in the boardroom as well as on the battlefield, the Caldari are living emblems of strength, persistence, and dignity.",
 		"name": "Caldari",
@@ -100,7 +100,7 @@ func TestFailUnmarshalInCacheRaceByID(t *testing.T) {
 }
 
 func TestFailUnmarshalNotInCacheRaceByID(t *testing.T) {
-	var ancestriesJSONResponse string = `[
+	var ancestriesJSONResponse = `[
 	{{
 		"alliance_id": 500001,
 		"description": "Founded on the tenets of patriotism and hard work that carried its ancestors through hardships on an inhospitable homeworld, the Caldari State is today a corporate dictatorship, led by rulers who are determined to see it return to the meritocratic ideals of old. Ruthless and efficient in the boardroom as well as on the battlefield, the Caldari are living emblems of strength, persistence, and dignity.",
