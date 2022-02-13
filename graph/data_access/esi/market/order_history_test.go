@@ -38,7 +38,7 @@ func TestSuccessfulOrderHistory(t *testing.T) {
 	var regionID = 10000008
 	var typeID = 602
 
-	resp, err := OrderHistory(context.Background(), &regionId, &typeID)
+	resp, err := OrderHistory(context.Background(), &regionID, &typeID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -72,7 +72,7 @@ func TestFailNilRegionIDOrderHistory(t *testing.T) {
 	var regionID *int
 	var typeID = 602
 
-	_, err := OrderHistory(context.Background(), regionId, &typeID)
+	_, err := OrderHistory(context.Background(), regionID, &typeID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilID {
@@ -104,7 +104,7 @@ func TestFailNilTypeIDOrderHistory(t *testing.T) {
 	var regionID = 10000008
 	var typeID *int
 
-	_, err := OrderHistory(context.Background(), &regionId, typeID)
+	_, err := OrderHistory(context.Background(), &regionID, typeID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilID {
@@ -124,7 +124,7 @@ func TestFailRestCallOrderHistory(t *testing.T) {
 	var regionID = 2
 	var typeID = 2
 
-	_, err := OrderHistory(context.Background(), &regionId, &typeID)
+	_, err := OrderHistory(context.Background(), &regionID, &typeID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -156,7 +156,7 @@ func TestFailUnmarshalOrderHistory(t *testing.T) {
 	var regionID = 10000008
 	var typeID = 602
 
-	_, err := OrderHistory(context.Background(), &regionId, &typeID)
+	_, err := OrderHistory(context.Background(), &regionID, &typeID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
