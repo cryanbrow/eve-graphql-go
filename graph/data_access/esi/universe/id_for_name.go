@@ -47,23 +47,23 @@ func IDForName(ctx context.Context, name *string, nameType string) (int, error) 
 	span.SetAttributes(attribute.String("request.name", *name), attribute.String("request.nameType", nameType))
 
 	switch nameType {
-	case local_model.AGENTS:
+	case local_model.Agents:
 		return *ids.Agents[0].ID, nil
-	case local_model.ALLIANCES:
+	case local_model.Alliances:
 		return *ids.Alliances[0].ID, nil
-	case local_model.CHARACTERS:
+	case local_model.Characters:
 		return *ids.Characters[0].ID, nil
-	case local_model.CONSTELLATIONS:
+	case local_model.Constellations:
 		return *ids.Constellations[0].ID, nil
-	case local_model.CORPORATIONS:
+	case local_model.Corporations:
 		return *ids.Corporations[0].ID, nil
-	case local_model.FACTIONS:
+	case local_model.Factions:
 		return *ids.Factions[0].ID, nil
-	case local_model.INVENTORY_TYPES:
+	case local_model.InventoryTypes:
 		return *ids.InventoryTypes[0].ID, nil
-	case local_model.REGIONS:
+	case local_model.Regions:
 		return *ids.Regions[0].ID, nil
-	case local_model.SYSTEMS:
+	case local_model.Systems:
 		return *ids.Systems[0].ID, nil
 	default:
 		return 0, errors.New("all fields nil")
