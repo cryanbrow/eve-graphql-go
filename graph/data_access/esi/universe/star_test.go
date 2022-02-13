@@ -42,7 +42,7 @@ func TestSuccessfulStarByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Inaro - Star"
+	var responseName = "Inaro - Star"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}

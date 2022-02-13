@@ -45,7 +45,7 @@ func TestSuccessfulMoonDetails(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Inaro I - Moon 1"
+	var responseName = "Inaro I - Moon 1"
 	if *resp[0].Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -114,7 +114,7 @@ func TestSuccessfulMoonByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Inaro I - Moon 1"
+	var responseName = "Inaro I - Moon 1"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}

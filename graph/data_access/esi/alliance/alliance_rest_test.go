@@ -36,7 +36,7 @@ func TestSuccessfulAllianceByID(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
-	var responseName string = "Fleet Coordination Coalition"
+	var responseName = "Fleet Coordination Coalition"
 	if *resp.Name != responseName {
 		t.Errorf("Response was not as expected")
 	}

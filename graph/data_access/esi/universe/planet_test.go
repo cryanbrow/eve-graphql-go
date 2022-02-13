@@ -43,7 +43,7 @@ func TestSuccessfulPlanetByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Inaro III"
+	var responseName = "Inaro III"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}

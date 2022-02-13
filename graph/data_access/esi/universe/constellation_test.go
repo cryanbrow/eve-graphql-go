@@ -55,7 +55,7 @@ func TestSuccessfulConstellationsByIDs(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Ihilakken"
+	var responseName = "Ihilakken"
 	if *resp[0].Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -144,7 +144,7 @@ func TestSuccessfulConstellationByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Ihilakken"
+	var responseName = "Ihilakken"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}

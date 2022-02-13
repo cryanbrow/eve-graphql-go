@@ -66,7 +66,7 @@ func TestSuccessfulStationByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Ebolfer V - Tribal Liberation Force Testing Facilities"
+	var responseName = "Ebolfer V - Tribal Liberation Force Testing Facilities"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -213,7 +213,7 @@ func TestSuccessfulStationsByIDs(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Ebolfer V - Tribal Liberation Force Testing Facilities"
+	var responseName = "Ebolfer V - Tribal Liberation Force Testing Facilities"
 	if *resp[0].Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}

@@ -47,11 +47,11 @@ func TestSuccessfulOrdersForRegion(t *testing.T) {
 	restHelper = mockRestHelper
 
 	var regionId = 10000008
-	var typeId = 44992
+	var typeID = 44992
 	var page = 1
 	var orderType model.Ordertype = model.OrdertypeAll
 
-	resp, err := OrdersForRegion(context.Background(), &regionId, &orderType, &typeId, &page)
+	resp, err := OrdersForRegion(context.Background(), &regionId, &orderType, &typeID, &page)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -93,11 +93,11 @@ func TestFailNilTypeIDOrdersForRegion(t *testing.T) {
 	restHelper = mockRestHelper
 
 	var regionId = 10000008
-	var typeId *int
+	var typeID *int
 	var page = 1
 	var orderType model.Ordertype = model.OrdertypeAll
 
-	resp, err := OrdersForRegion(context.Background(), &regionId, &orderType, typeId, &page)
+	resp, err := OrdersForRegion(context.Background(), &regionId, &orderType, typeID, &page)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -117,11 +117,11 @@ func TestFailRestCallOrdersForRegion(t *testing.T) {
 	restHelper = mockRestHelper
 
 	var regionId = 10000008
-	var typeId = 44992
+	var typeID = 44992
 	var page = 1
 	var orderType model.Ordertype = model.OrdertypeAll
 
-	_, err := OrdersForRegion(context.Background(), &regionId, &orderType, &typeId, &page)
+	_, err := OrdersForRegion(context.Background(), &regionId, &orderType, &typeID, &page)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -157,11 +157,11 @@ func TestFailUnmarshalOrdersForRegion(t *testing.T) {
 	restHelper = mockRestHelper
 
 	var regionId = 10000008
-	var typeId = 44992
+	var typeID = 44992
 	var page = 1
 	var orderType model.Ordertype = model.OrdertypeAll
 
-	_, err := OrdersForRegion(context.Background(), &regionId, &orderType, &typeId, &page)
+	_, err := OrdersForRegion(context.Background(), &regionId, &orderType, &typeID, &page)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

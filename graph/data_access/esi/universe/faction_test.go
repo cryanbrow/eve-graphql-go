@@ -41,14 +41,14 @@ func TestSuccessfulInCacheFactionByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Amarr Empire"
+	var responseName = "Amarr Empire"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 }
 
 func TestSuccessfulNotInCacheFactionByID(t *testing.T) {
-	var ancestriesJsonResponse string = `[
+	var ancestriesJSONResponse string = `[
 		{
 			"corporation_id": 1000084,
 			"description": "The largest of the five main empires, the Amarr Empire is a sprawling patch-work of feudal-like provinces held together by the might of the emperor. Religion has always played a big part in Amarrian politics and the Amarrians believe they are the rightful masters of the world, souring their relations with their neighbours. Another source of ill-feelings on part of the other empires is the fact that the Amarrians embrace slavery.",
@@ -62,7 +62,7 @@ func TestSuccessfulNotInCacheFactionByID(t *testing.T) {
 			"station_system_count": 508
 		  }
   ]`
-	shouldReturn := setupNotInCacheRedis(ancestriesJsonResponse)
+	shouldReturn := setupNotInCacheRedis(ancestriesJSONResponse)
 	if shouldReturn {
 		return
 	}
@@ -72,7 +72,7 @@ func TestSuccessfulNotInCacheFactionByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Amarr Empire"
+	var responseName = "Amarr Empire"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -119,7 +119,7 @@ func TestFailUnmarshalInCacheFactionByID(t *testing.T) {
 }
 
 func TestFailUnmarshalNotInCacheFactionByID(t *testing.T) {
-	var ancestriesJsonResponse string = `[
+	var ancestriesJSONResponse string = `[
 	{{
 		"corporation_id": 1000084,
 		"description": "The largest of the five main empires, the Amarr Empire is a sprawling patch-work of feudal-like provinces held together by the might of the emperor. Religion has always played a big part in Amarrian politics and the Amarrians believe they are the rightful masters of the world, souring their relations with their neighbours. Another source of ill-feelings on part of the other empires is the fact that the Amarrians embrace slavery.",
@@ -133,7 +133,7 @@ func TestFailUnmarshalNotInCacheFactionByID(t *testing.T) {
 		"station_system_count": 508
 	  }
   ]`
-	shouldReturn := setupNotInCacheRedis(ancestriesJsonResponse)
+	shouldReturn := setupNotInCacheRedis(ancestriesJSONResponse)
 	if shouldReturn {
 		return
 	}

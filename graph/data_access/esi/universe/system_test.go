@@ -126,7 +126,7 @@ func TestSuccessfulSystemByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Ebolfer"
+	var responseName = "Ebolfer"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -393,7 +393,7 @@ func TestSuccessfulSystemsByIDs(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Ebolfer"
+	var responseName = "Ebolfer"
 	if *resp[0].Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}

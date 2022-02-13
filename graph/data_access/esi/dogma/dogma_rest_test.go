@@ -47,7 +47,7 @@ func TestSuccessfulDogmaEffectByID(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
-	var responseName string = "shipStasisWebStrengthBonusMF2"
+	var responseName = "shipStasisWebStrengthBonusMF2"
 	if *resp.Name != responseName {
 		t.Errorf("Response was not as expected")
 	}
@@ -174,7 +174,7 @@ func TestSuccessfulDogmaAttributeByID(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
-	var responseName string = "energyWarfareStrengthMultiplier"
+	var responseName = "energyWarfareStrengthMultiplier"
 	if *resp.Name != responseName {
 		t.Errorf("Response was not as expected")
 	}

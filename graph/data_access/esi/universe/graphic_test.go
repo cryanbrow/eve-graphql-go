@@ -38,7 +38,7 @@ func TestSuccessfulGraphicByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "amarrnavy"
+	var responseName = "amarrnavy"
 	if *resp.SofFationName != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}

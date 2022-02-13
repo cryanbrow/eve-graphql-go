@@ -41,7 +41,7 @@ func TestSuccessfulCorporationByID(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
-	var responseName string = "Tribal Liberation Force"
+	var responseName = "Tribal Liberation Force"
 	if *resp.Name != responseName {
 		t.Errorf("Response was not as expected")
 	}

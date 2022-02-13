@@ -41,14 +41,14 @@ func TestSuccessfulInCacheAncestryByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Activists"
+	var responseName = "Activists"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 }
 
 func TestSuccessfulNotInCacheAncestryByID(t *testing.T) {
-	var ancestriesJsonResponse string = `[
+	var ancestriesJSONResponse string = `[
 	{
 	  "bloodline_id": 7,
 	  "description": "The Gallente prize political activism more so than other Empires. Many devote their efforts towards one or more causes that suit their ambitions. Activists understand that things will never change for the better unless someone has the courage to fight the good fight.",
@@ -59,7 +59,7 @@ func TestSuccessfulNotInCacheAncestryByID(t *testing.T) {
 	}
   ]`
 	//Method returns nothing so needs no implementation
-	shouldReturn := setupNotInCacheRedis(ancestriesJsonResponse)
+	shouldReturn := setupNotInCacheRedis(ancestriesJSONResponse)
 	if shouldReturn {
 		return
 	}
@@ -69,7 +69,7 @@ func TestSuccessfulNotInCacheAncestryByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Activists"
+	var responseName = "Activists"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -133,7 +133,7 @@ func TestFailUnmarshalInCacheAncestryByID(t *testing.T) {
 }
 
 func TestFailUnmarshalNotInCacheAncestryByID(t *testing.T) {
-	var ancestriesJsonResponse string = `[
+	var ancestriesJSONResponse string = `[
 	{{
 	  "bloodline_id": 7,
 	  "description": "The Gallente prize political activism more so than other Empires. Many devote their efforts towards one or more causes that suit their ambitions. Activists understand that things will never change for the better unless someone has the courage to fight the good fight.",
@@ -143,7 +143,7 @@ func TestFailUnmarshalNotInCacheAncestryByID(t *testing.T) {
 	  "short_description": "Making the universe a better place, one fight at a time."
 	}
   ]`
-	shouldReturn := setupNotInCacheRedis(ancestriesJsonResponse)
+	shouldReturn := setupNotInCacheRedis(ancestriesJSONResponse)
 	if shouldReturn {
 		return
 	}

@@ -51,7 +51,7 @@ func TestSuccessfulRegionByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Scalding Pass"
+	var responseName = "Scalding Pass"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}

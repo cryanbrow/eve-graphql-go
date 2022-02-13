@@ -44,7 +44,7 @@ func TestSuccessfulAsteroidBeltDetails(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Inaro IX - Asteroid Belt 1"
+	var responseName = "Inaro IX - Asteroid Belt 1"
 	if *resp[0].Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -111,7 +111,7 @@ func TestSuccessfulAsteroidBeltByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Inaro IX - Asteroid Belt 1"
+	var responseName = "Inaro IX - Asteroid Belt 1"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}

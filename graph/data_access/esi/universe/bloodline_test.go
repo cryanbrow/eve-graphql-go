@@ -42,14 +42,14 @@ func TestSuccessfulInCacheBloodlineByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Amarr"
+	var responseName = "Amarr"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 }
 
 func TestSuccessfulNotInCacheBloodlineByID(t *testing.T) {
-	var ancestriesJsonResponse string = `[
+	var ancestriesJSONResponse string = `[
 		{
 			"bloodline_id": 5,
 			"charisma": 3,
@@ -64,7 +64,7 @@ func TestSuccessfulNotInCacheBloodlineByID(t *testing.T) {
 			"willpower": 10
 		  }
   ]`
-	shouldReturn := setupNotInCacheRedis(ancestriesJsonResponse)
+	shouldReturn := setupNotInCacheRedis(ancestriesJSONResponse)
 	if shouldReturn {
 		return
 	}
@@ -74,7 +74,7 @@ func TestSuccessfulNotInCacheBloodlineByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Amarr"
+	var responseName = "Amarr"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -122,7 +122,7 @@ func TestFailUnmarshalInCacheBloodlineByID(t *testing.T) {
 }
 
 func TestFailUnmarshalNotInCacheBloodlineByID(t *testing.T) {
-	var ancestriesJsonResponse string = `[
+	var ancestriesJSONResponse string = `[
 	{{
 		"bloodline_id": 5,
 		"charisma": 3,
@@ -137,7 +137,7 @@ func TestFailUnmarshalNotInCacheBloodlineByID(t *testing.T) {
 		"willpower": 10
 	  }
   ]`
-	shouldReturn := setupNotInCacheRedis(ancestriesJsonResponse)
+	shouldReturn := setupNotInCacheRedis(ancestriesJSONResponse)
 	if shouldReturn {
 		return
 	}

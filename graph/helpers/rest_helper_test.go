@@ -16,7 +16,7 @@ import (
 const byteArrayFail string = "Failed to return correct byte array."
 
 var jsonResponse string
-var testUrl string
+var testURL string
 
 func TestSuccessfulMakeCachingRESTCall(t *testing.T) {
 	queryParams, shouldReturn := setupSuccessfulRESTCall()
@@ -25,7 +25,7 @@ func TestSuccessfulMakeCachingRESTCall(t *testing.T) {
 	}
 
 	var buffer bytes.Buffer
-	bytes, _, err := restHelper.MakeCachingRESTCall(context.Background(), testUrl, http.MethodGet, buffer, queryParams, "himom")
+	bytes, _, err := restHelper.MakeCachingRESTCall(context.Background(), testURL, http.MethodGet, buffer, queryParams, "himom")
 	if string(bytes) != jsonResponse {
 		t.Error(byteArrayFail)
 	}
@@ -80,7 +80,7 @@ func TestInCacheSuccessfulMakeCachingRESTCall(t *testing.T) {
 	queryParams = append(queryParams, *kv)
 
 	var buffer bytes.Buffer
-	_, _, err := restHelper.MakeCachingRESTCall(context.Background(), testUrl, http.MethodGet, buffer, queryParams, "himom")
+	_, _, err := restHelper.MakeCachingRESTCall(context.Background(), testURL, http.MethodGet, buffer, queryParams, "himom")
 	if err != nil {
 		t.Errorf(ErrorWasNotNil, err)
 	}
@@ -95,7 +95,7 @@ func TestSuccessfulWithDefaultParamsMakeCachingRESTCall(t *testing.T) {
 	configuration.AppConfig.Esi.Default.QueryParams = queryParams
 
 	var buffer bytes.Buffer
-	bytes4, _, err := restHelper.MakeCachingRESTCall(context.Background(), testUrl, http.MethodGet, buffer, nil, "himom")
+	bytes4, _, err := restHelper.MakeCachingRESTCall(context.Background(), testURL, http.MethodGet, buffer, nil, "himom")
 	byteString := string(bytes4)
 	if byteString != jsonResponse {
 		fmt.Printf("expected: %s : actual %s", jsonResponse, byteString)
@@ -119,7 +119,7 @@ func TestSuccessfulWithQueryParamsMakeCachingRESTCall(t *testing.T) {
 	}
 
 	var buffer bytes.Buffer
-	bytes, _, err := restHelper.MakeCachingRESTCall(context.Background(), testUrl, http.MethodGet, buffer, nil, "himom")
+	bytes, _, err := restHelper.MakeCachingRESTCall(context.Background(), testURL, http.MethodGet, buffer, nil, "himom")
 	if string(bytes) != jsonResponse {
 		t.Error(byteArrayFail)
 	}
@@ -248,7 +248,7 @@ func init() {
 	jsonResponse = `[{
 		"full_name": "mock-repo"
 	   }]`
-	testUrl = "https://www.google.com"
+	testURL = "https://www.google.com"
 }
 
 func setRedisClient() {

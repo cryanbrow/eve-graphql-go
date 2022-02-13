@@ -38,7 +38,7 @@ func TestSuccessfulMarketGroupByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Blueprints & Reactions"
+	var responseName = "Blueprints & Reactions"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}

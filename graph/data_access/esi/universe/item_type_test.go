@@ -419,7 +419,7 @@ func TestSuccessfulItemTypeByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Kestrel"
+	var responseName = "Kestrel"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -894,7 +894,7 @@ func TestSuccessfulItemTypesByIDs(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Kestrel"
+	var responseName = "Kestrel"
 	if *resp[0].Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}

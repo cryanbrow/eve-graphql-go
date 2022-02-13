@@ -34,7 +34,7 @@ func TestSuccessfulCharacterPortraitByID(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
-	var responseName string = "https://images.evetech.net/characters/3018996/portrait?tenant=tranquility&size=128"
+	var responseName = "https://images.evetech.net/characters/3018996/portrait?tenant=tranquility&size=128"
 	if *resp.Px128x128 != responseName {
 		t.Errorf("Response was not as expected")
 	}

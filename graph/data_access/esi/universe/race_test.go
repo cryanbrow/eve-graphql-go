@@ -35,21 +35,21 @@ func TestSuccessfulInCacheRaceByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Caldari"
+	var responseName = "Caldari"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
 }
 
 func TestSuccessfulNotInCacheRaceByID(t *testing.T) {
-	var ancestriesJsonResponse string = `[{
+	var ancestriesJSONResponse string = `[{
 		"alliance_id": 500001,
 		"description": "Founded on the tenets of patriotism and hard work that carried its ancestors through hardships on an inhospitable homeworld, the Caldari State is today a corporate dictatorship, led by rulers who are determined to see it return to the meritocratic ideals of old. Ruthless and efficient in the boardroom as well as on the battlefield, the Caldari are living emblems of strength, persistence, and dignity.",
 		"name": "Caldari",
 		"race_id": 1
 	  }]`
 	//Method returns nothing so needs no implementation
-	shouldReturn := setupNotInCacheRedis(ancestriesJsonResponse)
+	shouldReturn := setupNotInCacheRedis(ancestriesJSONResponse)
 	if shouldReturn {
 		return
 	}
@@ -59,7 +59,7 @@ func TestSuccessfulNotInCacheRaceByID(t *testing.T) {
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
-	var responseName string = "Caldari"
+	var responseName = "Caldari"
 	if *resp.Name != responseName {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
 	}
@@ -100,7 +100,7 @@ func TestFailUnmarshalInCacheRaceByID(t *testing.T) {
 }
 
 func TestFailUnmarshalNotInCacheRaceByID(t *testing.T) {
-	var ancestriesJsonResponse string = `[
+	var ancestriesJSONResponse string = `[
 	{{
 		"alliance_id": 500001,
 		"description": "Founded on the tenets of patriotism and hard work that carried its ancestors through hardships on an inhospitable homeworld, the Caldari State is today a corporate dictatorship, led by rulers who are determined to see it return to the meritocratic ideals of old. Ruthless and efficient in the boardroom as well as on the battlefield, the Caldari are living emblems of strength, persistence, and dignity.",
@@ -108,7 +108,7 @@ func TestFailUnmarshalNotInCacheRaceByID(t *testing.T) {
 		"race_id": 1
 	  }
   ]`
-	shouldReturn := setupNotInCacheRedis(ancestriesJsonResponse)
+	shouldReturn := setupNotInCacheRedis(ancestriesJSONResponse)
 	if shouldReturn {
 		return
 	}
