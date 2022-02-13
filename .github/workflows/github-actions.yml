@@ -42,6 +42,11 @@ jobs:
         go tool cover -func=output/cover.out | grep total
         go tool cover --html=output/cover.out -o output/coverage.html
 
+    - name: Run Revive Action by pulling pre-built image
+      uses: docker://morphy/revive-action:v2
+      with:
+        exclude: "models_gen.go;generated.go"
+
     - name: sonar-cloud-scan
       uses: SonarSource/sonarcloud-github-action@master
       env:
