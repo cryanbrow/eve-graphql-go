@@ -15,7 +15,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-//RestHelperClient is the client making cached REST calls.
+// RestHelperClient is the client making cached REST calls.
 type RestHelperClient struct {
 }
 
@@ -74,7 +74,7 @@ func (r *RestHelperClient) MakeCachingRESTCall(ctx context.Context, baseURL stri
 	return result, nil, nil
 }
 
-//HTTPClient is an interface for the http Do method for mocking during Unit Tests.
+// HTTPClient is an interface for the http Do method for mocking during Unit Tests.
 type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
