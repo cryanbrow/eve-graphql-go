@@ -36,10 +36,10 @@ func TestSuccessfulMoonDetails(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = new(int)
-	*testId = 40176874
+	var testID *int = new(int)
+	*testID = 40176874
 	var ids []*int = make([]*int, 1)
-	ids[0] = testId
+	ids[0] = testID
 
 	resp, err := MoonDetails(context.Background(), ids)
 	if err != nil {
@@ -72,10 +72,10 @@ func TestFailNilIDMoonDetails(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = new(int)
-	*testId = 40176874
+	var testID *int = new(int)
+	*testID = 40176874
 	var ids []*int = make([]*int, 2)
-	ids[0] = testId
+	ids[0] = testID
 
 	_, err := MoonDetails(context.Background(), ids)
 	if err == nil {
@@ -108,9 +108,9 @@ func TestSuccessfulMoonByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 40176874
+	var testID = 40176874
 
-	resp, err := MoonByID(context.Background(), &testId)
+	resp, err := MoonByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -142,9 +142,9 @@ func TestFailNilIDMoonByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = nil
+	var testID *int
 
-	_, err := MoonByID(context.Background(), testId)
+	_, err := MoonByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -161,9 +161,9 @@ func TestFailRestCallMoonByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 40176874
+	var testID = 40176874
 
-	_, err := MoonByID(context.Background(), &testId)
+	_, err := MoonByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -193,9 +193,9 @@ func TestFailUnmarshalMoonByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 40176874
+	var testID = 40176874
 
-	_, err := MoonByID(context.Background(), &testId)
+	_, err := MoonByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

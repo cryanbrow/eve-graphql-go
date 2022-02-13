@@ -35,10 +35,10 @@ func TestSuccessfulAsteroidBeltDetails(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = new(int)
-	*testId = 1
+	var testID *int = new(int)
+	*testID = 1
 	var ids []*int = make([]*int, 1)
-	ids[0] = testId
+	ids[0] = testID
 
 	resp, err := AsteroidBeltDetails(context.Background(), ids)
 	if err != nil {
@@ -70,10 +70,10 @@ func TestFailNilIDAsteroidBeltDetails(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = new(int)
-	*testId = 1
+	var testID *int = new(int)
+	*testID = 1
 	var ids []*int = make([]*int, 2)
-	ids[0] = testId
+	ids[0] = testID
 
 	_, err := AsteroidBeltDetails(context.Background(), ids)
 	if err == nil {
@@ -105,9 +105,9 @@ func TestSuccessfulAsteroidBeltByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId = 1
+	var testID = 1
 
-	resp, err := AsteroidBeltByID(context.Background(), &testId)
+	resp, err := AsteroidBeltByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -138,9 +138,9 @@ func TestFailNilIDAsteroidBeltByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int
+	var testID *int
 
-	_, err := AsteroidBeltByID(context.Background(), testId)
+	_, err := AsteroidBeltByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -157,9 +157,9 @@ func TestFailRestCallAsteroidBeltByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId = 1
+	var testID = 1
 
-	_, err := AsteroidBeltByID(context.Background(), &testId)
+	_, err := AsteroidBeltByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -188,9 +188,9 @@ func TestFailUnmarshalAsteroidBeltByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId = 1
+	var testID = 1
 
-	_, err := AsteroidBeltByID(context.Background(), &testId)
+	_, err := AsteroidBeltByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

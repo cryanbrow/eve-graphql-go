@@ -413,9 +413,9 @@ func TestSuccessfulItemTypeByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 602
+	var testID = 602
 
-	resp, err := ItemTypeByID(context.Background(), &testId)
+	resp, err := ItemTypeByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -427,9 +427,9 @@ func TestSuccessfulItemTypeByID(t *testing.T) {
 }
 
 func TestFailNilIDItemTypeByID(t *testing.T) {
-	var testId *int = nil
+	var testID *int
 
-	_, err := ItemTypeByID(context.Background(), testId)
+	_, err := ItemTypeByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -446,9 +446,9 @@ func TestFailRestCallItemTypeByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 602
+	var testID = 602
 
-	_, err := ItemTypeByID(context.Background(), &testId)
+	_, err := ItemTypeByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -477,9 +477,9 @@ func TestFailUnmarshalItemTypeByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 602
+	var testID = 602
 
-	_, err := ItemTypeByID(context.Background(), &testId)
+	_, err := ItemTypeByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
@@ -884,11 +884,11 @@ func TestSuccessfulItemTypesByIDs(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId1 int = 602
-	var testId2 int = 602
+	var testID1 int = 602
+	var testID2 int = 602
 	var ids []*int = make([]*int, 2)
-	ids[0] = &testId1
-	ids[1] = &testId2
+	ids[0] = &testID1
+	ids[1] = &testID2
 
 	resp, err := ItemTypesByIDs(context.Background(), ids)
 	if err != nil {
@@ -908,11 +908,11 @@ func TestFailureItemTypesByIDs(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId1 int = 602
-	var testId2 int = 602
+	var testID1 int = 602
+	var testID2 int = 602
 	var ids []*int = make([]*int, 2)
-	ids[0] = &testId1
-	ids[1] = &testId2
+	ids[0] = &testID1
+	ids[1] = &testID2
 
 	_, err := ItemTypesByIDs(context.Background(), ids)
 	if err == nil {

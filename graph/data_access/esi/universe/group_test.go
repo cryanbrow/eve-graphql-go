@@ -109,9 +109,9 @@ func TestSuccessfulGroupByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 25
+	var testID = 25
 
-	resp, err := GroupByID(context.Background(), &testId)
+	resp, err := GroupByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -220,9 +220,9 @@ func TestFailNilIDGroupByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = nil
+	var testID *int
 
-	_, err := GroupByID(context.Background(), testId)
+	_, err := GroupByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -239,9 +239,9 @@ func TestFailRestCallGroupByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 25
+	var testID = 25
 
-	_, err := GroupByID(context.Background(), &testId)
+	_, err := GroupByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -348,9 +348,9 @@ func TestFailUnmarshalGroupByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 25
+	var testID = 25
 
-	_, err := GroupByID(context.Background(), &testId)
+	_, err := GroupByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

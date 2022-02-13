@@ -120,9 +120,9 @@ func TestSuccessfulSystemByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 30002094
+	var testID = 30002094
 
-	resp, err := SystemByID(context.Background(), &testId)
+	resp, err := SystemByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -134,9 +134,9 @@ func TestSuccessfulSystemByID(t *testing.T) {
 }
 
 func TestFailNilIDSystemByID(t *testing.T) {
-	var testId *int = nil
+	var testID *int
 
-	_, err := SystemByID(context.Background(), testId)
+	_, err := SystemByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -153,9 +153,9 @@ func TestFailRestCallSystemByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 30002094
+	var testID = 30002094
 
-	_, err := SystemByID(context.Background(), &testId)
+	_, err := SystemByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -269,9 +269,9 @@ func TestFailUnmarshalSystemByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 30002094
+	var testID = 30002094
 
-	_, err := SystemByID(context.Background(), &testId)
+	_, err := SystemByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
@@ -383,11 +383,11 @@ func TestSuccessfulSystemsByIDs(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId1 int = 30002094
-	var testId2 int = 30002094
+	var testID1 int = 30002094
+	var testID2 int = 30002094
 	var ids []*int = make([]*int, 2)
-	ids[0] = &testId1
-	ids[1] = &testId2
+	ids[0] = &testID1
+	ids[1] = &testID2
 
 	resp, err := SystemsByIDs(context.Background(), ids)
 	if err != nil {
@@ -407,11 +407,11 @@ func TestFailureSystemsByIDs(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId1 int = 30002094
-	var testId2 int = 30002094
+	var testID1 int = 30002094
+	var testID2 int = 30002094
 	var ids []*int = make([]*int, 2)
-	ids[0] = &testId1
-	ids[1] = &testId2
+	ids[0] = &testID1
+	ids[1] = &testID2
 
 	_, err := SystemsByIDs(context.Background(), ids)
 	if err == nil {

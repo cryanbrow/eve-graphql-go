@@ -35,9 +35,9 @@ func TestSuccessfulCorporationByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId = 1
+	var testID = 1
 
-	resp, err := CorporationByID(context.Background(), &testId)
+	resp, err := CorporationByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -72,9 +72,9 @@ func TestFailNilIDCorporationByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int
+	var testID *int
 
-	_, err := CorporationByID(context.Background(), testId)
+	_, err := CorporationByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -91,9 +91,9 @@ func TestFailRestCallCorporationByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId = 1
+	var testID = 1
 
-	_, err := CorporationByID(context.Background(), &testId)
+	_, err := CorporationByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -126,9 +126,9 @@ func TestFailUnmarshalCorporationByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId = 1
+	var testID = 1
 
-	_, err := CorporationByID(context.Background(), &testId)
+	_, err := CorporationByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

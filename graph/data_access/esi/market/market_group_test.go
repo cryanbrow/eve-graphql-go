@@ -32,9 +32,9 @@ func TestSuccessfulMarketGroupByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId = 2
+	var testID = 2
 
-	resp, err := MarketGroupByID(context.Background(), &testId)
+	resp, err := MarketGroupByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -62,9 +62,9 @@ func TestFailNilIDMarketGroupByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int
+	var testID *int
 
-	_, err := MarketGroupByID(context.Background(), testId)
+	_, err := MarketGroupByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -81,9 +81,9 @@ func TestFailRestCallMarketGroupByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId = 2
+	var testID = 2
 
-	_, err := MarketGroupByID(context.Background(), &testId)
+	_, err := MarketGroupByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -109,9 +109,9 @@ func TestFailUnmarshalMarketGroupByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId = 2
+	var testID = 2
 
-	_, err := MarketGroupByID(context.Background(), &testId)
+	_, err := MarketGroupByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

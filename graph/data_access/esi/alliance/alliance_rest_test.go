@@ -30,9 +30,9 @@ func TestSuccessfulAllianceByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId = 1
+	var testID = 1
 
-	resp, err := AllianceByID(context.Background(), &testId)
+	resp, err := AllianceByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -62,9 +62,9 @@ func TestFailNilIDAllianceByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int
+	var testID *int
 
-	_, err := AllianceByID(context.Background(), testId)
+	_, err := AllianceByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -81,9 +81,9 @@ func TestFailRestCallAllianceByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId = 1
+	var testID = 1
 
-	_, err := AllianceByID(context.Background(), &testId)
+	_, err := AllianceByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -111,9 +111,9 @@ func TestFailUnmarshalAllianceByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId = 1
+	var testID = 1
 
-	_, err := AllianceByID(context.Background(), &testId)
+	_, err := AllianceByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

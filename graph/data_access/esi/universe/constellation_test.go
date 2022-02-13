@@ -46,10 +46,10 @@ func TestSuccessfulConstellationsByIDs(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = new(int)
-	*testId = 20000019
+	var testID *int = new(int)
+	*testID = 20000019
 	var ids []*int = make([]*int, 1)
-	ids[0] = testId
+	ids[0] = testID
 
 	resp, err := ConstellationsByIDs(context.Background(), ids)
 	if err != nil {
@@ -92,10 +92,10 @@ func TestFailNilIDConstellationsByIDs(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = new(int)
-	*testId = 20000019
+	var testID *int = new(int)
+	*testID = 20000019
 	var ids []*int = make([]*int, 2)
-	ids[0] = testId
+	ids[0] = testID
 
 	_, err := ConstellationsByIDs(context.Background(), ids)
 	if err == nil {
@@ -138,9 +138,9 @@ func TestSuccessfulConstellationByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 20000019
+	var testID = 20000019
 
-	resp, err := ConstellationByID(context.Background(), &testId)
+	resp, err := ConstellationByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -182,9 +182,9 @@ func TestFailNilIDConstellationByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = nil
+	var testID *int
 
-	_, err := ConstellationByID(context.Background(), testId)
+	_, err := ConstellationByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -201,9 +201,9 @@ func TestFailRestCallConstellationByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 20000019
+	var testID = 20000019
 
-	_, err := ConstellationByID(context.Background(), &testId)
+	_, err := ConstellationByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -243,9 +243,9 @@ func TestFailUnmarshalConstellationByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 20000019
+	var testID = 20000019
 
-	_, err := ConstellationByID(context.Background(), &testId)
+	_, err := ConstellationByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

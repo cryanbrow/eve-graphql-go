@@ -60,9 +60,9 @@ func TestSuccessfulStationByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 60015096
+	var testID = 60015096
 
-	resp, err := StationByID(context.Background(), &testId)
+	resp, err := StationByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -74,9 +74,9 @@ func TestSuccessfulStationByID(t *testing.T) {
 }
 
 func TestFailNilIDStationByID(t *testing.T) {
-	var testId *int = nil
+	var testID *int
 
-	_, err := StationByID(context.Background(), testId)
+	_, err := StationByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -93,9 +93,9 @@ func TestFailRestCallStationByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 60015096
+	var testID = 60015096
 
-	_, err := StationByID(context.Background(), &testId)
+	_, err := StationByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -149,9 +149,9 @@ func TestFailUnmarshalStationByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 60015096
+	var testID = 60015096
 
-	_, err := StationByID(context.Background(), &testId)
+	_, err := StationByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
@@ -203,11 +203,11 @@ func TestSuccessfulStationsByIDs(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId1 int = 60015096
-	var testId2 int = 60015096
+	var testID1 int = 60015096
+	var testID2 int = 60015096
 	var ids []*int = make([]*int, 2)
-	ids[0] = &testId1
-	ids[1] = &testId2
+	ids[0] = &testID1
+	ids[1] = &testID2
 
 	resp, err := StationsByIDs(context.Background(), ids)
 	if err != nil {
@@ -227,11 +227,11 @@ func TestFailureStationsByIDs(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId1 int = 60015096
-	var testId2 int = 60015096
+	var testID1 int = 60015096
+	var testID2 int = 60015096
 	var ids []*int = make([]*int, 2)
-	ids[0] = &testId1
-	ids[1] = &testId2
+	ids[0] = &testID1
+	ids[1] = &testID2
 
 	_, err := StationsByIDs(context.Background(), ids)
 	if err == nil {

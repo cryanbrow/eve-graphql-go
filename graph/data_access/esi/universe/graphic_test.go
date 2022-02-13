@@ -32,9 +32,9 @@ func TestSuccessfulGraphicByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 21573
+	var testID = 21573
 
-	resp, err := GraphicByID(context.Background(), &testId)
+	resp, err := GraphicByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -62,9 +62,9 @@ func TestFailNilIDGraphicByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = nil
+	var testID *int
 
-	_, err := GraphicByID(context.Background(), testId)
+	_, err := GraphicByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -81,9 +81,9 @@ func TestFailRestCallGraphicByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 21573
+	var testID = 21573
 
-	_, err := GraphicByID(context.Background(), &testId)
+	_, err := GraphicByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -109,9 +109,9 @@ func TestFailUnmarshalGraphicByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 21573
+	var testID = 21573
 
-	_, err := GraphicByID(context.Background(), &testId)
+	_, err := GraphicByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

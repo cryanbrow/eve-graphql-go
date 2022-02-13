@@ -30,8 +30,8 @@ func TestSuccessfulInCacheRaceByID(t *testing.T) {
 	}
 	CachingClient = mockCachingClient
 
-	var testId int = 1
-	resp, err := RaceByID(context.Background(), &testId)
+	var testID = 1
+	resp, err := RaceByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -54,8 +54,8 @@ func TestSuccessfulNotInCacheRaceByID(t *testing.T) {
 		return
 	}
 
-	var testId int = 1
-	resp, err := RaceByID(context.Background(), &testId)
+	var testID = 1
+	resp, err := RaceByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -66,8 +66,8 @@ func TestSuccessfulNotInCacheRaceByID(t *testing.T) {
 }
 
 func TestFailNilIDRaceByID(t *testing.T) {
-	var testId *int = nil
-	_, err := RaceByID(context.Background(), testId)
+	var testID *int
+	_, err := RaceByID(context.Background(), testID)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -92,8 +92,8 @@ func TestFailUnmarshalInCacheRaceByID(t *testing.T) {
 	}
 	CachingClient = mockCachingClient
 
-	var testId int = 1
-	_, err := RaceByID(context.Background(), &testId)
+	var testID = 1
+	_, err := RaceByID(context.Background(), &testID)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -113,8 +113,8 @@ func TestFailUnmarshalNotInCacheRaceByID(t *testing.T) {
 		return
 	}
 
-	var testId int = 1
-	_, err := RaceByID(context.Background(), &testId)
+	var testID = 1
+	_, err := RaceByID(context.Background(), &testID)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -127,8 +127,8 @@ func TestFailRestNotInCacheRaceByID(t *testing.T) {
 		return
 	}
 
-	var testId int = 1
-	_, err := RaceByID(context.Background(), &testId)
+	var testID = 1
+	_, err := RaceByID(context.Background(), &testID)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}

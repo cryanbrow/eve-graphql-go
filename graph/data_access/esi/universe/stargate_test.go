@@ -41,10 +41,10 @@ func TestSuccessfulStargateDetails(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = new(int)
-	*testId = 50003085
+	var testID *int = new(int)
+	*testID = 50003085
 	var ids []*int = make([]*int, 1)
-	ids[0] = testId
+	ids[0] = testID
 
 	resp, err := StargateDetails(context.Background(), ids)
 	if err != nil {
@@ -82,10 +82,10 @@ func TestFailNilIDStargateDetails(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = new(int)
-	*testId = 50003085
+	var testID *int = new(int)
+	*testID = 50003085
 	var ids []*int = make([]*int, 2)
-	ids[0] = testId
+	ids[0] = testID
 
 	_, err := StargateDetails(context.Background(), ids)
 	if err == nil {
@@ -123,9 +123,9 @@ func TestSuccessfulStargateByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 50003085
+	var testID = 50003085
 
-	resp, err := StargateByID(context.Background(), &testId)
+	resp, err := StargateByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -162,9 +162,9 @@ func TestFailNilIDStargateByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int = nil
+	var testID *int
 
-	_, err := StargateByID(context.Background(), testId)
+	_, err := StargateByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -181,9 +181,9 @@ func TestFailRestCallStargateByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 50003085
+	var testID = 50003085
 
-	_, err := StargateByID(context.Background(), &testId)
+	_, err := StargateByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -218,9 +218,9 @@ func TestFailUnmarshalStargateByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 50003085
+	var testID = 50003085
 
-	_, err := StargateByID(context.Background(), &testId)
+	_, err := StargateByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

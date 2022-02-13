@@ -36,8 +36,8 @@ func TestSuccessfulInCacheAncestryByID(t *testing.T) {
 	}
 	CachingClient = mockCachingClient
 
-	var testId = 1
-	resp, err := AncestryByID(context.Background(), &testId)
+	var testID = 1
+	resp, err := AncestryByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -64,8 +64,8 @@ func TestSuccessfulNotInCacheAncestryByID(t *testing.T) {
 		return
 	}
 
-	var testId = 13
-	resp, err := AncestryByID(context.Background(), &testId)
+	var testID = 13
+	resp, err := AncestryByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -97,8 +97,8 @@ func setupNotInCacheRedis(jsonResponse string) bool {
 }
 
 func TestFailNilIDAncestryByID(t *testing.T) {
-	var testId *int
-	_, err := AncestryByID(context.Background(), testId)
+	var testID *int
+	_, err := AncestryByID(context.Background(), testID)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -125,8 +125,8 @@ func TestFailUnmarshalInCacheAncestryByID(t *testing.T) {
 	}
 	CachingClient = mockCachingClient
 
-	var testId = 13
-	_, err := AncestryByID(context.Background(), &testId)
+	var testID = 13
+	_, err := AncestryByID(context.Background(), &testID)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -148,8 +148,8 @@ func TestFailUnmarshalNotInCacheAncestryByID(t *testing.T) {
 		return
 	}
 
-	var testId = 13
-	_, err := AncestryByID(context.Background(), &testId)
+	var testID = 13
+	_, err := AncestryByID(context.Background(), &testID)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -162,8 +162,8 @@ func TestFailRestNotInCacheAncestryByID(t *testing.T) {
 		return
 	}
 
-	var testId = 13
-	_, err := AncestryByID(context.Background(), &testId)
+	var testID = 13
+	_, err := AncestryByID(context.Background(), &testID)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}

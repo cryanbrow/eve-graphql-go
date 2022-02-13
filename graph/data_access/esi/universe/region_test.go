@@ -45,9 +45,9 @@ func TestSuccessfulRegionByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 10000008
+	var testID = 10000008
 
-	resp, err := RegionByID(context.Background(), &testId)
+	resp, err := RegionByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -59,9 +59,9 @@ func TestSuccessfulRegionByID(t *testing.T) {
 }
 
 func TestFailNilIDRegionByID(t *testing.T) {
-	var testId *int = nil
+	var testID *int
 
-	_, err := RegionByID(context.Background(), testId)
+	_, err := RegionByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -78,9 +78,9 @@ func TestFailRestCallRegionByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 10000008
+	var testID = 10000008
 
-	_, err := RegionByID(context.Background(), &testId)
+	_, err := RegionByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -119,9 +119,9 @@ func TestFailUnmarshalRegionByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 10000008
+	var testID = 10000008
 
-	_, err := RegionByID(context.Background(), &testId)
+	_, err := RegionByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

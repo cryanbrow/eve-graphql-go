@@ -37,9 +37,9 @@ func TestSuccessfulPlanetByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 40176876
+	var testID = 40176876
 
-	resp, err := PlanetByID(context.Background(), &testId)
+	resp, err := PlanetByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -51,9 +51,9 @@ func TestSuccessfulPlanetByID(t *testing.T) {
 }
 
 func TestFailNilIDPlanetByID(t *testing.T) {
-	var testId *int = nil
+	var testID *int
 
-	_, err := PlanetByID(context.Background(), testId)
+	_, err := PlanetByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -70,9 +70,9 @@ func TestFailRestCallPlanetByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 40176876
+	var testID = 40176876
 
-	_, err := PlanetByID(context.Background(), &testId)
+	_, err := PlanetByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -103,9 +103,9 @@ func TestFailUnmarshalPlanetByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 40176876
+	var testID = 40176876
 
-	_, err := PlanetByID(context.Background(), &testId)
+	_, err := PlanetByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

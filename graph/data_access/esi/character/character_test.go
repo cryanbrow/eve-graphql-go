@@ -32,9 +32,9 @@ func TestSuccessfulCharacterByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId = 1
+	var testID = 1
 
-	resp, err := CharacterByID(context.Background(), &testId)
+	resp, err := CharacterByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -66,9 +66,9 @@ func TestFailNilIDCharacterByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId *int
+	var testID *int
 
-	_, err := CharacterByID(context.Background(), testId)
+	_, err := CharacterByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -85,9 +85,9 @@ func TestFailRestCallCharacterByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId = 1
+	var testID = 1
 
-	_, err := CharacterByID(context.Background(), &testId)
+	_, err := CharacterByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -117,9 +117,9 @@ func TestFailUnmarshalCharacterByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId = 1
+	var testID = 1
 
-	_, err := CharacterByID(context.Background(), &testId)
+	_, err := CharacterByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

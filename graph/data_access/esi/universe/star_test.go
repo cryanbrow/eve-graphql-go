@@ -36,9 +36,9 @@ func TestSuccessfulStarByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 40176872
+	var testID = 40176872
 
-	resp, err := StarByID(context.Background(), &testId)
+	resp, err := StarByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -50,9 +50,9 @@ func TestSuccessfulStarByID(t *testing.T) {
 }
 
 func TestFailNilIDStarByID(t *testing.T) {
-	var testId *int = nil
+	var testID *int
 
-	_, err := StarByID(context.Background(), testId)
+	_, err := StarByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -69,9 +69,9 @@ func TestFailRestCallStarByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 40176872
+	var testID = 40176872
 
-	_, err := StarByID(context.Background(), &testId)
+	_, err := StarByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -101,9 +101,9 @@ func TestFailUnmarshalStarByID(t *testing.T) {
 	}
 	restHelper = mockRestHelper
 
-	var testId int = 40176872
+	var testID = 40176872
 
-	_, err := StarByID(context.Background(), &testId)
+	_, err := StarByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
