@@ -20,15 +20,15 @@ type RestHelperClient struct {
 
 const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/helpers"
 
-func (r *RestHelperClient) MakeCachingRESTCall(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+func (r *RestHelperClient) MakeCachingRESTCall(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "MakeCachingRESTCall")
-	span.SetAttributes(attribute.String("baseUrl", baseUrl), attribute.String("verb", verb), attribute.String("redisKey", redisQueryKey))
+	span.SetAttributes(attribute.String("baseURL", baseURL), attribute.String("verb", verb), attribute.String("redisKey", redisQueryKey))
 	defer span.End()
 	inCache, result := CachingClientVar.CheckCache(redisQueryKey, newCtx)
 	if !inCache {
-		crest_url, err := url.Parse(baseUrl)
+		crest_url, err := url.Parse(baseURL)
 		if err != nil {
-			log.WithFields(log.Fields{"baseUrl": baseUrl, "verb": verb}).Errorf("Failed to Parse URL with Error : %v", err)
+			log.WithFields(log.Fields{"baseURL": baseURL, "verb": verb}).Errorf("Failed to Parse URL with Error : %v", err)
 			return nil, nil, err
 		}
 		queryParameters := crest_url.Query()

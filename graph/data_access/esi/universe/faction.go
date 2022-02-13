@@ -51,11 +51,11 @@ func factionByArray(ctx context.Context, id *int) (*model.Faction, error) {
 	defer span.End()
 	var factions []*model.Faction = make([]*model.Faction, 0)
 	var returnFaction *model.Faction
-	baseUrl := fmt.Sprintf("%s/universe/factions/", configuration.AppConfig.Esi.Default.Url)
+	baseURL := fmt.Sprintf("%s/universe/factions/", configuration.AppConfig.Esi.Default.Url)
 	redisKey := factionRedisKey + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, headers, err := restHelper.MakeCachingRESTCall(newCtx, baseURL, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return nil, err
 	}

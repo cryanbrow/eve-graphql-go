@@ -52,11 +52,11 @@ func bloodlineByArray(ctx context.Context, id *int) (*model.Bloodline, error) {
 	defer span.End()
 	var bloodlines []*model.Bloodline = make([]*model.Bloodline, 0)
 	var returnBloodline *model.Bloodline
-	baseUrl := fmt.Sprintf("%s/universe/bloodlines/", configuration.AppConfig.Esi.Default.Url)
+	baseURL := fmt.Sprintf("%s/universe/bloodlines/", configuration.AppConfig.Esi.Default.Url)
 	redisKey := bloodlineRedisKey
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, headers, err := restHelper.MakeCachingRESTCall(newCtx, baseURL, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return nil, err
 	}

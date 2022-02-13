@@ -23,7 +23,7 @@ func OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordert
 	defer span.End()
 	log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID, "orderType": orderType}).Info("OrdersForRegion Called")
 	orderList := make([]*model.Order, 0)
-	baseUrl := fmt.Sprintf("%s/markets/%s/orders/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*regionID))
+	baseURL := fmt.Sprintf("%s/markets/%s/orders/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*regionID))
 
 	redisKey := "OrdersForRegion:" + strconv.Itoa(*regionID) + ":" + orderType.String()
 
@@ -43,7 +43,7 @@ func OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordert
 	redisKey = redisKey + ":" + strconv.Itoa(*page)
 	log.Debugf("Here: %s", redisKey)
 
-	orderResult, pages, err := ordersForRegionREST(newCtx, baseUrl, queryParams, redisKey)
+	orderResult, pages, err := ordersForRegionREST(newCtx, baseURL, queryParams, redisKey)
 
 	if err == nil {
 		orderList = append(orderList, orderResult...)
@@ -97,6 +97,6 @@ func ordersForRegionREST(ctx context.Context, url string, additionalQueryParams 
 		return orders, 0, err
 	}
 
-	span.SetAttributes(attribute.String("baseUrl", url), attribute.String("redisKey", redisKey))
+	span.SetAttributes(attribute.String("baseURL", url), attribute.String("redisKey", redisKey))
 	return orders, pages, nil
 }

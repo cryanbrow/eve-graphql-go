@@ -51,11 +51,11 @@ func raceByArray(ctx context.Context, id *int) (*model.Race, error) {
 	var races []*model.Race = make([]*model.Race, 0)
 	var returnRace *model.Race
 	var headers http.Header
-	baseUrl := fmt.Sprintf("%s/universe/races/", configuration.AppConfig.Esi.Default.Url)
+	baseURL := fmt.Sprintf("%s/universe/races/", configuration.AppConfig.Esi.Default.Url)
 	redisKey := raceRedisKey + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, headers, err := restHelper.MakeCachingRESTCall(newCtx, baseURL, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return nil, err
 	}

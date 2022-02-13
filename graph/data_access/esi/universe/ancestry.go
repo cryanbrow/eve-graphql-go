@@ -51,10 +51,10 @@ func ancestryByArray(ctx context.Context, id *int) (*model.Ancestry, error) {
 	var ancestries []*model.Ancestry = make([]*model.Ancestry, 0)
 	var returnAncestry *model.Ancestry
 	var redisKey = ancestryRedisKey + strconv.Itoa(*id)
-	baseUrl := fmt.Sprintf("%s/universe/ancestries/", configuration.AppConfig.Esi.Default.Url)
+	baseURL := fmt.Sprintf("%s/universe/ancestries/", configuration.AppConfig.Esi.Default.Url)
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, headers, err := restHelper.MakeCachingRESTCall(newCtx, baseURL, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return nil, err
 	}

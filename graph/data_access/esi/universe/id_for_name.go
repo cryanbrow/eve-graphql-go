@@ -20,7 +20,7 @@ func IdForName(ctx context.Context, name *string, nameType string) (int, error) 
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "IdForName")
 	defer span.End()
 	var ids *local_model.Names = new(local_model.Names)
-	baseUrl := fmt.Sprintf("%s/universe/ids/", configuration.AppConfig.Esi.Default.Url)
+	baseURL := fmt.Sprintf("%s/universe/ids/", configuration.AppConfig.Esi.Default.Url)
 	if name == nil {
 		return 0, errors.New("nil name")
 	}
@@ -34,7 +34,7 @@ func IdForName(ctx context.Context, name *string, nameType string) (int, error) 
 		return 0, err
 	}
 
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodPost, buf, nil, redisKey)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseURL, http.MethodPost, buf, nil, redisKey)
 	if err != nil {
 		return 0, err
 	}
