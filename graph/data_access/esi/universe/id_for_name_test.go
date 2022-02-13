@@ -33,7 +33,7 @@ func TestSuccessfulAgentIDForName(t *testing.T) {
 
 	var testName = "Agent CCP Zoetrope"
 
-	resp, err := IdForName(context.Background(), &testName, model.AGENTS)
+	resp, err := IDForName(context.Background(), &testName, model.AGENTS)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -64,7 +64,7 @@ func TestSuccessfulAllianceIDForName(t *testing.T) {
 
 	var testName = "Alliance CCP Zoetrope"
 
-	resp, err := IdForName(context.Background(), &testName, model.ALLIANCES)
+	resp, err := IDForName(context.Background(), &testName, model.ALLIANCES)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -95,7 +95,7 @@ func TestSuccessfulCharacterIDForName(t *testing.T) {
 
 	var testName = "Character CCP Zoetrope"
 
-	resp, err := IdForName(context.Background(), &testName, model.CHARACTERS)
+	resp, err := IDForName(context.Background(), &testName, model.CHARACTERS)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -126,7 +126,7 @@ func TestSuccessfulConstellationIDForName(t *testing.T) {
 
 	var testName = "Constellation CCP Zoetrope"
 
-	resp, err := IdForName(context.Background(), &testName, model.CONSTELLATIONS)
+	resp, err := IDForName(context.Background(), &testName, model.CONSTELLATIONS)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -157,7 +157,7 @@ func TestSuccessfulCorporationIDForName(t *testing.T) {
 
 	var testName = "Corporation CCP Zoetrope"
 
-	resp, err := IdForName(context.Background(), &testName, model.CORPORATIONS)
+	resp, err := IDForName(context.Background(), &testName, model.CORPORATIONS)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -188,7 +188,7 @@ func TestSuccessfulFactionIDForName(t *testing.T) {
 
 	var testName = "Faction CCP Zoetrope"
 
-	resp, err := IdForName(context.Background(), &testName, model.FACTIONS)
+	resp, err := IDForName(context.Background(), &testName, model.FACTIONS)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -219,7 +219,7 @@ func TestSuccessfulInventoryTypeIDForName(t *testing.T) {
 
 	var testName = "Inventory Type CCP Zoetrope"
 
-	resp, err := IdForName(context.Background(), &testName, model.INVENTORY_TYPES)
+	resp, err := IDForName(context.Background(), &testName, model.INVENTORY_TYPES)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -250,7 +250,7 @@ func TestSuccessfulRegionIDForName(t *testing.T) {
 
 	var testName = "Region CCP Zoetrope"
 
-	resp, err := IdForName(context.Background(), &testName, model.REGIONS)
+	resp, err := IDForName(context.Background(), &testName, model.REGIONS)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -281,7 +281,7 @@ func TestSuccessfulSystemIDForName(t *testing.T) {
 
 	var testName = "System CCP Zoetrope"
 
-	resp, err := IdForName(context.Background(), &testName, model.SYSTEMS)
+	resp, err := IDForName(context.Background(), &testName, model.SYSTEMS)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -312,7 +312,7 @@ func TestFailNilNameTypeIDForName(t *testing.T) {
 
 	var testName = "System CCP Zoetrope"
 
-	_, err := IdForName(context.Background(), &testName, "bryans")
+	_, err := IDForName(context.Background(), &testName, "bryans")
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
@@ -339,7 +339,7 @@ func TestFailNilNameIDForName(t *testing.T) {
 
 	var testName *string
 
-	_, err := IdForName(context.Background(), testName, model.AGENTS)
+	_, err := IDForName(context.Background(), testName, model.AGENTS)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
@@ -355,7 +355,7 @@ func TestFailRESTFailureIDForName(t *testing.T) {
 
 	var testName = "bryan"
 
-	_, err := IdForName(context.Background(), &testName, model.AGENTS)
+	_, err := IDForName(context.Background(), &testName, model.AGENTS)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
@@ -382,7 +382,7 @@ func TestFailureUnmarshalIDForName(t *testing.T) {
 
 	var testName = "Region CCP Zoetrope"
 
-	_, err := IdForName(context.Background(), &testName, model.REGIONS)
+	_, err := IDForName(context.Background(), &testName, model.REGIONS)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

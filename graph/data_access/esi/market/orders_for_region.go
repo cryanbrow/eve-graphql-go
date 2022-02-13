@@ -62,11 +62,11 @@ func OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordert
 func OrdersForRegionByName(ctx context.Context, region *string, orderType *model.Ordertype, typeName *string, page *int) (*model.OrderWrapper, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "OrdersForRegionByName")
 	defer span.End()
-	regionID, err := universe.IdForName(newCtx, region, local_model.REGIONS)
+	regionID, err := universe.IDForName(newCtx, region, local_model.REGIONS)
 	if err != nil {
 		return nil, errors.New("unknown name for region")
 	}
-	typeID, err := universe.IdForName(newCtx, typeName, local_model.INVENTORY_TYPES)
+	typeID, err := universe.IDForName(newCtx, typeName, local_model.INVENTORY_TYPES)
 	if err != nil {
 		return nil, errors.New("unknown name for typeName")
 	}

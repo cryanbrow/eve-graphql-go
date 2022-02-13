@@ -20,6 +20,8 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	go.opentelemetry.io/otel/trace v1.3.0 // indirect
+	golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f // indirect
+	golang.org/x/text v0.3.7 // indirect
 )
 
 require (
