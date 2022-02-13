@@ -22,9 +22,9 @@ func MarketGroupByID(ctx context.Context, id *int) (*model.MarketGroup, error) {
 	defer span.End()
 	var marketGroup *model.MarketGroup = new(model.MarketGroup)
 	if id == nil {
-		return nil, errors.New(helpers.NilId)
+		return nil, errors.New(helpers.NilID)
 	}
-	baseURL := fmt.Sprintf("%s/markets/groups/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/markets/groups/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
 	redisKey := "MarketGroupByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

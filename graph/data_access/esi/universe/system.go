@@ -36,10 +36,10 @@ func SystemByID(ctx context.Context, id *int) (*model.System, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "SystemByID")
 	defer span.End()
 	if id == nil {
-		return nil, errors.New(helpers.NilId)
+		return nil, errors.New(helpers.NilID)
 	}
 	var system *model.System = new(model.System)
-	baseURL := fmt.Sprintf("%s/universe/systems/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/universe/systems/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
 	redisKey := "SystemByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

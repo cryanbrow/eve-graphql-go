@@ -25,7 +25,7 @@ func BloodlineByID(ctx context.Context, id *int) (*model.Bloodline, error) {
 	var bloodline *model.Bloodline = new(model.Bloodline)
 	var err error
 	if id == nil {
-		return nil, errors.New(helpers.NilId)
+		return nil, errors.New(helpers.NilID)
 	}
 
 	span.SetAttributes(attribute.Int("request.id", *id))
@@ -52,7 +52,7 @@ func bloodlineByArray(ctx context.Context, id *int) (*model.Bloodline, error) {
 	defer span.End()
 	var bloodlines []*model.Bloodline = make([]*model.Bloodline, 0)
 	var returnBloodline *model.Bloodline
-	baseURL := fmt.Sprintf("%s/universe/bloodlines/", configuration.AppConfig.Esi.Default.Url)
+	baseURL := fmt.Sprintf("%s/universe/bloodlines/", configuration.AppConfig.Esi.Default.URL)
 	redisKey := bloodlineRedisKey
 
 	var buffer bytes.Buffer

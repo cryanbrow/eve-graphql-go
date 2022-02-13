@@ -29,13 +29,13 @@ func TestSuccessfulOrderHistory(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var regionId = 10000008
+	var regionID = 10000008
 	var typeID = 602
 
 	resp, err := OrderHistory(context.Background(), &regionId, &typeID)
@@ -63,19 +63,19 @@ func TestFailNilRegionIDOrderHistory(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var regionId *int
+	var regionID *int
 	var typeID = 602
 
 	_, err := OrderHistory(context.Background(), regionId, &typeID)
 	if err == nil {
 		t.Error(helpers.NilError)
-	} else if err.Error() != helpers.NilId {
+	} else if err.Error() != helpers.NilID {
 		t.Errorf(helpers.WrongErrorText, err.Error())
 	}
 
@@ -95,19 +95,19 @@ func TestFailNilTypeIDOrderHistory(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var regionId = 10000008
+	var regionID = 10000008
 	var typeID *int
 
 	_, err := OrderHistory(context.Background(), &regionId, typeID)
 	if err == nil {
 		t.Error(helpers.NilError)
-	} else if err.Error() != helpers.NilId {
+	} else if err.Error() != helpers.NilID {
 		t.Errorf(helpers.WrongErrorText, err.Error())
 	}
 
@@ -115,13 +115,13 @@ func TestFailNilTypeIDOrderHistory(t *testing.T) {
 
 func TestFailRestCallOrderHistory(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
 	restHelper = mockRestHelper
 
-	var regionId = 2
+	var regionID = 2
 	var typeID = 2
 
 	_, err := OrderHistory(context.Background(), &regionId, &typeID)
@@ -147,13 +147,13 @@ func TestFailUnmarshalOrderHistory(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var regionId = 10000008
+	var regionID = 10000008
 	var typeID = 602
 
 	_, err := OrderHistory(context.Background(), &regionId, &typeID)

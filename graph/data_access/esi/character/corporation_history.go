@@ -25,9 +25,9 @@ func CorporationHistory(ctx context.Context, id *int) ([]*model.CorporationHisto
 	defer span.End()
 	var corpHistory []*model.CorporationHistory = make([]*model.CorporationHistory, 0)
 	if id == nil {
-		return nil, errors.New(helpers.NilId)
+		return nil, errors.New(helpers.NilID)
 	}
-	baseURL := fmt.Sprintf("%s/characters/%s/corporationhistory", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/characters/%s/corporationhistory", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
 	redisKey := "CorporationHistory:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

@@ -36,13 +36,13 @@ func StationByID(ctx context.Context, id *int) (*model.Station, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "StationByID")
 	defer span.End()
 	if id == nil {
-		return nil, errors.New(helpers.NilId)
+		return nil, errors.New(helpers.NilID)
 	}
 	if *id > 2147483647 {
 		return nil, nil
 	}
 	var station *model.Station = new(model.Station)
-	baseURL := fmt.Sprintf("%s/universe/stations/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/universe/stations/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
 	redisKey := "StationByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

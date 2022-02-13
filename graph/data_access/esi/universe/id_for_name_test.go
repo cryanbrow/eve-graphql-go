@@ -25,13 +25,13 @@ func TestSuccessfulAgentIDForName(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var testName string = "Agent CCP Zoetrope"
+	var testName = "Agent CCP Zoetrope"
 
 	resp, err := IdForName(context.Background(), &testName, model.AGENTS)
 	if err != nil {
@@ -56,13 +56,13 @@ func TestSuccessfulAllianceIDForName(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var testName string = "Alliance CCP Zoetrope"
+	var testName = "Alliance CCP Zoetrope"
 
 	resp, err := IdForName(context.Background(), &testName, model.ALLIANCES)
 	if err != nil {
@@ -87,13 +87,13 @@ func TestSuccessfulCharacterIDForName(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var testName string = "Character CCP Zoetrope"
+	var testName = "Character CCP Zoetrope"
 
 	resp, err := IdForName(context.Background(), &testName, model.CHARACTERS)
 	if err != nil {
@@ -118,13 +118,13 @@ func TestSuccessfulConstellationIDForName(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var testName string = "Constellation CCP Zoetrope"
+	var testName = "Constellation CCP Zoetrope"
 
 	resp, err := IdForName(context.Background(), &testName, model.CONSTELLATIONS)
 	if err != nil {
@@ -149,13 +149,13 @@ func TestSuccessfulCorporationIDForName(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var testName string = "Corporation CCP Zoetrope"
+	var testName = "Corporation CCP Zoetrope"
 
 	resp, err := IdForName(context.Background(), &testName, model.CORPORATIONS)
 	if err != nil {
@@ -180,13 +180,13 @@ func TestSuccessfulFactionIDForName(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var testName string = "Faction CCP Zoetrope"
+	var testName = "Faction CCP Zoetrope"
 
 	resp, err := IdForName(context.Background(), &testName, model.FACTIONS)
 	if err != nil {
@@ -211,13 +211,13 @@ func TestSuccessfulInventoryTypeIDForName(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var testName string = "Inventory Type CCP Zoetrope"
+	var testName = "Inventory Type CCP Zoetrope"
 
 	resp, err := IdForName(context.Background(), &testName, model.INVENTORY_TYPES)
 	if err != nil {
@@ -242,13 +242,13 @@ func TestSuccessfulRegionIDForName(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var testName string = "Region CCP Zoetrope"
+	var testName = "Region CCP Zoetrope"
 
 	resp, err := IdForName(context.Background(), &testName, model.REGIONS)
 	if err != nil {
@@ -273,13 +273,13 @@ func TestSuccessfulSystemIDForName(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var testName string = "System CCP Zoetrope"
+	var testName = "System CCP Zoetrope"
 
 	resp, err := IdForName(context.Background(), &testName, model.SYSTEMS)
 	if err != nil {
@@ -304,13 +304,13 @@ func TestFailNilNameTypeIDForName(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var testName string = "System CCP Zoetrope"
+	var testName = "System CCP Zoetrope"
 
 	_, err := IdForName(context.Background(), &testName, "bryans")
 	if err == nil {
@@ -331,7 +331,7 @@ func TestFailNilNameIDForName(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -347,13 +347,13 @@ func TestFailNilNameIDForName(t *testing.T) {
 
 func TestFailRESTFailureIDForName(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
 	restHelper = mockRestHelper
 
-	var testName string = "bryan"
+	var testName = "bryan"
 
 	_, err := IdForName(context.Background(), &testName, model.AGENTS)
 	if err == nil {
@@ -374,13 +374,13 @@ func TestFailureUnmarshalIDForName(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var testName string = "Region CCP Zoetrope"
+	var testName = "Region CCP Zoetrope"
 
 	_, err := IdForName(context.Background(), &testName, model.REGIONS)
 	if err == nil {

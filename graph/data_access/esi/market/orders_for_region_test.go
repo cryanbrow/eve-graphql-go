@@ -40,13 +40,13 @@ func TestSuccessfulOrdersForRegion(t *testing.T) {
 	}
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, header, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var regionId = 10000008
+	var regionID = 10000008
 	var typeID = 44992
 	var page = 1
 	var orderType model.Ordertype = model.OrdertypeAll
@@ -86,13 +86,13 @@ func TestFailNilTypeIDOrdersForRegion(t *testing.T) {
 	}
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, header, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var regionId = 10000008
+	var regionID = 10000008
 	var typeID *int
 	var page = 1
 	var orderType model.Ordertype = model.OrdertypeAll
@@ -110,13 +110,13 @@ func TestFailNilTypeIDOrdersForRegion(t *testing.T) {
 
 func TestFailRestCallOrdersForRegion(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
 	restHelper = mockRestHelper
 
-	var regionId = 10000008
+	var regionID = 10000008
 	var typeID = 44992
 	var page = 1
 	var orderType model.Ordertype = model.OrdertypeAll
@@ -150,13 +150,13 @@ func TestFailUnmarshalOrdersForRegion(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
 	restHelper = mockRestHelper
 
-	var regionId = 10000008
+	var regionID = 10000008
 	var typeID = 44992
 	var page = 1
 	var orderType model.Ordertype = model.OrdertypeAll

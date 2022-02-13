@@ -26,15 +26,15 @@ type Config struct {
 		Impl string `default:"memory" yaml:"impl"`
 	} `yaml:"cache"`
 	Redis struct {
-		Url      string `default:"localhost" yaml:"url"`
+		URL      string `default:"localhost" yaml:"url"`
 		Port     string `default:"30893" yaml:"port"`
 		User     string `default:"" yaml:"user"`
 		Password string `default:"" yaml:"password"`
 	} `yaml:"redis"`
 	Esi struct {
 		Default struct {
-			QueryParams []Key_value `yaml:"queryParams"`
-			Url         string      `default:"https://esi.evetech.net/latest" yaml:"url"`
+			QueryParams []KevValue `yaml:"queryParams"`
+			URL         string     `default:"https://esi.evetech.net/latest" yaml:"url"`
 		} `yaml:"default"`
 	} `yaml:"esi"`
 	Jaeger struct {
@@ -49,7 +49,7 @@ type Config struct {
 	} `yaml:"jaeger"`
 }
 
-type Key_value struct {
+type KevValue struct {
 	Key   string `yaml:"key"`
 	Value string `yaml:"value"`
 }

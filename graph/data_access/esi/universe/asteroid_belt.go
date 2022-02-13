@@ -40,9 +40,9 @@ func AsteroidBeltByID(ctx context.Context, id *int) (*model.AsteroidBelt, error)
 	defer span.End()
 	var asteroidBelt *model.AsteroidBelt = new(model.AsteroidBelt)
 	if id == nil {
-		return nil, errors.New(helpers.NilId)
+		return nil, errors.New(helpers.NilID)
 	}
-	baseURL := fmt.Sprintf("%s/universe/asteroid_belts/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/universe/asteroid_belts/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
 	redisKey := asteroidBeltRedisKey + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

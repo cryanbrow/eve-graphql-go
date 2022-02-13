@@ -37,9 +37,9 @@ func StargateByID(ctx context.Context, id *int) (*model.Stargate, error) {
 	defer span.End()
 	var stargate *model.Stargate = new(model.Stargate)
 	if id == nil {
-		return nil, errors.New(helpers.NilId)
+		return nil, errors.New(helpers.NilID)
 	}
-	baseURL := fmt.Sprintf("%s/universe/stargates/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/universe/stargates/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
 	redisKey := "StargateByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

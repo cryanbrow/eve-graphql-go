@@ -25,9 +25,9 @@ func CharacterPortraitByID(ctx context.Context, id *int) (*model.CharacterPortra
 	defer span.End()
 	var characterPortrait *model.CharacterPortrait = new(model.CharacterPortrait)
 	if id == nil {
-		return nil, errors.New(helpers.NilId)
+		return nil, errors.New(helpers.NilID)
 	}
-	baseURL := fmt.Sprintf("%s/characters/%s/portrait", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/characters/%s/portrait", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
 	redisKey := "CharacterPortraitByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

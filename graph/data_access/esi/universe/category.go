@@ -22,9 +22,9 @@ func CategoryByID(ctx context.Context, id *int) (*model.Category, error) {
 	defer span.End()
 	var category *model.Category = new(model.Category)
 	if id == nil {
-		return nil, errors.New(helpers.NilId)
+		return nil, errors.New(helpers.NilID)
 	}
-	baseURL := fmt.Sprintf("%s/universe/categories/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/universe/categories/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
 	redisKey := "CategoryByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

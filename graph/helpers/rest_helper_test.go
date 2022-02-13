@@ -34,7 +34,7 @@ func TestSuccessfulMakeCachingRESTCall(t *testing.T) {
 	}
 }
 
-func setupSuccessfulRESTCall() ([]configuration.Key_value, bool) {
+func setupSuccessfulRESTCall() ([]configuration.KevValue, bool) {
 	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
 	setRedisClient()
 	Client = &MockClient{
@@ -46,8 +46,8 @@ func setupSuccessfulRESTCall() ([]configuration.Key_value, bool) {
 		},
 	}
 
-	queryParams := make([]configuration.Key_value, 2)
-	kv := new(configuration.Key_value)
+	queryParams := make([]configuration.KevValue, 2)
+	kv := new(configuration.KevValue)
 	kv.Key = "page"
 	kv.Value = strconv.Itoa(1)
 	queryParams = append(queryParams, *kv)
@@ -73,8 +73,8 @@ func TestInCacheSuccessfulMakeCachingRESTCall(t *testing.T) {
 		},
 	}
 
-	queryParams := make([]configuration.Key_value, 2)
-	kv := new(configuration.Key_value)
+	queryParams := make([]configuration.KevValue, 2)
+	kv := new(configuration.KevValue)
 	kv.Key = "page"
 	kv.Value = strconv.Itoa(1)
 	queryParams = append(queryParams, *kv)
@@ -236,7 +236,7 @@ func (m *MockCachingClient) CheckCache(key string, ctx context.Context) (bool, [
 }
 
 type RestHelper interface {
-	MakeCachingRESTCall(ctx context.Context, base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.Key_value, redis_query_key string) ([]byte, http.Header, error)
+	MakeCachingRESTCall(ctx context.Context, base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error)
 }
 
 var (

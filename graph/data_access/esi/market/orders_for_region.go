@@ -23,12 +23,12 @@ func OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordert
 	defer span.End()
 	log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID, "orderType": orderType}).Info("OrdersForRegion Called")
 	orderList := make([]*model.Order, 0)
-	baseURL := fmt.Sprintf("%s/markets/%s/orders/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*regionID))
+	baseURL := fmt.Sprintf("%s/markets/%s/orders/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*regionID))
 
 	redisKey := "OrdersForRegion:" + strconv.Itoa(*regionID) + ":" + orderType.String()
 
-	queryParams := make([]configuration.Key_value, 2)
-	kv := new(configuration.Key_value)
+	queryParams := make([]configuration.KevValue, 2)
+	kv := new(configuration.KevValue)
 	kv.Key = "page"
 	kv.Value = strconv.Itoa(*page)
 	queryParams = append(queryParams, *kv)
@@ -79,7 +79,7 @@ func OrdersForRegionByName(ctx context.Context, region *string, orderType *model
 	return orders, nil
 }
 
-func ordersForRegionREST(ctx context.Context, url string, additionalQueryParams []configuration.Key_value, redisKey string) ([]*model.Order, int, error) {
+func ordersForRegionREST(ctx context.Context, url string, additionalQueryParams []configuration.KevValue, redisKey string) ([]*model.Order, int, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "ordersForRegionREST")
 	defer span.End()
 	var orders []*model.Order

@@ -24,9 +24,9 @@ func DogmaAttributeByID(ctx context.Context, id *int) (*model.DogmaAttributeDeta
 	defer span.End()
 	var dogmaAttribute *model.DogmaAttributeDetail = new(model.DogmaAttributeDetail)
 	if id == nil {
-		return nil, errors.New(helpers.NilId)
+		return nil, errors.New(helpers.NilID)
 	}
-	baseURL := fmt.Sprintf("%s/dogma/attributes/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/dogma/attributes/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
 	redisKey := "DogmaAttributeByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
@@ -49,9 +49,9 @@ func DogmaEffectByID(ctx context.Context, id *int) (*model.DogmaEffectDetail, er
 	defer span.End()
 	var dogmaEffect *model.DogmaEffectDetail = new(model.DogmaEffectDetail)
 	if id == nil {
-		return nil, errors.New(helpers.NilId)
+		return nil, errors.New(helpers.NilID)
 	}
-	baseURL := fmt.Sprintf("%s/dogma/effects/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/dogma/effects/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
 	redisKey := "DogmaEffectByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
@@ -70,7 +70,7 @@ func DogmaEffectByID(ctx context.Context, id *int) (*model.DogmaEffectDetail, er
 }
 
 type RestHelper interface {
-	MakeCachingRESTCall(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error)
+	MakeCachingRESTCall(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error)
 }
 
 var (

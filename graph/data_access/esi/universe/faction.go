@@ -24,7 +24,7 @@ func FactionByID(ctx context.Context, id *int) (*model.Faction, error) {
 	defer span.End()
 	var faction *model.Faction = new(model.Faction)
 	if id == nil {
-		return nil, errors.New(helpers.NilId)
+		return nil, errors.New(helpers.NilID)
 	}
 
 	span.SetAttributes(attribute.Int("request.id", *id))
@@ -51,7 +51,7 @@ func factionByArray(ctx context.Context, id *int) (*model.Faction, error) {
 	defer span.End()
 	var factions []*model.Faction = make([]*model.Faction, 0)
 	var returnFaction *model.Faction
-	baseURL := fmt.Sprintf("%s/universe/factions/", configuration.AppConfig.Esi.Default.Url)
+	baseURL := fmt.Sprintf("%s/universe/factions/", configuration.AppConfig.Esi.Default.URL)
 	redisKey := factionRedisKey + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

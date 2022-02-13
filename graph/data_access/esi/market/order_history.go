@@ -21,10 +21,10 @@ func OrderHistory(ctx context.Context, regionID *int, typeID *int) ([]*model.Ord
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "OrderHistory")
 	defer span.End()
 	if regionID == nil || typeID == nil {
-		return nil, errors.New(helpers.NilId)
+		return nil, errors.New(helpers.NilID)
 	}
 	var orderHistory []*model.OrderHistory = make([]*model.OrderHistory, 0)
-	baseURL := fmt.Sprintf("%s/markets/%s/history", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*regionID))
+	baseURL := fmt.Sprintf("%s/markets/%s/history", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*regionID))
 	redisKey := "OrderHistoryByID:" + strconv.Itoa(*regionID) + ":" + strconv.Itoa(*typeID)
 
 	var buffer bytes.Buffer

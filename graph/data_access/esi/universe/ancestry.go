@@ -25,7 +25,7 @@ func AncestryByID(ctx context.Context, id *int) (*model.Ancestry, error) {
 	var ancestry *model.Ancestry = new(model.Ancestry)
 	var err error
 	if id == nil {
-		return nil, errors.New(helpers.NilId)
+		return nil, errors.New(helpers.NilID)
 	}
 	span.SetAttributes(attribute.Int("request.id", *id))
 
@@ -51,7 +51,7 @@ func ancestryByArray(ctx context.Context, id *int) (*model.Ancestry, error) {
 	var ancestries []*model.Ancestry = make([]*model.Ancestry, 0)
 	var returnAncestry *model.Ancestry
 	var redisKey = ancestryRedisKey + strconv.Itoa(*id)
-	baseURL := fmt.Sprintf("%s/universe/ancestries/", configuration.AppConfig.Esi.Default.Url)
+	baseURL := fmt.Sprintf("%s/universe/ancestries/", configuration.AppConfig.Esi.Default.URL)
 
 	var buffer bytes.Buffer
 	responseBytes, headers, err := restHelper.MakeCachingRESTCall(newCtx, baseURL, http.MethodGet, buffer, nil, redisKey)

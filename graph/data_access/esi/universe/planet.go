@@ -22,9 +22,9 @@ func PlanetByID(ctx context.Context, id *int) (*model.Planet, error) {
 	defer span.End()
 	var planet *model.Planet = new(model.Planet)
 	if id == nil {
-		return nil, errors.New(helpers.NilId)
+		return nil, errors.New(helpers.NilID)
 	}
-	baseURL := fmt.Sprintf("%s/universe/planets/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/universe/planets/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
 	redisKey := "PlanetByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

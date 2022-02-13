@@ -22,9 +22,9 @@ func RegionByID(ctx context.Context, id *int) (*model.Region, error) {
 	defer span.End()
 	var region *model.Region = new(model.Region)
 	if id == nil {
-		return nil, errors.New(helpers.NilId)
+		return nil, errors.New(helpers.NilID)
 	}
-	baseURL := fmt.Sprintf("%s/universe/regions/%s/", configuration.AppConfig.Esi.Default.Url, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/universe/regions/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
 	redisKey := "RegionByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

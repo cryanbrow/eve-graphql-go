@@ -25,7 +25,7 @@ func RaceByID(ctx context.Context, id *int) (*model.Race, error) {
 	var race *model.Race = new(model.Race)
 	var err error
 	if id == nil {
-		return nil, errors.New(helpers.NilId)
+		return nil, errors.New(helpers.NilID)
 	}
 
 	span.SetAttributes(attribute.Int("request.id", *id))
@@ -51,7 +51,7 @@ func raceByArray(ctx context.Context, id *int) (*model.Race, error) {
 	var races []*model.Race = make([]*model.Race, 0)
 	var returnRace *model.Race
 	var headers http.Header
-	baseURL := fmt.Sprintf("%s/universe/races/", configuration.AppConfig.Esi.Default.Url)
+	baseURL := fmt.Sprintf("%s/universe/races/", configuration.AppConfig.Esi.Default.URL)
 	redisKey := raceRedisKey + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

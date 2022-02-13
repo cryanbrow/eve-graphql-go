@@ -19,7 +19,7 @@ var (
 func ConfigureCaching() {
 	if configuration.AppConfig.Caching.Impl == "redis" {
 		rdb = redis.NewClient(&redis.Options{
-			Addr:     configuration.AppConfig.Redis.Url + ":" + configuration.AppConfig.Redis.Port,
+			Addr:     configuration.AppConfig.Redis.URL + ":" + configuration.AppConfig.Redis.Port,
 			Username: configuration.AppConfig.Redis.User,
 			Password: configuration.AppConfig.Redis.Password,
 			DB:       0, // use default DB
