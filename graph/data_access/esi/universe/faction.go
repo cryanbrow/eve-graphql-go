@@ -35,13 +35,12 @@ func FactionByID(ctx context.Context, id *int) (*model.Faction, error) {
 			return nil, err
 		}
 		return faction, nil
-	} else {
-		if err := json.Unmarshal(result, &faction); err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf(helpers.CouldNotUnmarshalResponseBytes, err)
-			return faction, err
-		}
-		return faction, nil
 	}
+	if err := json.Unmarshal(result, &faction); err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf(helpers.CouldNotUnmarshalResponseBytes, err)
+		return faction, err
+	}
+	return faction, nil
 }
 
 func factionByArray(ctx context.Context, id *int) (*model.Faction, error) {
