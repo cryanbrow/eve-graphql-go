@@ -1,5 +1,6 @@
 package model
 
+//Names is a struct of possible types of Names that can be returned for IDs
 type Names struct {
 	Agents         []*NameTuple `json:"agents"`
 	Alliances      []*NameTuple `json:"alliances"`
@@ -12,6 +13,7 @@ type Names struct {
 	Systems        []*NameTuple `json:"systems"`
 }
 
+//NameTuple is a representation of a name as it relates to an ID.
 type NameTuple struct {
 	ID   *int    `json:"id"`
 	Name *string `json:"name"`

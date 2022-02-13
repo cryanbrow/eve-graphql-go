@@ -1,5 +1,6 @@
 package helpers
 
+//NilError is a string constant for unit testing.
 const NilError = "error is nil"
 const WrongErrorText = "Wrong error text: %s"
 const NilID = "nil id"

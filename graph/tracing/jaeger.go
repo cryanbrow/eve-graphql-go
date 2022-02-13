@@ -34,6 +34,7 @@ func tracerProvider(url string) (*tracesdk.TracerProvider, error) {
 	return tp, nil
 }
 
+//SetupTracing determines if Jaeger is enabled, loads configuration if it is, or sets up a TracerProvider that sends the traces to nowhere.
 func SetupTracing() {
 	if configuration.AppConfig.Jaeger.Enabled {
 		var err error
@@ -53,5 +54,6 @@ func SetupTracing() {
 }
 
 var (
+	//TraceProvider is the trace provider implementation that has been injected.
 	TraceProvider *tracesdk.TracerProvider
 )
