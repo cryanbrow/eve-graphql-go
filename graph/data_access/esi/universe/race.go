@@ -36,13 +36,12 @@ func RaceByID(ctx context.Context, id *int) (*model.Race, error) {
 			return nil, err
 		}
 		return race, nil
-	} else {
-		if err := json.Unmarshal(result, &race); err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf(helpers.CouldNotUnmarshalResponseBytes, err)
-			return race, err
-		}
-		return race, nil
 	}
+	if err := json.Unmarshal(result, &race); err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf(helpers.CouldNotUnmarshalResponseBytes, err)
+		return race, err
+	}
+	return race, nil
 }
 
 func raceByArray(ctx context.Context, id *int) (*model.Race, error) {

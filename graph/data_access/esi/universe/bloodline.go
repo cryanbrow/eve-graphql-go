@@ -34,16 +34,14 @@ func BloodlineByID(ctx context.Context, id *int) (*model.Bloodline, error) {
 		bloodline, err = bloodlineByArray(newCtx, id)
 		if err != nil {
 			return nil, err
-		} else {
-			return bloodline, nil
 		}
+		return bloodline, nil
 	} else {
 		if err := json.Unmarshal(result, &bloodline); err != nil {
 			log.WithFields(log.Fields{"id": id}).Errorf(helpers.CouldNotUnmarshalResponseBytes, err)
 			return bloodline, err
-		} else {
-			return bloodline, nil
 		}
+		return bloodline, nil
 	}
 }
 

@@ -36,13 +36,12 @@ func AncestryByID(ctx context.Context, id *int) (*model.Ancestry, error) {
 			return nil, err
 		}
 		return ancestry, nil
-	} else {
-		if err := json.Unmarshal(result, &ancestry); err != nil {
-			log.WithFields(log.Fields{"id": id}).Errorf(helpers.CouldNotUnmarshalResponseBytes, err)
-			return ancestry, err
-		}
-		return ancestry, nil
 	}
+	if err := json.Unmarshal(result, &ancestry); err != nil {
+		log.WithFields(log.Fields{"id": id}).Errorf(helpers.CouldNotUnmarshalResponseBytes, err)
+		return ancestry, err
+	}
+	return ancestry, nil
 }
 
 func ancestryByArray(ctx context.Context, id *int) (*model.Ancestry, error) {

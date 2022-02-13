@@ -33,16 +33,14 @@ func FactionByID(ctx context.Context, id *int) (*model.Faction, error) {
 		faction, err := factionByArray(newCtx, id)
 		if err != nil {
 			return nil, err
-		} else {
-			return faction, nil
 		}
+		return faction, nil
 	} else {
 		if err := json.Unmarshal(result, &faction); err != nil {
 			log.WithFields(log.Fields{"id": id}).Errorf(helpers.CouldNotUnmarshalResponseBytes, err)
 			return faction, err
-		} else {
-			return faction, nil
 		}
+		return faction, nil
 	}
 }
 

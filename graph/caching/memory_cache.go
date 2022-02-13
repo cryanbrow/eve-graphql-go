@@ -23,9 +23,8 @@ func (c *MemoryClient) CheckCache(ctx context.Context, key string) (bool, []byte
 	if !success || result.(cacheRecord).value == nil || result.(cacheRecord).expiry < time.Now().UnixMilli() {
 		memoryCache.Delete(key)
 		return false, nil
-	} else {
-		return true, result.(cacheRecord).value
 	}
+	return true, result.(cacheRecord).value
 }
 
 func (c *MemoryClient) AddToCache(ctx context.Context, key string, value []byte, ttl int64) {

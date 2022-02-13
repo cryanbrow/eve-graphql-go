@@ -236,7 +236,7 @@ func (m *MockCachingClient) CheckCache(ctx context.Context, key string) (bool, [
 }
 
 type RestHelper interface {
-	MakeCachingRESTCall(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additional_query_params []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error)
+	MakeCachingRESTCall(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error)
 }
 
 var (

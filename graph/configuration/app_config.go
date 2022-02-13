@@ -68,9 +68,8 @@ func ReadFile() {
 			log.Warn("Did not find config file. Proceeding with default config.")
 			ReadEnv()
 			return
-		} else {
-			processError(err)
 		}
+		processError(err)
 	}
 	defer func() {
 		if err := file.Close(); err != nil {

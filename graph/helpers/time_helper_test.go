@@ -16,9 +16,8 @@ func TestEsiTTLToMillisSuccess(t *testing.T) {
 	result := EsiTTLToMillis(context.Background(), nowString)
 	if result > 0 {
 		return
-	} else {
-		t.Errorf("TTL return was not greater than 0: %s", strconv.FormatInt(result, 10))
 	}
+	t.Errorf("TTL return was not greater than 0: %s", strconv.FormatInt(result, 10))
 }
 
 func TestEsiTTLToMillisFail(t *testing.T) {
@@ -29,9 +28,8 @@ func TestEsiTTLToMillisFail(t *testing.T) {
 	result := EsiTTLToMillis(context.Background(), nowString)
 	if result == 43200000 {
 		return
-	} else {
-		t.Errorf("TTL return was not greater than 0: %s", strconv.FormatInt(result, 10))
 	}
+	t.Errorf("TTL return was not greater than 0: %s", strconv.FormatInt(result, 10))
 }
 
 func init() {

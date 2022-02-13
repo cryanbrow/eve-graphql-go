@@ -25,9 +25,8 @@ func (c *RedisClient) CheckCache(ctx context.Context, key string) (bool, []byte)
 	if err != nil {
 		if err.Error() == string("redis: nil") {
 			return false, nil
-		} else {
-			log.Errorf("Redis encountered an error: %v", err)
 		}
+		log.Errorf("Redis encountered an error: %v", err)
 	}
 	span.SetAttributes(attribute.String("key", key))
 	return true, []byte(val)
