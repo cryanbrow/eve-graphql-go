@@ -51,7 +51,7 @@ func TestSuccessfulOrdersForRegion(t *testing.T) {
 	var page = 1
 	var orderType model.Ordertype = model.OrdertypeAll
 
-	resp, err := OrdersForRegion(context.Background(), &regionId, &orderType, &typeID, &page)
+	resp, err := OrdersForRegion(context.Background(), &regionID, &orderType, &typeID, &page)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -97,7 +97,7 @@ func TestFailNilTypeIDOrdersForRegion(t *testing.T) {
 	var page = 1
 	var orderType model.Ordertype = model.OrdertypeAll
 
-	resp, err := OrdersForRegion(context.Background(), &regionId, &orderType, typeID, &page)
+	resp, err := OrdersForRegion(context.Background(), &regionID, &orderType, typeID, &page)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -121,7 +121,7 @@ func TestFailRestCallOrdersForRegion(t *testing.T) {
 	var page = 1
 	var orderType model.Ordertype = model.OrdertypeAll
 
-	_, err := OrdersForRegion(context.Background(), &regionId, &orderType, &typeID, &page)
+	_, err := OrdersForRegion(context.Background(), &regionID, &orderType, &typeID, &page)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -161,7 +161,7 @@ func TestFailUnmarshalOrdersForRegion(t *testing.T) {
 	var page = 1
 	var orderType model.Ordertype = model.OrdertypeAll
 
-	_, err := OrdersForRegion(context.Background(), &regionId, &orderType, &typeID, &page)
+	_, err := OrdersForRegion(context.Background(), &regionID, &orderType, &typeID, &page)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
