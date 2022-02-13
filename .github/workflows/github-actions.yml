@@ -42,7 +42,11 @@ jobs:
         go tool cover -func=output/cover.out | grep total
         go tool cover --html=output/cover.out -o output/coverage.html
 
-    - name: run-revive
+    - name: vet
+      run: |
+        go vet ./... > output/vet.out
+
+    - name: revive
       run: |
         go install github.com/mgechev/revive@latest
         revive -exclude generated.go -exclude models_gen.go --exclude schema.resolvers.go -formatter default ./... > output/revive.out

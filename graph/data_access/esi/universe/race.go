@@ -29,7 +29,7 @@ func RaceByID(ctx context.Context, id *int) (*model.Race, error) {
 	}
 
 	span.SetAttributes(attribute.Int("request.id", *id))
-	inCache, result := CachingClient.CheckCache(raceRedisKey+strconv.Itoa(*id), newCtx)
+	inCache, result := CachingClient.CheckCache(newCtx, raceRedisKey+strconv.Itoa(*id))
 	if !inCache {
 		race, err = raceByArray(newCtx, id)
 		if err != nil {
@@ -72,7 +72,7 @@ func raceByArray(ctx context.Context, id *int) (*model.Race, error) {
 		}
 		raceBytes, err := json.Marshal(*race)
 		if err == nil {
-			CachingClient.AddToCache(raceRedisKey+strconv.Itoa(*race.RaceID), raceBytes, helpers.EsiTtlToMillis(headers.Get("expires"), newCtx), newCtx)
+			CachingClient.AddToCache(newCtx, raceRedisKey+strconv.Itoa(*race.RaceID), raceBytes, helpers.EsiTTLToMillis(newCtx, headers.Get("expires")))
 		} else {
 			log.Errorf(helpers.FailureMarshaling, err)
 		}

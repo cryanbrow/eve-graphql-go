@@ -27,10 +27,10 @@ func TestSuccessfulInCacheFactionByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockCachingClient := &MockCachingClient{
-		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
+		MockAdd: func(ctx context.Context, key string, value []byte, ttl int64) {
 			//Method returns nothing so needs no implementation
 		},
-		MockCheck: func(key string, ctx context.Context) (bool, []byte) {
+		MockCheck: func(ctx context.Context, key string) (bool, []byte) {
 			return true, b
 		},
 	}
@@ -102,10 +102,10 @@ func TestFailUnmarshalInCacheFactionByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockCachingClient := &MockCachingClient{
-		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
+		MockAdd: func(ctx context.Context, key string, value []byte, ttl int64) {
 			//Method returns nothing so needs no implementation
 		},
-		MockCheck: func(key string, ctx context.Context) (bool, []byte) {
+		MockCheck: func(ctx context.Context, key string) (bool, []byte) {
 			return true, b
 		},
 	}

@@ -8,8 +8,8 @@ import (
 )
 
 type Caching interface {
-	CheckCache(key string, ctx context.Context) (bool, []byte)
-	AddToCache(key string, value []byte, ttl int64, ctx context.Context)
+	CheckCache(ctx context.Context, key string) (bool, []byte)
+	AddToCache(ctx context.Context, key string, value []byte, ttl int64)
 }
 
 var (

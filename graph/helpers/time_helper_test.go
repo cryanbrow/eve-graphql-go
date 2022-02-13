@@ -9,11 +9,11 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 )
 
-func TestEsiTtlToMillisSuccess(t *testing.T) {
+func TestEsiTTLToMillisSuccess(t *testing.T) {
 	now := time.Now().UTC()
 	now = now.Add(time.Millisecond * 50000)
 	nowString := now.Format(time.RFC1123)
-	result := EsiTtlToMillis(nowString, context.Background())
+	result := EsiTTLToMillis(context.Background(), nowString)
 	if result > 0 {
 		return
 	} else {
@@ -21,12 +21,12 @@ func TestEsiTtlToMillisSuccess(t *testing.T) {
 	}
 }
 
-func TestEsiTtlToMillisFail(t *testing.T) {
+func TestEsiTTLToMillisFail(t *testing.T) {
 	now := time.Now().UTC()
 	now = now.Add(time.Millisecond * 50000)
 	nowString := now.Format(time.RFC1123)
 	nowString = nowString + "GARBAGE"
-	result := EsiTtlToMillis(nowString, context.Background())
+	result := EsiTTLToMillis(context.Background(), nowString)
 	if result == 43200000 {
 		return
 	} else {

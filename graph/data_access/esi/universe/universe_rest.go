@@ -13,8 +13,8 @@ import (
 const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
 
 type CacheClientInterface interface {
-	AddToCache(key string, value []byte, ttl int64, ctx context.Context)
-	CheckCache(key string, ctx context.Context) (bool, []byte)
+	AddToCache(ctx context.Context, key string, value []byte, ttl int64)
+	CheckCache(ctx context.Context, key string) (bool, []byte)
 }
 
 var (

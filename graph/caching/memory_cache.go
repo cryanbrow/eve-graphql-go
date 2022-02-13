@@ -18,7 +18,7 @@ type cacheRecord struct {
 
 var memoryCache sync.Map
 
-func (c *MemoryClient) CheckCache(key string, ctx context.Context) (bool, []byte) {
+func (c *MemoryClient) CheckCache(ctx context.Context, key string) (bool, []byte) {
 	result, success := memoryCache.Load(key)
 	if !success || result.(cacheRecord).value == nil || result.(cacheRecord).expiry < time.Now().UnixMilli() {
 		memoryCache.Delete(key)
@@ -28,7 +28,7 @@ func (c *MemoryClient) CheckCache(key string, ctx context.Context) (bool, []byte
 	}
 }
 
-func (c *MemoryClient) AddToCache(key string, value []byte, ttl int64, ctx context.Context) {
+func (c *MemoryClient) AddToCache(ctx context.Context, key string, value []byte, ttl int64) {
 	result, success := memoryCache.Load(key)
 	if !success || result.(cacheRecord).value == nil || result.(cacheRecord).expiry < time.Now().UnixMilli() {
 		log.Debugf("Adding to Memory Cache: %s", key)

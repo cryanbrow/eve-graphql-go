@@ -28,7 +28,7 @@ func FactionByID(ctx context.Context, id *int) (*model.Faction, error) {
 	}
 
 	span.SetAttributes(attribute.Int("request.id", *id))
-	inCache, result := CachingClient.CheckCache(factionRedisKey+strconv.Itoa(*id), newCtx)
+	inCache, result := CachingClient.CheckCache(newCtx, factionRedisKey+strconv.Itoa(*id))
 	if !inCache {
 		faction, err := factionByArray(newCtx, id)
 		if err != nil {
@@ -72,7 +72,7 @@ func factionByArray(ctx context.Context, id *int) (*model.Faction, error) {
 		}
 		factionBytes, err := json.Marshal(*faction)
 		if err == nil {
-			CachingClient.AddToCache(factionRedisKey+strconv.Itoa(*faction.FactionID), factionBytes, helpers.EsiTtlToMillis(headers.Get("expires"), newCtx), newCtx)
+			CachingClient.AddToCache(newCtx, factionRedisKey+strconv.Itoa(*faction.FactionID), factionBytes, helpers.EsiTTLToMillis(newCtx, headers.Get("expires")))
 		} else {
 			log.Errorf(helpers.FailureMarshaling, err)
 		}

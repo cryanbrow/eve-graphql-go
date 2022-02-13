@@ -29,7 +29,7 @@ func AncestryByID(ctx context.Context, id *int) (*model.Ancestry, error) {
 	}
 	span.SetAttributes(attribute.Int("request.id", *id))
 
-	inCache, result := CachingClient.CheckCache(ancestryRedisKey+strconv.Itoa(*id), newCtx)
+	inCache, result := CachingClient.CheckCache(newCtx, ancestryRedisKey+strconv.Itoa(*id))
 	if !inCache {
 		ancestry, err = ancestryByArray(newCtx, id)
 		if err != nil {
@@ -71,7 +71,7 @@ func ancestryByArray(ctx context.Context, id *int) (*model.Ancestry, error) {
 		}
 		ancestryBytes, err := json.Marshal(*ancestry)
 		if err == nil {
-			CachingClient.AddToCache(ancestryRedisKey+strconv.Itoa(*ancestry.ID), ancestryBytes, helpers.EsiTtlToMillis(headers.Get("expires"), newCtx), newCtx)
+			CachingClient.AddToCache(newCtx, ancestryRedisKey+strconv.Itoa(*ancestry.ID), ancestryBytes, helpers.EsiTTLToMillis(newCtx, headers.Get("expires")))
 		} else {
 			log.Errorf(helpers.FailureMarshaling, err)
 		}

@@ -12,20 +12,20 @@ import (
 *             MOCK SECTION             *
 ***************************************/
 
-type MockAddToCacheType func(key string, value []byte, ttl int64, ctx context.Context)
-type MockCheckCacheType func(key string, ctx context.Context) (bool, []byte)
+type MockAddToCacheType func(ctx context.Context, key string, value []byte, ttl int64)
+type MockCheckCacheType func(ctx context.Context, key string) (bool, []byte)
 
 type MockCachingClient struct {
 	MockAdd   MockAddToCacheType
 	MockCheck MockCheckCacheType
 }
 
-func (m *MockCachingClient) AddToCache(key string, value []byte, ttl int64, ctx context.Context) {
-	m.MockAdd(key, value, ttl, ctx)
+func (m *MockCachingClient) AddToCache(ctx context.Context, key string, value []byte, ttl int64) {
+	m.MockAdd(ctx, key, value, ttl)
 }
 
-func (m *MockCachingClient) CheckCache(key string, ctx context.Context) (bool, []byte) {
-	return m.MockCheck(key, ctx)
+func (m *MockCachingClient) CheckCache(ctx context.Context, key string) (bool, []byte) {
+	return m.MockCheck(ctx, key)
 }
 
 type MockMakeCachingRESTCallType func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error)

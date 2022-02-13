@@ -27,10 +27,10 @@ func TestSuccessfulInCacheAncestryByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockCachingClient := &MockCachingClient{
-		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
+		MockAdd: func(ctx context.Context, key string, value []byte, ttl int64) {
 			//Method returns nothing so needs no implementation
 		},
-		MockCheck: func(key string, ctx context.Context) (bool, []byte) {
+		MockCheck: func(ctx context.Context, key string) (bool, []byte) {
 			return true, b
 		},
 	}
@@ -78,10 +78,10 @@ func TestSuccessfulNotInCacheAncestryByID(t *testing.T) {
 func setupNotInCacheRedis(jsonResponse string) bool {
 	b := []byte(jsonResponse)
 	mockCachingClient := &MockCachingClient{
-		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
+		MockAdd: func(ctx context.Context, key string, value []byte, ttl int64) {
 			//This method does nothing when mocked
 		},
-		MockCheck: func(key string, ctx context.Context) (bool, []byte) {
+		MockCheck: func(ctx context.Context, key string) (bool, []byte) {
 			return false, nil
 		},
 	}
@@ -116,10 +116,10 @@ func TestFailUnmarshalInCacheAncestryByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockCachingClient := &MockCachingClient{
-		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
+		MockAdd: func(ctx context.Context, key string, value []byte, ttl int64) {
 			//Method returns nothing so needs no implementation
 		},
-		MockCheck: func(key string, ctx context.Context) (bool, []byte) {
+		MockCheck: func(ctx context.Context, key string) (bool, []byte) {
 			return true, b
 		},
 	}
@@ -171,10 +171,10 @@ func TestFailRestNotInCacheAncestryByID(t *testing.T) {
 
 func setupRESTFailureNotInCache() bool {
 	mockCachingClient := &MockCachingClient{
-		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
+		MockAdd: func(ctx context.Context, key string, value []byte, ttl int64) {
 			//Method returns nothing so needs no implementation
 		},
-		MockCheck: func(key string, ctx context.Context) (bool, []byte) {
+		MockCheck: func(ctx context.Context, key string) (bool, []byte) {
 			return false, nil
 		},
 	}

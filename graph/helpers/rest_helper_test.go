@@ -65,10 +65,10 @@ func TestInCacheSuccessfulMakeCachingRESTCall(t *testing.T) {
 		},
 	}
 	CachingClientVar = &MockCachingClient{
-		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
+		MockAdd: func(ctx context.Context, key string, value []byte, ttl int64) {
 			//Method returns nothing so needs no implementation
 		},
-		MockCheck: func(key string, ctx context.Context) (bool, []byte) {
+		MockCheck: func(ctx context.Context, key string) (bool, []byte) {
 			return true, make([]byte, 0)
 		},
 	}
@@ -211,8 +211,8 @@ func Test404FailureMakeCachingRESTCall(t *testing.T) {
 }
 
 type MockDoType func(req *http.Request) (*http.Response, error)
-type MockAddToCacheType func(key string, value []byte, ttl int64, ctx context.Context)
-type MockCheckCacheType func(key string, ctx context.Context) (bool, []byte)
+type MockAddToCacheType func(ctx context.Context, key string, value []byte, ttl int64)
+type MockCheckCacheType func(ctx context.Context, key string) (bool, []byte)
 
 type MockClient struct {
 	MockDo MockDoType
@@ -227,16 +227,16 @@ func (m *MockClient) Do(req *http.Request) (*http.Response, error) {
 	return m.MockDo(req)
 }
 
-func (m *MockCachingClient) AddToCache(key string, value []byte, ttl int64, ctx context.Context) {
-	m.MockAdd(key, value, ttl, ctx)
+func (m *MockCachingClient) AddToCache(ctx context.Context, key string, value []byte, ttl int64) {
+	m.MockAdd(ctx, key, value, ttl)
 }
 
-func (m *MockCachingClient) CheckCache(key string, ctx context.Context) (bool, []byte) {
-	return m.MockCheck(key, ctx)
+func (m *MockCachingClient) CheckCache(ctx context.Context, key string) (bool, []byte) {
+	return m.MockCheck(ctx, key)
 }
 
 type RestHelper interface {
-	MakeCachingRESTCall(ctx context.Context, base_url string, verb string, body bytes.Buffer, additional_query_params []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error)
+	MakeCachingRESTCall(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additional_query_params []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error)
 }
 
 var (
@@ -253,10 +253,10 @@ func init() {
 
 func setRedisClient() {
 	CachingClientVar = &MockCachingClient{
-		MockAdd: func(key string, value []byte, ttl int64, ctx context.Context) {
+		MockAdd: func(ctx context.Context, key string, value []byte, ttl int64) {
 			//Method returns nothing so needs no implementation
 		},
-		MockCheck: func(key string, ctx context.Context) (bool, []byte) {
+		MockCheck: func(ctx context.Context, key string) (bool, []byte) {
 			return false, make([]byte, 0)
 		},
 	}

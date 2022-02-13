@@ -9,8 +9,8 @@ import (
 	"go.opentelemetry.io/otel"
 )
 
-func EsiTtlToMillis(esiTime string, ctx context.Context) int64 {
-	_, span := otel.Tracer(tracerName).Start(ctx, "EsiTtlToMillis")
+func EsiTTLToMillis(ctx context.Context, esiTime string) int64 {
+	_, span := otel.Tracer(tracerName).Start(ctx, "EsiTTLToMillis")
 	defer span.End()
 	log.WithFields(log.Fields{"time": esiTime}).Debugf("Parsing Time : %s", esiTime)
 	t, err := time.Parse(time.RFC1123, esiTime)

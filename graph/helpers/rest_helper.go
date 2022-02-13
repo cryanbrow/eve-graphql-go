@@ -24,14 +24,14 @@ func (r *RestHelperClient) MakeCachingRESTCall(ctx context.Context, baseURL stri
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "MakeCachingRESTCall")
 	span.SetAttributes(attribute.String("baseURL", baseURL), attribute.String("verb", verb), attribute.String("redisKey", redisQueryKey))
 	defer span.End()
-	inCache, result := CachingClientVar.CheckCache(redisQueryKey, newCtx)
+	inCache, result := CachingClientVar.CheckCache(newCtx, redisQueryKey)
 	if !inCache {
-		crest_url, err := url.Parse(baseURL)
+		crestURL, err := url.Parse(baseURL)
 		if err != nil {
 			log.WithFields(log.Fields{"baseURL": baseURL, "verb": verb}).Errorf("Failed to Parse URL with Error : %v", err)
 			return nil, nil, err
 		}
-		queryParameters := crest_url.Query()
+		queryParameters := crestURL.Query()
 		for _, kv := range configuration.AppConfig.Esi.Default.QueryParams {
 			queryParameters.Add(kv.Key, kv.Value)
 		}
@@ -39,8 +39,8 @@ func (r *RestHelperClient) MakeCachingRESTCall(ctx context.Context, baseURL stri
 			queryParameters.Add(kv.Key, kv.Value)
 		}
 
-		crest_url.RawQuery = queryParameters.Encode()
-		url := crest_url.String()
+		crestURL.RawQuery = queryParameters.Encode()
+		url := crestURL.String()
 
 		log.WithFields(log.Fields{"url": url}).Info("Making REST Call")
 		request, err := http.NewRequest(verb, url, &body)
@@ -64,7 +64,7 @@ func (r *RestHelperClient) MakeCachingRESTCall(ctx context.Context, baseURL stri
 			log.WithFields(log.Fields{"url": url}).Errorf("Could not read response for body. : %v", err)
 			return make([]byte, 0), nil, err
 		}
-		CachingClientVar.AddToCache(redisQueryKey, responseBytes, EsiTtlToMillis(h.Get("expires"), newCtx), newCtx)
+		CachingClientVar.AddToCache(newCtx, redisQueryKey, responseBytes, EsiTTLToMillis(newCtx, h.Get("expires")))
 		return responseBytes, h, nil
 	}
 	return result, nil, nil
@@ -75,8 +75,8 @@ type HTTPClient interface {
 }
 
 type CachingClient interface {
-	AddToCache(key string, value []byte, ttl int64, ctx context.Context)
-	CheckCache(key string, ctx context.Context) (bool, []byte)
+	AddToCache(ctx context.Context, key string, value []byte, ttl int64)
+	CheckCache(ctx context.Context, key string) (bool, []byte)
 }
 
 var (
