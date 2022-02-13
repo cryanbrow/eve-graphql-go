@@ -17,12 +17,12 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-func StargateDetails(stargates []*int, ctx context.Context) ([]*model.Stargate, error) {
+func StargateDetails(ctx context.Context, stargates []*int) ([]*model.Stargate, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "StargateDetails")
 	defer span.End()
 	stargateDetails := make([]*model.Stargate, 0)
 	for _, element := range stargates {
-		stargate, err := StargateByID(element, newCtx)
+		stargate, err := StargateByID(newCtx, element)
 		if err == nil {
 			stargateDetails = append(stargateDetails, stargate)
 		} else {
@@ -32,7 +32,7 @@ func StargateDetails(stargates []*int, ctx context.Context) ([]*model.Stargate, 
 	return stargateDetails, nil
 }
 
-func StargateByID(id *int, ctx context.Context) (*model.Stargate, error) {
+func StargateByID(ctx context.Context, id *int) (*model.Stargate, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "StargateByID")
 	defer span.End()
 	var stargate *model.Stargate = new(model.Stargate)
@@ -43,7 +43,7 @@ func StargateByID(id *int, ctx context.Context) (*model.Stargate, error) {
 	redisKey := "StargateByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return stargate, err
 	}

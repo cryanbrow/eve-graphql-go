@@ -17,7 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-func GroupByID(id *int, ctx context.Context) (*model.Group, error) {
+func GroupByID(ctx context.Context, id *int) (*model.Group, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "GroupByID")
 	defer span.End()
 	var group *model.Group = new(model.Group)
@@ -28,7 +28,7 @@ func GroupByID(id *int, ctx context.Context) (*model.Group, error) {
 	redisKey := "GroupByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return group, err
 	}

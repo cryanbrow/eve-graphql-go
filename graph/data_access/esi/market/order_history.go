@@ -17,7 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-func OrderHistory(regionID *int, typeID *int, ctx context.Context) ([]*model.OrderHistory, error) {
+func OrderHistory(ctx context.Context, regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "OrderHistory")
 	defer span.End()
 	if regionID == nil || typeID == nil {
@@ -28,7 +28,7 @@ func OrderHistory(regionID *int, typeID *int, ctx context.Context) ([]*model.Ord
 	redisKey := "OrderHistoryByID:" + strconv.Itoa(*regionID) + ":" + strconv.Itoa(*typeID)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return orderHistory, err
 	}

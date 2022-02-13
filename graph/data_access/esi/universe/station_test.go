@@ -54,7 +54,7 @@ func TestSuccessfulStationByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -62,7 +62,7 @@ func TestSuccessfulStationByID(t *testing.T) {
 
 	var testId int = 60015096
 
-	resp, err := StationByID(&testId, context.Background())
+	resp, err := StationByID(context.Background(), &testId)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -76,7 +76,7 @@ func TestSuccessfulStationByID(t *testing.T) {
 func TestFailNilIDStationByID(t *testing.T) {
 	var testId *int = nil
 
-	_, err := StationByID(testId, context.Background())
+	_, err := StationByID(context.Background(), testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -87,7 +87,7 @@ func TestFailNilIDStationByID(t *testing.T) {
 
 func TestFailRestCallStationByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -95,7 +95,7 @@ func TestFailRestCallStationByID(t *testing.T) {
 
 	var testId int = 60015096
 
-	_, err := StationByID(&testId, context.Background())
+	_, err := StationByID(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -143,7 +143,7 @@ func TestFailUnmarshalStationByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -151,7 +151,7 @@ func TestFailUnmarshalStationByID(t *testing.T) {
 
 	var testId int = 60015096
 
-	_, err := StationByID(&testId, context.Background())
+	_, err := StationByID(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
@@ -197,7 +197,7 @@ func TestSuccessfulStationsByIDs(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -209,7 +209,7 @@ func TestSuccessfulStationsByIDs(t *testing.T) {
 	ids[0] = &testId1
 	ids[1] = &testId2
 
-	resp, err := StationsByIDs(ids, context.Background())
+	resp, err := StationsByIDs(context.Background(), ids)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -221,7 +221,7 @@ func TestSuccessfulStationsByIDs(t *testing.T) {
 
 func TestFailureStationsByIDs(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -233,7 +233,7 @@ func TestFailureStationsByIDs(t *testing.T) {
 	ids[0] = &testId1
 	ids[1] = &testId2
 
-	_, err := StationsByIDs(ids, context.Background())
+	_, err := StationsByIDs(context.Background(), ids)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

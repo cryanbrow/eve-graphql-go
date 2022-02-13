@@ -19,7 +19,7 @@ import (
 
 const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/corporation"
 
-func CorporationByID(id *int, ctx context.Context) (*model.Corporation, error) {
+func CorporationByID(ctx context.Context, id *int) (*model.Corporation, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "CorporationByID")
 	defer span.End()
 	var corporation *model.Corporation = new(model.Corporation)
@@ -30,7 +30,7 @@ func CorporationByID(id *int, ctx context.Context) (*model.Corporation, error) {
 	redisKey := "CorporationByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return corporation, err
 	}
@@ -45,7 +45,7 @@ func CorporationByID(id *int, ctx context.Context) (*model.Corporation, error) {
 }
 
 type RestHelper interface {
-	MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error)
+	MakeCachingRESTCall(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error)
 }
 
 var (

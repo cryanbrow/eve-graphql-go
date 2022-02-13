@@ -17,7 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-func GraphicByID(id *int, ctx context.Context) (*model.Graphic, error) {
+func GraphicByID(ctx context.Context, id *int) (*model.Graphic, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "GraphicByID")
 	defer span.End()
 	var graphic *model.Graphic = new(model.Graphic)
@@ -28,7 +28,7 @@ func GraphicByID(id *int, ctx context.Context) (*model.Graphic, error) {
 	redisKey := "GraphicByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return graphic, err
 	}

@@ -17,7 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-func ItemTypeByID(id *int, ctx context.Context) (*model.ItemType, error) {
+func ItemTypeByID(ctx context.Context, id *int) (*model.ItemType, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ItemTypeByID")
 	defer span.End()
 	var itemType *model.ItemType = new(model.ItemType)
@@ -28,7 +28,7 @@ func ItemTypeByID(id *int, ctx context.Context) (*model.ItemType, error) {
 	redisKey := "ItemTypeByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return itemType, err
 	}
@@ -42,12 +42,12 @@ func ItemTypeByID(id *int, ctx context.Context) (*model.ItemType, error) {
 	return itemType, nil
 }
 
-func ItemTypesByIDs(itemTypes []*int, ctx context.Context) ([]*model.ItemType, error) {
+func ItemTypesByIDs(ctx context.Context, itemTypes []*int) ([]*model.ItemType, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ItemTypesByIDs")
 	defer span.End()
 	itemTypeDetails := make([]*model.ItemType, 0)
 	for _, element := range itemTypes {
-		itemType, err := ItemTypeByID(element, newCtx)
+		itemType, err := ItemTypeByID(newCtx, element)
 		if err == nil {
 			itemTypeDetails = append(itemTypeDetails, itemType)
 		} else {

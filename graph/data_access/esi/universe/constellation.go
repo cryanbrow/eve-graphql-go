@@ -17,12 +17,12 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-func ConstellationsByIDs(ids []*int, ctx context.Context) ([]*model.Constellation, error) {
+func ConstellationsByIDs(ctx context.Context, ids []*int) ([]*model.Constellation, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ConstellationsByIDs")
 	defer span.End()
 	constellationDetails := make([]*model.Constellation, 0)
 	for _, element := range ids {
-		constellation, err := ConstellationByID(element, newCtx)
+		constellation, err := ConstellationByID(newCtx, element)
 		if err == nil {
 			constellationDetails = append(constellationDetails, constellation)
 		} else {
@@ -32,7 +32,7 @@ func ConstellationsByIDs(ids []*int, ctx context.Context) ([]*model.Constellatio
 	return constellationDetails, nil
 }
 
-func ConstellationByID(id *int, ctx context.Context) (*model.Constellation, error) {
+func ConstellationByID(ctx context.Context, id *int) (*model.Constellation, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ConstellationByID")
 	defer span.End()
 	var constellation *model.Constellation = new(model.Constellation)
@@ -43,7 +43,7 @@ func ConstellationByID(id *int, ctx context.Context) (*model.Constellation, erro
 	redisKey := "ConstellationByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return constellation, err
 	}

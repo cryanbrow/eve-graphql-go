@@ -38,7 +38,7 @@ func TestSuccessfulInCacheBloodlineByID(t *testing.T) {
 	CachingClient = mockCachingClient
 
 	var testId int = 1
-	resp, err := BloodlineByID(&testId, context.Background())
+	resp, err := BloodlineByID(context.Background(), &testId)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -70,7 +70,7 @@ func TestSuccessfulNotInCacheBloodlineByID(t *testing.T) {
 	}
 
 	var testId int = 5
-	resp, err := BloodlineByID(&testId, context.Background())
+	resp, err := BloodlineByID(context.Background(), &testId)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -82,7 +82,7 @@ func TestSuccessfulNotInCacheBloodlineByID(t *testing.T) {
 
 func TestFailNilIDBloodlineByID(t *testing.T) {
 	var testId *int = nil
-	_, err := BloodlineByID(testId, context.Background())
+	_, err := BloodlineByID(context.Background(), testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -115,7 +115,7 @@ func TestFailUnmarshalInCacheBloodlineByID(t *testing.T) {
 	CachingClient = mockCachingClient
 
 	var testId int = 5
-	_, err := BloodlineByID(&testId, context.Background())
+	_, err := BloodlineByID(context.Background(), &testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -143,7 +143,7 @@ func TestFailUnmarshalNotInCacheBloodlineByID(t *testing.T) {
 	}
 
 	var testId int = 5
-	_, err := BloodlineByID(&testId, context.Background())
+	_, err := BloodlineByID(context.Background(), &testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -156,7 +156,7 @@ func TestFailRestNotInCacheBloodlineByID(t *testing.T) {
 	}
 
 	var testId int = 5
-	_, err := BloodlineByID(&testId, context.Background())
+	_, err := BloodlineByID(context.Background(), &testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}

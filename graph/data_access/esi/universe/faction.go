@@ -19,7 +19,7 @@ import (
 
 const factionRedisKey string = "FactionByID:"
 
-func FactionByID(id *int, ctx context.Context) (*model.Faction, error) {
+func FactionByID(ctx context.Context, id *int) (*model.Faction, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "CorporationByID")
 	defer span.End()
 	var faction *model.Faction = new(model.Faction)
@@ -30,7 +30,7 @@ func FactionByID(id *int, ctx context.Context) (*model.Faction, error) {
 	span.SetAttributes(attribute.Int("request.id", *id))
 	inCache, result := CachingClient.CheckCache(factionRedisKey+strconv.Itoa(*id), newCtx)
 	if !inCache {
-		faction, err := factionByArray(id, newCtx)
+		faction, err := factionByArray(newCtx, id)
 		if err != nil {
 			return nil, err
 		} else {
@@ -46,7 +46,7 @@ func FactionByID(id *int, ctx context.Context) (*model.Faction, error) {
 	}
 }
 
-func factionByArray(id *int, ctx context.Context) (*model.Faction, error) {
+func factionByArray(ctx context.Context, id *int) (*model.Faction, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "factionByArray")
 	defer span.End()
 	var factions []*model.Faction = make([]*model.Faction, 0)
@@ -55,7 +55,7 @@ func factionByArray(id *int, ctx context.Context) (*model.Faction, error) {
 	redisKey := factionRedisKey + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, headers, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return nil, err
 	}

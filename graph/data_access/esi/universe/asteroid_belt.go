@@ -19,12 +19,12 @@ import (
 
 const asteroidBeltRedisKey string = "AsteroidBeltByID:"
 
-func AsteroidBeltDetails(asteroidBelts []*int, ctx context.Context) ([]*model.AsteroidBelt, error) {
+func AsteroidBeltDetails(ctx context.Context, asteroidBelts []*int) ([]*model.AsteroidBelt, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "AsteroidBeltDetails")
 	defer span.End()
 	asteroidBeltDetails := make([]*model.AsteroidBelt, 0)
 	for _, element := range asteroidBelts {
-		asteroidBelt, err := AsteroidBeltByID(element, newCtx)
+		asteroidBelt, err := AsteroidBeltByID(newCtx, element)
 		if err == nil {
 			asteroidBeltDetails = append(asteroidBeltDetails, asteroidBelt)
 		} else {
@@ -35,7 +35,7 @@ func AsteroidBeltDetails(asteroidBelts []*int, ctx context.Context) ([]*model.As
 	return asteroidBeltDetails, nil
 }
 
-func AsteroidBeltByID(id *int, ctx context.Context) (*model.AsteroidBelt, error) {
+func AsteroidBeltByID(ctx context.Context, id *int) (*model.AsteroidBelt, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "AsteroidBeltByID")
 	defer span.End()
 	var asteroidBelt *model.AsteroidBelt = new(model.AsteroidBelt)
@@ -46,7 +46,7 @@ func AsteroidBeltByID(id *int, ctx context.Context) (*model.AsteroidBelt, error)
 	redisKey := asteroidBeltRedisKey + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return asteroidBelt, err
 	}

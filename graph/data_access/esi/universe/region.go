@@ -17,7 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-func RegionByID(id *int, ctx context.Context) (*model.Region, error) {
+func RegionByID(ctx context.Context, id *int) (*model.Region, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "RegionByID")
 	defer span.End()
 	var region *model.Region = new(model.Region)
@@ -28,7 +28,7 @@ func RegionByID(id *int, ctx context.Context) (*model.Region, error) {
 	redisKey := "RegionByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return region, err
 	}

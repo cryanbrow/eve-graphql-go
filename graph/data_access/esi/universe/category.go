@@ -17,7 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-func CategoryByID(id *int, ctx context.Context) (*model.Category, error) {
+func CategoryByID(ctx context.Context, id *int) (*model.Category, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "CategoryByID")
 	defer span.End()
 	var category *model.Category = new(model.Category)
@@ -28,7 +28,7 @@ func CategoryByID(id *int, ctx context.Context) (*model.Category, error) {
 	redisKey := "CategoryByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return category, err
 	}

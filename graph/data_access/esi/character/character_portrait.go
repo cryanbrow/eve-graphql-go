@@ -31,7 +31,7 @@ func CharacterPortraitByID(ctx context.Context, id *int) (*model.CharacterPortra
 	redisKey := "CharacterPortraitByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return characterPortrait, err
 	}

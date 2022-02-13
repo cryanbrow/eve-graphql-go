@@ -30,7 +30,7 @@ func TestSuccessfulStarByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -38,7 +38,7 @@ func TestSuccessfulStarByID(t *testing.T) {
 
 	var testId int = 40176872
 
-	resp, err := StarByID(&testId, context.Background())
+	resp, err := StarByID(context.Background(), &testId)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -52,7 +52,7 @@ func TestSuccessfulStarByID(t *testing.T) {
 func TestFailNilIDStarByID(t *testing.T) {
 	var testId *int = nil
 
-	_, err := StarByID(testId, context.Background())
+	_, err := StarByID(context.Background(), testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -63,7 +63,7 @@ func TestFailNilIDStarByID(t *testing.T) {
 
 func TestFailRestCallStarByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -71,7 +71,7 @@ func TestFailRestCallStarByID(t *testing.T) {
 
 	var testId int = 40176872
 
-	_, err := StarByID(&testId, context.Background())
+	_, err := StarByID(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -95,7 +95,7 @@ func TestFailUnmarshalStarByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -103,7 +103,7 @@ func TestFailUnmarshalStarByID(t *testing.T) {
 
 	var testId int = 40176872
 
-	_, err := StarByID(&testId, context.Background())
+	_, err := StarByID(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

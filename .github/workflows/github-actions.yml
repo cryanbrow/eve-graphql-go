@@ -29,9 +29,6 @@ jobs:
     - name: make-output-directory
       run: mkdir output
 
-    - name: build
-      run: go build -v ./...
-
     - name: test
       run: go test -v ./... -json > output/test-report.out
 

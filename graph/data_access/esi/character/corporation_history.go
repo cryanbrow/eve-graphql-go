@@ -31,7 +31,7 @@ func CorporationHistory(ctx context.Context, id *int) ([]*model.CorporationHisto
 	redisKey := "CorporationHistory:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return corpHistory, err
 	}

@@ -19,7 +19,7 @@ import (
 
 const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/dogma"
 
-func DogmaAttributeByID(id *int, ctx context.Context) (*model.DogmaAttributeDetail, error) {
+func DogmaAttributeByID(ctx context.Context, id *int) (*model.DogmaAttributeDetail, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "DogmaAttributeByID")
 	defer span.End()
 	var dogmaAttribute *model.DogmaAttributeDetail = new(model.DogmaAttributeDetail)
@@ -30,7 +30,7 @@ func DogmaAttributeByID(id *int, ctx context.Context) (*model.DogmaAttributeDeta
 	redisKey := "DogmaAttributeByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return dogmaAttribute, err
 	}
@@ -44,7 +44,7 @@ func DogmaAttributeByID(id *int, ctx context.Context) (*model.DogmaAttributeDeta
 	return dogmaAttribute, nil
 }
 
-func DogmaEffectByID(id *int, ctx context.Context) (*model.DogmaEffectDetail, error) {
+func DogmaEffectByID(ctx context.Context, id *int) (*model.DogmaEffectDetail, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "DogmaEffectByID")
 	defer span.End()
 	var dogmaEffect *model.DogmaEffectDetail = new(model.DogmaEffectDetail)
@@ -55,7 +55,7 @@ func DogmaEffectByID(id *int, ctx context.Context) (*model.DogmaEffectDetail, er
 	redisKey := "DogmaEffectByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return dogmaEffect, err
 	}
@@ -70,7 +70,7 @@ func DogmaEffectByID(id *int, ctx context.Context) (*model.DogmaEffectDetail, er
 }
 
 type RestHelper interface {
-	MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error)
+	MakeCachingRESTCall(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error)
 }
 
 var (

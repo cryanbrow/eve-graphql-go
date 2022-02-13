@@ -17,12 +17,12 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-func MoonDetails(moons []*int, ctx context.Context) ([]*model.Moon, error) {
+func MoonDetails(ctx context.Context, moons []*int) ([]*model.Moon, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "MoonDetails")
 	defer span.End()
 	moonDetails := make([]*model.Moon, 0)
 	for _, element := range moons {
-		moon, err := MoonByID(element, newCtx)
+		moon, err := MoonByID(newCtx, element)
 		if err == nil {
 			moonDetails = append(moonDetails, moon)
 		} else {
@@ -32,7 +32,7 @@ func MoonDetails(moons []*int, ctx context.Context) ([]*model.Moon, error) {
 	return moonDetails, nil
 }
 
-func MoonByID(id *int, ctx context.Context) (*model.Moon, error) {
+func MoonByID(ctx context.Context, id *int) (*model.Moon, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "MoonByID")
 	defer span.End()
 	var moon *model.Moon = new(model.Moon)
@@ -43,7 +43,7 @@ func MoonByID(id *int, ctx context.Context) (*model.Moon, error) {
 	redisKey := "MoonByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return moon, err
 	}

@@ -17,12 +17,12 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-func StationsByIDs(ids []*int, ctx context.Context) ([]*model.Station, error) {
+func StationsByIDs(ctx context.Context, ids []*int) ([]*model.Station, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "StationsByIDs")
 	defer span.End()
 	stationDetails := make([]*model.Station, 0)
 	for _, element := range ids {
-		station, err := StationByID(element, newCtx)
+		station, err := StationByID(newCtx, element)
 		if err == nil {
 			stationDetails = append(stationDetails, station)
 		} else {
@@ -32,7 +32,7 @@ func StationsByIDs(ids []*int, ctx context.Context) ([]*model.Station, error) {
 	return stationDetails, nil
 }
 
-func StationByID(id *int, ctx context.Context) (*model.Station, error) {
+func StationByID(ctx context.Context, id *int) (*model.Station, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "StationByID")
 	defer span.End()
 	if id == nil {
@@ -46,7 +46,7 @@ func StationByID(id *int, ctx context.Context) (*model.Station, error) {
 	redisKey := "StationByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return station, err
 	}

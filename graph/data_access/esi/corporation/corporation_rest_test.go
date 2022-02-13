@@ -29,7 +29,7 @@ func TestSuccessfulCorporationByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		CorporationMockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		CorporationMockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -37,7 +37,7 @@ func TestSuccessfulCorporationByID(t *testing.T) {
 
 	var testId int = 1
 
-	resp, err := CorporationByID(&testId, context.Background())
+	resp, err := CorporationByID(context.Background(), &testId)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -66,7 +66,7 @@ func TestFailNilIDCorporationByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		CorporationMockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		CorporationMockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -74,7 +74,7 @@ func TestFailNilIDCorporationByID(t *testing.T) {
 
 	var testId *int = nil
 
-	_, err := CorporationByID(testId, context.Background())
+	_, err := CorporationByID(context.Background(), testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -85,7 +85,7 @@ func TestFailNilIDCorporationByID(t *testing.T) {
 
 func TestFailRestCallCorporationByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		CorporationMockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		CorporationMockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -93,7 +93,7 @@ func TestFailRestCallCorporationByID(t *testing.T) {
 
 	var testId int = 1
 
-	_, err := CorporationByID(&testId, context.Background())
+	_, err := CorporationByID(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -120,7 +120,7 @@ func TestFailUnmarshalCorporationByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		CorporationMockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		CorporationMockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -128,19 +128,19 @@ func TestFailUnmarshalCorporationByID(t *testing.T) {
 
 	var testId int = 1
 
-	_, err := CorporationByID(&testId, context.Background())
+	_, err := CorporationByID(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
 
 }
 
-type CorporationMockMakeCachingRESTCallType func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error)
+type CorporationMockMakeCachingRESTCallType func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error)
 
 type MockRestHelper struct {
 	CorporationMockMakeCachingRESTCall CorporationMockMakeCachingRESTCallType
 }
 
-func (m *MockRestHelper) MakeCachingRESTCall(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
-	return m.CorporationMockMakeCachingRESTCall(baseUrl, verb, body, additionalQueryParams, redisQueryKey, ctx)
+func (m *MockRestHelper) MakeCachingRESTCall(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
+	return m.CorporationMockMakeCachingRESTCall(ctx, baseUrl, verb, body, additionalQueryParams, redisQueryKey)
 }

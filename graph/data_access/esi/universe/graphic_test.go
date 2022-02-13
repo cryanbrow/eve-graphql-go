@@ -26,7 +26,7 @@ func TestSuccessfulGraphicByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -34,7 +34,7 @@ func TestSuccessfulGraphicByID(t *testing.T) {
 
 	var testId int = 21573
 
-	resp, err := GraphicByID(&testId, context.Background())
+	resp, err := GraphicByID(context.Background(), &testId)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -56,7 +56,7 @@ func TestFailNilIDGraphicByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -64,7 +64,7 @@ func TestFailNilIDGraphicByID(t *testing.T) {
 
 	var testId *int = nil
 
-	_, err := GraphicByID(testId, context.Background())
+	_, err := GraphicByID(context.Background(), testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -75,7 +75,7 @@ func TestFailNilIDGraphicByID(t *testing.T) {
 
 func TestFailRestCallGraphicByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -83,7 +83,7 @@ func TestFailRestCallGraphicByID(t *testing.T) {
 
 	var testId int = 21573
 
-	_, err := GraphicByID(&testId, context.Background())
+	_, err := GraphicByID(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -103,7 +103,7 @@ func TestFailUnmarshalGraphicByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -111,7 +111,7 @@ func TestFailUnmarshalGraphicByID(t *testing.T) {
 
 	var testId int = 21573
 
-	_, err := GraphicByID(&testId, context.Background())
+	_, err := GraphicByID(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

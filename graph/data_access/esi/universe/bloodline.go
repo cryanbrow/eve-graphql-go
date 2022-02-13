@@ -19,7 +19,7 @@ import (
 
 const bloodlineRedisKey string = "BloodlineByID:"
 
-func BloodlineByID(id *int, ctx context.Context) (*model.Bloodline, error) {
+func BloodlineByID(ctx context.Context, id *int) (*model.Bloodline, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "BloodlineByID")
 	defer span.End()
 	var bloodline *model.Bloodline = new(model.Bloodline)
@@ -31,7 +31,7 @@ func BloodlineByID(id *int, ctx context.Context) (*model.Bloodline, error) {
 	span.SetAttributes(attribute.Int("request.id", *id))
 	inCache, result := CachingClient.CheckCache(bloodlineRedisKey+strconv.Itoa(*id), newCtx)
 	if !inCache {
-		bloodline, err = bloodlineByArray(id, newCtx)
+		bloodline, err = bloodlineByArray(newCtx, id)
 		if err != nil {
 			return nil, err
 		} else {
@@ -47,7 +47,7 @@ func BloodlineByID(id *int, ctx context.Context) (*model.Bloodline, error) {
 	}
 }
 
-func bloodlineByArray(id *int, ctx context.Context) (*model.Bloodline, error) {
+func bloodlineByArray(ctx context.Context, id *int) (*model.Bloodline, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "bloodlineByArray")
 	defer span.End()
 	var bloodlines []*model.Bloodline = make([]*model.Bloodline, 0)
@@ -56,7 +56,7 @@ func bloodlineByArray(id *int, ctx context.Context) (*model.Bloodline, error) {
 	redisKey := bloodlineRedisKey
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, headers, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return nil, err
 	}

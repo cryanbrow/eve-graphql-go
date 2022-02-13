@@ -16,7 +16,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-func IdForName(name *string, nameType string, ctx context.Context) (int, error) {
+func IdForName(ctx context.Context, name *string, nameType string) (int, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "IdForName")
 	defer span.End()
 	var ids *local_model.Names = new(local_model.Names)
@@ -34,7 +34,7 @@ func IdForName(name *string, nameType string, ctx context.Context) (int, error) 
 		return 0, err
 	}
 
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodPost, buf, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodPost, buf, nil, redisKey)
 	if err != nil {
 		return 0, err
 	}

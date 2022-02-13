@@ -37,7 +37,7 @@ func TestSuccessfulInCacheFactionByID(t *testing.T) {
 	CachingClient = mockCachingClient
 
 	var testId int = 500003
-	resp, err := FactionByID(&testId, context.Background())
+	resp, err := FactionByID(context.Background(), &testId)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -68,7 +68,7 @@ func TestSuccessfulNotInCacheFactionByID(t *testing.T) {
 	}
 
 	var testId int = 500003
-	resp, err := FactionByID(&testId, context.Background())
+	resp, err := FactionByID(context.Background(), &testId)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -80,7 +80,7 @@ func TestSuccessfulNotInCacheFactionByID(t *testing.T) {
 
 func TestFailNilIDFactionByID(t *testing.T) {
 	var testId *int = nil
-	_, err := FactionByID(testId, context.Background())
+	_, err := FactionByID(context.Background(), testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -112,7 +112,7 @@ func TestFailUnmarshalInCacheFactionByID(t *testing.T) {
 	CachingClient = mockCachingClient
 
 	var testId int = 500003
-	_, err := FactionByID(&testId, context.Background())
+	_, err := FactionByID(context.Background(), &testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -139,7 +139,7 @@ func TestFailUnmarshalNotInCacheFactionByID(t *testing.T) {
 	}
 
 	var testId int = 500003
-	_, err := FactionByID(&testId, context.Background())
+	_, err := FactionByID(context.Background(), &testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -152,7 +152,7 @@ func TestFailRestNotInCacheFactionByID(t *testing.T) {
 	}
 
 	var testId int = 500003
-	_, err := FactionByID(&testId, context.Background())
+	_, err := FactionByID(context.Background(), &testId)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}

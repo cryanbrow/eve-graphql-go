@@ -29,7 +29,7 @@ func TestSuccessfulAsteroidBeltDetails(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -40,7 +40,7 @@ func TestSuccessfulAsteroidBeltDetails(t *testing.T) {
 	var ids []*int = make([]*int, 1)
 	ids[0] = testId
 
-	resp, err := AsteroidBeltDetails(ids, context.Background())
+	resp, err := AsteroidBeltDetails(context.Background(), ids)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -64,7 +64,7 @@ func TestFailNilIDAsteroidBeltDetails(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -75,7 +75,7 @@ func TestFailNilIDAsteroidBeltDetails(t *testing.T) {
 	var ids []*int = make([]*int, 2)
 	ids[0] = testId
 
-	_, err := AsteroidBeltDetails(ids, context.Background())
+	_, err := AsteroidBeltDetails(context.Background(), ids)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
@@ -99,7 +99,7 @@ func TestSuccessfulAsteroidBeltByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -107,7 +107,7 @@ func TestSuccessfulAsteroidBeltByID(t *testing.T) {
 
 	var testId int = 1
 
-	resp, err := AsteroidBeltByID(&testId, context.Background())
+	resp, err := AsteroidBeltByID(context.Background(), &testId)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -132,7 +132,7 @@ func TestFailNilIDAsteroidBeltByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -140,7 +140,7 @@ func TestFailNilIDAsteroidBeltByID(t *testing.T) {
 
 	var testId *int = nil
 
-	_, err := AsteroidBeltByID(testId, context.Background())
+	_, err := AsteroidBeltByID(context.Background(), testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilId {
@@ -151,7 +151,7 @@ func TestFailNilIDAsteroidBeltByID(t *testing.T) {
 
 func TestFailRestCallAsteroidBeltByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}
@@ -159,7 +159,7 @@ func TestFailRestCallAsteroidBeltByID(t *testing.T) {
 
 	var testId int = 1
 
-	_, err := AsteroidBeltByID(&testId, context.Background())
+	_, err := AsteroidBeltByID(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -182,7 +182,7 @@ func TestFailUnmarshalAsteroidBeltByID(t *testing.T) {
 	b := []byte(jsonResponse)
 
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string, ctx context.Context) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -190,7 +190,7 @@ func TestFailUnmarshalAsteroidBeltByID(t *testing.T) {
 
 	var testId int = 1
 
-	_, err := AsteroidBeltByID(&testId, context.Background())
+	_, err := AsteroidBeltByID(context.Background(), &testId)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

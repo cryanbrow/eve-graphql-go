@@ -17,7 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-func MarketGroupByID(id *int, ctx context.Context) (*model.MarketGroup, error) {
+func MarketGroupByID(ctx context.Context, id *int) (*model.MarketGroup, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "MarketGroupByID")
 	defer span.End()
 	var marketGroup *model.MarketGroup = new(model.MarketGroup)
@@ -28,7 +28,7 @@ func MarketGroupByID(id *int, ctx context.Context) (*model.MarketGroup, error) {
 	redisKey := "MarketGroupByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return marketGroup, err
 	}

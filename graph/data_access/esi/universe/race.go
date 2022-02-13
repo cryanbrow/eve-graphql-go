@@ -19,7 +19,7 @@ import (
 
 const raceRedisKey string = "RaceByID:"
 
-func RaceByID(id *int, ctx context.Context) (*model.Race, error) {
+func RaceByID(ctx context.Context, id *int) (*model.Race, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "RaceByID")
 	defer span.End()
 	var race *model.Race = new(model.Race)
@@ -31,7 +31,7 @@ func RaceByID(id *int, ctx context.Context) (*model.Race, error) {
 	span.SetAttributes(attribute.Int("request.id", *id))
 	inCache, result := CachingClient.CheckCache(raceRedisKey+strconv.Itoa(*id), newCtx)
 	if !inCache {
-		race, err = raceByArray(id, newCtx)
+		race, err = raceByArray(newCtx, id)
 		if err != nil {
 			return nil, err
 		}
@@ -45,7 +45,7 @@ func RaceByID(id *int, ctx context.Context) (*model.Race, error) {
 	}
 }
 
-func raceByArray(id *int, ctx context.Context) (*model.Race, error) {
+func raceByArray(ctx context.Context, id *int) (*model.Race, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "raceByArray")
 	defer span.End()
 	var races []*model.Race = make([]*model.Race, 0)
@@ -55,7 +55,7 @@ func raceByArray(id *int, ctx context.Context) (*model.Race, error) {
 	redisKey := raceRedisKey + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, headers, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, headers, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return nil, err
 	}

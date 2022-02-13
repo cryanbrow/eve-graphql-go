@@ -17,7 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-func StarByID(id *int, ctx context.Context) (*model.Star, error) {
+func StarByID(ctx context.Context, id *int) (*model.Star, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "StarByID")
 	defer span.End()
 	var star *model.Star = new(model.Star)
@@ -28,7 +28,7 @@ func StarByID(id *int, ctx context.Context) (*model.Star, error) {
 	redisKey := "StarByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(baseUrl, http.MethodGet, buffer, nil, redisKey, newCtx)
+	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseUrl, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return star, err
 	}

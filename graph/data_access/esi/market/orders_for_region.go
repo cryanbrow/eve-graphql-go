@@ -18,7 +18,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int, page *int, ctx context.Context) (*model.OrderWrapper, error) {
+func OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordertype, typeID *int, page *int) (*model.OrderWrapper, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "OrdersForRegion")
 	defer span.End()
 	log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID, "orderType": orderType}).Info("OrdersForRegion Called")
@@ -43,7 +43,7 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int, pag
 	redisKey = redisKey + ":" + strconv.Itoa(*page)
 	log.Debugf("Here: %s", redisKey)
 
-	orderResult, pages, err := ordersForRegionREST(baseUrl, queryParams, redisKey, newCtx)
+	orderResult, pages, err := ordersForRegionREST(newCtx, baseUrl, queryParams, redisKey)
 
 	if err == nil {
 		orderList = append(orderList, orderResult...)
@@ -59,18 +59,18 @@ func OrdersForRegion(regionID *int, orderType *model.Ordertype, typeID *int, pag
 	return returnOrders, nil
 }
 
-func OrdersForRegionByName(region *string, orderType *model.Ordertype, typeName *string, page *int, ctx context.Context) (*model.OrderWrapper, error) {
+func OrdersForRegionByName(ctx context.Context, region *string, orderType *model.Ordertype, typeName *string, page *int) (*model.OrderWrapper, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "OrdersForRegionByName")
 	defer span.End()
-	regionID, err := universe.IdForName(region, local_model.REGIONS, newCtx)
+	regionID, err := universe.IdForName(newCtx, region, local_model.REGIONS)
 	if err != nil {
 		return nil, errors.New("unknown name for region")
 	}
-	typeID, err := universe.IdForName(typeName, local_model.INVENTORY_TYPES, newCtx)
+	typeID, err := universe.IdForName(newCtx, typeName, local_model.INVENTORY_TYPES)
 	if err != nil {
 		return nil, errors.New("unknown name for typeName")
 	}
-	orders, err := OrdersForRegion(&regionID, orderType, &typeID, page, newCtx)
+	orders, err := OrdersForRegion(newCtx, &regionID, orderType, &typeID, page)
 	if err != nil {
 		return nil, err
 	}
@@ -79,13 +79,13 @@ func OrdersForRegionByName(region *string, orderType *model.Ordertype, typeName 
 	return orders, nil
 }
 
-func ordersForRegionREST(url string, additionalQueryParams []configuration.Key_value, redisKey string, ctx context.Context) ([]*model.Order, int, error) {
+func ordersForRegionREST(ctx context.Context, url string, additionalQueryParams []configuration.Key_value, redisKey string) ([]*model.Order, int, error) {
 	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ordersForRegionREST")
 	defer span.End()
 	var orders []*model.Order
 	var pages int
 	var buffer bytes.Buffer
-	responseBytes, header, err := restHelper.MakeCachingRESTCall(url, http.MethodGet, buffer, additionalQueryParams, redisKey, newCtx)
+	responseBytes, header, err := restHelper.MakeCachingRESTCall(newCtx, url, http.MethodGet, buffer, additionalQueryParams, redisKey)
 	if err != nil {
 		return orders, 0, err
 	}
