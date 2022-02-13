@@ -3,6 +3,7 @@ package tracing
 import (
 	"testing"
 
+	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
@@ -17,6 +18,14 @@ func TestSuccessfulTracerProvider(t *testing.T) {
 }
 
 func TestSuccessfulSetupTracing(t *testing.T) {
+	SetupTracing()
+	if TraceProvider == nil {
+		t.Errorf(helpers.ResponseWasNotAsExpected)
+	}
+}
+
+func TestSuccessfulJaegerSetupTracing(t *testing.T) {
+	configuration.AppConfig.Jaeger.Enabled = true
 	SetupTracing()
 	if TraceProvider == nil {
 		t.Errorf(helpers.ResponseWasNotAsExpected)
