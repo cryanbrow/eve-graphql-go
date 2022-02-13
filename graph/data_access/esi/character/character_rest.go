@@ -19,6 +19,7 @@ var (
 	restHelper RestHelper
 )
 
+//Injects required dependencies into the character package.
 func SetupCharacterRest() {
 	restHelper = &helpers.RestHelperClient{}
 }
