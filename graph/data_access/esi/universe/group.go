@@ -18,7 +18,7 @@ import (
 )
 
 func GroupByID(ctx context.Context, id *int) (*model.Group, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "GroupByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "GroupByID")
 	defer span.End()
 	var group *model.Group = new(model.Group)
 	if id == nil {

@@ -15,10 +15,10 @@ import (
 type RedisClient struct {
 }
 
-const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph/caching"
+const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/caching"
 
 func (c *RedisClient) CheckCache(key string, ctx context.Context) (bool, []byte) {
-	_, span := otel.Tracer(tracer_name).Start(ctx, "CheckRedisCache")
+	_, span := otel.Tracer(tracerName).Start(ctx, "CheckRedisCache")
 	defer span.End()
 	log.Debugf("Checking Redis Cache for key: %s", key)
 	val, err := rdb.Get(ctx, key).Result()
@@ -34,7 +34,7 @@ func (c *RedisClient) CheckCache(key string, ctx context.Context) (bool, []byte)
 }
 
 func (c *RedisClient) AddToCache(key string, value []byte, ttl int64, ctx context.Context) {
-	_, span := otel.Tracer(tracer_name).Start(ctx, "AddToRedisCache")
+	_, span := otel.Tracer(tracerName).Start(ctx, "AddToRedisCache")
 	defer span.End()
 	log.Debugf("Adding to Redis Cache: %s", key)
 	ttlString, err := time.ParseDuration((strconv.FormatInt(ttl, 10) + "ms"))

@@ -18,7 +18,7 @@ import (
 )
 
 func ConstellationsByIDs(ctx context.Context, ids []*int) ([]*model.Constellation, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ConstellationsByIDs")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "ConstellationsByIDs")
 	defer span.End()
 	constellationDetails := make([]*model.Constellation, 0)
 	for _, element := range ids {
@@ -33,7 +33,7 @@ func ConstellationsByIDs(ctx context.Context, ids []*int) ([]*model.Constellatio
 }
 
 func ConstellationByID(ctx context.Context, id *int) (*model.Constellation, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ConstellationByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "ConstellationByID")
 	defer span.End()
 	var constellation *model.Constellation = new(model.Constellation)
 	if id == nil {

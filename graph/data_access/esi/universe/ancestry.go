@@ -20,7 +20,7 @@ import (
 const ancestryRedisKey string = "AncestryByID:"
 
 func AncestryByID(ctx context.Context, id *int) (*model.Ancestry, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "AncestryByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AncestryByID")
 	defer span.End()
 	var ancestry *model.Ancestry = new(model.Ancestry)
 	var err error
@@ -46,7 +46,7 @@ func AncestryByID(ctx context.Context, id *int) (*model.Ancestry, error) {
 }
 
 func ancestryByArray(ctx context.Context, id *int) (*model.Ancestry, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ancestryByArray")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "ancestryByArray")
 	defer span.End()
 	var ancestries []*model.Ancestry = make([]*model.Ancestry, 0)
 	var returnAncestry *model.Ancestry

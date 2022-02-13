@@ -18,7 +18,7 @@ import (
 )
 
 func StarByID(ctx context.Context, id *int) (*model.Star, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "StarByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "StarByID")
 	defer span.End()
 	var star *model.Star = new(model.Star)
 	if id == nil {

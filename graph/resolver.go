@@ -8,4 +8,4 @@ package graph
 
 type Resolver struct{}
 
-const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph"
+const tracerName = "github.com/cryanbrow/eve-graphql-go/graph"

@@ -18,7 +18,7 @@ import (
 )
 
 func OrderHistory(ctx context.Context, regionID *int, typeID *int) ([]*model.OrderHistory, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "OrderHistory")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "OrderHistory")
 	defer span.End()
 	if regionID == nil || typeID == nil {
 		return nil, errors.New(helpers.NilId)

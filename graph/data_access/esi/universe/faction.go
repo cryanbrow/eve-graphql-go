@@ -20,7 +20,7 @@ import (
 const factionRedisKey string = "FactionByID:"
 
 func FactionByID(ctx context.Context, id *int) (*model.Faction, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "CorporationByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "CorporationByID")
 	defer span.End()
 	var faction *model.Faction = new(model.Faction)
 	if id == nil {
@@ -47,7 +47,7 @@ func FactionByID(ctx context.Context, id *int) (*model.Faction, error) {
 }
 
 func factionByArray(ctx context.Context, id *int) (*model.Faction, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "factionByArray")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "factionByArray")
 	defer span.End()
 	var factions []*model.Faction = make([]*model.Faction, 0)
 	var returnFaction *model.Faction

@@ -18,7 +18,7 @@ import (
 )
 
 func GraphicByID(ctx context.Context, id *int) (*model.Graphic, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "GraphicByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "GraphicByID")
 	defer span.End()
 	var graphic *model.Graphic = new(model.Graphic)
 	if id == nil {

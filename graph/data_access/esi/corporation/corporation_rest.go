@@ -17,10 +17,10 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/corporation"
+const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/corporation"
 
 func CorporationByID(ctx context.Context, id *int) (*model.Corporation, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "CorporationByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "CorporationByID")
 	defer span.End()
 	var corporation *model.Corporation = new(model.Corporation)
 	if id == nil {

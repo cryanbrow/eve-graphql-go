@@ -18,7 +18,7 @@ import (
 )
 
 func MoonDetails(ctx context.Context, moons []*int) ([]*model.Moon, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "MoonDetails")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "MoonDetails")
 	defer span.End()
 	moonDetails := make([]*model.Moon, 0)
 	for _, element := range moons {
@@ -33,7 +33,7 @@ func MoonDetails(ctx context.Context, moons []*int) ([]*model.Moon, error) {
 }
 
 func MoonByID(ctx context.Context, id *int) (*model.Moon, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "MoonByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "MoonByID")
 	defer span.End()
 	var moon *model.Moon = new(model.Moon)
 	if id == nil {

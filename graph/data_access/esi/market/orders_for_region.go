@@ -19,7 +19,7 @@ import (
 )
 
 func OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordertype, typeID *int, page *int) (*model.OrderWrapper, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "OrdersForRegion")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "OrdersForRegion")
 	defer span.End()
 	log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID, "orderType": orderType}).Info("OrdersForRegion Called")
 	orderList := make([]*model.Order, 0)
@@ -60,7 +60,7 @@ func OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordert
 }
 
 func OrdersForRegionByName(ctx context.Context, region *string, orderType *model.Ordertype, typeName *string, page *int) (*model.OrderWrapper, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "OrdersForRegionByName")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "OrdersForRegionByName")
 	defer span.End()
 	regionID, err := universe.IdForName(newCtx, region, local_model.REGIONS)
 	if err != nil {
@@ -80,7 +80,7 @@ func OrdersForRegionByName(ctx context.Context, region *string, orderType *model
 }
 
 func ordersForRegionREST(ctx context.Context, url string, additionalQueryParams []configuration.Key_value, redisKey string) ([]*model.Order, int, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ordersForRegionREST")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "ordersForRegionREST")
 	defer span.End()
 	var orders []*model.Order
 	var pages int

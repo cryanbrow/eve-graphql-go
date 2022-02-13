@@ -18,7 +18,7 @@ import (
 )
 
 func ItemTypeByID(ctx context.Context, id *int) (*model.ItemType, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ItemTypeByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "ItemTypeByID")
 	defer span.End()
 	var itemType *model.ItemType = new(model.ItemType)
 	if id == nil {
@@ -43,7 +43,7 @@ func ItemTypeByID(ctx context.Context, id *int) (*model.ItemType, error) {
 }
 
 func ItemTypesByIDs(ctx context.Context, itemTypes []*int) ([]*model.ItemType, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "ItemTypesByIDs")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "ItemTypesByIDs")
 	defer span.End()
 	itemTypeDetails := make([]*model.ItemType, 0)
 	for _, element := range itemTypes {

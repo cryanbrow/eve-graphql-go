@@ -20,7 +20,7 @@ import (
 const raceRedisKey string = "RaceByID:"
 
 func RaceByID(ctx context.Context, id *int) (*model.Race, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "RaceByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "RaceByID")
 	defer span.End()
 	var race *model.Race = new(model.Race)
 	var err error
@@ -46,7 +46,7 @@ func RaceByID(ctx context.Context, id *int) (*model.Race, error) {
 }
 
 func raceByArray(ctx context.Context, id *int) (*model.Race, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "raceByArray")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "raceByArray")
 	defer span.End()
 	var races []*model.Race = make([]*model.Race, 0)
 	var returnRace *model.Race

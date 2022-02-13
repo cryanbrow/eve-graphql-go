@@ -18,7 +18,7 @@ import (
 )
 
 func RegionByID(ctx context.Context, id *int) (*model.Region, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "RegionByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "RegionByID")
 	defer span.End()
 	var region *model.Region = new(model.Region)
 	if id == nil {

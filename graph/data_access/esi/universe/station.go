@@ -18,7 +18,7 @@ import (
 )
 
 func StationsByIDs(ctx context.Context, ids []*int) ([]*model.Station, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "StationsByIDs")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "StationsByIDs")
 	defer span.End()
 	stationDetails := make([]*model.Station, 0)
 	for _, element := range ids {
@@ -33,7 +33,7 @@ func StationsByIDs(ctx context.Context, ids []*int) ([]*model.Station, error) {
 }
 
 func StationByID(ctx context.Context, id *int) (*model.Station, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "StationByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "StationByID")
 	defer span.End()
 	if id == nil {
 		return nil, errors.New(helpers.NilId)

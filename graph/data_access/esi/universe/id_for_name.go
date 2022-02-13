@@ -17,7 +17,7 @@ import (
 )
 
 func IdForName(ctx context.Context, name *string, nameType string) (int, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "IdForName")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "IdForName")
 	defer span.End()
 	var ids *local_model.Names = new(local_model.Names)
 	baseUrl := fmt.Sprintf("%s/universe/ids/", configuration.AppConfig.Esi.Default.Url)

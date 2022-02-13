@@ -17,13 +17,13 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/alliance"
+const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/alliance"
 
 //AllianceByID returns the alliance indicated by the id field, the context is
 //used for tracing. If the alliance is cached the ESI will not be called until the ttl
 //and the cached instance will be returned.
 func AllianceByID(ctx context.Context, id *int) (*model.Alliance, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "AllianceByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AllianceByID")
 	defer span.End()
 	var alliance *model.Alliance = new(model.Alliance)
 	if id == nil {

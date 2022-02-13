@@ -21,7 +21,7 @@ import (
 //used for tracing. If the corporation history is cached the ESI will not be called until the ttl
 //and the cached instance will be returned.
 func CorporationHistory(ctx context.Context, id *int) ([]*model.CorporationHistory, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "CorporationHistory")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "CorporationHistory")
 	defer span.End()
 	var corpHistory []*model.CorporationHistory = make([]*model.CorporationHistory, 0)
 	if id == nil {

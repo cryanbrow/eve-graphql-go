@@ -18,7 +18,7 @@ import (
 )
 
 func MarketGroupByID(ctx context.Context, id *int) (*model.MarketGroup, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "MarketGroupByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "MarketGroupByID")
 	defer span.End()
 	var marketGroup *model.MarketGroup = new(model.MarketGroup)
 	if id == nil {

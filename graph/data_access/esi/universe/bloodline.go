@@ -20,7 +20,7 @@ import (
 const bloodlineRedisKey string = "BloodlineByID:"
 
 func BloodlineByID(ctx context.Context, id *int) (*model.Bloodline, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "BloodlineByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "BloodlineByID")
 	defer span.End()
 	var bloodline *model.Bloodline = new(model.Bloodline)
 	var err error
@@ -48,7 +48,7 @@ func BloodlineByID(ctx context.Context, id *int) (*model.Bloodline, error) {
 }
 
 func bloodlineByArray(ctx context.Context, id *int) (*model.Bloodline, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "bloodlineByArray")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "bloodlineByArray")
 	defer span.End()
 	var bloodlines []*model.Bloodline = make([]*model.Bloodline, 0)
 	var returnBloodline *model.Bloodline

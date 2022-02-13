@@ -17,10 +17,10 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/dogma"
+const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/dogma"
 
 func DogmaAttributeByID(ctx context.Context, id *int) (*model.DogmaAttributeDetail, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "DogmaAttributeByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "DogmaAttributeByID")
 	defer span.End()
 	var dogmaAttribute *model.DogmaAttributeDetail = new(model.DogmaAttributeDetail)
 	if id == nil {
@@ -45,7 +45,7 @@ func DogmaAttributeByID(ctx context.Context, id *int) (*model.DogmaAttributeDeta
 }
 
 func DogmaEffectByID(ctx context.Context, id *int) (*model.DogmaEffectDetail, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "DogmaEffectByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "DogmaEffectByID")
 	defer span.End()
 	var dogmaEffect *model.DogmaEffectDetail = new(model.DogmaEffectDetail)
 	if id == nil {

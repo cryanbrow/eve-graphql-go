@@ -18,7 +18,7 @@ import (
 )
 
 func SystemsByIDs(ctx context.Context, ids []*int) ([]*model.System, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "SystemsByIDs")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "SystemsByIDs")
 	defer span.End()
 	systemDetails := make([]*model.System, 0)
 	for _, element := range ids {
@@ -33,7 +33,7 @@ func SystemsByIDs(ctx context.Context, ids []*int) ([]*model.System, error) {
 }
 
 func SystemByID(ctx context.Context, id *int) (*model.System, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "SystemByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "SystemByID")
 	defer span.End()
 	if id == nil {
 		return nil, errors.New(helpers.NilId)

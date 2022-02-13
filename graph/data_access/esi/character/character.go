@@ -21,7 +21,7 @@ import (
 //used for tracing. If the character is cached the ESI will not be called until the ttl
 //and the cached instance will be returned.
 func CharacterByID(ctx context.Context, id *int) (*model.Character, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "CharacterByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "CharacterByID")
 	defer span.End()
 	var character *model.Character = new(model.Character)
 	if id == nil {

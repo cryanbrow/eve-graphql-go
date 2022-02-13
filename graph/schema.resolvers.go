@@ -18,433 +18,433 @@ import (
 )
 
 func (r *allianceResolver) CreatorCorporation(ctx context.Context, obj *model.Alliance) (*model.Corporation, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CreatorCorporation")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CreatorCorporation")
 	defer span.End()
 	return corporation.CorporationByID(newCtx, obj.CreatorCorporationID)
 }
 
 func (r *allianceResolver) Creator(ctx context.Context, obj *model.Alliance) (*model.Character, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "Creator")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "Creator")
 	defer span.End()
 	return character.CharacterByID(newCtx, obj.CreatorID)
 }
 
 func (r *allianceResolver) ExecutorCorporation(ctx context.Context, obj *model.Alliance) (*model.Corporation, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "ExecutorCorporation")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ExecutorCorporation")
 	defer span.End()
 	return corporation.CorporationByID(newCtx, obj.ExecutorCorporationID)
 }
 
 func (r *allianceResolver) Faction(ctx context.Context, obj *model.Alliance) (*model.Faction, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "AllianceFaction")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "AllianceFaction")
 	defer span.End()
 	return universe.FactionByID(newCtx, obj.FactionID)
 }
 
 func (r *ancestryResolver) Bloodline(ctx context.Context, obj *model.Ancestry) (*model.Bloodline, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "AncestryBloodline")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "AncestryBloodline")
 	defer span.End()
 	return universe.BloodlineByID(newCtx, obj.BloodlineID)
 }
 
 func (r *asteroid_beltResolver) System(ctx context.Context, obj *model.AsteroidBelt) (*model.System, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "AstroidBeltSystem")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "AstroidBeltSystem")
 	defer span.End()
 	return universe.SystemByID(newCtx, obj.SystemID)
 }
 
 func (r *characterResolver) Alliance(ctx context.Context, obj *model.Character) (*model.Alliance, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CharcterAlliance")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CharcterAlliance")
 	defer span.End()
 	return alliance.AllianceByID(newCtx, obj.AllianceID)
 }
 
 func (r *characterResolver) Ancestry(ctx context.Context, obj *model.Character) (*model.Ancestry, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CharacterAncestry")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CharacterAncestry")
 	defer span.End()
 	return universe.AncestryByID(newCtx, obj.AncestryID)
 }
 
 func (r *characterResolver) Bloodline(ctx context.Context, obj *model.Character) (*model.Bloodline, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "ChracterBloodline")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ChracterBloodline")
 	defer span.End()
 	return universe.BloodlineByID(newCtx, obj.BloodlineID)
 }
 
 func (r *characterResolver) Corporation(ctx context.Context, obj *model.Character) (*model.Corporation, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CharacterCorporation")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CharacterCorporation")
 	defer span.End()
 	return corporation.CorporationByID(newCtx, obj.CorporationID)
 }
 
 func (r *characterResolver) Faction(ctx context.Context, obj *model.Character) (*model.Faction, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CharacterFaction")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CharacterFaction")
 	defer span.End()
 	return universe.FactionByID(newCtx, obj.FactionID)
 }
 
 func (r *characterResolver) Race(ctx context.Context, obj *model.Character) (*model.Race, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CharacterRace")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CharacterRace")
 	defer span.End()
 	return universe.RaceByID(newCtx, obj.RaceID)
 }
 
 func (r *constellationResolver) Region(ctx context.Context, obj *model.Constellation) (*model.Region, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "ConstellationRegion")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ConstellationRegion")
 	defer span.End()
 	return universe.RegionByID(newCtx, obj.RegionID)
 }
 
 func (r *constellationResolver) SolarSystems(ctx context.Context, obj *model.Constellation) ([]*model.System, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "ConstellationSolarSystem")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ConstellationSolarSystem")
 	defer span.End()
 	return universe.SystemsByIDs(newCtx, obj.Systems)
 }
 
 func (r *corporationResolver) Alliance(ctx context.Context, obj *model.Corporation) (*model.Alliance, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CorporationAlliance")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CorporationAlliance")
 	defer span.End()
 	return alliance.AllianceByID(newCtx, obj.AllianceID)
 }
 
 func (r *corporationResolver) Ceo(ctx context.Context, obj *model.Corporation) (*model.Character, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CorporationCeo")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CorporationCeo")
 	defer span.End()
 	return character.CharacterByID(newCtx, obj.CeoID)
 }
 
 func (r *corporationResolver) Creator(ctx context.Context, obj *model.Corporation) (*model.Character, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CorporationCreator")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CorporationCreator")
 	defer span.End()
 	return character.CharacterByID(newCtx, obj.CreatorID)
 }
 
 func (r *corporationResolver) Faction(ctx context.Context, obj *model.Corporation) (*model.Faction, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CorporationFaction")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CorporationFaction")
 	defer span.End()
 	return universe.FactionByID(newCtx, obj.FactionID)
 }
 
 func (r *corporationResolver) HomeStation(ctx context.Context, obj *model.Corporation) (*model.Station, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CorporationHomeStation")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CorporationHomeStation")
 	defer span.End()
 	return universe.StationByID(newCtx, obj.HomeStationID)
 }
 
 func (r *corporation_historyResolver) Employer(ctx context.Context, obj *model.CorporationHistory) (*model.Corporation, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "Employer")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "Employer")
 	defer span.End()
 	return corporation.CorporationByID(newCtx, obj.CorporationID)
 }
 
 func (r *dogma_attributeResolver) Attribute(ctx context.Context, obj *model.DogmaAttribute) (*model.DogmaAttributeDetail, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "DogmaAttributeAttribute")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "DogmaAttributeAttribute")
 	defer span.End()
 	return dogma.DogmaAttributeByID(newCtx, obj.AttributeID)
 }
 
 func (r *dogma_effectResolver) Effect(ctx context.Context, obj *model.DogmaEffect) (*model.DogmaEffectDetail, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "DogmaEffectEffect")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "DogmaEffectEffect")
 	defer span.End()
 	return dogma.DogmaEffectByID(newCtx, obj.EffectID)
 }
 
 func (r *dogma_effect_detailResolver) DischargeAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "DischargeAttribute")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "DischargeAttribute")
 	defer span.End()
 	return dogma.DogmaAttributeByID(newCtx, obj.DischargeAttributeID)
 }
 
 func (r *dogma_effect_detailResolver) DurationAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "DurationAttribute")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "DurationAttribute")
 	defer span.End()
 	return dogma.DogmaAttributeByID(newCtx, obj.DurationAttributeID)
 }
 
 func (r *dogma_effect_detailResolver) FalloffAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "FalloffAttribute")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "FalloffAttribute")
 	defer span.End()
 	return dogma.DogmaAttributeByID(newCtx, obj.FalloffAttributeID)
 }
 
 func (r *dogma_effect_detailResolver) RangeAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "RangeAttribute")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "RangeAttribute")
 	defer span.End()
 	return dogma.DogmaAttributeByID(newCtx, obj.RangeAttributeID)
 }
 
 func (r *dogma_effect_detailResolver) TrackingSpeedAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "TrackingSpeedAttribute")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "TrackingSpeedAttribute")
 	defer span.End()
 	return dogma.DogmaAttributeByID(newCtx, obj.TrackingSpeedAttributeID)
 }
 
 func (r *factionResolver) Corporation(ctx context.Context, obj *model.Faction) (*model.Corporation, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "FactionCorporation")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "FactionCorporation")
 	defer span.End()
 	return corporation.CorporationByID(newCtx, obj.CorporationID)
 }
 
 func (r *factionResolver) MilitiaCorporation(ctx context.Context, obj *model.Faction) (*model.Corporation, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "MilitiaCorporation")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "MilitiaCorporation")
 	defer span.End()
 	return corporation.CorporationByID(newCtx, obj.MilitiaCorporationID)
 }
 
 func (r *factionResolver) SolarSystem(ctx context.Context, obj *model.Faction) (*model.System, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "FactionSolarSystem")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "FactionSolarSystem")
 	defer span.End()
 	return universe.SystemByID(newCtx, obj.SolarSystemID)
 }
 
 func (r *groupResolver) Category(ctx context.Context, obj *model.Group) (*model.Category, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "GroupCategory")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "GroupCategory")
 	defer span.End()
 	return universe.CategoryByID(newCtx, obj.CategoryID)
 }
 
 func (r *groupResolver) ItemTypes(ctx context.Context, obj *model.Group) ([]*model.ItemType, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "GroupItemTypes")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "GroupItemTypes")
 	defer span.End()
 	return universe.ItemTypesByIDs(newCtx, obj.Types)
 }
 
 func (r *item_typeResolver) Graphic(ctx context.Context, obj *model.ItemType) (*model.Graphic, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "ItemTypeGraphic")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ItemTypeGraphic")
 	defer span.End()
 	return universe.GraphicByID(newCtx, obj.GraphicID)
 }
 
 func (r *item_typeResolver) Group(ctx context.Context, obj *model.ItemType) (*model.Group, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "ItemTypeGroup")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ItemTypeGroup")
 	defer span.End()
 	return universe.GroupByID(newCtx, obj.GroupID)
 }
 
 func (r *item_typeResolver) MarketGroup(ctx context.Context, obj *model.ItemType) (*model.MarketGroup, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "ItemTypeMarketGroup")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ItemTypeMarketGroup")
 	defer span.End()
 	return market.MarketGroupByID(newCtx, obj.MarketGroupID)
 }
 
 func (r *market_groupResolver) ParentGroup(ctx context.Context, obj *model.MarketGroup) (*model.Group, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "MarketGroupParentGroup")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "MarketGroupParentGroup")
 	defer span.End()
 	return universe.GroupByID(newCtx, obj.ParentGroupID)
 }
 
 func (r *market_groupResolver) TypesDetails(ctx context.Context, obj *model.MarketGroup) ([]*model.ItemType, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "MarketGroupTypeDetails")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "MarketGroupTypeDetails")
 	defer span.End()
 	return universe.ItemTypesByIDs(newCtx, obj.Types)
 }
 
 func (r *modifierResolver) ModifiedAttribute(ctx context.Context, obj *model.Modifier) (*model.DogmaAttributeDetail, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "ModifierModifiedAttribute")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ModifierModifiedAttribute")
 	defer span.End()
 	return dogma.DogmaAttributeByID(newCtx, obj.ModifiedAttributeID)
 }
 
 func (r *modifierResolver) ModifyingAttribute(ctx context.Context, obj *model.Modifier) (*model.DogmaAttributeDetail, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "ModifyingAttribute")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ModifyingAttribute")
 	defer span.End()
 	return dogma.DogmaAttributeByID(newCtx, obj.ModifyingAttributeID)
 }
 
 func (r *moonResolver) System(ctx context.Context, obj *model.Moon) (*model.System, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "MoonSystem")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "MoonSystem")
 	defer span.End()
 	return universe.SystemByID(newCtx, obj.SystemID)
 }
 
 func (r *orderResolver) Location(ctx context.Context, obj *model.Order) (*model.Station, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "OrderLocation")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "OrderLocation")
 	defer span.End()
 	return universe.StationByID(newCtx, obj.LocationID)
 }
 
 func (r *orderResolver) System(ctx context.Context, obj *model.Order) (*model.System, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "OrderSystem")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "OrderSystem")
 	defer span.End()
 	return universe.SystemByID(newCtx, obj.SystemID)
 }
 
 func (r *orderResolver) ItemType(ctx context.Context, obj *model.Order) (*model.ItemType, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "OrderItemType")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "OrderItemType")
 	defer span.End()
 	return universe.ItemTypeByID(newCtx, obj.TypeID)
 }
 
 func (r *planetResolver) System(ctx context.Context, obj *model.Planet) (*model.System, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "PlanetSystem")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "PlanetSystem")
 	defer span.End()
 	return universe.SystemByID(newCtx, obj.SystemID)
 }
 
 func (r *planetResolver) ItemType(ctx context.Context, obj *model.Planet) (*model.ItemType, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "PlanetItemType")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "PlanetItemType")
 	defer span.End()
 	return universe.ItemTypeByID(newCtx, obj.TypeID)
 }
 
 func (r *queryResolver) OrdersForRegion(ctx context.Context, regionID int, orderType model.Ordertype, typeID *int, page int) (*model.OrderWrapper, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "ResolverOrdersForRegion")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ResolverOrdersForRegion")
 	defer span.End()
 	return market.OrdersForRegion(newCtx, &regionID, &orderType, typeID, &page)
 }
 
 func (r *queryResolver) OrdersForRegionByName(ctx context.Context, region string, orderType model.Ordertype, typeName *string, page int) (*model.OrderWrapper, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "ResolverOrdersForRegionByName")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ResolverOrdersForRegionByName")
 	defer span.End()
 	return market.OrdersForRegionByName(newCtx, &region, &orderType, typeName, &page)
 }
 
 func (r *queryResolver) SystemByID(ctx context.Context, id *int) (*model.System, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "SystemByID")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "SystemByID")
 	defer span.End()
 	return universe.SystemByID(newCtx, id)
 }
 
 func (r *queryResolver) StationByID(ctx context.Context, id *int) (*model.Station, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "StationByID")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "StationByID")
 	defer span.End()
 	return universe.StationByID(newCtx, id)
 }
 
 func (r *queryResolver) PlanetByID(ctx context.Context, id *int) (*model.Planet, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "PlanetByID")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "PlanetByID")
 	defer span.End()
 	return universe.PlanetByID(newCtx, id)
 }
 
 func (r *queryResolver) CorporationByID(ctx context.Context, id *int) (*model.Corporation, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CorporationByID")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CorporationByID")
 	defer span.End()
 	return corporation.CorporationByID(newCtx, id)
 }
 
 func (r *queryResolver) CorporationHistoryForCharacterID(ctx context.Context, id *int) ([]*model.CorporationHistory, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CorporationHistoryForCharacterID")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CorporationHistoryForCharacterID")
 	defer span.End()
 	return character.CorporationHistory(newCtx, id)
 }
 
 func (r *queryResolver) CharacterPortraitByID(ctx context.Context, id *int) (*model.CharacterPortrait, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "CharacterPortraitByID")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CharacterPortraitByID")
 	defer span.End()
 	return character.CharacterPortraitByID(newCtx, id)
 }
 
 func (r *queryResolver) FactionByID(ctx context.Context, id *int) (*model.Faction, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "FactionByID")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "FactionByID")
 	defer span.End()
 	return universe.FactionByID(newCtx, id)
 }
 
 func (r *queryResolver) OrderHistory(ctx context.Context, regionID *int, typeID *int) ([]*model.OrderHistory, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "OrderHistory")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "OrderHistory")
 	defer span.End()
 	return market.OrderHistory(newCtx, regionID, typeID)
 }
 
 func (r *regionResolver) ConstellationList(ctx context.Context, obj *model.Region) ([]*model.Constellation, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "RegionConstellationList")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "RegionConstellationList")
 	defer span.End()
 	return universe.ConstellationsByIDs(newCtx, obj.Constellations)
 }
 
 func (r *starResolver) SolarSystem(ctx context.Context, obj *model.Star) (*model.System, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "StarSolarSystem")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "StarSolarSystem")
 	defer span.End()
 	return universe.SystemByID(newCtx, obj.SolarSystemID)
 }
 
 func (r *starResolver) ItemType(ctx context.Context, obj *model.Star) (*model.ItemType, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "StarItemType")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "StarItemType")
 	defer span.End()
 	return universe.ItemTypeByID(newCtx, obj.TypeID)
 }
 
 func (r *stargateResolver) ItemType(ctx context.Context, obj *model.Stargate) (*model.ItemType, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "StragateItemType")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "StragateItemType")
 	defer span.End()
 	return universe.ItemTypeByID(newCtx, obj.TypeID)
 }
 
 func (r *stargateDestinationResolver) Stargate(ctx context.Context, obj *model.StargateDestination) (*model.Stargate, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "StargateDestinationStargate")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "StargateDestinationStargate")
 	defer span.End()
 	return universe.StargateByID(newCtx, obj.StargateID)
 }
 
 func (r *stargateDestinationResolver) System(ctx context.Context, obj *model.StargateDestination) (*model.System, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "StargateDestinationSystem")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "StargateDestinationSystem")
 	defer span.End()
 	return universe.SystemByID(newCtx, obj.SystemID)
 }
 
 func (r *stationResolver) OwningCorporation(ctx context.Context, obj *model.Station) (*model.Corporation, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "OwningCorporation")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "OwningCorporation")
 	defer span.End()
 	return corporation.CorporationByID(newCtx, obj.Owner)
 }
 
 func (r *stationResolver) Race(ctx context.Context, obj *model.Station) (*model.Race, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "StationRace")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "StationRace")
 	defer span.End()
 	return universe.RaceByID(newCtx, obj.RaceID)
 }
 
 func (r *stationResolver) System(ctx context.Context, obj *model.Station) (*model.System, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "StationSystem")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "StationSystem")
 	defer span.End()
 	return universe.SystemByID(newCtx, obj.SystemID)
 }
 
 func (r *stationResolver) StationType(ctx context.Context, obj *model.Station) (*model.ItemType, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "StationStationType")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "StationStationType")
 	defer span.End()
 	return universe.ItemTypeByID(newCtx, obj.TypeID)
 }
 
 func (r *systemResolver) Constellation(ctx context.Context, obj *model.System) (*model.Constellation, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "SystemConstellation")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "SystemConstellation")
 	defer span.End()
 	return universe.ConstellationByID(newCtx, obj.ConstellationID)
 }
 
 func (r *systemResolver) Star(ctx context.Context, obj *model.System) (*model.Star, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "SystemStar")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "SystemStar")
 	defer span.End()
 	return universe.StarByID(newCtx, obj.StarID)
 }
 
 func (r *systemResolver) StargateList(ctx context.Context, obj *model.System) ([]*model.Stargate, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "SystemStargateList")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "SystemStargateList")
 	defer span.End()
 	return universe.StargateDetails(newCtx, obj.Stargates)
 }
 
 func (r *systemResolver) StationList(ctx context.Context, obj *model.System) ([]*model.Station, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "SystemStationList")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "SystemStationList")
 	defer span.End()
 	return universe.StationsByIDs(newCtx, obj.Stations)
 }
 
 func (r *system_planetResolver) AsteroidBeltsProperties(ctx context.Context, obj *model.SystemPlanet) ([]*model.AsteroidBelt, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "AsteroidBeltsProperties")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "AsteroidBeltsProperties")
 	defer span.End()
 	return universe.AsteroidBeltDetails(newCtx, obj.AsteroidBelts)
 }
 
 func (r *system_planetResolver) MoonDetails(ctx context.Context, obj *model.SystemPlanet) ([]*model.Moon, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "SystemPlanetMoonDetails")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "SystemPlanetMoonDetails")
 	defer span.End()
 	return universe.MoonDetails(newCtx, obj.Moons)
 }
 
 func (r *system_planetResolver) PlanetProperties(ctx context.Context, obj *model.SystemPlanet) (*model.Planet, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracer_name).Start(ctx, "SystemPlanetPlanetProperties")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "SystemPlanetPlanetProperties")
 	defer span.End()
 	return universe.PlanetByID(newCtx, obj.PlanetID)
 }

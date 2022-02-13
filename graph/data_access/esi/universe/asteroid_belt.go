@@ -20,7 +20,7 @@ import (
 const asteroidBeltRedisKey string = "AsteroidBeltByID:"
 
 func AsteroidBeltDetails(ctx context.Context, asteroidBelts []*int) ([]*model.AsteroidBelt, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "AsteroidBeltDetails")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AsteroidBeltDetails")
 	defer span.End()
 	asteroidBeltDetails := make([]*model.AsteroidBelt, 0)
 	for _, element := range asteroidBelts {
@@ -36,7 +36,7 @@ func AsteroidBeltDetails(ctx context.Context, asteroidBelts []*int) ([]*model.As
 }
 
 func AsteroidBeltByID(ctx context.Context, id *int) (*model.AsteroidBelt, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "AsteroidBeltByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AsteroidBeltByID")
 	defer span.End()
 	var asteroidBelt *model.AsteroidBelt = new(model.AsteroidBelt)
 	if id == nil {

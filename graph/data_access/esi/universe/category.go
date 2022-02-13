@@ -18,7 +18,7 @@ import (
 )
 
 func CategoryByID(ctx context.Context, id *int) (*model.Category, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "CategoryByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "CategoryByID")
 	defer span.End()
 	var category *model.Category = new(model.Category)
 	if id == nil {

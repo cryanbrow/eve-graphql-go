@@ -18,7 +18,7 @@ import (
 )
 
 func PlanetByID(ctx context.Context, id *int) (*model.Planet, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "PlanetByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "PlanetByID")
 	defer span.End()
 	var planet *model.Planet = new(model.Planet)
 	if id == nil {

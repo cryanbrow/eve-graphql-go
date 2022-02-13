@@ -10,7 +10,7 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
-const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
+const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
 
 type CacheClientInterface interface {
 	AddToCache(key string, value []byte, ttl int64, ctx context.Context)

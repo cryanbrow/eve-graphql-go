@@ -18,7 +18,7 @@ import (
 )
 
 func StargateDetails(ctx context.Context, stargates []*int) ([]*model.Stargate, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "StargateDetails")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "StargateDetails")
 	defer span.End()
 	stargateDetails := make([]*model.Stargate, 0)
 	for _, element := range stargates {
@@ -33,7 +33,7 @@ func StargateDetails(ctx context.Context, stargates []*int) ([]*model.Stargate, 
 }
 
 func StargateByID(ctx context.Context, id *int) (*model.Stargate, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "StargateByID")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "StargateByID")
 	defer span.End()
 	var stargate *model.Stargate = new(model.Stargate)
 	if id == nil {

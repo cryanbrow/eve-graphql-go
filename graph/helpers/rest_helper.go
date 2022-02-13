@@ -18,10 +18,10 @@ import (
 type RestHelperClient struct {
 }
 
-const tracer_name = "github.com/cryanbrow/eve-graphql-go/graph/helpers"
+const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/helpers"
 
 func (r *RestHelperClient) MakeCachingRESTCall(ctx context.Context, baseUrl string, verb string, body bytes.Buffer, additionalQueryParams []configuration.Key_value, redisQueryKey string) ([]byte, http.Header, error) {
-	newCtx, span := otel.Tracer(tracer_name).Start(ctx, "MakeCachingRESTCall")
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "MakeCachingRESTCall")
 	span.SetAttributes(attribute.String("baseUrl", baseUrl), attribute.String("verb", verb), attribute.String("redisKey", redisQueryKey))
 	defer span.End()
 	inCache, result := CachingClientVar.CheckCache(redisQueryKey, newCtx)
