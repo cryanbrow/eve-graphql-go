@@ -33,6 +33,11 @@ func OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordert
 	kv.Value = strconv.Itoa(*page)
 	queryParams = append(queryParams, *kv)
 
+	kv2 := new(configuration.KeyValue)
+	kv2.Key = "order_type"
+	kv2.Value = orderType.String()
+	queryParams = append(queryParams, *kv2)
+
 	if typeID != nil {
 		redisKey = redisKey + ":" + strconv.Itoa(*typeID)
 		kv.Key = "type_id"

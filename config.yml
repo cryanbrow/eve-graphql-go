@@ -1,6 +1,6 @@
 application:
   name: 'eve-graphql-go'
-  environment: 'test'
+  environment: 'production'
 
 server:
   port: 8080
@@ -30,4 +30,4 @@ jaeger:
   port: '14268'
   route: 'api/traces'
   sample:
-    percent: 99
+    percent: 100
