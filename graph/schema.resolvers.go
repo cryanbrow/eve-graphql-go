@@ -20,19 +20,19 @@ import (
 func (r *allianceResolver) CreatorCorporation(ctx context.Context, obj *model.Alliance) (*model.Corporation, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CreatorCorporation")
 	defer span.End()
-	return corporation.CorporationByID(newCtx, obj.CreatorCorporationID)
+	return corporation.ByID(newCtx, obj.CreatorCorporationID)
 }
 
 func (r *allianceResolver) Creator(ctx context.Context, obj *model.Alliance) (*model.Character, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "Creator")
 	defer span.End()
-	return character.CharacterByID(newCtx, obj.CreatorID)
+	return character.ByID(newCtx, obj.CreatorID)
 }
 
 func (r *allianceResolver) ExecutorCorporation(ctx context.Context, obj *model.Alliance) (*model.Corporation, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ExecutorCorporation")
 	defer span.End()
-	return corporation.CorporationByID(newCtx, obj.ExecutorCorporationID)
+	return corporation.ByID(newCtx, obj.ExecutorCorporationID)
 }
 
 func (r *allianceResolver) Faction(ctx context.Context, obj *model.Alliance) (*model.Faction, error) {
@@ -56,7 +56,7 @@ func (r *asteroid_beltResolver) System(ctx context.Context, obj *model.AsteroidB
 func (r *characterResolver) Alliance(ctx context.Context, obj *model.Character) (*model.Alliance, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CharcterAlliance")
 	defer span.End()
-	return alliance.AllianceByID(newCtx, obj.AllianceID)
+	return alliance.ByID(newCtx, obj.AllianceID)
 }
 
 func (r *characterResolver) Ancestry(ctx context.Context, obj *model.Character) (*model.Ancestry, error) {
@@ -74,7 +74,7 @@ func (r *characterResolver) Bloodline(ctx context.Context, obj *model.Character)
 func (r *characterResolver) Corporation(ctx context.Context, obj *model.Character) (*model.Corporation, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CharacterCorporation")
 	defer span.End()
-	return corporation.CorporationByID(newCtx, obj.CorporationID)
+	return corporation.ByID(newCtx, obj.CorporationID)
 }
 
 func (r *characterResolver) Faction(ctx context.Context, obj *model.Character) (*model.Faction, error) {
@@ -104,19 +104,19 @@ func (r *constellationResolver) SolarSystems(ctx context.Context, obj *model.Con
 func (r *corporationResolver) Alliance(ctx context.Context, obj *model.Corporation) (*model.Alliance, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CorporationAlliance")
 	defer span.End()
-	return alliance.AllianceByID(newCtx, obj.AllianceID)
+	return alliance.ByID(newCtx, obj.AllianceID)
 }
 
 func (r *corporationResolver) Ceo(ctx context.Context, obj *model.Corporation) (*model.Character, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CorporationCeo")
 	defer span.End()
-	return character.CharacterByID(newCtx, obj.CeoID)
+	return character.ByID(newCtx, obj.CeoID)
 }
 
 func (r *corporationResolver) Creator(ctx context.Context, obj *model.Corporation) (*model.Character, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CorporationCreator")
 	defer span.End()
-	return character.CharacterByID(newCtx, obj.CreatorID)
+	return character.ByID(newCtx, obj.CreatorID)
 }
 
 func (r *corporationResolver) Faction(ctx context.Context, obj *model.Corporation) (*model.Faction, error) {
@@ -134,7 +134,7 @@ func (r *corporationResolver) HomeStation(ctx context.Context, obj *model.Corpor
 func (r *corporation_historyResolver) Employer(ctx context.Context, obj *model.CorporationHistory) (*model.Corporation, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "Employer")
 	defer span.End()
-	return corporation.CorporationByID(newCtx, obj.CorporationID)
+	return corporation.ByID(newCtx, obj.CorporationID)
 }
 
 func (r *dogma_attributeResolver) Attribute(ctx context.Context, obj *model.DogmaAttribute) (*model.DogmaAttributeDetail, error) {
@@ -182,13 +182,13 @@ func (r *dogma_effect_detailResolver) TrackingSpeedAttribute(ctx context.Context
 func (r *factionResolver) Corporation(ctx context.Context, obj *model.Faction) (*model.Corporation, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "FactionCorporation")
 	defer span.End()
-	return corporation.CorporationByID(newCtx, obj.CorporationID)
+	return corporation.ByID(newCtx, obj.CorporationID)
 }
 
 func (r *factionResolver) MilitiaCorporation(ctx context.Context, obj *model.Faction) (*model.Corporation, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "MilitiaCorporation")
 	defer span.End()
-	return corporation.CorporationByID(newCtx, obj.MilitiaCorporationID)
+	return corporation.ByID(newCtx, obj.MilitiaCorporationID)
 }
 
 func (r *factionResolver) SolarSystem(ctx context.Context, obj *model.Faction) (*model.System, error) {
@@ -320,7 +320,7 @@ func (r *queryResolver) PlanetByID(ctx context.Context, id *int) (*model.Planet,
 func (r *queryResolver) CorporationByID(ctx context.Context, id *int) (*model.Corporation, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CorporationByID")
 	defer span.End()
-	return corporation.CorporationByID(newCtx, id)
+	return corporation.ByID(newCtx, id)
 }
 
 func (r *queryResolver) CorporationHistoryForCharacterID(ctx context.Context, id *int) ([]*model.CorporationHistory, error) {
@@ -386,7 +386,7 @@ func (r *stargateDestinationResolver) System(ctx context.Context, obj *model.Sta
 func (r *stationResolver) OwningCorporation(ctx context.Context, obj *model.Station) (*model.Corporation, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "OwningCorporation")
 	defer span.End()
-	return corporation.CorporationByID(newCtx, obj.Owner)
+	return corporation.ByID(newCtx, obj.Owner)
 }
 
 func (r *stationResolver) Race(ctx context.Context, obj *model.Station) (*model.Race, error) {

@@ -19,10 +19,10 @@ import (
 
 const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/alliance"
 
-// AllianceByID returns the alliance indicated by the id field, the context is
+// ByID returns the alliance indicated by the id field, the context is
 // used for tracing. If the alliance is cached the ESI will not be called until the ttl
 // and the cached instance will be returned.
-func AllianceByID(ctx context.Context, id *int) (*model.Alliance, error) {
+func ByID(ctx context.Context, id *int) (*model.Alliance, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AllianceByID")
 	defer span.End()
 	var alliance *model.Alliance = new(model.Alliance)
@@ -56,7 +56,7 @@ var (
 	restHelper RestHelper
 )
 
-// Injects required dependencies into the alliance package.
+// SetupAllianceRest injects required dependencies into the alliance package.
 func SetupAllianceRest() {
 	restHelper = &helpers.RestHelperClient{}
 }

@@ -17,10 +17,10 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-// CharacterByID returns the character indicated by the id field, the context is
+// ByID returns the character indicated by the id field, the context is
 // used for tracing. If the character is cached the ESI will not be called until the ttl
 // and the cached instance will be returned.
-func CharacterByID(ctx context.Context, id *int) (*model.Character, error) {
+func ByID(ctx context.Context, id *int) (*model.Character, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "CharacterByID")
 	defer span.End()
 	var character *model.Character = new(model.Character)

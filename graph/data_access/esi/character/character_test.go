@@ -11,7 +11,7 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
-func TestSuccessfulCharacterByID(t *testing.T) {
+func TestSuccessfulByID(t *testing.T) {
 	jsonResponse := `{
 		"birthday": "2008-04-01T10:24:00Z",
 		"bloodline_id": 3,
@@ -34,7 +34,7 @@ func TestSuccessfulCharacterByID(t *testing.T) {
 
 	var testID = 1
 
-	resp, err := CharacterByID(context.Background(), &testID)
+	resp, err := ByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -45,7 +45,7 @@ func TestSuccessfulCharacterByID(t *testing.T) {
 
 }
 
-func TestFailNilIDCharacterByID(t *testing.T) {
+func TestFailNilIDByID(t *testing.T) {
 	jsonResponse := `{
 		"birthday": "2008-04-01T10:24:00Z",
 		"bloodline_id": 3,
@@ -68,7 +68,7 @@ func TestFailNilIDCharacterByID(t *testing.T) {
 
 	var testID *int
 
-	_, err := CharacterByID(context.Background(), testID)
+	_, err := ByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilID {
@@ -77,7 +77,7 @@ func TestFailNilIDCharacterByID(t *testing.T) {
 
 }
 
-func TestFailRestCallCharacterByID(t *testing.T) {
+func TestFailRestCallByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		CharacterMockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KeyValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -87,7 +87,7 @@ func TestFailRestCallCharacterByID(t *testing.T) {
 
 	var testID = 1
 
-	_, err := CharacterByID(context.Background(), &testID)
+	_, err := ByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -96,7 +96,7 @@ func TestFailRestCallCharacterByID(t *testing.T) {
 
 }
 
-func TestFailUnmarshalCharacterByID(t *testing.T) {
+func TestFailUnmarshalByID(t *testing.T) {
 	jsonResponse := `{{
 		"birthday": "2008-04-01T10:24:00Z",
 		"bloodline_id": 3,
@@ -119,7 +119,7 @@ func TestFailUnmarshalCharacterByID(t *testing.T) {
 
 	var testID = 1
 
-	_, err := CharacterByID(context.Background(), &testID)
+	_, err := ByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

@@ -19,7 +19,7 @@ import (
 
 const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/corporation"
 
-func CorporationByID(ctx context.Context, id *int) (*model.Corporation, error) {
+func ByID(ctx context.Context, id *int) (*model.Corporation, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "CorporationByID")
 	defer span.End()
 	var corporation *model.Corporation = new(model.Corporation)

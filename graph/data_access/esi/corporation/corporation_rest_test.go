@@ -11,7 +11,7 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
-func TestSuccessfulCorporationByID(t *testing.T) {
+func TestSuccessfulByID(t *testing.T) {
 	jsonResponse := `{
 		"ceo_id": 3018996,
 		"creator_id": 1,
@@ -37,7 +37,7 @@ func TestSuccessfulCorporationByID(t *testing.T) {
 
 	var testID = 1
 
-	resp, err := CorporationByID(context.Background(), &testID)
+	resp, err := ByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -48,7 +48,7 @@ func TestSuccessfulCorporationByID(t *testing.T) {
 
 }
 
-func TestFailNilIDCorporationByID(t *testing.T) {
+func TestFailNilIDByID(t *testing.T) {
 	jsonResponse := `{
 		"ceo_id": 3018996,
 		"creator_id": 1,
@@ -74,7 +74,7 @@ func TestFailNilIDCorporationByID(t *testing.T) {
 
 	var testID *int
 
-	_, err := CorporationByID(context.Background(), testID)
+	_, err := ByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilID {
@@ -83,7 +83,7 @@ func TestFailNilIDCorporationByID(t *testing.T) {
 
 }
 
-func TestFailRestCallCorporationByID(t *testing.T) {
+func TestFailRestCallByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		CorporationMockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KeyValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -93,7 +93,7 @@ func TestFailRestCallCorporationByID(t *testing.T) {
 
 	var testID = 1
 
-	_, err := CorporationByID(context.Background(), &testID)
+	_, err := ByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -102,7 +102,7 @@ func TestFailRestCallCorporationByID(t *testing.T) {
 
 }
 
-func TestFailUnmarshalCorporationByID(t *testing.T) {
+func TestFailUnmarshalByID(t *testing.T) {
 	jsonResponse := `{{
 		"ceo_id": 3018996,
 		"creator_id": 1,
@@ -128,7 +128,7 @@ func TestFailUnmarshalCorporationByID(t *testing.T) {
 
 	var testID = 1
 
-	_, err := CorporationByID(context.Background(), &testID)
+	_, err := ByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

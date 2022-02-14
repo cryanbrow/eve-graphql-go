@@ -11,7 +11,7 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
-func TestSuccessfulAllianceByID(t *testing.T) {
+func TestSuccessfulByID(t *testing.T) {
 	jsonResponse := `{
 		"creator_corporation_id": 98007669,
 		"creator_id": 1973270502,
@@ -32,7 +32,7 @@ func TestSuccessfulAllianceByID(t *testing.T) {
 
 	var testID = 1
 
-	resp, err := AllianceByID(context.Background(), &testID)
+	resp, err := ByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -43,7 +43,7 @@ func TestSuccessfulAllianceByID(t *testing.T) {
 
 }
 
-func TestFailNilIDAllianceByID(t *testing.T) {
+func TestFailNilIDByID(t *testing.T) {
 	jsonResponse := `{
 		"creator_corporation_id": 98007669,
 		"creator_id": 1973270502,
@@ -64,7 +64,7 @@ func TestFailNilIDAllianceByID(t *testing.T) {
 
 	var testID *int
 
-	_, err := AllianceByID(context.Background(), testID)
+	_, err := ByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilID {
@@ -73,7 +73,7 @@ func TestFailNilIDAllianceByID(t *testing.T) {
 
 }
 
-func TestFailRestCallAllianceByID(t *testing.T) {
+func TestFailRestCallByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		AllianceMockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KeyValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -83,7 +83,7 @@ func TestFailRestCallAllianceByID(t *testing.T) {
 
 	var testID = 1
 
-	_, err := AllianceByID(context.Background(), &testID)
+	_, err := ByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -92,7 +92,7 @@ func TestFailRestCallAllianceByID(t *testing.T) {
 
 }
 
-func TestFailUnmarshalAllianceByID(t *testing.T) {
+func TestFailUnmarshalByID(t *testing.T) {
 	jsonResponse := `{{
 		"creator_corporation_id": 98007669,
 		"creator_id": 1973270502,
@@ -113,7 +113,7 @@ func TestFailUnmarshalAllianceByID(t *testing.T) {
 
 	var testID = 1
 
-	_, err := AllianceByID(context.Background(), &testID)
+	_, err := ByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
