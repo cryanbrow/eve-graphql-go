@@ -21,7 +21,7 @@ var AppConfig Config
 type Config struct {
 	Application struct {
 		Name        string `default:"eve-graphql-go" yaml:"name"`
-		Environment string `default:"test" yaml:"environment"`
+		Environment string `default:"production" yaml:"environment"`
 	} `yaml:"application"`
 	Server struct {
 		Port string `default:"8080" yaml:"port"`
