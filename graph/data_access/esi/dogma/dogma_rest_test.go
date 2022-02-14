@@ -13,7 +13,7 @@ import (
 
 const wrongError string = "Wrong error text: %s"
 
-func TestSuccessfulDogmaEffectByID(t *testing.T) {
+func TestSuccessfulEffectByID(t *testing.T) {
 	jsonResponse := `{
 		"description": "",
 		"display_name": "",
@@ -43,7 +43,7 @@ func TestSuccessfulDogmaEffectByID(t *testing.T) {
 
 	var testID = 1
 
-	resp, err := DogmaEffectByID(context.Background(), &testID)
+	resp, err := EffectByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -54,7 +54,7 @@ func TestSuccessfulDogmaEffectByID(t *testing.T) {
 
 }
 
-func TestFailNilIDDogmaEffectByID(t *testing.T) {
+func TestFailNilIDEffectByID(t *testing.T) {
 	jsonResponse := `{
 		"description": "",
 		"display_name": "",
@@ -84,7 +84,7 @@ func TestFailNilIDDogmaEffectByID(t *testing.T) {
 
 	var testID *int
 
-	_, err := DogmaEffectByID(context.Background(), testID)
+	_, err := EffectByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilID {
@@ -92,7 +92,7 @@ func TestFailNilIDDogmaEffectByID(t *testing.T) {
 	}
 }
 
-func TestFailRestCallDogmaEffectByID(t *testing.T) {
+func TestFailRestCallEffectByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		DogmaMockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KeyValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -102,7 +102,7 @@ func TestFailRestCallDogmaEffectByID(t *testing.T) {
 
 	var testID = 1
 
-	_, err := DogmaEffectByID(context.Background(), &testID)
+	_, err := EffectByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -110,7 +110,7 @@ func TestFailRestCallDogmaEffectByID(t *testing.T) {
 	}
 }
 
-func TestFailUnmarshalDogmaEffectByID(t *testing.T) {
+func TestFailUnmarshalEffectByID(t *testing.T) {
 	jsonResponse := `{{
 		"description": "",
 		"display_name": "",
@@ -140,13 +140,13 @@ func TestFailUnmarshalDogmaEffectByID(t *testing.T) {
 
 	var testID = 1
 
-	_, err := DogmaEffectByID(context.Background(), &testID)
+	_, err := EffectByID(context.Background(), &testID)
 	if err == nil {
 		t.Errorf(helpers.NilError)
 	}
 }
 
-func TestSuccessfulDogmaAttributeByID(t *testing.T) {
+func TestSuccessfulAttributeByID(t *testing.T) {
 	jsonResponse := `{
 		"attribute_id": 1966,
 		"default_value": 0,
@@ -170,7 +170,7 @@ func TestSuccessfulDogmaAttributeByID(t *testing.T) {
 
 	var testID = 1
 
-	resp, err := DogmaAttributeByID(context.Background(), &testID)
+	resp, err := AttributeByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -181,7 +181,7 @@ func TestSuccessfulDogmaAttributeByID(t *testing.T) {
 
 }
 
-func TestFailNilIDDogmaAttributeByID(t *testing.T) {
+func TestFailNilIDAttributeByID(t *testing.T) {
 	jsonResponse := `{
 		"attribute_id": 1966,
 		"default_value": 0,
@@ -205,7 +205,7 @@ func TestFailNilIDDogmaAttributeByID(t *testing.T) {
 
 	var testID *int
 
-	_, err := DogmaAttributeByID(context.Background(), testID)
+	_, err := AttributeByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilID {
@@ -214,7 +214,7 @@ func TestFailNilIDDogmaAttributeByID(t *testing.T) {
 
 }
 
-func TestFailRestCallDogmaAttributeByID(t *testing.T) {
+func TestFailRestCallAttributeByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		DogmaMockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KeyValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -224,7 +224,7 @@ func TestFailRestCallDogmaAttributeByID(t *testing.T) {
 
 	var testID = 1
 
-	_, err := DogmaAttributeByID(context.Background(), &testID)
+	_, err := AttributeByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -233,7 +233,7 @@ func TestFailRestCallDogmaAttributeByID(t *testing.T) {
 
 }
 
-func TestFailUnmarshalDogmaAttributeByID(t *testing.T) {
+func TestFailUnmarshalAttributeByID(t *testing.T) {
 	jsonResponse := `{
 		"attribute_id": 1966"hi",
 		"default_value": 0,
@@ -257,7 +257,7 @@ func TestFailUnmarshalDogmaAttributeByID(t *testing.T) {
 
 	var testID = 1
 
-	_, err := DogmaAttributeByID(context.Background(), &testID)
+	_, err := AttributeByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

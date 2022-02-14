@@ -11,7 +11,7 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
-func TestSuccessfulCharacterPortraitByID(t *testing.T) {
+func TestSuccessfulPortraitByID(t *testing.T) {
 	jsonResponse := `{
 		"px128x128": "https://images.evetech.net/characters/3018996/portrait?tenant=tranquility&size=128",
 		"px256x256": "https://images.evetech.net/characters/3018996/portrait?tenant=tranquility&size=256",
@@ -30,7 +30,7 @@ func TestSuccessfulCharacterPortraitByID(t *testing.T) {
 
 	var testID = 1
 
-	resp, err := CharacterPortraitByID(context.Background(), &testID)
+	resp, err := PortraitByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -41,7 +41,7 @@ func TestSuccessfulCharacterPortraitByID(t *testing.T) {
 
 }
 
-func TestFailNilIDCharacterPortraitByID(t *testing.T) {
+func TestFailNilIDPortraitByID(t *testing.T) {
 	jsonResponse := `{
 		"px128x128": "https://images.evetech.net/characters/3018996/portrait?tenant=tranquility&size=128",
 		"px256x256": "https://images.evetech.net/characters/3018996/portrait?tenant=tranquility&size=256",
@@ -60,7 +60,7 @@ func TestFailNilIDCharacterPortraitByID(t *testing.T) {
 
 	var testID *int
 
-	_, err := CharacterPortraitByID(context.Background(), testID)
+	_, err := PortraitByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilID {
@@ -69,7 +69,7 @@ func TestFailNilIDCharacterPortraitByID(t *testing.T) {
 
 }
 
-func TestFailRestCallCharacterPortraitByID(t *testing.T) {
+func TestFailRestCallPortraitByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		CharacterMockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KeyValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -79,7 +79,7 @@ func TestFailRestCallCharacterPortraitByID(t *testing.T) {
 
 	var testID = 1
 
-	_, err := CharacterPortraitByID(context.Background(), &testID)
+	_, err := PortraitByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -88,7 +88,7 @@ func TestFailRestCallCharacterPortraitByID(t *testing.T) {
 
 }
 
-func TestFailUnmarshalCharacterPortraitByID(t *testing.T) {
+func TestFailUnmarshalPortraitByID(t *testing.T) {
 	jsonResponse := `{{
 		"px128x128": "https://images.evetech.net/characters/3018996/portrait?tenant=tranquility&size=128",
 		"px256x256": "https://images.evetech.net/characters/3018996/portrait?tenant=tranquility&size=256",
@@ -107,7 +107,7 @@ func TestFailUnmarshalCharacterPortraitByID(t *testing.T) {
 
 	var testID = 1
 
-	_, err := CharacterPortraitByID(context.Background(), &testID)
+	_, err := PortraitByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

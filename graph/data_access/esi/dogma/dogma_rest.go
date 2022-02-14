@@ -19,7 +19,7 @@ import (
 
 const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/dogma"
 
-func DogmaAttributeByID(ctx context.Context, id *int) (*model.DogmaAttributeDetail, error) {
+func AttributeByID(ctx context.Context, id *int) (*model.DogmaAttributeDetail, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "DogmaAttributeByID")
 	defer span.End()
 	var dogmaAttribute *model.DogmaAttributeDetail = new(model.DogmaAttributeDetail)
@@ -44,7 +44,7 @@ func DogmaAttributeByID(ctx context.Context, id *int) (*model.DogmaAttributeDeta
 	return dogmaAttribute, nil
 }
 
-func DogmaEffectByID(ctx context.Context, id *int) (*model.DogmaEffectDetail, error) {
+func EffectByID(ctx context.Context, id *int) (*model.DogmaEffectDetail, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "DogmaEffectByID")
 	defer span.End()
 	var dogmaEffect *model.DogmaEffectDetail = new(model.DogmaEffectDetail)

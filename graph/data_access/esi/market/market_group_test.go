@@ -12,10 +12,10 @@ import (
 )
 
 /***************************************
-*             MarketGroupByID              *
+*             GroupByID              *
 ***************************************/
 
-func TestSuccessfulMarketGroupByID(t *testing.T) {
+func TestSuccessfulGroupByID(t *testing.T) {
 	jsonResponse := `{
 		"description": "Blueprints are data items used in industry for manufacturing, research and invention jobs",
 		"market_group_id": 2,
@@ -34,7 +34,7 @@ func TestSuccessfulMarketGroupByID(t *testing.T) {
 
 	var testID = 2
 
-	resp, err := MarketGroupByID(context.Background(), &testID)
+	resp, err := GroupByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf(helpers.ErrorWasNotNil, err)
 	}
@@ -45,7 +45,7 @@ func TestSuccessfulMarketGroupByID(t *testing.T) {
 
 }
 
-func TestFailNilIDMarketGroupByID(t *testing.T) {
+func TestFailNilIDGroupByID(t *testing.T) {
 	jsonResponse := `{
 		"description": "Blueprints are data items used in industry for manufacturing, research and invention jobs",
 		"market_group_id": 2,
@@ -64,7 +64,7 @@ func TestFailNilIDMarketGroupByID(t *testing.T) {
 
 	var testID *int
 
-	_, err := MarketGroupByID(context.Background(), testID)
+	_, err := GroupByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilID {
@@ -73,7 +73,7 @@ func TestFailNilIDMarketGroupByID(t *testing.T) {
 
 }
 
-func TestFailRestCallMarketGroupByID(t *testing.T) {
+func TestFailRestCallGroupByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KeyValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -83,7 +83,7 @@ func TestFailRestCallMarketGroupByID(t *testing.T) {
 
 	var testID = 2
 
-	_, err := MarketGroupByID(context.Background(), &testID)
+	_, err := GroupByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -92,7 +92,7 @@ func TestFailRestCallMarketGroupByID(t *testing.T) {
 
 }
 
-func TestFailUnmarshalMarketGroupByID(t *testing.T) {
+func TestFailUnmarshalGroupByID(t *testing.T) {
 	jsonResponse := `{{
 		"description": "Blueprints are data items used in industry for manufacturing, research and invention jobs",
 		"market_group_id": 2,
@@ -111,7 +111,7 @@ func TestFailUnmarshalMarketGroupByID(t *testing.T) {
 
 	var testID = 2
 
-	_, err := MarketGroupByID(context.Background(), &testID)
+	_, err := GroupByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

@@ -140,43 +140,43 @@ func (r *corporation_historyResolver) Employer(ctx context.Context, obj *model.C
 func (r *dogma_attributeResolver) Attribute(ctx context.Context, obj *model.DogmaAttribute) (*model.DogmaAttributeDetail, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "DogmaAttributeAttribute")
 	defer span.End()
-	return dogma.DogmaAttributeByID(newCtx, obj.AttributeID)
+	return dogma.AttributeByID(newCtx, obj.AttributeID)
 }
 
 func (r *dogma_effectResolver) Effect(ctx context.Context, obj *model.DogmaEffect) (*model.DogmaEffectDetail, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "DogmaEffectEffect")
 	defer span.End()
-	return dogma.DogmaEffectByID(newCtx, obj.EffectID)
+	return dogma.EffectByID(newCtx, obj.EffectID)
 }
 
 func (r *dogma_effect_detailResolver) DischargeAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "DischargeAttribute")
 	defer span.End()
-	return dogma.DogmaAttributeByID(newCtx, obj.DischargeAttributeID)
+	return dogma.AttributeByID(newCtx, obj.DischargeAttributeID)
 }
 
 func (r *dogma_effect_detailResolver) DurationAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "DurationAttribute")
 	defer span.End()
-	return dogma.DogmaAttributeByID(newCtx, obj.DurationAttributeID)
+	return dogma.AttributeByID(newCtx, obj.DurationAttributeID)
 }
 
 func (r *dogma_effect_detailResolver) FalloffAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "FalloffAttribute")
 	defer span.End()
-	return dogma.DogmaAttributeByID(newCtx, obj.FalloffAttributeID)
+	return dogma.AttributeByID(newCtx, obj.FalloffAttributeID)
 }
 
 func (r *dogma_effect_detailResolver) RangeAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "RangeAttribute")
 	defer span.End()
-	return dogma.DogmaAttributeByID(newCtx, obj.RangeAttributeID)
+	return dogma.AttributeByID(newCtx, obj.RangeAttributeID)
 }
 
 func (r *dogma_effect_detailResolver) TrackingSpeedAttribute(ctx context.Context, obj *model.DogmaEffectDetail) (*model.DogmaAttributeDetail, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "TrackingSpeedAttribute")
 	defer span.End()
-	return dogma.DogmaAttributeByID(newCtx, obj.TrackingSpeedAttributeID)
+	return dogma.AttributeByID(newCtx, obj.TrackingSpeedAttributeID)
 }
 
 func (r *factionResolver) Corporation(ctx context.Context, obj *model.Faction) (*model.Corporation, error) {
@@ -224,7 +224,7 @@ func (r *item_typeResolver) Group(ctx context.Context, obj *model.ItemType) (*mo
 func (r *item_typeResolver) MarketGroup(ctx context.Context, obj *model.ItemType) (*model.MarketGroup, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ItemTypeMarketGroup")
 	defer span.End()
-	return market.MarketGroupByID(newCtx, obj.MarketGroupID)
+	return market.GroupByID(newCtx, obj.MarketGroupID)
 }
 
 func (r *market_groupResolver) ParentGroup(ctx context.Context, obj *model.MarketGroup) (*model.Group, error) {
@@ -242,13 +242,13 @@ func (r *market_groupResolver) TypesDetails(ctx context.Context, obj *model.Mark
 func (r *modifierResolver) ModifiedAttribute(ctx context.Context, obj *model.Modifier) (*model.DogmaAttributeDetail, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ModifierModifiedAttribute")
 	defer span.End()
-	return dogma.DogmaAttributeByID(newCtx, obj.ModifiedAttributeID)
+	return dogma.AttributeByID(newCtx, obj.ModifiedAttributeID)
 }
 
 func (r *modifierResolver) ModifyingAttribute(ctx context.Context, obj *model.Modifier) (*model.DogmaAttributeDetail, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ModifyingAttribute")
 	defer span.End()
-	return dogma.DogmaAttributeByID(newCtx, obj.ModifyingAttributeID)
+	return dogma.AttributeByID(newCtx, obj.ModifyingAttributeID)
 }
 
 func (r *moonResolver) System(ctx context.Context, obj *model.Moon) (*model.System, error) {
@@ -332,7 +332,7 @@ func (r *queryResolver) CorporationHistoryForCharacterID(ctx context.Context, id
 func (r *queryResolver) CharacterPortraitByID(ctx context.Context, id *int) (*model.CharacterPortrait, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CharacterPortraitByID")
 	defer span.End()
-	return character.CharacterPortraitByID(newCtx, id)
+	return character.PortraitByID(newCtx, id)
 }
 
 func (r *queryResolver) FactionByID(ctx context.Context, id *int) (*model.Faction, error) {
