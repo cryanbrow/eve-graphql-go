@@ -86,7 +86,7 @@ func setupNotInCacheRedis(jsonResponse string) bool {
 		},
 	}
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KeyValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return b, nil, nil
 		},
 	}
@@ -179,7 +179,7 @@ func setupRESTFailureNotInCache() bool {
 		},
 	}
 	mockRestHelper := &MockRestHelper{
-		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
+		MockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KeyValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
 		},
 	}

@@ -27,8 +27,8 @@ func OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordert
 
 	redisKey := "OrdersForRegion:" + strconv.Itoa(*regionID) + ":" + orderType.String()
 
-	queryParams := make([]configuration.KevValue, 2)
-	kv := new(configuration.KevValue)
+	queryParams := make([]configuration.KeyValue, 2)
+	kv := new(configuration.KeyValue)
 	kv.Key = "page"
 	kv.Value = strconv.Itoa(*page)
 	queryParams = append(queryParams, *kv)
@@ -79,7 +79,7 @@ func OrdersForRegionByName(ctx context.Context, region *string, orderType *model
 	return orders, nil
 }
 
-func ordersForRegionREST(ctx context.Context, url string, additionalQueryParams []configuration.KevValue, redisKey string) ([]*model.Order, int, error) {
+func ordersForRegionREST(ctx context.Context, url string, additionalQueryParams []configuration.KeyValue, redisKey string) ([]*model.Order, int, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "ordersForRegionREST")
 	defer span.End()
 	var orders []*model.Order

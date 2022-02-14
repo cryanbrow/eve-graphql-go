@@ -17,9 +17,9 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-//CorporationHistory returns the corporation history of the character indicated by the id field, the context is
-//used for tracing. If the corporation history is cached the ESI will not be called until the ttl
-//and the cached instance will be returned.
+// CorporationHistory returns the corporation history of the character indicated by the id field, the context is
+// used for tracing. If the corporation history is cached the ESI will not be called until the ttl
+// and the cached instance will be returned.
 func CorporationHistory(ctx context.Context, id *int) ([]*model.CorporationHistory, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "CorporationHistory")
 	defer span.End()

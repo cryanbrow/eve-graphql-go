@@ -37,7 +37,7 @@ type Config struct {
 	} `yaml:"redis"`
 	Esi struct {
 		Default struct {
-			QueryParams []KevValue `yaml:"queryParams"`
+			QueryParams []KeyValue `yaml:"queryParams"`
 			URL         string     `default:"https://esi.evetech.net/latest" yaml:"url"`
 		} `yaml:"default"`
 	} `yaml:"esi"`
@@ -54,7 +54,7 @@ type Config struct {
 }
 
 // KeyValue is a struct for representing simple Key Value pairs of configs.
-type KevValue struct {
+type KeyValue struct {
 	Key   string `yaml:"key"`
 	Value string `yaml:"value"`
 }
@@ -107,6 +107,7 @@ func setupLogging() {
 	log.SetReportCaller(true)
 }
 
+// LoadConfiguration is for loading config from files and environment and setting it ready to be read.
 func LoadConfiguration() {
 	setupLogging()
 	readFile()

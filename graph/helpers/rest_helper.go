@@ -24,7 +24,7 @@ const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/helpers"
 // MakeCachingRESTCall takes in a context for tracing, the baseURL is the url minus query parameters, verb is the http verb in string form,
 // body is a byte buffer of a JSON body to be sent, additionalQueryParams are the query params beyond the default ones to be sent, redisQueryKey
 // is the unique query key by which the response will be saved and retrieved from the cache.
-func (r *RestHelperClient) MakeCachingRESTCall(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error) {
+func (r *RestHelperClient) MakeCachingRESTCall(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KeyValue, redisQueryKey string) ([]byte, http.Header, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "MakeCachingRESTCall")
 	span.SetAttributes(attribute.String("baseURL", baseURL), attribute.String("verb", verb), attribute.String("redisKey", redisQueryKey))
 	defer span.End()

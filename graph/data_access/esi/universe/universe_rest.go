@@ -27,6 +27,7 @@ func SetupUniverseRest() {
 	restHelper = &helpers.RestHelperClient{}
 }
 
+// RestHelper is an interface used in mocking for unit tests.
 type RestHelper interface {
-	MakeCachingRESTCall(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error)
+	MakeCachingRESTCall(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KeyValue, redisQueryKey string) ([]byte, http.Header, error)
 }
