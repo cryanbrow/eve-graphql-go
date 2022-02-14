@@ -19,9 +19,9 @@ import (
 
 const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/alliance"
 
-//AllianceByID returns the alliance indicated by the id field, the context is
-//used for tracing. If the alliance is cached the ESI will not be called until the ttl
-//and the cached instance will be returned.
+// AllianceByID returns the alliance indicated by the id field, the context is
+// used for tracing. If the alliance is cached the ESI will not be called until the ttl
+// and the cached instance will be returned.
 func AllianceByID(ctx context.Context, id *int) (*model.Alliance, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AllianceByID")
 	defer span.End()
@@ -47,6 +47,7 @@ func AllianceByID(ctx context.Context, id *int) (*model.Alliance, error) {
 	return alliance, nil
 }
 
+// RestHelper is an interface used in mocking for unit tests.
 type RestHelper interface {
 	MakeCachingRESTCall(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KevValue, redisQueryKey string) ([]byte, http.Header, error)
 }
@@ -55,7 +56,7 @@ var (
 	restHelper RestHelper
 )
 
-//Injects required dependencies into the alliance package.
+// Injects required dependencies into the alliance package.
 func SetupAllianceRest() {
 	restHelper = &helpers.RestHelperClient{}
 }

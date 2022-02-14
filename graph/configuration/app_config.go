@@ -11,9 +11,13 @@ import (
 
 const configPath = "config.yml"
 
+// TestConfigPath is file path used for unit tests.
 var TestConfigPath string
+
+// AppConfig is the package level variable exposing the applications configs.
 var AppConfig Config
 
+// Config is a struct in yaml format for storing configs for the application.
 type Config struct {
 	Application struct {
 		Name        string `default:"eve-graphql-go" yaml:"name"`
@@ -49,12 +53,13 @@ type Config struct {
 	} `yaml:"jaeger"`
 }
 
+// KeyValue is a struct for representing simple Key Value pairs of configs.
 type KevValue struct {
 	Key   string `yaml:"key"`
 	Value string `yaml:"value"`
 }
 
-func ReadFile() {
+func readFile() {
 	var file *os.File
 	var err error
 	if TestConfigPath == "" {
@@ -66,7 +71,7 @@ func ReadFile() {
 	if err != nil {
 		if err.Error() == "open config.yml: The system cannot find the file specified." {
 			log.Warn("Did not find config file. Proceeding with default config.")
-			ReadEnv()
+			readEnv()
 			return
 		}
 		processError(err)
@@ -84,7 +89,7 @@ func ReadFile() {
 	}
 }
 
-func ReadEnv() {
+func readEnv() {
 	err := envconfig.Process("", &AppConfig)
 	if err != nil {
 		processError(err)
@@ -96,14 +101,14 @@ func processError(err error) {
 	os.Exit(2)
 }
 
-func SetupLogging() {
+func setupLogging() {
 	log.SetFormatter(&log.JSONFormatter{})
 	log.SetLevel(log.DebugLevel)
 	log.SetReportCaller(true)
 }
 
 func LoadConfiguration() {
-	SetupLogging()
-	ReadFile()
+	setupLogging()
+	readFile()
 	//ReadEnv()
 }
