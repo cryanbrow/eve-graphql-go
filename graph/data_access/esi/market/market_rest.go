@@ -20,6 +20,7 @@ var (
 	restHelper RestHelper
 )
 
+// SetupMarketRest configures dependencies for the Market rest package
 func SetupMarketRest() {
 	restHelper = &helpers.RestHelperClient{}
 }

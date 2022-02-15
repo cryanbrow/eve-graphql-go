@@ -19,6 +19,7 @@ import (
 
 const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/corporation"
 
+// ByID takes a context for tracing and an ID to query the corporation by.
 func ByID(ctx context.Context, id *int) (*model.Corporation, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "CorporationByID")
 	defer span.End()
@@ -53,6 +54,7 @@ var (
 	restHelper RestHelper
 )
 
+// SetupCorporationRest configures dependencies for the Corporation rest package
 func SetupCorporationRest() {
 	restHelper = &helpers.RestHelperClient{}
 }

@@ -19,6 +19,7 @@ import (
 
 const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/dogma"
 
+// AttributeByID takes a context for tracing and an ID to query the Dogma Attribute by.
 func AttributeByID(ctx context.Context, id *int) (*model.DogmaAttributeDetail, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "DogmaAttributeByID")
 	defer span.End()
@@ -44,6 +45,7 @@ func AttributeByID(ctx context.Context, id *int) (*model.DogmaAttributeDetail, e
 	return dogmaAttribute, nil
 }
 
+// EffectByID takes a context for tracing and an ID to query the Dogma Effect by.
 func EffectByID(ctx context.Context, id *int) (*model.DogmaEffectDetail, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "DogmaEffectByID")
 	defer span.End()
@@ -78,6 +80,7 @@ var (
 	restHelper RestHelper
 )
 
+// SetupDogmaRest configures dependencies for the Dogma rest package
 func SetupDogmaRest() {
 	restHelper = &helpers.RestHelperClient{}
 }

@@ -18,10 +18,12 @@ type CacheClientInterface interface {
 }
 
 var (
+	// CachingClient is for wiring in the implementation of caching that is decided by the config
 	CachingClient CacheClientInterface
 	restHelper    RestHelper
 )
 
+// SetupUniverseRest configures dependencies for the Universe rest package
 func SetupUniverseRest() {
 	CachingClient = caching.Cache
 	restHelper = &helpers.RestHelperClient{}
