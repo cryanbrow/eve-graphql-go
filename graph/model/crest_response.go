@@ -19,12 +19,29 @@ type NameTuple struct {
 	Name *string `json:"name"`
 }
 
+// Agents is a constant for NameByID
 const Agents = "agents"
+
+// Alliances is a constant for NameByID
 const Alliances = "alliances"
+
+// Characters is a constant for NameByID
 const Characters = "characters"
+
+// Constellations is a constant for NameByID
 const Constellations = "constellations"
+
+// Corporations is a constant for NameByID
 const Corporations = "corporations"
+
+// Factions is a constant for NameByID
 const Factions = "factions"
+
+// InventoryTypes is a constant for NameByID
 const InventoryTypes = "inventory_types"
+
+// Regions is a constant for NameByID
 const Regions = "regions"
+
+// Systems is a constant for NameByID
 const Systems = "systems"
