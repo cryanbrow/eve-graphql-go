@@ -17,6 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+// RegionByID takes a context for tracing and an ID to query the Region by.
 func RegionByID(ctx context.Context, id *int) (*model.Region, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "RegionByID")
 	defer span.End()

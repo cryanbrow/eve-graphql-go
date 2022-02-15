@@ -19,6 +19,7 @@ import (
 
 const bloodlineRedisKey string = "BloodlineByID:"
 
+// BloodlineByID takes a context for tracing and an ID to query the Bloodline by.
 func BloodlineByID(ctx context.Context, id *int) (*model.Bloodline, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "BloodlineByID")
 	defer span.End()

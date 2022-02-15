@@ -17,6 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+// GroupByID takes a context for tracing and an ID to query the Group by.
 func GroupByID(ctx context.Context, id *int) (*model.Group, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "GroupByID")
 	defer span.End()

@@ -19,6 +19,7 @@ import (
 
 const ancestryRedisKey string = "AncestryByID:"
 
+// AncestryByID takes a context for tracing and an ID to query the Ancestry by.
 func AncestryByID(ctx context.Context, id *int) (*model.Ancestry, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AncestryByID")
 	defer span.End()

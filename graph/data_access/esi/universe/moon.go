@@ -17,6 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+// MoonDetails takes a context for tracing and an array of IDs to query the Moons by.
 func MoonDetails(ctx context.Context, moons []*int) ([]*model.Moon, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "MoonDetails")
 	defer span.End()
@@ -32,6 +33,7 @@ func MoonDetails(ctx context.Context, moons []*int) ([]*model.Moon, error) {
 	return moonDetails, nil
 }
 
+// MoonByID takes a context for tracing and an ID to query the Moon by.
 func MoonByID(ctx context.Context, id *int) (*model.Moon, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "MoonByID")
 	defer span.End()

@@ -17,6 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+// CategoryByID takes a context for tracing and an ID to query the Category by.
 func CategoryByID(ctx context.Context, id *int) (*model.Category, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "CategoryByID")
 	defer span.End()

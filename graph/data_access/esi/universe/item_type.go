@@ -17,6 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+// ItemTypeByID takes a context for tracing and an ID to query the Item Type by.
 func ItemTypeByID(ctx context.Context, id *int) (*model.ItemType, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "ItemTypeByID")
 	defer span.End()
@@ -42,6 +43,7 @@ func ItemTypeByID(ctx context.Context, id *int) (*model.ItemType, error) {
 	return itemType, nil
 }
 
+// ItemTypesByIDs takes a context for tracing and an ID to query the Item Types by.
 func ItemTypesByIDs(ctx context.Context, itemTypes []*int) ([]*model.ItemType, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "ItemTypesByIDs")
 	defer span.End()

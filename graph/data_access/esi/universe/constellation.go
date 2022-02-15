@@ -17,6 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+// ConstellationsByIDs takes a context for tracing and an array of IDs to query the Constellations by.
 func ConstellationsByIDs(ctx context.Context, ids []*int) ([]*model.Constellation, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "ConstellationsByIDs")
 	defer span.End()
@@ -32,6 +33,7 @@ func ConstellationsByIDs(ctx context.Context, ids []*int) ([]*model.Constellatio
 	return constellationDetails, nil
 }
 
+// ConstellationByID takes a context for tracing and an ID to query the Constellation by.
 func ConstellationByID(ctx context.Context, id *int) (*model.Constellation, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "ConstellationByID")
 	defer span.End()

@@ -19,6 +19,7 @@ import (
 
 const factionRedisKey string = "FactionByID:"
 
+// FactionByID takes a context for tracing and an ID to query the Faction by.
 func FactionByID(ctx context.Context, id *int) (*model.Faction, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "CorporationByID")
 	defer span.End()

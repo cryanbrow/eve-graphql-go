@@ -19,6 +19,7 @@ import (
 
 const raceRedisKey string = "RaceByID:"
 
+// RaceByID takes a context for tracing and an ID to query the Race by.
 func RaceByID(ctx context.Context, id *int) (*model.Race, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "RaceByID")
 	defer span.End()

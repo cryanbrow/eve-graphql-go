@@ -18,6 +18,8 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+// OrdersForRegion takes a context for tracing, a region id to query by, a order type of ALL, BUY, or SELL, an optional type id to query by and the page of results for
+// which to query.
 func OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordertype, typeID *int, page *int) (*model.OrderWrapper, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "OrdersForRegion")
 	defer span.End()
@@ -64,6 +66,8 @@ func OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordert
 	return returnOrders, nil
 }
 
+// OrdersForRegionByName takes a context for tracing, a region name to query by, a order type of ALL, BUY, or SELL, an optional type name to query by and the page of results for
+// which to query.
 func OrdersForRegionByName(ctx context.Context, region *string, orderType *model.Ordertype, typeName *string, page *int) (*model.OrderWrapper, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "OrdersForRegionByName")
 	defer span.End()

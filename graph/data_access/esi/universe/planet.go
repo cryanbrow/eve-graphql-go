@@ -17,6 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+// PlanetByID takes a context for tracing and an ID to query the Planet by.
 func PlanetByID(ctx context.Context, id *int) (*model.Planet, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "PlanetByID")
 	defer span.End()

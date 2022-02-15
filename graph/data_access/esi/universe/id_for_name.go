@@ -16,6 +16,8 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+// IDForName takes a context for tracing and a common name of a type in EVE, Agent, Alliance, etc and a field representing the type
+// being requested. Returns a name/id pair representing the object requested.
 func IDForName(ctx context.Context, name *string, nameType string) (int, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "IDForName")
 	defer span.End()

@@ -17,6 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+// GroupByID takes a context for tracing and an ID to query the Market Group by.
 func GroupByID(ctx context.Context, id *int) (*model.MarketGroup, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "MarketGroupByID")
 	defer span.End()

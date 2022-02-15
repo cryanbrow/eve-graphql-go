@@ -17,6 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+// OrderHistory takes in a context for tracing, a region id to query the history for, and a type id for the item history to get.
 func OrderHistory(ctx context.Context, regionID *int, typeID *int) ([]*model.OrderHistory, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "OrderHistory")
 	defer span.End()

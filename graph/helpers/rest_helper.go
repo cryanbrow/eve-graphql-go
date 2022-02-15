@@ -79,16 +79,20 @@ type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
+// CachingClient is an interface for the caching package for mocking during Unit Tests
 type CachingClient interface {
 	AddToCache(ctx context.Context, key string, value []byte, ttl int64)
 	CheckCache(ctx context.Context, key string) (bool, []byte)
 }
 
 var (
-	Client           HTTPClient
+	// Client is an implementation of HTTP Client for making calls with Do.
+	Client HTTPClient
+	// CachingClientVar is an implementation of the caching interface for whichever caching implementation is used.
 	CachingClientVar CachingClient
 )
 
+// SetupRestHelper sets up required dependency injection
 func SetupRestHelper() {
 	Client = &http.Client{}
 	CachingClientVar = caching.Cache

@@ -12,6 +12,7 @@ import (
 
 const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
 
+// CacheClientInterface is an interface for mocking during unit tests for the caching implementation
 type CacheClientInterface interface {
 	AddToCache(ctx context.Context, key string, value []byte, ttl int64)
 	CheckCache(ctx context.Context, key string) (bool, []byte)

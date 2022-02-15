@@ -17,6 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+// SystemsByIDs takes a context for tracing and an array of IDs to query the Systems by.
 func SystemsByIDs(ctx context.Context, ids []*int) ([]*model.System, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "SystemsByIDs")
 	defer span.End()
@@ -32,6 +33,7 @@ func SystemsByIDs(ctx context.Context, ids []*int) ([]*model.System, error) {
 	return systemDetails, nil
 }
 
+// SystemByID takes a context for tracing and an ID to query the System by.
 func SystemByID(ctx context.Context, id *int) (*model.System, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "SystemByID")
 	defer span.End()

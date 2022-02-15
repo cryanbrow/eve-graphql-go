@@ -19,6 +19,7 @@ import (
 
 const asteroidBeltRedisKey string = "AsteroidBeltByID:"
 
+// AsteroidBeltDetails takes in a context for tracing and an array of astroidBelt IDs to query buy to return the data requested.
 func AsteroidBeltDetails(ctx context.Context, asteroidBelts []*int) ([]*model.AsteroidBelt, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AsteroidBeltDetails")
 	defer span.End()
@@ -35,6 +36,7 @@ func AsteroidBeltDetails(ctx context.Context, asteroidBelts []*int) ([]*model.As
 	return asteroidBeltDetails, nil
 }
 
+// AsteroidBeltByID takes a context for tracing and an ID to query the Astroid Belt by.
 func AsteroidBeltByID(ctx context.Context, id *int) (*model.AsteroidBelt, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AsteroidBeltByID")
 	defer span.End()

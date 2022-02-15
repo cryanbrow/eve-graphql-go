@@ -17,6 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+// StargateDetails takes a context for tracing and an array of IDs to query the Stargates by.
 func StargateDetails(ctx context.Context, stargates []*int) ([]*model.Stargate, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "StargateDetails")
 	defer span.End()
@@ -32,6 +33,7 @@ func StargateDetails(ctx context.Context, stargates []*int) ([]*model.Stargate, 
 	return stargateDetails, nil
 }
 
+// StargateByID takes a context for tracing and an ID to query the Stargate by.
 func StargateByID(ctx context.Context, id *int) (*model.Stargate, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "StargateByID")
 	defer span.End()

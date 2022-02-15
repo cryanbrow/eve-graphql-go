@@ -17,6 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+// StarByID takes a context for tracing and an ID to query the Star by.
 func StarByID(ctx context.Context, id *int) (*model.Star, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "StarByID")
 	defer span.End()

@@ -17,6 +17,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+// GraphicByID takes a context for tracing and an ID to query the Graphic by.
 func GraphicByID(ctx context.Context, id *int) (*model.Graphic, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "GraphicByID")
 	defer span.End()
