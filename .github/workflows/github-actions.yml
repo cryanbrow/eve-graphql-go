@@ -77,8 +77,8 @@ jobs:
     - name: build the image
       run: |
         docker buildx build --push \
-          --tag cryanbrow/eve-graphql:latest \
           --tag cryanbrow/eve-graphql:0.0.2 \
-          --tag ghcr.io/cryanbrow/eve-graphql:latest \
+          --tag cryanbrow/eve-graphql:latest \
           --tag ghcr.io/cryanbrow/eve-graphql:0.0.2 \
+          --tag ghcr.io/cryanbrow/eve-graphql:latest \
           --platform linux/amd64,linux/arm/v7,linux/arm64 .

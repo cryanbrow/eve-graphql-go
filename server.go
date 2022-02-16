@@ -6,12 +6,14 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/go-chi/chi"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/apollotracing"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/cryanbrow/eve-graphql-go/graph"
+	"github.com/cryanbrow/eve-graphql-go/graph/auth"
 	"github.com/cryanbrow/eve-graphql-go/graph/caching"
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/alliance"
@@ -40,15 +42,19 @@ func main() {
 		port = configuration.AppConfig.Server.Port
 	}
 
+	router := chi.NewRouter()
+
+	router.Use(auth.Middleware())
+
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
 	if configuration.AppConfig.Application.Environment != "production" {
 		srv.Use(apollotracing.Tracer{})
 	}
 
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
+	router.Handle("/", playground.Handler("GraphQL playground", "/query"))
+	router.Handle("/query", srv)
 
-	http.HandleFunc("/voyager", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/voyager", func(w http.ResponseWriter, r *http.Request) {
 		page, ok := pages[r.URL.Path]
 		if !ok {
 			w.WriteHeader(http.StatusNotFound)
@@ -72,7 +78,7 @@ func main() {
 	http.FileServer(http.FS(res))
 
 	log.Infof("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatalln(http.ListenAndServe(":"+port, nil))
+	log.Fatalln(http.ListenAndServe(":"+port, router))
 }
 
 func setupDependencies() {
