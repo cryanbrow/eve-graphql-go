@@ -83,6 +83,7 @@ func main() {
 
 func setupDependencies() {
 	configuration.LoadConfiguration()
+	auth.GetPublicKeys()
 	caching.ConfigureCaching()
 	helpers.SetupRestHelper()
 	universe.SetupUniverseRest()

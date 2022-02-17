@@ -41,7 +41,7 @@ func SystemByID(ctx context.Context, id *int) (*model.System, error) {
 		return nil, errors.New(helpers.NilID)
 	}
 	var system *model.System = new(model.System)
-	baseURL := fmt.Sprintf("%s/universe/systems/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/universe/systems/%s/", configuration.AppConfig.Esi.URL, strconv.Itoa(*id))
 	redisKey := "SystemByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

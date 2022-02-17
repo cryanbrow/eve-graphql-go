@@ -25,7 +25,7 @@ func ItemTypeByID(ctx context.Context, id *int) (*model.ItemType, error) {
 	if id == nil {
 		return nil, errors.New(helpers.NilID)
 	}
-	baseURL := fmt.Sprintf("%s/universe/types/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/universe/types/%s/", configuration.AppConfig.Esi.URL, strconv.Itoa(*id))
 	redisKey := "ItemTypeByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

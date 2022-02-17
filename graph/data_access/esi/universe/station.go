@@ -44,7 +44,7 @@ func StationByID(ctx context.Context, id *int) (*model.Station, error) {
 		return nil, nil
 	}
 	var station *model.Station = new(model.Station)
-	baseURL := fmt.Sprintf("%s/universe/stations/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/universe/stations/%s/", configuration.AppConfig.Esi.URL, strconv.Itoa(*id))
 	redisKey := "StationByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

@@ -22,7 +22,7 @@ func IDForName(ctx context.Context, name *string, nameType string) (int, error) 
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "IDForName")
 	defer span.End()
 	var ids *local_model.Names = new(local_model.Names)
-	baseURL := fmt.Sprintf("%s/universe/ids/", configuration.AppConfig.Esi.Default.URL)
+	baseURL := fmt.Sprintf("%s/universe/ids/", configuration.AppConfig.Esi.URL)
 	if name == nil {
 		return 0, errors.New("nil name")
 	}

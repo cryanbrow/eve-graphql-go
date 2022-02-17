@@ -49,7 +49,7 @@ func factionByArray(ctx context.Context, id *int) (*model.Faction, error) {
 	defer span.End()
 	var factions []*model.Faction = make([]*model.Faction, 0)
 	var returnFaction *model.Faction
-	baseURL := fmt.Sprintf("%s/universe/factions/", configuration.AppConfig.Esi.Default.URL)
+	baseURL := fmt.Sprintf("%s/universe/factions/", configuration.AppConfig.Esi.URL)
 	redisKey := factionRedisKey + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

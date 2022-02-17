@@ -25,7 +25,7 @@ func OrdersForRegion(ctx context.Context, regionID *int, orderType *model.Ordert
 	defer span.End()
 	log.WithFields(log.Fields{"regionID": regionID, "typeID": typeID, "orderType": orderType}).Info("OrdersForRegion Called")
 	orderList := make([]*model.Order, 0)
-	baseURL := fmt.Sprintf("%s/markets/%s/orders/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*regionID))
+	baseURL := fmt.Sprintf("%s/markets/%s/orders/", configuration.AppConfig.Esi.URL, strconv.Itoa(*regionID))
 
 	redisKey := "OrdersForRegion:" + strconv.Itoa(*regionID) + ":" + orderType.String()
 

@@ -21,7 +21,11 @@ esi:
       value: 'tranquility'
     - key: 'language'
       value: 'en'
-    url: 'https://esi.evetech.net/latest'
+  url: 'https://esi.evetech.net/latest'
+  oauth:
+    jwksUrl: "https://login.eveonline.com/oauth/jwks"
+    algorithm: "RS256"
+
 
 jaeger:
   enabled: true

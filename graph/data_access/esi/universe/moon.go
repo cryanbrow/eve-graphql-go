@@ -41,7 +41,7 @@ func MoonByID(ctx context.Context, id *int) (*model.Moon, error) {
 	if id == nil {
 		return nil, errors.New(helpers.NilID)
 	}
-	baseURL := fmt.Sprintf("%s/universe/moons/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/universe/moons/%s/", configuration.AppConfig.Esi.URL, strconv.Itoa(*id))
 	redisKey := "MoonByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

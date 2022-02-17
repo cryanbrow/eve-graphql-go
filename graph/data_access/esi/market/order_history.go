@@ -25,7 +25,7 @@ func OrderHistory(ctx context.Context, regionID *int, typeID *int) ([]*model.Ord
 		return nil, errors.New(helpers.NilID)
 	}
 	var orderHistory []*model.OrderHistory = make([]*model.OrderHistory, 0)
-	baseURL := fmt.Sprintf("%s/markets/%s/history", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*regionID))
+	baseURL := fmt.Sprintf("%s/markets/%s/history", configuration.AppConfig.Esi.URL, strconv.Itoa(*regionID))
 	redisKey := "OrderHistoryByID:" + strconv.Itoa(*regionID) + ":" + strconv.Itoa(*typeID)
 
 	var buffer bytes.Buffer

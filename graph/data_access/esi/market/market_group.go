@@ -25,7 +25,7 @@ func GroupByID(ctx context.Context, id *int) (*model.MarketGroup, error) {
 	if id == nil {
 		return nil, errors.New(helpers.NilID)
 	}
-	baseURL := fmt.Sprintf("%s/markets/groups/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/markets/groups/%s/", configuration.AppConfig.Esi.URL, strconv.Itoa(*id))
 	redisKey := "MarketGroupByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

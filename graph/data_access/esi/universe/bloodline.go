@@ -50,7 +50,7 @@ func bloodlineByArray(ctx context.Context, id *int) (*model.Bloodline, error) {
 	defer span.End()
 	var bloodlines []*model.Bloodline = make([]*model.Bloodline, 0)
 	var returnBloodline *model.Bloodline
-	baseURL := fmt.Sprintf("%s/universe/bloodlines/", configuration.AppConfig.Esi.Default.URL)
+	baseURL := fmt.Sprintf("%s/universe/bloodlines/", configuration.AppConfig.Esi.URL)
 	redisKey := bloodlineRedisKey
 
 	var buffer bytes.Buffer

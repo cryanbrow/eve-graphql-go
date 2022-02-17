@@ -38,8 +38,12 @@ type Config struct {
 	Esi struct {
 		Default struct {
 			QueryParams []KeyValue `yaml:"queryParams"`
-			URL         string     `default:"https://esi.evetech.net/latest" yaml:"url"`
 		} `yaml:"default"`
+		URL   string `default:"https://esi.evetech.net/latest" yaml:"url"`
+		OAuth struct {
+			JWKSURL   string `default:"https://login.eveonline.com/oauth/jwks"`
+			Algorithm string `default:"RS256"`
+		} `yaml:"oauth"`
 	} `yaml:"esi"`
 	Jaeger struct {
 		Enabled  bool   `default:"false" yaml:"enabled"`

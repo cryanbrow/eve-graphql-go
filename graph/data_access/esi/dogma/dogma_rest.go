@@ -27,7 +27,7 @@ func AttributeByID(ctx context.Context, id *int) (*model.DogmaAttributeDetail, e
 	if id == nil {
 		return nil, errors.New(helpers.NilID)
 	}
-	baseURL := fmt.Sprintf("%s/dogma/attributes/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/dogma/attributes/%s/", configuration.AppConfig.Esi.URL, strconv.Itoa(*id))
 	redisKey := "DogmaAttributeByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
@@ -53,7 +53,7 @@ func EffectByID(ctx context.Context, id *int) (*model.DogmaEffectDetail, error) 
 	if id == nil {
 		return nil, errors.New(helpers.NilID)
 	}
-	baseURL := fmt.Sprintf("%s/dogma/effects/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/dogma/effects/%s/", configuration.AppConfig.Esi.URL, strconv.Itoa(*id))
 	redisKey := "DogmaEffectByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

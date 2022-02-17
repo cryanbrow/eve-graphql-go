@@ -27,7 +27,7 @@ func ByID(ctx context.Context, id *int) (*model.Corporation, error) {
 	if id == nil {
 		return nil, errors.New(helpers.NilID)
 	}
-	baseURL := fmt.Sprintf("%s/corporations/%s/", configuration.AppConfig.Esi.Default.URL, strconv.Itoa(*id))
+	baseURL := fmt.Sprintf("%s/corporations/%s/", configuration.AppConfig.Esi.URL, strconv.Itoa(*id))
 	redisKey := "CorporationByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer

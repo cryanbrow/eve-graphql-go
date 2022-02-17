@@ -1,61 +1,81 @@
 package auth
 
 import (
-	"context"
-	"fmt"
+	"crypto/rsa"
+	"encoding/base64"
+	"encoding/json"
+	"math/big"
 	"net/http"
 	"strings"
 
-	"github.com/golang-jwt/jwt"
 	log "github.com/sirupsen/logrus"
+
+	"github.com/golang-jwt/jwt"
 )
 
-// A private key for context that only this package can access. This is important
-// to prevent collisions between different context uses
-var userCtxKey = &contextKey{"user"}
-
-type contextKey struct {
-	name string
-}
-
-// A stand-in for our database backed user object
-type User struct {
-	Name    string
-	IsAdmin bool
-}
+var rsakeys map[string]*rsa.PublicKey
 
 // Middleware decodes the share session cookie and packs the session into context
 func Middleware() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			authToken := r.Header.Get("authorization")
-			log.WithFields(log.Fields{"authorization": authToken}).Infof("Bearer Token on request: ")
-			validateJWT(strings.Split(authToken, " ")[1])
+			tokenString := r.Header.Get("Authorization")
+			isValid := false
+			errorMessage := ""
 
+			if strings.HasPrefix(tokenString, "Bearer ") {
+				tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+				token, err := jwt.ParseWithClaims(tokenString, &EveCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+					return rsakeys[token.Header["kid"].(string)], nil
+				})
+				if err != nil {
+					errorMessage = err.Error()
+				} else if !token.Valid {
+					errorMessage = "Invalid token"
+				} else if token.Header["alg"] == nil {
+					errorMessage = "alg must be defined"
+				} else {
+					isValid = true
+				}
+				claims, ok := token.Claims.(*EveCustomClaims)
+				if ok && isValid {
+					log.WithFields(log.Fields{"audience": claims.Audience, "expiration": claims.ExpiresAt, "id": claims.Id, "issuedAt": claims.IssuedAt, "issuer": claims.Issuer, "notBefore": claims.NotBefore, "subject": claims.Subject, "scopes": claims.Scopes}).Info("JWT recieved and decoded.")
+				} else {
+					log.Errorf("Invalid jwt: %s", errorMessage)
+				}
+			}
 			next.ServeHTTP(w, r)
 		})
 	}
 }
 
-type MyCustomClaims struct {
-	Foo string `json:"sub"`
+type EveCustomClaims struct {
+	Scopes          []string `json:"scp"`
+	JWTID           string   `json:"jti"`
+	AuthorizedParty string   `json:"azp"`
+	Tenant          string   `json:"tenat"`
+	Tier            string   `json:"tier"`
+	Region          string   `json:"region"`
+	Name            string   `json:"name"`
+	Owner           string   `json:"owner"`
 	jwt.StandardClaims
 }
 
-func validateJWT(inputToken string) {
-	fmt.Println(inputToken)
-	token, err := jwt.Parse(inputToken, func(token *jwt.Token) (interface{}, error) {
-		return []byte("AllYourBase"), nil
-	})
-	if err != nil {
-		fmt.Println(err)
+func GetPublicKeys() {
+	rsakeys = make(map[string]*rsa.PublicKey)
+	var body map[string]interface{}
+	uri := "https://login.eveonline.com/oauth/jwks"
+	resp, _ := http.Get(uri)
+	json.NewDecoder(resp.Body).Decode(&body)
+	for _, bodykey := range body["keys"].([]interface{}) {
+		key := bodykey.(map[string]interface{})
+		if key["alg"].(string) == "RS256" {
+			kid := key["kid"].(string)
+			rsakey := new(rsa.PublicKey)
+			number, _ := base64.RawURLEncoding.DecodeString(key["n"].(string))
+			rsakey.N = new(big.Int).SetBytes(number)
+			rsakey.E = 65537
+			rsakeys[kid] = rsakey
+		}
 	}
-	claims, _ := token.Claims.(*MyCustomClaims)
-	fmt.Printf("%v %v", claims.Foo, claims.StandardClaims.ExpiresAt)
-}
-
-// ForContext finds the user from the context. REQUIRES Middleware to have run.
-func ForContext(ctx context.Context) *User {
-	raw, _ := ctx.Value(userCtxKey).(*User)
-	return raw
 }

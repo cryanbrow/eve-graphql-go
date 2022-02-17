@@ -51,7 +51,7 @@ func raceByArray(ctx context.Context, id *int) (*model.Race, error) {
 	var races []*model.Race = make([]*model.Race, 0)
 	var returnRace *model.Race
 	var headers http.Header
-	baseURL := fmt.Sprintf("%s/universe/races/", configuration.AppConfig.Esi.Default.URL)
+	baseURL := fmt.Sprintf("%s/universe/races/", configuration.AppConfig.Esi.URL)
 	redisKey := raceRedisKey + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
