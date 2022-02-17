@@ -23,32 +23,41 @@ func Middleware() func(http.Handler) http.Handler {
 			isValid := false
 			errorMessage := ""
 
-			if strings.HasPrefix(tokenString, "Bearer ") {
-				tokenString = strings.TrimPrefix(tokenString, "Bearer ")
-				token, err := jwt.ParseWithClaims(tokenString, &EveCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
-					return rsakeys[token.Header["kid"].(string)], nil
-				})
-				if err != nil {
-					errorMessage = err.Error()
-				} else if !token.Valid {
-					errorMessage = "Invalid token"
-				} else if token.Header["alg"] == nil {
-					errorMessage = "alg must be defined"
-				} else {
-					isValid = true
-				}
-				claims, ok := token.Claims.(*EveCustomClaims)
-				if ok && isValid {
-					log.WithFields(log.Fields{"audience": claims.Audience, "expiration": claims.ExpiresAt, "id": claims.Id, "issuedAt": claims.IssuedAt, "issuer": claims.Issuer, "notBefore": claims.NotBefore, "subject": claims.Subject, "scopes": claims.Scopes}).Info("JWT recieved and decoded.")
-				} else {
-					log.Errorf("Invalid jwt: %s", errorMessage)
-				}
+			shouldReturn := decodeAndValidateJWT(tokenString, errorMessage, isValid)
+			if shouldReturn {
+				return
 			}
 			next.ServeHTTP(w, r)
 		})
 	}
 }
 
+func decodeAndValidateJWT(tokenString string, errorMessage string, isValid bool) bool {
+	if strings.HasPrefix(tokenString, "Bearer ") {
+		tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			return rsakeys[token.Header["kid"].(string)], nil
+		})
+		if err != nil {
+			errorMessage = err.Error()
+		} else if !token.Valid {
+			errorMessage = "Invalid token"
+		} else if token.Header["alg"] == nil {
+			errorMessage = "alg must be defined"
+		} else {
+			isValid = true
+		}
+		claims, ok := token.Claims.(*EveCustomClaims)
+		if ok && isValid {
+			log.WithFields(log.Fields{"audience": claims.Audience, "expiration": claims.ExpiresAt, "id": claims.Id, "issuedAt": claims.IssuedAt, "issuer": claims.Issuer, "notBefore": claims.NotBefore, "subject": claims.Subject, "scopes": claims.Scopes}).Info("JWT recieved and decoded.")
+		} else {
+			log.Errorf("Invalid jwt: %s", errorMessage)
+		}
+	}
+	return false
+}
+
+// EveCustomClaims contains all standard jwt claims and the custom ones that are returned by the EVE SSO.
 type EveCustomClaims struct {
 	Scopes          []string `json:"scp"`
 	JWTID           string   `json:"jti"`
@@ -61,6 +70,7 @@ type EveCustomClaims struct {
 	jwt.StandardClaims
 }
 
+// GetPublicKeys gets the jwks key for RS256 from the eve online auth endpoint.
 func GetPublicKeys() {
 	rsakeys = make(map[string]*rsa.PublicKey)
 	var body map[string]interface{}
