@@ -55,7 +55,7 @@ type AsteroidBelt struct {
 	TypeID     int            `yaml:"typeID" json:"type_id"`
 }
 
-type bloodline map[int]struct {
+type Bloodline map[int]struct {
 	Charisma      int          `yaml:"charisma" json:"charisma"`
 	Corporation   *Corporation `json:"corporation"`
 	CorporationID int          `yaml:"corporationID" json:"corporationID"`
@@ -87,6 +87,152 @@ type bloodline map[int]struct {
 	ShipType   *ItemType `json:"ship_type"`
 	Willpower  int       `yaml:"willpower" json:"willpower"`
 	ID         int       `yaml:"id" json:"id"`
+}
+
+type CategoryID map[int]struct {
+	CategoryGroups []*Group `yaml:"category_groups" json:"category_groups"`
+	Name           struct {
+		DE string `yaml:"de" json:"de"`
+		EN string `yaml:"en" json:"en"`
+		FR string `yaml:"fr" json:"fr"`
+		JA string `yaml:"ja" json:"ja"`
+		KO string `yaml:"ko" json:"ko"`
+		RU string `yaml:"ru" json:"ru"`
+		ZH string `yaml:"zh" json:"zh"`
+	} `yaml:"name" json:"name"`
+	Published bool `yaml:"published" json:"published"`
+	ID        int  `yaml:"id" json:"id"`
+}
+
+type Character struct {
+	AllianceID     *int         `yaml:"alliance_id" json:"alliance_id"`
+	Alliance       *Alliance    `yaml:"alliance" json:"alliance"`
+	AncestryID     *int         `yaml:"ancestry_id" json:"ancestry_id"`
+	Ancestry       *Ancestry    `yaml:"ancestry" json:"ancestry"`
+	Birthday       *string      `yaml:"birthday" json:"birthday"`
+	BloodlineID    *int         `yaml:"bloodline_id" json:"bloodline_id"`
+	Bloodline      *Bloodline   `yaml:"bloodline" json:"bloodline"`
+	CorporationID  *int         `yaml:"corporation_id" json:"corporation_id"`
+	Corporation    *Corporation `yaml:"corporation" json:"corporation"`
+	Description    *string      `yaml:"description" json:"description"`
+	FactionID      *int         `yaml:"faction_id" json:"faction_id"`
+	Faction        *Faction     `yaml:"faction" json:"faction"`
+	Gender         *Gender      `yaml:"gender" json:"gender"`
+	Name           *string      `yaml:"name" json:"name"`
+	RaceID         *int         `yaml:"race_id" json:"race_id"`
+	Race           *Race        `yaml:"race" json:"race"`
+	SecurityStatus *float64     `yaml:"security_status" json:"security_status"`
+	Title          *string      `yaml:"title" json:"title"`
+}
+
+type CharacterPortrait struct {
+	Px128x128 *string `yaml:"px128x128" json:"px128x128"`
+	Px256x256 *string `yaml:"px256x256" json:"px256x256"`
+	Px512x512 *string `yaml:"px512x512" json:"px512x512"`
+	Px64x64   *string `yaml:"px64x64" json:"px64x64"`
+}
+
+type Constellation struct {
+	ConstellationID int       `yaml:"constellationID" json:"constellation_id"`
+	Systems         []*int    `yaml:"systems" json:"systems"`
+	SolarSystems    []*System `yaml:"solar_systems" json:"solar_systems"`
+	Max             Position  `yaml:"max" json:"max"`
+	Min             Position  `yaml:"min" json:"min"`
+	Name            string    `yaml:"name" json:"name"`
+	Region          *Region   `yaml:"region" json:"region"`
+	RegionID        int       `yaml:"region_id" json:"region_id"`
+	Position        Position  `yaml:"position" json:"position"`
+}
+
+type Corporation struct {
+	Alliance      *Alliance  `yaml:"alliance" json:"alliance"`
+	AllianceID    *int       `yaml:"alliance_id" json:"alliance_id"`
+	Ceo           *Character `yaml:"ceo" json:"ceo"`
+	CeoID         *int       `yaml:"ceo_id" json:"ceo_id"`
+	Creator       *Character `yaml:"creator" json:"creator"`
+	CreatorID     *int       `yaml:"creator_id" json:"creator_id"`
+	DateFounded   *string    `yaml:"date_founded" json:"date_founded"`
+	Description   *string    `yaml:"description" json:"description"`
+	Faction       *Faction   `yaml:"faction" json:"faction"`
+	FactionID     *int       `yaml:"faction_id" json:"faction_id"`
+	HomeStation   *Station   `yaml:"home_station" json:"home_station"`
+	HomeStationID *int       `yaml:"home_station_id" json:"home_station_id"`
+	MemberCount   *int       `yaml:"member_count" json:"member_count"`
+	Name          *string    `yaml:"name" json:"name"`
+	Shares        *int       `yaml:"shares" json:"shares"`
+	TaxRate       *float64   `yaml:"tax_rate" json:"tax_rate"`
+	Ticker        *string    `yaml:"ticker" json:"ticker"`
+	URL           *string    `yaml:"url" json:"url"`
+	WarEligible   *bool      `yaml:"war_eligible" json:"war_eligible"`
+}
+
+type npcCorporation map[int]struct {
+	AllowedMemberRaces []int           `yaml:"allowedMemberRaces" json:"allowedMemberRaces"`
+	CeoID              int             `yaml:"ceoID" json:"ceoID"`
+	CorporationTrades  map[int]float32 `yaml:"corporationTrades" json:"corporationTrades"`
+	Deleted            bool            `yaml:"deleted" json:"deleted"`
+	DescriptionID      struct {
+		DE string `yaml:"de" json:"de"`
+		EN string `yaml:"en" json:"en"`
+		FR string `yaml:"fr" json:"fr"`
+		JA string `yaml:"ja" json:"ja"`
+		KO string `yaml:"ko" json:"ko"`
+		RU string `yaml:"ru" json:"ru"`
+		ZH string `yaml:"zh" json:"zh"`
+	} `yaml:"descriptionID" json:"descriptionID"`
+	Divisions                 map[int]division `yaml:"divisions" json:"divisions"`
+	EnemyID                   int              `yaml:"enemyID" json:"enemyID"`
+	Extent                    string           `yaml:"extent" json:"extent"`
+	FactionID                 int              `yaml:"factionID" json:"factionID"`
+	FriendID                  int              `yaml:"friendID" json:"friendID"`
+	HasPlayerPersonnelManager bool             `yaml:"hasPlayerPersonnelManager" json:"hasPlayerPersonnelManager"`
+	IconID                    int              `yaml:"iconID" json:"iconID"`
+	InitialPrice              int              `yaml:"initialPrice" json:"initialPrice"`
+	Investors                 map[int]int      `yaml:"investors" json:"investors"`
+	LPOfferTables             []int            `yaml:"lpOfferTables" json:"lpOfferTables"`
+	MainActivityID            int              `yaml:"mainActivityID" json:"mainActivityID"`
+	MemberLimit               int              `yaml:"memberLimit" json:"memberLimit"`
+	MinSecurity               float32          `yaml:"minSecurity" json:"minSecurity"`
+	MinimumJoinStanding       int              `yaml:"minimumJoinStanding" json:"minimumJoinStanding"`
+	NameID                    struct {
+		DE string `yaml:"de" json:"de"`
+		EN string `yaml:"en" json:"en"`
+		FR string `yaml:"fr" json:"fr"`
+		JA string `yaml:"ja" json:"ja"`
+		KO string `yaml:"ko" json:"ko"`
+		RU string `yaml:"ru" json:"ru"`
+		ZH string `yaml:"zh" json:"zh"`
+	} `yaml:"nameID" json:"nameID"`
+	PublicShares               int     `yaml:"publicShares" json:"publicShares"`
+	RaceID                     int     `yaml:"raceID" json:"raceID"`
+	SendCharTerminationMessage bool    `yaml:"sendCharTerminationMessage" json:"sendCharTerminationMessage"`
+	Shares                     int     `yaml:"shares" json:"shares"`
+	Size                       string  `yaml:"size" json:"size"`
+	SizeFactor                 float32 `yaml:"sizeFactor" json:"sizeFactor"`
+	SolarSystemID              int     `yaml:"solarSystemID" json:"solarSystemID"`
+	StationID                  int     `yaml:"stationID" json:"stationID"`
+	TaxRate                    float32 `yaml:"taxRate" json:"taxRate"`
+	TickerName                 string  `yaml:"tickerName" json:"tickerName"`
+	UniqueName                 bool    `yaml:"uniqueName" json:"uniqueName"`
+	ID                         int     `json:"id"`
+}
+
+type division struct {
+	DivisionNumber int `yaml:"divisionNumber" json:"divisionNumber"`
+	LeaderID       int `yaml:"leaderID" json:"leaderID"`
+	Size           int `yaml:"size" json:"size"`
+}
+
+// A single corporation that a player has been part of.
+type CorporationHistory struct {
+	// unique id of the corporation
+	CorporationID *int `yaml:"corporation_id" json:"corporation_id"`
+	// unique id of the employment of the character
+	RecordID *int `yaml:"record_id" json:"record_id"`
+	// date the player started in RFC1123
+	StartDate *string `yaml:"start_date" json:"start_date"`
+	// corporation the player was employed by
+	Employer *Corporation `yaml:"employer" json:"employer"`
 }
 
 type StatisticsType struct {
