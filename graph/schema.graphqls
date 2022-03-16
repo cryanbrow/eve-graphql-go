@@ -1,4 +1,5 @@
 type Query{
+	alliance_byID(id: Int): Alliance
 	"""queries for orders in a required region id for active market orders."""
 	ordersForRegion(
 		region_id: Int!
@@ -392,26 +393,11 @@ type Faction{
 }
 
 type System{
-    border: Boolean
-    center: [Float]
 	constellation_id: Int
-    corridor: Boolean
 	constellation: Constellation
-    disallowedAnchorCategories: [Int]
-    disallowedAnchorGroups: [Int]
-    fringe: Boolean
-    hub: Boolean
-    international: Boolean
-    luminosity: Float
-    max: [Float]
-    min: [Float]
 	name: String
 	planets: [System_planet]
 	position: Position
-    radius: Float
-    regional: Boolean
-    region_id: Int
-    security: Float
 	security_class: String
 	star_id: Int
 	star: Star
@@ -420,7 +406,6 @@ type System{
 	stations: [Int]
 	station_list: [Station]
 	system_id: Int
-    sun_type_id: Int
 }
 
 type Constellation{
@@ -448,14 +433,9 @@ type Region{
 }
 
 type Planet{
-    asteroid_belts: [Int]
-    celestial_index: Int
-    moons: [Int]
-    name: String
+	name: String
 	planet_id: Int
 	position: Position
-    radius: Int
-    statistics: Statistics
 	system: System
 	system_id: Int
 	item_type: Item_type
@@ -474,41 +454,16 @@ type System_planet{
 type Asteroid_belt{
 	name: String
 	position: Position
-	statistics: Statistics
 	system: System
 	system_id: Int
-	type_id: Int
-}
-
-type Statistics{
-	density: Float
-	eccentricity: Float
-	escapeVelocity: Float
-	fragmented: Boolean
-	life: Float
-	locked: Boolean
-	massDust: Float
-	massGas: Float
-	orbitPeriod: Float
-	orbitRadius: Float
-	pressure: Float
-	radius: Float
-	rotationRate: Float
-	spectralClass: String
-	surfaceGravity: Float
-	temperature: Float
 }
 
 type Moon{
 	moon_id: Int
 	name: String
 	position: Position
-    Radius: Int
-    stations: [Int]
-    statistics: Statistics
 	system_id: Int
 	system: System
-    type_id: Int
 }
 
 type Star{

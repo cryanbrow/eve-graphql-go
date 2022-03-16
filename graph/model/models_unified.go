@@ -1,6 +1,6 @@
 package model
 
-type Alliance struct {
+/*6type Alliance struct {
 	CreatorCorporationID  *int         `json:"creator_corporation_id"`
 	CreatorCorporation    *Corporation `json:"creator_corporation"`
 	CreatorID             *int         `json:"creator_id"`
@@ -259,3 +259,4 @@ type Position struct {
 	Y float64 `yaml:"y" json:"y"`
 	Z float64 `yaml:"z" json:"z"`
 }
+*/
