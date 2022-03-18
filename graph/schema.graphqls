@@ -9,6 +9,33 @@ type Query{
 	assets_byCorporationID(id: Int): [Asset]
 	assets_byCharacterName(name: String): [Asset]
 	assets_byCorporationName(name: String): [Asset]
+	bookmarks_byCharacterID(id: Int) [Bookmark]
+	bookmarks_foldersByCharacterID(id: Int) [BookmarkFolder]
+	bookmarks_byCorporationID(id: Int) [Bookmark]
+	bookmarks_foldersByCorporationID(id: Int) [BookmarkFolder]
+	bookmarks_byCharacterName(name: String) [Bookmark]
+	bookmarks_foldersByCharacterName(name: String) [BookmarkFolder]
+	bookmarks_byCorporationName(name: String) [Bookmark]
+	bookmarks_foldersByCorporationName(name: String) [BookmarkFolder]
+	calendar_eventsByCharacterID(id: Int) [EventSummary]
+	calendar_eventByID(
+		characterID: Int
+		eventID: Int
+	): EventDetail
+	calendar_eventAttendeesByID(
+		characterID: Int
+		eventID: Int
+	): [EventAttendee]
+	calendar_eventsByCharacterName(name: String) [EventSummary]
+	calendar_eventByCharacterNameAndID(
+		characterName: String
+		eventID: Int
+	): EventDetail
+	calendar_eventAttendeesByCharacterNameAndID(
+		characterID: Int
+		eventID: Int
+	): [EventAttendee]
+
 	"""queries for orders in a required region id for active market orders."""
 	ordersForRegion(
 		region_id: Int!
@@ -42,6 +69,26 @@ type Query{
 		type_id: Int
 	): [OrderHistory]
 	
+}
+
+type Bookmark {
+	"""TODO"""
+}
+
+type BookmarkFolder {
+	"""TODO"""
+}
+
+type EventSummary {
+	"""TODO"""
+}
+
+type EventDetail {
+	"""TODO"""
+}
+
+type EventAttendee {
+	"""TODO"""
 }
 
 type Asset {
