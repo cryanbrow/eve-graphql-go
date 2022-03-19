@@ -35,6 +35,28 @@ type Query{
 		characterID: Int
 		eventID: Int
 	): [EventAttendee]
+	character_byID(id: Int) Character
+	character_researchAgentsByID(id: Int) [ResearchAgent]
+	character_blueprintsByID(id: Int) [Blueprint]
+	character_corporationHistoryById(id: Int) [Corporation_history]
+	character_fatiqueByID(id: Int) Fatique
+	character_medalsByID(id: Int) [Medal]
+	character_notificationsByID(id: Int) [Notification]
+	character_portraitByID(id: Int): Character_portrait
+	character_roleByID(id: Int): Role
+	character_standingsByID(id: Int): [Standing]
+	character_titlesByID(id: Int): [Title]
+	character_byName(name: String) Character
+	character_researchAgentsByName(name: String) [ResearchAgent]
+	character_blueprintsByName(name: String) [Blueprint]
+	character_corporationHistoryByName(name: String) [Corporation_history]
+	character_fatiqueByName(name: String) Fatique
+	character_medalsByName(name: String) [Medal]
+	character_notificationsByName(name: String) [Notification]
+	character_portraitByName(name: String): Character_portrait
+	character_roleByName(name: String): Role
+	character_standingsByName(name: String): [Standing]
+	character_titlesByName(name: String): [Title]
 
 	"""queries for orders in a required region id for active market orders."""
 	ordersForRegion(
@@ -59,8 +81,6 @@ type Query{
 	corporationById(id: Int): Corporation
 	"""List of corporations a character has belonged to."""
 	corporationHistoryForCharacterId(id: Int): [Corporation_history]
-	"""Returns URLs for portraits of characters."""
-	characterPortraitByID(id: Int): Character_portrait
 	"""Get information on a faction"""
 	factionByID(id: Int): Faction
 	"""Get history of orders for region and type id"""
@@ -88,6 +108,40 @@ type EventDetail {
 }
 
 type EventAttendee {
+	"""TODO"""
+}
+
+type ResearchAgent {
+	"""TODO"""
+}
+
+type Blueprint {
+	"""TODO"""
+}
+
+type Fatique {
+	jump_fatigue_expire_date: String
+	last_jump_date: String
+	last_update_date: String
+}
+
+type Medal {
+	"""TODO"""
+}
+
+type Notification {
+	"""TODO"""
+}
+
+type Role {
+	"""TODO"""
+}
+
+type Standing {
+	"""TODO"""
+}
+
+type Title {
 	"""TODO"""
 }
 
