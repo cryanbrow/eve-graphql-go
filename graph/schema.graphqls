@@ -57,6 +57,8 @@ type Query{
 	character_roleByName(name: String): Role
 	character_standingsByName(name: String): [Standing]
 	character_titlesByName(name: String): [Title]
+	clones_byID(id: Int) [Clone]
+	clones_implantsByID(id: Int) [Implant]
 
 	"""queries for orders in a required region id for active market orders."""
 	ordersForRegion(
@@ -142,6 +144,14 @@ type Standing {
 }
 
 type Title {
+	"""TODO"""
+}
+
+type Clone {
+	"""TODO"""
+}
+
+type Implant {
 	"""TODO"""
 }
 
