@@ -94,7 +94,23 @@ type Query{
 }
 
 type Bookmark {
-	"""TODO"""
+	bookmark_id: Int
+	coordinates: Position
+	created: String
+	creator_id: Int
+	creator: Character
+	folder_id: Int
+	item: Item
+	label: String
+	location_id: Int
+	location: Station
+	notes: String
+}
+
+type Item {
+	item_id: Int
+	item_type: Item_type
+	type_id: Int
 }
 
 type BookmarkFolder {
