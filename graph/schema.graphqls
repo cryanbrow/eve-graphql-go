@@ -114,15 +114,37 @@ type Item {
 }
 
 type BookmarkFolder {
-	"""TODO"""
+	folder_id: Int
+	name: String
 }
 
 type EventSummary {
-	"""TODO"""
+	event_data: String
+	event_id: Int
+	event_response: String
+	importance: Int
+	title: String
 }
 
 type EventDetail {
-	"""TODO"""
+	date: String
+	duration: Int
+	event_id: Int
+	importance: Int
+	owner_id: Int
+	owner_name: String
+	owner_type: OwnerType
+	response: String
+	text: String
+	title: String
+}
+
+enum OwnerType {
+	eve_server
+	corporation
+	faction
+	character
+	alliance
 }
 
 type EventAttendee {
@@ -182,6 +204,13 @@ type Asset {
 	quantity: Int
 	type_id: Int
 	item_type: Item_type
+}
+
+enum Response {
+	declined
+	not_responded
+	accepted
+	tentative
 }
 
 enum LocationFlag {
