@@ -92,7 +92,7 @@ type Query{
 	): [OrderHistory]
 	
 }
-
+"""This is a comment."""
 type Bookmark {
 	bookmark_id: Int
 	coordinates: Position
