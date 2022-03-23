@@ -148,15 +148,30 @@ enum OwnerType {
 }
 
 type EventAttendee {
-	"""TODO"""
+	character_id: Int
+	character: Character
+	event_response: Response
 }
 
 type ResearchAgent {
-	"""TODO"""
+	agent_id: Int
+	points_per_day: Float
+	remainder_points: Float
+	skill_type_id: Int
+	started_at: String
 }
 
 type Blueprint {
-	"""TODO"""
+	item_id: Int
+	item_type: Item_type
+	location_flag: LocationFlag
+	location_id: Int
+	location: Station
+	material_efficiency: Int
+	quantity: Int
+	runs: Int
+	time_efficiency: Int
+	type_id: Int
 }
 
 type Fatique {
