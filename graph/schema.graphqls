@@ -181,11 +181,26 @@ type Fatique {
 }
 
 type Medal {
-	"""TODO"""
+	corporation_id: Int
+	corporation: Corporation
+	date: String
+	description: String
+	graphics: [Graphic]
+	issuer_id: Int
+	medal_id: Int
+	reason: String
+	status: String
+	title: String
 }
 
 type Notification {
-	"""TODO"""
+	is_read: Boolean
+	notification_id: Int
+	sender_id: Int
+	sender_type: String
+	text: String
+	timestamp: String
+	type: String
 }
 
 type Role {
