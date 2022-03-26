@@ -273,7 +273,25 @@ type Title {
 }
 
 type Clone {
-	"""TODO"""
+	home_location: HomeLocation
+	jump_clones: [JumpClone]
+	last_clone_jump_date: String
+	last_station_change_date: String
+}
+
+type HomeLocation {
+	location_id: Int
+	location: Station
+	location_type: String
+}
+
+type JumpClone {
+	implants: [Int]
+	jump_clone_id: Int
+	location_id: Int
+	location: Station
+	location_type: String
+	name: String
 }
 
 type Implant {
