@@ -32,6 +32,19 @@ type Ancestry struct {
 	ShortDescription *string    `json:"short_description"`
 }
 
+type Asset struct {
+	IsBlueprintCopy *bool         `json:"is_blueprint_copy"`
+	IsSingleton     *bool         `json:"is_singleton"`
+	ItemID          *int          `json:"item_id"`
+	LocationFlag    *LocationFlag `json:"location_flag"`
+	LocationID      *int          `json:"location_id"`
+	Location        *Station      `json:"location"`
+	LocationType    *string       `json:"location_type"`
+	Quantity        *int          `json:"quantity"`
+	TypeID          *int          `json:"type_id"`
+	ItemType        *ItemType     `json:"item_type"`
+}
+
 type AsteroidBelt struct {
 	Name     *string   `json:"name"`
 	Position *Position `json:"position"`
@@ -54,6 +67,39 @@ type Bloodline struct {
 	ShipTypeID    *int         `json:"ship_type_id"`
 	ShipType      *ItemType    `json:"ship_type"`
 	Willpower     *int         `json:"willpower"`
+}
+
+type Blueprint struct {
+	ItemID             *int          `json:"item_id"`
+	ItemType           *ItemType     `json:"item_type"`
+	LocationFlag       *LocationFlag `json:"location_flag"`
+	LocationID         *int          `json:"location_id"`
+	Location           *Station      `json:"location"`
+	MaterialEfficiency *int          `json:"material_efficiency"`
+	Quantity           *int          `json:"quantity"`
+	Runs               *int          `json:"runs"`
+	TimeEfficiency     *int          `json:"time_efficiency"`
+	TypeID             *int          `json:"type_id"`
+}
+
+// This is a comment.
+type Bookmark struct {
+	BookmarkID  *int       `json:"bookmark_id"`
+	Coordinates *Position  `json:"coordinates"`
+	Created     *string    `json:"created"`
+	CreatorID   *int       `json:"creator_id"`
+	Creator     *Character `json:"creator"`
+	FolderID    *int       `json:"folder_id"`
+	Item        *Item      `json:"item"`
+	Label       *string    `json:"label"`
+	LocationID  *int       `json:"location_id"`
+	Location    *Station   `json:"location"`
+	Notes       *string    `json:"notes"`
+}
+
+type BookmarkFolder struct {
+	FolderID *int    `json:"folder_id"`
+	Name     *string `json:"name"`
 }
 
 type Category struct {
@@ -89,6 +135,13 @@ type CharacterPortrait struct {
 	Px256x256 *string `json:"px256x256"`
 	Px512x512 *string `json:"px512x512"`
 	Px64x64   *string `json:"px64x64"`
+}
+
+type Clone struct {
+	HomeLocation          *HomeLocation `json:"home_location"`
+	JumpClones            []*JumpClone  `json:"jump_clones"`
+	LastCloneJumpDate     *string       `json:"last_clone_jump_date"`
+	LastStationChangeDate *string       `json:"last_station_change_date"`
 }
 
 type Constellation struct {
@@ -190,6 +243,33 @@ type DogmaEffectDetail struct {
 	TrackingSpeedAttribute   *DogmaAttributeDetail `json:"tracking_speed_attribute"`
 }
 
+type EventAttendee struct {
+	CharacterID   *int       `json:"character_id"`
+	Character     *Character `json:"character"`
+	EventResponse *Response  `json:"event_response"`
+}
+
+type EventDetail struct {
+	Date       *string    `json:"date"`
+	Duration   *int       `json:"duration"`
+	EventID    *int       `json:"event_id"`
+	Importance *int       `json:"importance"`
+	OwnerID    *int       `json:"owner_id"`
+	OwnerName  *string    `json:"owner_name"`
+	OwnerType  *OwnerType `json:"owner_type"`
+	Response   *string    `json:"response"`
+	Text       *string    `json:"text"`
+	Title      *string    `json:"title"`
+}
+
+type EventSummary struct {
+	EventData     *string `json:"event_data"`
+	EventID       *int    `json:"event_id"`
+	EventResponse *string `json:"event_response"`
+	Importance    *int    `json:"importance"`
+	Title         *string `json:"title"`
+}
+
 type Faction struct {
 	CorporationID        *int         `json:"corporation_id"`
 	Corporation          *Corporation `json:"corporation"`
@@ -204,6 +284,12 @@ type Faction struct {
 	SolarSystem          *System      `json:"solar_system"`
 	StationCount         *int         `json:"station_count"`
 	StationSystemCount   *int         `json:"station_system_count"`
+}
+
+type Fatique struct {
+	JumpFatigueExpireDate *string `json:"jump_fatigue_expire_date"`
+	LastJumpDate          *string `json:"last_jump_date"`
+	LastUpdateDate        *string `json:"last_update_date"`
 }
 
 type Graphic struct {
@@ -227,8 +313,24 @@ type Group struct {
 	ItemTypes  []*ItemType `json:"item_types"`
 }
 
+type HomeLocation struct {
+	LocationID   *int     `json:"location_id"`
+	Location     *Station `json:"location"`
+	LocationType *string  `json:"location_type"`
+}
+
 type Icon struct {
 	ID *int `json:"id"`
+}
+
+type Implant struct {
+	ID *int `json:"id"`
+}
+
+type Item struct {
+	ItemID   *int      `json:"item_id"`
+	ItemType *ItemType `json:"item_type"`
+	TypeID   *int      `json:"type_id"`
 }
 
 type ItemType struct {
@@ -253,6 +355,15 @@ type ItemType struct {
 	Volume          *float64          `json:"volume"`
 }
 
+type JumpClone struct {
+	Implants     []*int   `json:"implants"`
+	JumpCloneID  *int     `json:"jump_clone_id"`
+	LocationID   *int     `json:"location_id"`
+	Location     *Station `json:"location"`
+	LocationType *string  `json:"location_type"`
+	Name         *string  `json:"name"`
+}
+
 type MarketGroup struct {
 	Description   *string     `json:"description"`
 	ID            *int        `json:"id"`
@@ -261,6 +372,19 @@ type MarketGroup struct {
 	ParentGroup   *Group      `json:"parent_group"`
 	Types         []*int      `json:"types"`
 	TypesDetails  []*ItemType `json:"types_details"`
+}
+
+type Medal struct {
+	CorporationID *int         `json:"corporation_id"`
+	Corporation   *Corporation `json:"corporation"`
+	Date          *string      `json:"date"`
+	Description   *string      `json:"description"`
+	Graphics      []*Graphic   `json:"graphics"`
+	IssuerID      *int         `json:"issuer_id"`
+	MedalID       *int         `json:"medal_id"`
+	Reason        *string      `json:"reason"`
+	Status        *string      `json:"status"`
+	Title         *string      `json:"title"`
 }
 
 type Modifier struct {
@@ -280,6 +404,16 @@ type Moon struct {
 	Position *Position `json:"position"`
 	SystemID *int      `json:"system_id"`
 	System   *System   `json:"system"`
+}
+
+type Notification struct {
+	IsRead         *bool   `json:"is_read"`
+	NotificationID *int    `json:"notification_id"`
+	SenderID       *int    `json:"sender_id"`
+	SenderType     *string `json:"sender_type"`
+	Text           *string `json:"text"`
+	Timestamp      *string `json:"timestamp"`
+	Type           *string `json:"type"`
 }
 
 // Object representing a market order
@@ -366,6 +500,27 @@ type Region struct {
 	Description       *string          `json:"description"`
 	Name              *string          `json:"name"`
 	RegionID          *int             `json:"region_id"`
+}
+
+type ResearchAgent struct {
+	AgentID         *int     `json:"agent_id"`
+	PointsPerDay    *float64 `json:"points_per_day"`
+	RemainderPoints *float64 `json:"remainder_points"`
+	SkillTypeID     *int     `json:"skill_type_id"`
+	StartedAt       *string  `json:"started_at"`
+}
+
+type Role struct {
+	Roles        []*Roles `json:"roles"`
+	RolesAtBase  []*Roles `json:"roles_at_base"`
+	RolesAtHq    []*Roles `json:"roles_at_hq"`
+	RolesAtOther []*Roles `json:"roles_at_other"`
+}
+
+type Standing struct {
+	FromID   *int     `json:"from_id"`
+	FromType *string  `json:"from_type"`
+	Standing *float64 `json:"standing"`
 }
 
 type Star struct {
@@ -460,6 +615,11 @@ type SystemPlanet struct {
 	PlanetID                *int            `json:"planet_id"`
 }
 
+type Title struct {
+	Name    *string `json:"name"`
+	TitleID *int    `json:"title_id"`
+}
+
 type Unit struct {
 	ID *int `json:"id"`
 }
@@ -505,6 +665,203 @@ func (e Gender) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+type LocationFlag string
+
+const (
+	LocationFlagAssetSafety                         LocationFlag = "AssetSafety"
+	LocationFlagAutoFit                             LocationFlag = "AutoFit"
+	LocationFlagBoosterBay                          LocationFlag = "BoosterBay"
+	LocationFlagCargo                               LocationFlag = "Cargo"
+	LocationFlagCorpseBay                           LocationFlag = "CorpseBay"
+	LocationFlagDeliveries                          LocationFlag = "Deliveries"
+	LocationFlagDroneBay                            LocationFlag = "DroneBay"
+	LocationFlagFighterBay                          LocationFlag = "FighterBay"
+	LocationFlagFighterTube0                        LocationFlag = "FighterTube0"
+	LocationFlagFighterTube1                        LocationFlag = "FighterTube1"
+	LocationFlagFighterTube2                        LocationFlag = "FighterTube2"
+	LocationFlagFighterTube3                        LocationFlag = "FighterTube3"
+	LocationFlagFighterTube4                        LocationFlag = "FighterTube4"
+	LocationFlagFleetHangar                         LocationFlag = "FleetHangar"
+	LocationFlagFrigateEscapeBay                    LocationFlag = "FrigateEscapeBay"
+	LocationFlagHangar                              LocationFlag = "Hangar"
+	LocationFlagHangarAll                           LocationFlag = "HangarAll"
+	LocationFlagHiSlot0                             LocationFlag = "HiSlot0"
+	LocationFlagHiSlot1                             LocationFlag = "HiSlot1"
+	LocationFlagHiSlot2                             LocationFlag = "HiSlot2"
+	LocationFlagHiSlot3                             LocationFlag = "HiSlot3"
+	LocationFlagHiSlot4                             LocationFlag = "HiSlot4"
+	LocationFlagHiSlot5                             LocationFlag = "HiSlot5"
+	LocationFlagHiSlot6                             LocationFlag = "HiSlot6"
+	LocationFlagHiSlot7                             LocationFlag = "HiSlot7"
+	LocationFlagHiddenModifiers                     LocationFlag = "HiddenModifiers"
+	LocationFlagImplant                             LocationFlag = "Implant"
+	LocationFlagLoSlot0                             LocationFlag = "LoSlot0"
+	LocationFlagLoSlot1                             LocationFlag = "LoSlot1"
+	LocationFlagLoSlot2                             LocationFlag = "LoSlot2"
+	LocationFlagLoSlot3                             LocationFlag = "LoSlot3"
+	LocationFlagLoSlot4                             LocationFlag = "LoSlot4"
+	LocationFlagLoSlot5                             LocationFlag = "LoSlot5"
+	LocationFlagLoSlot6                             LocationFlag = "LoSlot6"
+	LocationFlagLoSlot7                             LocationFlag = "LoSlot7"
+	LocationFlagLocked                              LocationFlag = "Locked"
+	LocationFlagMedSlot0                            LocationFlag = "MedSlot0"
+	LocationFlagMedSlot1                            LocationFlag = "MedSlot1"
+	LocationFlagMedSlot2                            LocationFlag = "MedSlot2"
+	LocationFlagMedSlot3                            LocationFlag = "MedSlot3"
+	LocationFlagMedSlot4                            LocationFlag = "MedSlot4"
+	LocationFlagMedSlot5                            LocationFlag = "MedSlot5"
+	LocationFlagMedSlot6                            LocationFlag = "MedSlot6"
+	LocationFlagMedSlot7                            LocationFlag = "MedSlot7"
+	LocationFlagQuafeBay                            LocationFlag = "QuafeBay"
+	LocationFlagRigSlot0                            LocationFlag = "RigSlot0"
+	LocationFlagRigSlot1                            LocationFlag = "RigSlot1"
+	LocationFlagRigSlot2                            LocationFlag = "RigSlot2"
+	LocationFlagRigSlot3                            LocationFlag = "RigSlot3"
+	LocationFlagRigSlot4                            LocationFlag = "RigSlot4"
+	LocationFlagRigSlot5                            LocationFlag = "RigSlot5"
+	LocationFlagRigSlot6                            LocationFlag = "RigSlot6"
+	LocationFlagRigSlot7                            LocationFlag = "RigSlot7"
+	LocationFlagShipHangar                          LocationFlag = "ShipHangar"
+	LocationFlagSkill                               LocationFlag = "Skill"
+	LocationFlagSpecializedAmmoHold                 LocationFlag = "SpecializedAmmoHold"
+	LocationFlagSpecializedCommandCenterHold        LocationFlag = "SpecializedCommandCenterHold"
+	LocationFlagSpecializedFuelBay                  LocationFlag = "SpecializedFuelBay"
+	LocationFlagSpecializedGasHold                  LocationFlag = "SpecializedGasHold"
+	LocationFlagSpecializedIndustrialShipHold       LocationFlag = "SpecializedIndustrialShipHold"
+	LocationFlagSpecializedLargeShipHold            LocationFlag = "SpecializedLargeShipHold"
+	LocationFlagSpecializedMaterialBay              LocationFlag = "SpecializedMaterialBay"
+	LocationFlagSpecializedMediumShipHold           LocationFlag = "SpecializedMediumShipHold"
+	LocationFlagSpecializedMineralHold              LocationFlag = "SpecializedMineralHold"
+	LocationFlagSpecializedOreHold                  LocationFlag = "SpecializedOreHold"
+	LocationFlagSpecializedPlanetaryCommoditiesHold LocationFlag = "SpecializedPlanetaryCommoditiesHold"
+	LocationFlagSpecializedSalvageHold              LocationFlag = "SpecializedSalvageHold"
+	LocationFlagSpecializedShipHold                 LocationFlag = "SpecializedShipHold"
+	LocationFlagSpecializedSmallShipHold            LocationFlag = "SpecializedSmallShipHold"
+	LocationFlagSubSystemBay                        LocationFlag = "SubSystemBay"
+	LocationFlagSubSystemSlot0                      LocationFlag = "SubSystemSlot0"
+	LocationFlagSubSystemSlot1                      LocationFlag = "SubSystemSlot1"
+	LocationFlagSubSystemSlot2                      LocationFlag = "SubSystemSlot2"
+	LocationFlagSubSystemSlot3                      LocationFlag = "SubSystemSlot3"
+	LocationFlagSubSystemSlot4                      LocationFlag = "SubSystemSlot4"
+	LocationFlagSubSystemSlot5                      LocationFlag = "SubSystemSlot5"
+	LocationFlagSubSystemSlot6                      LocationFlag = "SubSystemSlot6"
+	LocationFlagSubSystemSlot7                      LocationFlag = "SubSystemSlot7"
+	LocationFlagUnlocked                            LocationFlag = "Unlocked"
+	LocationFlagWardrobe                            LocationFlag = "Wardrobe"
+)
+
+var AllLocationFlag = []LocationFlag{
+	LocationFlagAssetSafety,
+	LocationFlagAutoFit,
+	LocationFlagBoosterBay,
+	LocationFlagCargo,
+	LocationFlagCorpseBay,
+	LocationFlagDeliveries,
+	LocationFlagDroneBay,
+	LocationFlagFighterBay,
+	LocationFlagFighterTube0,
+	LocationFlagFighterTube1,
+	LocationFlagFighterTube2,
+	LocationFlagFighterTube3,
+	LocationFlagFighterTube4,
+	LocationFlagFleetHangar,
+	LocationFlagFrigateEscapeBay,
+	LocationFlagHangar,
+	LocationFlagHangarAll,
+	LocationFlagHiSlot0,
+	LocationFlagHiSlot1,
+	LocationFlagHiSlot2,
+	LocationFlagHiSlot3,
+	LocationFlagHiSlot4,
+	LocationFlagHiSlot5,
+	LocationFlagHiSlot6,
+	LocationFlagHiSlot7,
+	LocationFlagHiddenModifiers,
+	LocationFlagImplant,
+	LocationFlagLoSlot0,
+	LocationFlagLoSlot1,
+	LocationFlagLoSlot2,
+	LocationFlagLoSlot3,
+	LocationFlagLoSlot4,
+	LocationFlagLoSlot5,
+	LocationFlagLoSlot6,
+	LocationFlagLoSlot7,
+	LocationFlagLocked,
+	LocationFlagMedSlot0,
+	LocationFlagMedSlot1,
+	LocationFlagMedSlot2,
+	LocationFlagMedSlot3,
+	LocationFlagMedSlot4,
+	LocationFlagMedSlot5,
+	LocationFlagMedSlot6,
+	LocationFlagMedSlot7,
+	LocationFlagQuafeBay,
+	LocationFlagRigSlot0,
+	LocationFlagRigSlot1,
+	LocationFlagRigSlot2,
+	LocationFlagRigSlot3,
+	LocationFlagRigSlot4,
+	LocationFlagRigSlot5,
+	LocationFlagRigSlot6,
+	LocationFlagRigSlot7,
+	LocationFlagShipHangar,
+	LocationFlagSkill,
+	LocationFlagSpecializedAmmoHold,
+	LocationFlagSpecializedCommandCenterHold,
+	LocationFlagSpecializedFuelBay,
+	LocationFlagSpecializedGasHold,
+	LocationFlagSpecializedIndustrialShipHold,
+	LocationFlagSpecializedLargeShipHold,
+	LocationFlagSpecializedMaterialBay,
+	LocationFlagSpecializedMediumShipHold,
+	LocationFlagSpecializedMineralHold,
+	LocationFlagSpecializedOreHold,
+	LocationFlagSpecializedPlanetaryCommoditiesHold,
+	LocationFlagSpecializedSalvageHold,
+	LocationFlagSpecializedShipHold,
+	LocationFlagSpecializedSmallShipHold,
+	LocationFlagSubSystemBay,
+	LocationFlagSubSystemSlot0,
+	LocationFlagSubSystemSlot1,
+	LocationFlagSubSystemSlot2,
+	LocationFlagSubSystemSlot3,
+	LocationFlagSubSystemSlot4,
+	LocationFlagSubSystemSlot5,
+	LocationFlagSubSystemSlot6,
+	LocationFlagSubSystemSlot7,
+	LocationFlagUnlocked,
+	LocationFlagWardrobe,
+}
+
+func (e LocationFlag) IsValid() bool {
+	switch e {
+	case LocationFlagAssetSafety, LocationFlagAutoFit, LocationFlagBoosterBay, LocationFlagCargo, LocationFlagCorpseBay, LocationFlagDeliveries, LocationFlagDroneBay, LocationFlagFighterBay, LocationFlagFighterTube0, LocationFlagFighterTube1, LocationFlagFighterTube2, LocationFlagFighterTube3, LocationFlagFighterTube4, LocationFlagFleetHangar, LocationFlagFrigateEscapeBay, LocationFlagHangar, LocationFlagHangarAll, LocationFlagHiSlot0, LocationFlagHiSlot1, LocationFlagHiSlot2, LocationFlagHiSlot3, LocationFlagHiSlot4, LocationFlagHiSlot5, LocationFlagHiSlot6, LocationFlagHiSlot7, LocationFlagHiddenModifiers, LocationFlagImplant, LocationFlagLoSlot0, LocationFlagLoSlot1, LocationFlagLoSlot2, LocationFlagLoSlot3, LocationFlagLoSlot4, LocationFlagLoSlot5, LocationFlagLoSlot6, LocationFlagLoSlot7, LocationFlagLocked, LocationFlagMedSlot0, LocationFlagMedSlot1, LocationFlagMedSlot2, LocationFlagMedSlot3, LocationFlagMedSlot4, LocationFlagMedSlot5, LocationFlagMedSlot6, LocationFlagMedSlot7, LocationFlagQuafeBay, LocationFlagRigSlot0, LocationFlagRigSlot1, LocationFlagRigSlot2, LocationFlagRigSlot3, LocationFlagRigSlot4, LocationFlagRigSlot5, LocationFlagRigSlot6, LocationFlagRigSlot7, LocationFlagShipHangar, LocationFlagSkill, LocationFlagSpecializedAmmoHold, LocationFlagSpecializedCommandCenterHold, LocationFlagSpecializedFuelBay, LocationFlagSpecializedGasHold, LocationFlagSpecializedIndustrialShipHold, LocationFlagSpecializedLargeShipHold, LocationFlagSpecializedMaterialBay, LocationFlagSpecializedMediumShipHold, LocationFlagSpecializedMineralHold, LocationFlagSpecializedOreHold, LocationFlagSpecializedPlanetaryCommoditiesHold, LocationFlagSpecializedSalvageHold, LocationFlagSpecializedShipHold, LocationFlagSpecializedSmallShipHold, LocationFlagSubSystemBay, LocationFlagSubSystemSlot0, LocationFlagSubSystemSlot1, LocationFlagSubSystemSlot2, LocationFlagSubSystemSlot3, LocationFlagSubSystemSlot4, LocationFlagSubSystemSlot5, LocationFlagSubSystemSlot6, LocationFlagSubSystemSlot7, LocationFlagUnlocked, LocationFlagWardrobe:
+		return true
+	}
+	return false
+}
+
+func (e LocationFlag) String() string {
+	return string(e)
+}
+
+func (e *LocationFlag) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = LocationFlag(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid LocationFlag", str)
+	}
+	return nil
+}
+
+func (e LocationFlag) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 type Ordertype string
 
 const (
@@ -545,6 +902,53 @@ func (e *Ordertype) UnmarshalGQL(v interface{}) error {
 }
 
 func (e Ordertype) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type OwnerType string
+
+const (
+	OwnerTypeEveServer   OwnerType = "eve_server"
+	OwnerTypeCorporation OwnerType = "corporation"
+	OwnerTypeFaction     OwnerType = "faction"
+	OwnerTypeCharacter   OwnerType = "character"
+	OwnerTypeAlliance    OwnerType = "alliance"
+)
+
+var AllOwnerType = []OwnerType{
+	OwnerTypeEveServer,
+	OwnerTypeCorporation,
+	OwnerTypeFaction,
+	OwnerTypeCharacter,
+	OwnerTypeAlliance,
+}
+
+func (e OwnerType) IsValid() bool {
+	switch e {
+	case OwnerTypeEveServer, OwnerTypeCorporation, OwnerTypeFaction, OwnerTypeCharacter, OwnerTypeAlliance:
+		return true
+	}
+	return false
+}
+
+func (e OwnerType) String() string {
+	return string(e)
+}
+
+func (e *OwnerType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = OwnerType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid OwnerType", str)
+	}
+	return nil
+}
+
+func (e OwnerType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
@@ -606,6 +1010,184 @@ func (e *Range) UnmarshalGQL(v interface{}) error {
 }
 
 func (e Range) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type Response string
+
+const (
+	ResponseDeclined     Response = "declined"
+	ResponseNotResponded Response = "not_responded"
+	ResponseAccepted     Response = "accepted"
+	ResponseTentative    Response = "tentative"
+)
+
+var AllResponse = []Response{
+	ResponseDeclined,
+	ResponseNotResponded,
+	ResponseAccepted,
+	ResponseTentative,
+}
+
+func (e Response) IsValid() bool {
+	switch e {
+	case ResponseDeclined, ResponseNotResponded, ResponseAccepted, ResponseTentative:
+		return true
+	}
+	return false
+}
+
+func (e Response) String() string {
+	return string(e)
+}
+
+func (e *Response) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Response(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Response", str)
+	}
+	return nil
+}
+
+func (e Response) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type Roles string
+
+const (
+	RolesAccountTake1            Roles = "Account_Take_1"
+	RolesAccountTake2            Roles = "Account_Take_2"
+	RolesAccountTake3            Roles = "Account_Take_3"
+	RolesAccountTake4            Roles = "Account_Take_4"
+	RolesAccountTake5            Roles = "Account_Take_5"
+	RolesAccountTake6            Roles = "Account_Take_6"
+	RolesAccountTake7            Roles = "Account_Take_7"
+	RolesAccountant              Roles = "Accountant"
+	RolesAuditor                 Roles = "Auditor"
+	RolesCommunicationsOfficer   Roles = "Communications_Officer"
+	RolesConfigEquipment         Roles = "Config_Equipment"
+	RolesConfigStarbaseEquipment Roles = "Config_Starbase_Equipment"
+	RolesContainerTake1          Roles = "Container_Take_1"
+	RolesContainerTake2          Roles = "Container_Take_2"
+	RolesContainerTake3          Roles = "Container_Take_3"
+	RolesContainerTake4          Roles = "Container_Take_4"
+	RolesContainerTake5          Roles = "Container_Take_5"
+	RolesContainerTake6          Roles = "Container_Take_6"
+	RolesContainerTake7          Roles = "Container_Take_7"
+	RolesContractManager         Roles = "Contract_Manager"
+	RolesDiplomat                Roles = "Diplomat"
+	RolesDirector                Roles = "Director"
+	RolesFactoryManager          Roles = "Factory_Manager"
+	RolesFittingManager          Roles = "Fitting_Manager"
+	RolesHangarQuery1            Roles = "Hangar_Query_1"
+	RolesHangarQuery2            Roles = "Hangar_Query_2"
+	RolesHangarQuery3            Roles = "Hangar_Query_3"
+	RolesHangarQuery4            Roles = "Hangar_Query_4"
+	RolesHangarQuery5            Roles = "Hangar_Query_5"
+	RolesHangarQuery6            Roles = "Hangar_Query_6"
+	RolesHangarQuery7            Roles = "Hangar_Query_7"
+	RolesHangarTake1             Roles = "Hangar_Take_1"
+	RolesHangarTake2             Roles = "Hangar_Take_2"
+	RolesHangarTake3             Roles = "Hangar_Take_3"
+	RolesHangarTake4             Roles = "Hangar_Take_4"
+	RolesHangarTake5             Roles = "Hangar_Take_5"
+	RolesHangarTake6             Roles = "Hangar_Take_6"
+	RolesHangarTake7             Roles = "Hangar_Take_7"
+	RolesJuniorAccountant        Roles = "Junior_Accountant"
+	RolesPersonnelManager        Roles = "Personnel_Manager"
+	RolesRentFactoryFacility     Roles = "Rent_Factory_Facility"
+	RolesRentOffice              Roles = "Rent_Office"
+	RolesRentResearchFacility    Roles = "Rent_Research_Facility"
+	RolesSecurityOfficer         Roles = "Security_Officer"
+	RolesStarbaseDefenseOperator Roles = "Starbase_Defense_Operator"
+	RolesStarbaseFuelTechnician  Roles = "Starbase_Fuel_Technician"
+	RolesStationManager          Roles = "Station_Manager"
+	RolesTrader                  Roles = "Trader"
+)
+
+var AllRoles = []Roles{
+	RolesAccountTake1,
+	RolesAccountTake2,
+	RolesAccountTake3,
+	RolesAccountTake4,
+	RolesAccountTake5,
+	RolesAccountTake6,
+	RolesAccountTake7,
+	RolesAccountant,
+	RolesAuditor,
+	RolesCommunicationsOfficer,
+	RolesConfigEquipment,
+	RolesConfigStarbaseEquipment,
+	RolesContainerTake1,
+	RolesContainerTake2,
+	RolesContainerTake3,
+	RolesContainerTake4,
+	RolesContainerTake5,
+	RolesContainerTake6,
+	RolesContainerTake7,
+	RolesContractManager,
+	RolesDiplomat,
+	RolesDirector,
+	RolesFactoryManager,
+	RolesFittingManager,
+	RolesHangarQuery1,
+	RolesHangarQuery2,
+	RolesHangarQuery3,
+	RolesHangarQuery4,
+	RolesHangarQuery5,
+	RolesHangarQuery6,
+	RolesHangarQuery7,
+	RolesHangarTake1,
+	RolesHangarTake2,
+	RolesHangarTake3,
+	RolesHangarTake4,
+	RolesHangarTake5,
+	RolesHangarTake6,
+	RolesHangarTake7,
+	RolesJuniorAccountant,
+	RolesPersonnelManager,
+	RolesRentFactoryFacility,
+	RolesRentOffice,
+	RolesRentResearchFacility,
+	RolesSecurityOfficer,
+	RolesStarbaseDefenseOperator,
+	RolesStarbaseFuelTechnician,
+	RolesStationManager,
+	RolesTrader,
+}
+
+func (e Roles) IsValid() bool {
+	switch e {
+	case RolesAccountTake1, RolesAccountTake2, RolesAccountTake3, RolesAccountTake4, RolesAccountTake5, RolesAccountTake6, RolesAccountTake7, RolesAccountant, RolesAuditor, RolesCommunicationsOfficer, RolesConfigEquipment, RolesConfigStarbaseEquipment, RolesContainerTake1, RolesContainerTake2, RolesContainerTake3, RolesContainerTake4, RolesContainerTake5, RolesContainerTake6, RolesContainerTake7, RolesContractManager, RolesDiplomat, RolesDirector, RolesFactoryManager, RolesFittingManager, RolesHangarQuery1, RolesHangarQuery2, RolesHangarQuery3, RolesHangarQuery4, RolesHangarQuery5, RolesHangarQuery6, RolesHangarQuery7, RolesHangarTake1, RolesHangarTake2, RolesHangarTake3, RolesHangarTake4, RolesHangarTake5, RolesHangarTake6, RolesHangarTake7, RolesJuniorAccountant, RolesPersonnelManager, RolesRentFactoryFacility, RolesRentOffice, RolesRentResearchFacility, RolesSecurityOfficer, RolesStarbaseDefenseOperator, RolesStarbaseFuelTechnician, RolesStationManager, RolesTrader:
+		return true
+	}
+	return false
+}
+
+func (e Roles) String() string {
+	return string(e)
+}
+
+func (e *Roles) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Roles(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Roles", str)
+	}
+	return nil
+}
+
+func (e Roles) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

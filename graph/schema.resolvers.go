@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/alliance"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/character"
@@ -287,6 +288,200 @@ func (r *planetResolver) ItemType(ctx context.Context, obj *model.Planet) (*mode
 	return universe.ItemTypeByID(newCtx, obj.TypeID)
 }
 
+func (r *queryResolver) AlliancesByID(ctx context.Context, id *int) (*model.Alliance, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) AlliancesCorporationsByID(ctx context.Context, id *int) ([]*model.Corporation, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) AlliancesIconByID(ctx context.Context, id *int) (*model.Icon, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) AlliancesByName(ctx context.Context, name *string) (*model.Alliance, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) AlliancesCorporationsByName(ctx context.Context, name *string) ([]*model.Corporation, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) AlliancesIconByName(ctx context.Context, name *string) (*model.Icon, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) AssetsByCharacterID(ctx context.Context, id *int) ([]*model.Asset, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) AssetsByCorporationID(ctx context.Context, id *int) ([]*model.Asset, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) AssetsByCharacterName(ctx context.Context, name *string) ([]*model.Asset, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) AssetsByCorporationName(ctx context.Context, name *string) ([]*model.Asset, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) BookmarksByCharacterID(ctx context.Context, id *int) ([]*model.Bookmark, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) BookmarksFoldersByCharacterID(ctx context.Context, id *int) ([]*model.BookmarkFolder, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) BookmarksByCorporationID(ctx context.Context, id *int) ([]*model.Bookmark, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) BookmarksFoldersByCorporationID(ctx context.Context, id *int) ([]*model.BookmarkFolder, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) BookmarksByCharacterName(ctx context.Context, name *string) ([]*model.Bookmark, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) BookmarksFoldersByCharacterName(ctx context.Context, name *string) ([]*model.BookmarkFolder, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) BookmarksByCorporationName(ctx context.Context, name *string) ([]*model.Bookmark, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) BookmarksFoldersByCorporationName(ctx context.Context, name *string) ([]*model.BookmarkFolder, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CalendarEventsByCharacterID(ctx context.Context, id *int) ([]*model.EventSummary, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CalendarEventByID(ctx context.Context, characterID *int, eventID *int) (*model.EventDetail, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CalendarEventAttendeesByID(ctx context.Context, characterID *int, eventID *int) ([]*model.EventAttendee, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CalendarEventsByCharacterName(ctx context.Context, name *string) ([]*model.EventSummary, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CalendarEventByCharacterNameAndID(ctx context.Context, characterName *string, eventID *int) (*model.EventDetail, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CalendarEventAttendeesByCharacterNameAndID(ctx context.Context, characterID *int, eventID *int) ([]*model.EventAttendee, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterByID(ctx context.Context, id *int) (*model.Character, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterResearchAgentsByID(ctx context.Context, id *int) ([]*model.ResearchAgent, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterBlueprintsByID(ctx context.Context, id *int) ([]*model.Blueprint, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterCorporationHistoryByID(ctx context.Context, id *int) ([]*model.CorporationHistory, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterFatiqueByID(ctx context.Context, id *int) (*model.Fatique, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterMedalsByID(ctx context.Context, id *int) ([]*model.Medal, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterNotificationsByID(ctx context.Context, id *int) ([]*model.Notification, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterPortraitByID(ctx context.Context, id *int) (*model.CharacterPortrait, error) {
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CharacterPortraitByID")
+	defer span.End()
+	return character.PortraitByID(newCtx, id)
+}
+
+func (r *queryResolver) CharacterRoleByID(ctx context.Context, id *int) (*model.Role, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterStandingsByID(ctx context.Context, id *int) ([]*model.Standing, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterTitlesByID(ctx context.Context, id *int) ([]*model.Title, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterByName(ctx context.Context, name *string) (*model.Character, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterResearchAgentsByName(ctx context.Context, name *string) ([]*model.ResearchAgent, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterBlueprintsByName(ctx context.Context, name *string) ([]*model.Blueprint, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterCorporationHistoryByName(ctx context.Context, name *string) ([]*model.CorporationHistory, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterFatiqueByName(ctx context.Context, name *string) (*model.Fatique, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterMedalsByName(ctx context.Context, name *string) ([]*model.Medal, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterNotificationsByName(ctx context.Context, name *string) ([]*model.Notification, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterPortraitByName(ctx context.Context, name *string) (*model.CharacterPortrait, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterRoleByName(ctx context.Context, name *string) (*model.Role, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterStandingsByName(ctx context.Context, name *string) ([]*model.Standing, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) CharacterTitlesByName(ctx context.Context, name *string) ([]*model.Title, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) ClonesByID(ctx context.Context, id *int) ([]*model.Clone, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) ClonesImplantsByID(ctx context.Context, id *int) ([]*model.Implant, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *queryResolver) OrdersForRegion(ctx context.Context, regionID int, orderType model.Ordertype, typeID *int, page int) (*model.OrderWrapper, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ResolverOrdersForRegion")
 	defer span.End()
@@ -327,12 +522,6 @@ func (r *queryResolver) CorporationHistoryForCharacterID(ctx context.Context, id
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CorporationHistoryForCharacterID")
 	defer span.End()
 	return character.CorporationHistory(newCtx, id)
-}
-
-func (r *queryResolver) CharacterPortraitByID(ctx context.Context, id *int) (*model.CharacterPortrait, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CharacterPortraitByID")
-	defer span.End()
-	return character.PortraitByID(newCtx, id)
 }
 
 func (r *queryResolver) FactionByID(ctx context.Context, id *int) (*model.Faction, error) {
@@ -561,3 +750,22 @@ type stargateDestinationResolver struct{ *Resolver }
 type stationResolver struct{ *Resolver }
 type systemResolver struct{ *Resolver }
 type system_planetResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *queryResolver) AssetsbyCharacterID(ctx context.Context, id *int) ([]*model.Asset, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+func (r *queryResolver) AssetsbyCorporationID(ctx context.Context, id *int) ([]*model.Asset, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+func (r *queryResolver) AssetsbyCharacterName(ctx context.Context, name *string) ([]*model.Asset, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+func (r *queryResolver) AssetsbyCorporationName(ctx context.Context, name *string) ([]*model.Asset, error) {
+	panic(fmt.Errorf("not implemented"))
+}

@@ -9,15 +9,15 @@ type Query{
 	assets_byCorporationID(id: Int): [Asset]
 	assets_byCharacterName(name: String): [Asset]
 	assets_byCorporationName(name: String): [Asset]
-	bookmarks_byCharacterID(id: Int) [Bookmark]
-	bookmarks_foldersByCharacterID(id: Int) [BookmarkFolder]
-	bookmarks_byCorporationID(id: Int) [Bookmark]
-	bookmarks_foldersByCorporationID(id: Int) [BookmarkFolder]
-	bookmarks_byCharacterName(name: String) [Bookmark]
-	bookmarks_foldersByCharacterName(name: String) [BookmarkFolder]
-	bookmarks_byCorporationName(name: String) [Bookmark]
-	bookmarks_foldersByCorporationName(name: String) [BookmarkFolder]
-	calendar_eventsByCharacterID(id: Int) [EventSummary]
+	bookmarks_byCharacterID(id: Int): [Bookmark]
+	bookmarks_foldersByCharacterID(id: Int): [BookmarkFolder]
+	bookmarks_byCorporationID(id: Int): [Bookmark]
+	bookmarks_foldersByCorporationID(id: Int): [BookmarkFolder]
+	bookmarks_byCharacterName(name: String): [Bookmark]
+	bookmarks_foldersByCharacterName(name: String): [BookmarkFolder]
+	bookmarks_byCorporationName(name: String): [Bookmark]
+	bookmarks_foldersByCorporationName(name: String): [BookmarkFolder]
+	calendar_eventsByCharacterID(id: Int): [EventSummary]
 	calendar_eventByID(
 		characterID: Int
 		eventID: Int
@@ -26,7 +26,7 @@ type Query{
 		characterID: Int
 		eventID: Int
 	): [EventAttendee]
-	calendar_eventsByCharacterName(name: String) [EventSummary]
+	calendar_eventsByCharacterName(name: String): [EventSummary]
 	calendar_eventByCharacterNameAndID(
 		characterName: String
 		eventID: Int
@@ -35,31 +35,30 @@ type Query{
 		characterID: Int
 		eventID: Int
 	): [EventAttendee]
-	character_byID(id: Int) Character
-	character_researchAgentsByID(id: Int) [ResearchAgent]
-	character_blueprintsByID(id: Int) [Blueprint]
-	character_corporationHistoryById(id: Int) [Corporation_history]
-	character_fatiqueByID(id: Int) Fatique
-	character_medalsByID(id: Int) [Medal]
-	character_notificationsByID(id: Int) [Notification]
+	character_byID(id: Int): Character
+	character_researchAgentsByID(id: Int): [ResearchAgent]
+	character_blueprintsByID(id: Int): [Blueprint]
+	character_corporationHistoryById(id: Int): [Corporation_history]
+	character_fatiqueByID(id: Int): Fatique
+	character_medalsByID(id: Int): [Medal]
+	character_notificationsByID(id: Int): [Notification]
 	character_portraitByID(id: Int): Character_portrait
 	character_roleByID(id: Int): Role
 	character_standingsByID(id: Int): [Standing]
 	character_titlesByID(id: Int): [Title]
-	character_byName(name: String) Character
-	character_researchAgentsByName(name: String) [ResearchAgent]
-	character_blueprintsByName(name: String) [Blueprint]
-	character_corporationHistoryByName(name: String) [Corporation_history]
-	character_fatiqueByName(name: String) Fatique
-	character_medalsByName(name: String) [Medal]
-	character_notificationsByName(name: String) [Notification]
+	character_byName(name: String): Character
+	character_researchAgentsByName(name: String): [ResearchAgent]
+	character_blueprintsByName(name: String): [Blueprint]
+	character_corporationHistoryByName(name: String): [Corporation_history]
+	character_fatiqueByName(name: String): Fatique
+	character_medalsByName(name: String): [Medal]
+	character_notificationsByName(name: String): [Notification]
 	character_portraitByName(name: String): Character_portrait
 	character_roleByName(name: String): Role
 	character_standingsByName(name: String): [Standing]
 	character_titlesByName(name: String): [Title]
-	clones_byID(id: Int) [Clone]
-	clones_implantsByID(id: Int) [Implant]
-
+	clones_byID(id: Int): [Clone]
+	clones_implantsByID(id: Int): [Implant]
 	"""queries for orders in a required region id for active market orders."""
 	ordersForRegion(
 		region_id: Int!
@@ -295,7 +294,7 @@ type JumpClone {
 }
 
 type Implant {
-	"""TODO"""
+	id: Int
 }
 
 type Asset {
