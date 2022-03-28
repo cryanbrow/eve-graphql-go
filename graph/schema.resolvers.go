@@ -289,7 +289,9 @@ func (r *planetResolver) ItemType(ctx context.Context, obj *model.Planet) (*mode
 }
 
 func (r *queryResolver) AlliancesByID(ctx context.Context, id *int) (*model.Alliance, error) {
-	panic(fmt.Errorf("not implemented"))
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "AlliancesByID")
+	defer span.End()
+	return alliance.ByID(newCtx, id)
 }
 
 func (r *queryResolver) AlliancesCorporationsByID(ctx context.Context, id *int) ([]*model.Corporation, error) {
@@ -301,7 +303,9 @@ func (r *queryResolver) AlliancesIconByID(ctx context.Context, id *int) (*model.
 }
 
 func (r *queryResolver) AlliancesByName(ctx context.Context, name *string) (*model.Alliance, error) {
-	panic(fmt.Errorf("not implemented"))
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "AlliancesByName")
+	defer span.End()
+	return alliance.ByName(newCtx, name)
 }
 
 func (r *queryResolver) AlliancesCorporationsByName(ctx context.Context, name *string) ([]*model.Corporation, error) {
@@ -750,22 +754,3 @@ type stargateDestinationResolver struct{ *Resolver }
 type stationResolver struct{ *Resolver }
 type systemResolver struct{ *Resolver }
 type system_planetResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *queryResolver) AssetsbyCharacterID(ctx context.Context, id *int) ([]*model.Asset, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-func (r *queryResolver) AssetsbyCorporationID(ctx context.Context, id *int) ([]*model.Asset, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-func (r *queryResolver) AssetsbyCharacterName(ctx context.Context, name *string) ([]*model.Asset, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-func (r *queryResolver) AssetsbyCorporationName(ctx context.Context, name *string) ([]*model.Asset, error) {
-	panic(fmt.Errorf("not implemented"))
-}

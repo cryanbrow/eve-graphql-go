@@ -10,14 +10,26 @@ import (
 	"strconv"
 
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
+	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
 	"github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
+	local_model "github.com/cryanbrow/eve-graphql-go/graph/model"
 	log "github.com/sirupsen/logrus"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 )
 
 const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/alliance"
+
+func ByName(ctx context.Context, name *string) (*model.Alliance, error) {
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AllianceByName")
+	defer span.End()
+	allianceID, err := universe.IDForName(newCtx, name, local_model.Alliances)
+	if err != nil {
+		return nil, errors.New("unknown name for region")
+	}
+	return ByID(newCtx, &allianceID)
+}
 
 // ByID returns the alliance indicated by the id field, the context is
 // used for tracing. If the alliance is cached the ESI will not be called until the ttl
