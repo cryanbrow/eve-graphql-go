@@ -10,7 +10,9 @@ import (
 	"strconv"
 
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
+	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/corporation"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
+	"github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 	local_model "github.com/cryanbrow/eve-graphql-go/graph/model"
 	log "github.com/sirupsen/logrus"
@@ -21,7 +23,7 @@ import (
 // CorporationsByName returns the alliance indicated by the name field, the context is
 // used for tracing. If the alliance is cached the ESI will not be called until the ttl
 // and the cached instance will be returned.
-func CorporationsByName(ctx context.Context, name *string) (*[]int, error) {
+func CorporationsByName(ctx context.Context, name *string) ([]*model.Corporation, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AllianceCorporationsByName")
 	defer span.End()
 	allianceID, err := universe.IDForName(newCtx, name, local_model.Alliances)
@@ -34,10 +36,11 @@ func CorporationsByName(ctx context.Context, name *string) (*[]int, error) {
 // CorporationsByID returns the alliance indicated by the id field, the context is
 // used for tracing. If the alliance is cached the ESI will not be called until the ttl
 // and the cached instance will be returned.
-func CorporationsByID(ctx context.Context, id *int) (*[]int, error) {
+func CorporationsByID(ctx context.Context, id *int) ([]*model.Corporation, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AllianceCorporationsByID")
 	defer span.End()
-	var corporations = make([]int, 0)
+	var corporationIDs = make([]int, 0)
+	var corporations = make([]*model.Corporation, 0)
 	if id == nil {
 		return nil, errors.New(helpers.NilID)
 	}
@@ -47,14 +50,22 @@ func CorporationsByID(ctx context.Context, id *int) (*[]int, error) {
 	var buffer bytes.Buffer
 	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseURL, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
-		return &corporations, err
+		return corporations, err
 	}
 
-	if err := json.Unmarshal(responseBytes, &corporations); err != nil {
+	if err := json.Unmarshal(responseBytes, &corporationIDs); err != nil {
 		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
-		return &corporations, err
+		return corporations, err
+	}
+
+	for _, corpID := range corporationIDs {
+		corporation, err := corporation.ByID(newCtx, &corpID)
+		if err != nil {
+			continue
+		}
+		corporations = append(corporations, corporation)
 	}
 
 	span.SetAttributes(attribute.Int("request.id", *id))
-	return &corporations, nil
+	return corporations, nil
 }

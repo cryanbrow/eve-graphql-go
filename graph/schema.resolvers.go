@@ -295,7 +295,9 @@ func (r *queryResolver) AlliancesByID(ctx context.Context, id *int) (*model.Alli
 }
 
 func (r *queryResolver) AlliancesCorporationsByID(ctx context.Context, id *int) ([]*model.Corporation, error) {
-	panic(fmt.Errorf("not implemented"))
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "AlliancesCorporationsByID")
+	defer span.End()
+	return alliance.CorporationsByID(newCtx, id)
 }
 
 func (r *queryResolver) AlliancesIconByID(ctx context.Context, id *int) (*model.Icon, error) {
@@ -309,7 +311,9 @@ func (r *queryResolver) AlliancesByName(ctx context.Context, name *string) (*mod
 }
 
 func (r *queryResolver) AlliancesCorporationsByName(ctx context.Context, name *string) ([]*model.Corporation, error) {
-	panic(fmt.Errorf("not implemented"))
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "AlliancesCorporationsByName")
+	defer span.End()
+	return alliance.CorporationsByName(newCtx, name)
 }
 
 func (r *queryResolver) AlliancesIconByName(ctx context.Context, name *string) (*model.Icon, error) {

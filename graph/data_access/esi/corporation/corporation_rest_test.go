@@ -33,7 +33,7 @@ func TestSuccessfulByID(t *testing.T) {
 			return b, nil, nil
 		},
 	}
-	restHelper = mockRestHelper
+	RESTHelper = mockRestHelper
 
 	var testID = 1
 
@@ -70,7 +70,7 @@ func TestFailNilIDByID(t *testing.T) {
 			return b, nil, nil
 		},
 	}
-	restHelper = mockRestHelper
+	RESTHelper = mockRestHelper
 
 	var testID *int
 
@@ -89,7 +89,7 @@ func TestFailRestCallByID(t *testing.T) {
 			return nil, nil, errors.New("failure")
 		},
 	}
-	restHelper = mockRestHelper
+	RESTHelper = mockRestHelper
 
 	var testID = 1
 
@@ -124,7 +124,7 @@ func TestFailUnmarshalByID(t *testing.T) {
 			return b, nil, nil
 		},
 	}
-	restHelper = mockRestHelper
+	RESTHelper = mockRestHelper
 
 	var testID = 1
 

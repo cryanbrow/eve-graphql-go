@@ -31,7 +31,7 @@ func ByID(ctx context.Context, id *int) (*model.Corporation, error) {
 	redisKey := "CorporationByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
-	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseURL, http.MethodGet, buffer, nil, redisKey)
+	responseBytes, _, err := RESTHelper.MakeCachingRESTCall(newCtx, baseURL, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
 		return corporation, err
 	}
@@ -51,10 +51,10 @@ type RestHelper interface {
 }
 
 var (
-	restHelper RestHelper
+	RESTHelper RestHelper
 )
 
 // SetupCorporationRest configures dependencies for the Corporation rest package
 func SetupCorporationRest() {
-	restHelper = &helpers.RestHelperClient{}
+	RESTHelper = &helpers.RestHelperClient{}
 }
