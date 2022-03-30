@@ -18,6 +18,9 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+// CorporationsByName returns the alliance indicated by the name field, the context is
+// used for tracing. If the alliance is cached the ESI will not be called until the ttl
+// and the cached instance will be returned.
 func CorporationsByName(ctx context.Context, name *string) (*[]int, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AllianceCorporationsByName")
 	defer span.End()
@@ -28,13 +31,13 @@ func CorporationsByName(ctx context.Context, name *string) (*[]int, error) {
 	return CorporationsByID(newCtx, &allianceID)
 }
 
-// ByID returns the alliance indicated by the id field, the context is
+// CorporationsByID returns the alliance indicated by the id field, the context is
 // used for tracing. If the alliance is cached the ESI will not be called until the ttl
 // and the cached instance will be returned.
 func CorporationsByID(ctx context.Context, id *int) (*[]int, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AllianceCorporationsByID")
 	defer span.End()
-	var corporations []int = make([]int, 0)
+	var corporations = make([]int, 0)
 	if id == nil {
 		return nil, errors.New(helpers.NilID)
 	}

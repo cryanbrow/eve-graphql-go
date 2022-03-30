@@ -21,6 +21,9 @@ import (
 
 const tracerName = "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/alliance"
 
+// ByName returns the alliance indicated by the name field, the context is
+// used for tracing. If the alliance is cached the ESI will not be called until the ttl
+// and the cached instance will be returned.
 func ByName(ctx context.Context, name *string) (*model.Alliance, error) {
 	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AllianceByName")
 	defer span.End()
