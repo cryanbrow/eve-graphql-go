@@ -10,7 +10,6 @@ import (
 	"strconv"
 
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
-	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/corporation"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
 	"github.com/cryanbrow/eve-graphql-go/graph/generated/model"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
@@ -20,52 +19,43 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-// CorporationsByName returns the alliance corporations indicated by the name field, the context is
+// IconByName returns the alliance icon indicated by the name field, the context is
 // used for tracing. If the alliance is cached the ESI will not be called until the ttl
 // and the cached instance will be returned.
-func CorporationsByName(ctx context.Context, name *string) ([]*model.Corporation, error) {
-	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AllianceCorporationsByName")
+func IconByName(ctx context.Context, name *string) (*model.Icon, error) {
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AllianceIconByName")
 	defer span.End()
 	allianceID, err := universe.IDForName(newCtx, name, local_model.Alliances)
 	if err != nil {
 		return nil, errors.New("unknown name for alliance")
 	}
-	return CorporationsByID(newCtx, &allianceID)
+	return IconByID(newCtx, &allianceID)
 }
 
-// CorporationsByID returns the alliance corporations indicated by the id field, the context is
+// CorporationsByID returns the alliance icon indicated by the id field, the context is
 // used for tracing. If the alliance is cached the ESI will not be called until the ttl
 // and the cached instance will be returned.
-func CorporationsByID(ctx context.Context, id *int) ([]*model.Corporation, error) {
-	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AllianceCorporationsByID")
+func IconByID(ctx context.Context, id *int) (*model.Icon, error) {
+	newCtx, span := otel.Tracer(tracerName).Start(ctx, "AllianceIconByID")
 	defer span.End()
-	var corporationIDs = make([]int, 0)
-	var corporations = make([]*model.Corporation, 0)
+	var icon = model.Icon{}
 	if id == nil {
 		return nil, errors.New(helpers.NilID)
 	}
-	baseURL := fmt.Sprintf("%s/alliances/%s/corporations", configuration.AppConfig.Esi.URL, strconv.Itoa(*id))
-	redisKey := "AllianceCorporationsByID:" + strconv.Itoa(*id)
+	baseURL := fmt.Sprintf("%s/alliances/%s/icons", configuration.AppConfig.Esi.URL, strconv.Itoa(*id))
+	redisKey := "AllianceIconByID:" + strconv.Itoa(*id)
 
 	var buffer bytes.Buffer
 	responseBytes, _, err := restHelper.MakeCachingRESTCall(newCtx, baseURL, http.MethodGet, buffer, nil, redisKey)
 	if err != nil {
-		return corporations, err
+		return &icon, err
 	}
 
-	if err := json.Unmarshal(responseBytes, &corporationIDs); err != nil {
+	if err := json.Unmarshal(responseBytes, &icon); err != nil {
 		log.WithFields(log.Fields{"id": id}).Errorf("Could not unmarshal reponseBytes. %v", err)
-		return corporations, err
-	}
-
-	for _, corpID := range corporationIDs {
-		corporation, err := corporation.ByID(newCtx, &corpID)
-		if err != nil {
-			continue
-		}
-		corporations = append(corporations, corporation)
+		return &icon, err
 	}
 
 	span.SetAttributes(attribute.Int("request.id", *id))
-	return corporations, nil
+	return &icon, nil
 }

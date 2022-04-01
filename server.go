@@ -2,14 +2,12 @@ package main
 
 import (
 	"embed"
-	"fmt"
 	"html/template"
 	"net/http"
 	"os"
 
 	"github.com/go-chi/chi"
 	log "github.com/sirupsen/logrus"
-	"google.golang.org/protobuf/proto"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/apollotracing"
@@ -26,7 +24,6 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
 	"github.com/cryanbrow/eve-graphql-go/graph/generated"
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
-	"github.com/cryanbrow/eve-graphql-go/graph/model/alliancepb"
 	"github.com/cryanbrow/eve-graphql-go/graph/tracing"
 )
 
@@ -39,33 +36,6 @@ var (
 )
 
 func main() {
-	myAlliance := &alliancepb.Alliance{
-		CreatorCorporationId:  5,
-		CreatorId:             10,
-		DateFounded:           "2019-09-07T15:50-04:00",
-		ExecutorCorporationId: 15,
-		FactionId:             1,
-		Name:                  "Goonswarm",
-		Ticker:                "Hi Mom",
-	}
-
-	data, err := proto.Marshal(myAlliance)
-	if err != nil {
-		log.Fatal("marshaling error: ", err)
-	}
-
-	// printing out our raw protobuf object
-	fmt.Println(data)
-
-	newAlliance := &alliancepb.Alliance{}
-	err = proto.Unmarshal(data, newAlliance)
-	if err != nil {
-		log.Fatal("unmarshaling error: ", err)
-	}
-
-	fmt.Println(newAlliance.GetDateFounded())
-	fmt.Println(newAlliance.GetName())
-
 	setupDependencies()
 	port := os.Getenv("PORT")
 	if port == "" {
