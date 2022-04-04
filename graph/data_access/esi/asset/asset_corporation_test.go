@@ -11,7 +11,7 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
-func TestCharacterSuccessfulByID(t *testing.T) {
+func TestCorporationsSuccessfulByID(t *testing.T) {
 	jsonResponse := `[
 		{
 		  "is_singleton": true,
@@ -54,7 +54,7 @@ func TestCharacterSuccessfulByID(t *testing.T) {
 
 	var testID = 2119771486
 
-	resp, err := AssetsByCharacterID(context.Background(), &testID)
+	resp, err := AssetsByCorporationID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
@@ -67,7 +67,7 @@ func TestCharacterSuccessfulByID(t *testing.T) {
 
 }
 
-func TestCharacterFailNilIDByID(t *testing.T) {
+func TestCorporationsFailNilIDByID(t *testing.T) {
 	jsonResponse := `[
 		{
 		  "is_singleton": true,
@@ -110,7 +110,7 @@ func TestCharacterFailNilIDByID(t *testing.T) {
 
 	var testID *int
 
-	_, err := AssetsByCharacterID(context.Background(), testID)
+	_, err := AssetsByCorporationID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilID {
@@ -119,7 +119,7 @@ func TestCharacterFailNilIDByID(t *testing.T) {
 
 }
 
-func TestCharcaterFailRestCallByID(t *testing.T) {
+func TestCorporationsFailRestCallByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		AssetMockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KeyValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -129,7 +129,7 @@ func TestCharcaterFailRestCallByID(t *testing.T) {
 
 	var testID = 1
 
-	_, err := AssetsByCharacterID(context.Background(), &testID)
+	_, err := AssetsByCorporationID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -138,7 +138,7 @@ func TestCharcaterFailRestCallByID(t *testing.T) {
 
 }
 
-func TestCharacterFailUnmarshalByID(t *testing.T) {
+func TestCorporationsFailUnmarshalByID(t *testing.T) {
 	jsonResponse := `{[
 		207315351
 	  ]`
@@ -154,19 +154,19 @@ func TestCharacterFailUnmarshalByID(t *testing.T) {
 
 	var testID = 1
 
-	_, err := AssetsByCharacterID(context.Background(), &testID)
+	_, err := AssetsByCorporationID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}
 
 }
 
-type CharacterMockMakeCachingRESTCallType func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KeyValue, redisQueryKey string) ([]byte, http.Header, error)
+type CorporationMockMakeCachingRESTCallType func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KeyValue, redisQueryKey string) ([]byte, http.Header, error)
 
-type MockCharacterRestHelper struct {
-	CharacterMockMakeCachingRESTCall CharacterMockMakeCachingRESTCallType
+type MockCorporationRestHelper struct {
+	CorporationMockMakeCachingRESTCall CorporationMockMakeCachingRESTCallType
 }
 
-func (m *MockCharacterRestHelper) MakeCachingRESTCall(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KeyValue, redisQueryKey string) ([]byte, http.Header, error) {
-	return m.CharacterMockMakeCachingRESTCall(ctx, baseURL, verb, body, additionalQueryParams, redisQueryKey)
+func (m *MockCorporationRestHelper) MakeCachingRESTCall(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KeyValue, redisQueryKey string) ([]byte, http.Header, error) {
+	return m.CorporationMockMakeCachingRESTCall(ctx, baseURL, verb, body, additionalQueryParams, redisQueryKey)
 }
