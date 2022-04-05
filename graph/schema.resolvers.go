@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/alliance"
+	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/asset"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/character"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/corporation"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/dogma"
@@ -325,19 +326,27 @@ func (r *queryResolver) AlliancesIconByName(ctx context.Context, name *string) (
 }
 
 func (r *queryResolver) AssetsByCharacterID(ctx context.Context, id *int) ([]*model.Asset, error) {
-	panic(fmt.Errorf("not implemented"))
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "AssetsByCharacterID")
+	defer span.End()
+	return asset.AssetsByCharacterID(newCtx, id)
 }
 
 func (r *queryResolver) AssetsByCorporationID(ctx context.Context, id *int) ([]*model.Asset, error) {
-	panic(fmt.Errorf("not implemented"))
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "AssetsByCorporationID")
+	defer span.End()
+	return asset.AssetsByCorporationID(newCtx, id)
 }
 
 func (r *queryResolver) AssetsByCharacterName(ctx context.Context, name *string) ([]*model.Asset, error) {
-	panic(fmt.Errorf("not implemented"))
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "AssetsByCharacterName")
+	defer span.End()
+	return asset.AssetsByCharacterName(newCtx, name)
 }
 
 func (r *queryResolver) AssetsByCorporationName(ctx context.Context, name *string) ([]*model.Asset, error) {
-	panic(fmt.Errorf("not implemented"))
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "AssetsByCorporationName")
+	defer span.End()
+	return asset.AssetsByCorporationName(newCtx, name)
 }
 
 func (r *queryResolver) BookmarksByCharacterID(ctx context.Context, id *int) ([]*model.Bookmark, error) {
