@@ -32,7 +32,7 @@ func IconByName(ctx context.Context, name *string) (*model.Icon, error) {
 	return IconByID(newCtx, &allianceID)
 }
 
-// CorporationsByID returns the alliance icon indicated by the id field, the context is
+// IconByID returns the alliance icon indicated by the id field, the context is
 // used for tracing. If the alliance is cached the ESI will not be called until the ttl
 // and the cached instance will be returned.
 func IconByID(ctx context.Context, id *int) (*model.Icon, error) {
