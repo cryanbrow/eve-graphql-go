@@ -37,6 +37,7 @@ type Config struct {
 type ResolverRoot interface {
 	Alliance() AllianceResolver
 	Ancestry() AncestryResolver
+	Asset() AssetResolver
 	Asteroid_belt() Asteroid_beltResolver
 	Character() CharacterResolver
 	Constellation() ConstellationResolver
@@ -708,6 +709,11 @@ type AllianceResolver interface {
 }
 type AncestryResolver interface {
 	Bloodline(ctx context.Context, obj *model.Ancestry) (*model.Bloodline, error)
+}
+type AssetResolver interface {
+	Location(ctx context.Context, obj *model.Asset) (*model.Station, error)
+
+	ItemType(ctx context.Context, obj *model.Asset) (*model.ItemType, error)
 }
 type Asteroid_beltResolver interface {
 	System(ctx context.Context, obj *model.AsteroidBelt) (*model.System, error)
@@ -7253,14 +7259,14 @@ func (ec *executionContext) _Asset_location(ctx context.Context, field graphql.C
 		Object:     "Asset",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Location, nil
+		return ec.resolvers.Asset().Location(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7381,14 +7387,14 @@ func (ec *executionContext) _Asset_item_type(ctx context.Context, field graphql.
 		Object:     "Asset",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ItemType, nil
+		return ec.resolvers.Asset().ItemType(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -23189,12 +23195,22 @@ func (ec *executionContext) _Asset(ctx context.Context, sel ast.SelectionSet, ob
 			out.Values[i] = innerFunc(ctx)
 
 		case "location":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Asset_location(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Asset_location(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "location_type":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Asset_location_type(ctx, field, obj)
@@ -23217,12 +23233,22 @@ func (ec *executionContext) _Asset(ctx context.Context, sel ast.SelectionSet, ob
 			out.Values[i] = innerFunc(ctx)
 
 		case "item_type":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Asset_item_type(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Asset_item_type(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

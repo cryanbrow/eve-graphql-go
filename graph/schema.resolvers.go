@@ -49,6 +49,18 @@ func (r *ancestryResolver) Bloodline(ctx context.Context, obj *model.Ancestry) (
 	return universe.BloodlineByID(newCtx, obj.BloodlineID)
 }
 
+func (r *assetResolver) Location(ctx context.Context, obj *model.Asset) (*model.Station, error) {
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "AssetLocation")
+	defer span.End()
+	return universe.StationByID(newCtx, obj.LocationID)
+}
+
+func (r *assetResolver) ItemType(ctx context.Context, obj *model.Asset) (*model.ItemType, error) {
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "AssetItemTypes")
+	defer span.End()
+	return universe.ItemTypeByID(newCtx, obj.TypeID)
+}
+
 func (r *asteroid_beltResolver) System(ctx context.Context, obj *model.AsteroidBelt) (*model.System, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "AstroidBeltSystem")
 	defer span.End()
@@ -665,6 +677,9 @@ func (r *Resolver) Alliance() generated.AllianceResolver { return &allianceResol
 // Ancestry returns generated.AncestryResolver implementation.
 func (r *Resolver) Ancestry() generated.AncestryResolver { return &ancestryResolver{r} }
 
+// Asset returns generated.AssetResolver implementation.
+func (r *Resolver) Asset() generated.AssetResolver { return &assetResolver{r} }
+
 // Asteroid_belt returns generated.Asteroid_beltResolver implementation.
 func (r *Resolver) Asteroid_belt() generated.Asteroid_beltResolver { return &asteroid_beltResolver{r} }
 
@@ -747,6 +762,7 @@ func (r *Resolver) System_planet() generated.System_planetResolver { return &sys
 
 type allianceResolver struct{ *Resolver }
 type ancestryResolver struct{ *Resolver }
+type assetResolver struct{ *Resolver }
 type asteroid_beltResolver struct{ *Resolver }
 type characterResolver struct{ *Resolver }
 type constellationResolver struct{ *Resolver }

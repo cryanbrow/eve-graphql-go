@@ -217,6 +217,12 @@ models:
     fields:
       employer:
         resolver: true
+  Asset:
+    fields:
+      item_type:
+        resolver: true
+      location:
+        resolver: true
   ID:
     model:
       - github.com/99designs/gqlgen/graphql.ID
