@@ -91,7 +91,7 @@ type Query{
 	): [OrderHistory]
 	
 }
-"""This is a comment."""
+"""Bookmark is the in game location that is bookmarked"""
 type Bookmark {
 	bookmark_id: Int
 	coordinates: Position
