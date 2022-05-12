@@ -106,6 +106,7 @@ type Bookmark {
 	notes: String
 }
 
+"""Item represents an item type"""
 type Item {
 	item_id: Int
 	item_type: Item_type
