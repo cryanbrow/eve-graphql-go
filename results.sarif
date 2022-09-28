@@ -1,0 +1,250 @@
+{
+	"runs": [
+		{
+			"results": [
+				{
+					"level": "error",
+					"locations": [
+						{
+							"physicalLocation": {
+								"artifactLocation": {
+									"uri": "C:\\Users\\Bryan\\Documents\\workspace\\eve-graphql-go\\server.go"
+								},
+								"region": {
+									"endColumn": 14,
+									"endLine": 83,
+									"snippet": {
+										"text": "log.Fatalln(http.ListenAndServe(\":\"+port, router))"
+									},
+									"sourceLanguage": "go",
+									"startColumn": 14,
+									"startLine": 83
+								}
+							}
+						}
+					],
+					"message": {
+						"text": "Use of net/http serve function that has no support for setting timeouts"
+					},
+					"ruleId": "G114"
+				},
+				{
+					"level": "error",
+					"locations": [
+						{
+							"physicalLocation": {
+								"artifactLocation": {
+									"uri": "C:\\Users\\Bryan\\Documents\\workspace\\eve-graphql-go\\graph\\data_access\\esi\\alliance\\alliance_corporations.go"
+								},
+								"region": {
+									"endColumn": 48,
+									"endLine": 62,
+									"snippet": {
+										"text": "corporation, err := corporation.ByID(newCtx, \u0026corpID)"
+									},
+									"sourceLanguage": "go",
+									"startColumn": 48,
+									"startLine": 62
+								}
+							}
+						}
+					],
+					"message": {
+						"text": "Implicit memory aliasing in for loop."
+					},
+					"ruleId": "G601",
+					"ruleIndex": 1
+				},
+				{
+					"level": "warning",
+					"locations": [
+						{
+							"physicalLocation": {
+								"artifactLocation": {
+									"uri": "C:\\Users\\Bryan\\Documents\\workspace\\eve-graphql-go\\graph\\auth\\http_auth.go"
+								},
+								"region": {
+									"endColumn": 2,
+									"endLine": 84,
+									"snippet": {
+										"text": "json.NewDecoder(resp.Body).Decode(\u0026body)"
+									},
+									"sourceLanguage": "go",
+									"startColumn": 2,
+									"startLine": 84
+								}
+							}
+						}
+					],
+					"message": {
+						"text": "Errors unhandled."
+					},
+					"ruleId": "G104",
+					"ruleIndex": 2
+				}
+			],
+			"taxonomies": [
+				{
+					"downloadUri": "https://cwe.mitre.org/data/xml/cwec_v4.4.xml.zip",
+					"guid": "f2856fc0-85b7-373f-83e7-6f8582243547",
+					"informationUri": "https://cwe.mitre.org/data/published/cwe_v4.4.pdf/",
+					"isComprehensive": true,
+					"language": "en",
+					"minimumRequiredLocalizedDataSemanticVersion": "4.4",
+					"name": "CWE",
+					"organization": "MITRE",
+					"releaseDateUtc": "2021-03-15",
+					"shortDescription": {
+						"text": "The MITRE Common Weakness Enumeration"
+					},
+					"taxa": [
+						{
+							"fullDescription": {
+								"text": "The software does not restrict or incorrectly restricts operations within the boundaries of a resource that is accessed using an index or pointer, such as memory or files."
+							},
+							"guid": "ebb90d25-d5f3-32f8-b42a-b74b23984fbb",
+							"helpUri": "https://cwe.mitre.org/data/definitions/118.html",
+							"id": "118",
+							"shortDescription": {
+								"text": "Incorrect Access of Indexable Resource ('Range Error')"
+							}
+						},
+						{
+							"fullDescription": {
+								"text": "The software does not properly anticipate or handle exceptional conditions that rarely occur during normal operation of the software."
+							},
+							"guid": "7df38d1d-038e-3ced-8601-8d9265b90a25",
+							"helpUri": "https://cwe.mitre.org/data/definitions/703.html",
+							"id": "703",
+							"shortDescription": {
+								"text": "Improper Check or Handling of Exceptional Conditions"
+							}
+						}
+					],
+					"version": "4.4"
+				}
+			],
+			"tool": {
+				"driver": {
+					"guid": "8b518d5f-906d-39f9-894b-d327b1a421c5",
+					"informationUri": "https://github.com/securego/gosec/",
+					"name": "gosec",
+					"rules": [
+						{
+							"defaultConfiguration": {
+								"level": "warning"
+							},
+							"fullDescription": {
+								"text": "Errors unhandled."
+							},
+							"help": {
+								"text": "Errors unhandled.\nSeverity: LOW\nConfidence: HIGH\n"
+							},
+							"id": "G104",
+							"name": "Improper Check or Handling of Exceptional Conditions",
+							"properties": {
+								"precision": "high",
+								"tags": [
+									"security",
+									"LOW"
+								]
+							},
+							"relationships": [
+								{
+									"kinds": [
+										"superset"
+									],
+									"target": {
+										"guid": "7df38d1d-038e-3ced-8601-8d9265b90a25",
+										"id": "703",
+										"toolComponent": {
+											"guid": "f2856fc0-85b7-373f-83e7-6f8582243547",
+											"name": "CWE"
+										}
+									}
+								}
+							],
+							"shortDescription": {
+								"text": "Errors unhandled."
+							}
+						},
+						{
+							"defaultConfiguration": {
+								"level": "error"
+							},
+							"fullDescription": {
+								"text": "Use of net/http serve function that has no support for setting timeouts"
+							},
+							"help": {
+								"text": "Use of net/http serve function that has no support for setting timeouts\nSeverity: MEDIUM\nConfidence: HIGH\n"
+							},
+							"id": "G114",
+							"name": "G114",
+							"properties": {
+								"precision": "high",
+								"tags": [
+									"security",
+									"MEDIUM"
+								]
+							},
+							"relationships": [
+								null
+							],
+							"shortDescription": {
+								"text": "Use of net/http serve function that has no support for setting timeouts"
+							}
+						},
+						{
+							"defaultConfiguration": {
+								"level": "error"
+							},
+							"fullDescription": {
+								"text": "Implicit memory aliasing in for loop."
+							},
+							"help": {
+								"text": "Implicit memory aliasing in for loop.\nSeverity: MEDIUM\nConfidence: MEDIUM\n"
+							},
+							"id": "G601",
+							"name": "Incorrect Access of Indexable Resource ('Range Error')",
+							"properties": {
+								"precision": "medium",
+								"tags": [
+									"security",
+									"MEDIUM"
+								]
+							},
+							"relationships": [
+								{
+									"kinds": [
+										"superset"
+									],
+									"target": {
+										"guid": "ebb90d25-d5f3-32f8-b42a-b74b23984fbb",
+										"id": "118",
+										"toolComponent": {
+											"guid": "f2856fc0-85b7-373f-83e7-6f8582243547",
+											"name": "CWE"
+										}
+									}
+								}
+							],
+							"shortDescription": {
+								"text": "Implicit memory aliasing in for loop."
+							}
+						}
+					],
+					"semanticVersion": "dev",
+					"supportedTaxonomies": [
+						{
+							"guid": "f2856fc0-85b7-373f-83e7-6f8582243547",
+							"name": "CWE"
+						}
+					],
+					"version": "dev"
+				}
+			}
+		}
+	],
+	"$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+	"version": "2.1.0"
+}
