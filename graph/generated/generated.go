@@ -112,6 +112,15 @@ type ComplexityRoot struct {
 		SystemID func(childComplexity int) int
 	}
 
+	Attributes struct {
+		BonusRemaps  func(childComplexity int) int
+		Charisma     func(childComplexity int) int
+		Intelligence func(childComplexity int) int
+		Memory       func(childComplexity int) int
+		Perception   func(childComplexity int) int
+		Willpower    func(childComplexity int) int
+	}
+
 	Bloodline struct {
 		BloodlineID   func(childComplexity int) int
 		Charisma      func(childComplexity int) int
@@ -573,6 +582,12 @@ type ComplexityRoot struct {
 		OrdersForRegion                            func(childComplexity int, regionID int, orderType model.Ordertype, typeID *int, page int) int
 		OrdersForRegionByName                      func(childComplexity int, region string, orderType model.Ordertype, typeName *string, page int) int
 		PlanetByID                                 func(childComplexity int, id *int) int
+		SkillsByCharacterID                        func(childComplexity int, characterID int) int
+		SkillsByCharacterName                      func(childComplexity int, character string) int
+		SkillsCharacterAttributesByID              func(childComplexity int, characterID int) int
+		SkillsCharacterAttributesByName            func(childComplexity int, character string) int
+		SkillsQueueByCharacterID                   func(childComplexity int, characterID int) int
+		SkillsQueueByCharacterName                 func(childComplexity int, character string) int
 		StationByID                                func(childComplexity int, id *int) int
 		SystemByID                                 func(childComplexity int, id *int) int
 	}
@@ -605,6 +620,30 @@ type ComplexityRoot struct {
 		RolesAtBase  func(childComplexity int) int
 		RolesAtHq    func(childComplexity int) int
 		RolesAtOther func(childComplexity int) int
+	}
+
+	Skill struct {
+		ActiveSkillLevel   func(childComplexity int) int
+		ItemType           func(childComplexity int) int
+		SkillID            func(childComplexity int) int
+		SkillpointsInSkill func(childComplexity int) int
+		TrainedSkillLevel  func(childComplexity int) int
+	}
+
+	SkillQueueItem struct {
+		FinishDate      func(childComplexity int) int
+		FinishedLevel   func(childComplexity int) int
+		ItemType        func(childComplexity int) int
+		LevelEndSp      func(childComplexity int) int
+		LevelStartSp    func(childComplexity int) int
+		QueuePosition   func(childComplexity int) int
+		SkillID         func(childComplexity int) int
+		StartDate       func(childComplexity int) int
+		TrainingStartSp func(childComplexity int) int
+	}
+
+	SkillWrapper struct {
+		Skills func(childComplexity int) int
 	}
 
 	Standing struct {
@@ -862,6 +901,12 @@ type QueryResolver interface {
 	ClonesImplantsByID(ctx context.Context, id *int) ([]*model.Implant, error)
 	OrdersForRegion(ctx context.Context, regionID int, orderType model.Ordertype, typeID *int, page int) (*model.OrderWrapper, error)
 	OrdersForRegionByName(ctx context.Context, region string, orderType model.Ordertype, typeName *string, page int) (*model.OrderWrapper, error)
+	SkillsCharacterAttributesByID(ctx context.Context, characterID int) (*model.Attributes, error)
+	SkillsCharacterAttributesByName(ctx context.Context, character string) (*model.Attributes, error)
+	SkillsQueueByCharacterID(ctx context.Context, characterID int) ([]*model.SkillQueueItem, error)
+	SkillsQueueByCharacterName(ctx context.Context, character string) ([]*model.SkillQueueItem, error)
+	SkillsByCharacterID(ctx context.Context, characterID int) (*model.SkillWrapper, error)
+	SkillsByCharacterName(ctx context.Context, character string) (*model.SkillWrapper, error)
 	SystemByID(ctx context.Context, id *int) (*model.System, error)
 	StationByID(ctx context.Context, id *int) (*model.Station, error)
 	PlanetByID(ctx context.Context, id *int) (*model.Planet, error)
@@ -1149,6 +1194,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Asteroid_belt.SystemID(childComplexity), true
+
+	case "Attributes.bonus_remaps":
+		if e.complexity.Attributes.BonusRemaps == nil {
+			break
+		}
+
+		return e.complexity.Attributes.BonusRemaps(childComplexity), true
+
+	case "Attributes.charisma":
+		if e.complexity.Attributes.Charisma == nil {
+			break
+		}
+
+		return e.complexity.Attributes.Charisma(childComplexity), true
+
+	case "Attributes.intelligence":
+		if e.complexity.Attributes.Intelligence == nil {
+			break
+		}
+
+		return e.complexity.Attributes.Intelligence(childComplexity), true
+
+	case "Attributes.memory":
+		if e.complexity.Attributes.Memory == nil {
+			break
+		}
+
+		return e.complexity.Attributes.Memory(childComplexity), true
+
+	case "Attributes.perception":
+		if e.complexity.Attributes.Perception == nil {
+			break
+		}
+
+		return e.complexity.Attributes.Perception(childComplexity), true
+
+	case "Attributes.willpower":
+		if e.complexity.Attributes.Willpower == nil {
+			break
+		}
+
+		return e.complexity.Attributes.Willpower(childComplexity), true
 
 	case "Bloodline.bloodline_id":
 		if e.complexity.Bloodline.BloodlineID == nil {
@@ -3847,6 +3934,78 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.PlanetByID(childComplexity, args["id"].(*int)), true
 
+	case "Query.skills_ByCharacterID":
+		if e.complexity.Query.SkillsByCharacterID == nil {
+			break
+		}
+
+		args, err := ec.field_Query_skills_ByCharacterID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.SkillsByCharacterID(childComplexity, args["character_id"].(int)), true
+
+	case "Query.skills_ByCharacterName":
+		if e.complexity.Query.SkillsByCharacterName == nil {
+			break
+		}
+
+		args, err := ec.field_Query_skills_ByCharacterName_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.SkillsByCharacterName(childComplexity, args["character"].(string)), true
+
+	case "Query.skills_characterAttributesByID":
+		if e.complexity.Query.SkillsCharacterAttributesByID == nil {
+			break
+		}
+
+		args, err := ec.field_Query_skills_characterAttributesByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.SkillsCharacterAttributesByID(childComplexity, args["character_id"].(int)), true
+
+	case "Query.skills_characterAttributesByName":
+		if e.complexity.Query.SkillsCharacterAttributesByName == nil {
+			break
+		}
+
+		args, err := ec.field_Query_skills_characterAttributesByName_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.SkillsCharacterAttributesByName(childComplexity, args["character"].(string)), true
+
+	case "Query.skills_QueueByCharacterID":
+		if e.complexity.Query.SkillsQueueByCharacterID == nil {
+			break
+		}
+
+		args, err := ec.field_Query_skills_QueueByCharacterID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.SkillsQueueByCharacterID(childComplexity, args["character_id"].(int)), true
+
+	case "Query.skills_QueueByCharacterName":
+		if e.complexity.Query.SkillsQueueByCharacterName == nil {
+			break
+		}
+
+		args, err := ec.field_Query_skills_QueueByCharacterName_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.SkillsQueueByCharacterName(childComplexity, args["character"].(string)), true
+
 	case "Query.stationById":
 		if e.complexity.Query.StationByID == nil {
 			break
@@ -3996,6 +4155,111 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Role.RolesAtOther(childComplexity), true
+
+	case "Skill.active_skill_level":
+		if e.complexity.Skill.ActiveSkillLevel == nil {
+			break
+		}
+
+		return e.complexity.Skill.ActiveSkillLevel(childComplexity), true
+
+	case "Skill.item_type":
+		if e.complexity.Skill.ItemType == nil {
+			break
+		}
+
+		return e.complexity.Skill.ItemType(childComplexity), true
+
+	case "Skill.skill_id":
+		if e.complexity.Skill.SkillID == nil {
+			break
+		}
+
+		return e.complexity.Skill.SkillID(childComplexity), true
+
+	case "Skill.skillpoints_in_skill":
+		if e.complexity.Skill.SkillpointsInSkill == nil {
+			break
+		}
+
+		return e.complexity.Skill.SkillpointsInSkill(childComplexity), true
+
+	case "Skill.trained_skill_level":
+		if e.complexity.Skill.TrainedSkillLevel == nil {
+			break
+		}
+
+		return e.complexity.Skill.TrainedSkillLevel(childComplexity), true
+
+	case "SkillQueueItem.finish_date":
+		if e.complexity.SkillQueueItem.FinishDate == nil {
+			break
+		}
+
+		return e.complexity.SkillQueueItem.FinishDate(childComplexity), true
+
+	case "SkillQueueItem.finished_level":
+		if e.complexity.SkillQueueItem.FinishedLevel == nil {
+			break
+		}
+
+		return e.complexity.SkillQueueItem.FinishedLevel(childComplexity), true
+
+	case "SkillQueueItem.item_type":
+		if e.complexity.SkillQueueItem.ItemType == nil {
+			break
+		}
+
+		return e.complexity.SkillQueueItem.ItemType(childComplexity), true
+
+	case "SkillQueueItem.level_end_sp":
+		if e.complexity.SkillQueueItem.LevelEndSp == nil {
+			break
+		}
+
+		return e.complexity.SkillQueueItem.LevelEndSp(childComplexity), true
+
+	case "SkillQueueItem.level_start_sp":
+		if e.complexity.SkillQueueItem.LevelStartSp == nil {
+			break
+		}
+
+		return e.complexity.SkillQueueItem.LevelStartSp(childComplexity), true
+
+	case "SkillQueueItem.queue_position":
+		if e.complexity.SkillQueueItem.QueuePosition == nil {
+			break
+		}
+
+		return e.complexity.SkillQueueItem.QueuePosition(childComplexity), true
+
+	case "SkillQueueItem.skill_id":
+		if e.complexity.SkillQueueItem.SkillID == nil {
+			break
+		}
+
+		return e.complexity.SkillQueueItem.SkillID(childComplexity), true
+
+	case "SkillQueueItem.start_date":
+		if e.complexity.SkillQueueItem.StartDate == nil {
+			break
+		}
+
+		return e.complexity.SkillQueueItem.StartDate(childComplexity), true
+
+	case "SkillQueueItem.training_start_sp":
+		if e.complexity.SkillQueueItem.TrainingStartSp == nil {
+			break
+		}
+
+		return e.complexity.SkillQueueItem.TrainingStartSp(childComplexity), true
+
+	case "SkillWrapper.skills":
+		if e.complexity.SkillWrapper.Skills == nil {
+			break
+		}
+
+		return e.complexity.SkillWrapper.Skills(childComplexity), true
 
 	case "Standing.from_id":
 		if e.complexity.Standing.FromID == nil {
@@ -4562,6 +4826,24 @@ var sources = []*ast.Source{
 		type_name: String
 		page: Int!
 	): OrderWrapper
+	skills_characterAttributesByID(
+		character_id: Int!
+	): Attributes
+	skills_characterAttributesByName(
+		character: String!
+	): Attributes
+	skills_QueueByCharacterID(
+		character_id: Int!
+	): [SkillQueueItem]
+	skills_QueueByCharacterName(
+		character: String!
+	): [SkillQueueItem]
+	skills_ByCharacterID(
+		character_id: Int!
+	): SkillWrapper
+	skills_ByCharacterName(
+		character: String!
+	): SkillWrapper
 	"""Get information on a solar system."""
 	systemById(id: Int): System
 	"""Get information on a station"""
@@ -4580,6 +4862,35 @@ var sources = []*ast.Source{
 		type_id: Int
 	): [OrderHistory]
 	
+}
+type Attributes {
+	bonus_remaps: Int
+	charisma: Int
+	intelligence: Int
+	memory: Int
+	perception: Int
+	willpower: Int
+}
+type SkillQueueItem {
+	finish_date: String
+	finished_level: Int
+	level_end_sp: Int
+	level_start_sp: Int
+	queue_position: Int
+	skill_id: Int
+	item_type: Item_type
+	start_date: String
+	training_start_sp: Int
+}
+type SkillWrapper {
+	skills: [Skill]
+}
+type Skill {
+	active_skill_level: Int
+	skill_id: Int
+	item_type: Item_type
+	skillpoints_in_skill: Int
+	trained_skill_level: Int
 }
 """This is a comment."""
 type Bookmark {
@@ -6444,6 +6755,96 @@ func (ec *executionContext) field_Query_planetById_args(ctx context.Context, raw
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_skills_ByCharacterID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["character_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("character_id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["character_id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_skills_ByCharacterName_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["character"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("character"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["character"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_skills_QueueByCharacterID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["character_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("character_id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["character_id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_skills_QueueByCharacterName_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["character"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("character"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["character"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_skills_characterAttributesByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["character_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("character_id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["character_id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_skills_characterAttributesByName_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["character"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("character"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["character"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_stationById_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -7523,6 +7924,198 @@ func (ec *executionContext) _Asteroid_belt_system_id(ctx context.Context, field 
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.SystemID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Attributes_bonus_remaps(ctx context.Context, field graphql.CollectedField, obj *model.Attributes) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Attributes",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.BonusRemaps, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Attributes_charisma(ctx context.Context, field graphql.CollectedField, obj *model.Attributes) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Attributes",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Charisma, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Attributes_intelligence(ctx context.Context, field graphql.CollectedField, obj *model.Attributes) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Attributes",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Intelligence, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Attributes_memory(ctx context.Context, field graphql.CollectedField, obj *model.Attributes) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Attributes",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Memory, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Attributes_perception(ctx context.Context, field graphql.CollectedField, obj *model.Attributes) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Attributes",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Perception, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Attributes_willpower(ctx context.Context, field graphql.CollectedField, obj *model.Attributes) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Attributes",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Willpower, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -18801,6 +19394,240 @@ func (ec *executionContext) _Query_ordersForRegionByName(ctx context.Context, fi
 	return ec.marshalOOrderWrapper2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐOrderWrapper(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_skills_characterAttributesByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_skills_characterAttributesByID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().SkillsCharacterAttributesByID(rctx, args["character_id"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Attributes)
+	fc.Result = res
+	return ec.marshalOAttributes2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐAttributes(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_skills_characterAttributesByName(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_skills_characterAttributesByName_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().SkillsCharacterAttributesByName(rctx, args["character"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Attributes)
+	fc.Result = res
+	return ec.marshalOAttributes2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐAttributes(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_skills_QueueByCharacterID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_skills_QueueByCharacterID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().SkillsQueueByCharacterID(rctx, args["character_id"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.SkillQueueItem)
+	fc.Result = res
+	return ec.marshalOSkillQueueItem2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSkillQueueItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_skills_QueueByCharacterName(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_skills_QueueByCharacterName_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().SkillsQueueByCharacterName(rctx, args["character"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.SkillQueueItem)
+	fc.Result = res
+	return ec.marshalOSkillQueueItem2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSkillQueueItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_skills_ByCharacterID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_skills_ByCharacterID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().SkillsByCharacterID(rctx, args["character_id"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.SkillWrapper)
+	fc.Result = res
+	return ec.marshalOSkillWrapper2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSkillWrapper(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_skills_ByCharacterName(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_skills_ByCharacterName_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().SkillsByCharacterName(rctx, args["character"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.SkillWrapper)
+	fc.Result = res
+	return ec.marshalOSkillWrapper2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSkillWrapper(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_systemById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -19719,6 +20546,486 @@ func (ec *executionContext) _Role_roles_at_other(ctx context.Context, field grap
 	res := resTmp.([]*model.Roles)
 	fc.Result = res
 	return ec.marshalORoles2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐRoles(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Skill_active_skill_level(ctx context.Context, field graphql.CollectedField, obj *model.Skill) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Skill",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ActiveSkillLevel, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Skill_skill_id(ctx context.Context, field graphql.CollectedField, obj *model.Skill) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Skill",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SkillID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Skill_item_type(ctx context.Context, field graphql.CollectedField, obj *model.Skill) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Skill",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ItemType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.ItemType)
+	fc.Result = res
+	return ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐItemType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Skill_skillpoints_in_skill(ctx context.Context, field graphql.CollectedField, obj *model.Skill) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Skill",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SkillpointsInSkill, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Skill_trained_skill_level(ctx context.Context, field graphql.CollectedField, obj *model.Skill) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Skill",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TrainedSkillLevel, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SkillQueueItem_finish_date(ctx context.Context, field graphql.CollectedField, obj *model.SkillQueueItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SkillQueueItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FinishDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SkillQueueItem_finished_level(ctx context.Context, field graphql.CollectedField, obj *model.SkillQueueItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SkillQueueItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FinishedLevel, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SkillQueueItem_level_end_sp(ctx context.Context, field graphql.CollectedField, obj *model.SkillQueueItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SkillQueueItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LevelEndSp, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SkillQueueItem_level_start_sp(ctx context.Context, field graphql.CollectedField, obj *model.SkillQueueItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SkillQueueItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LevelStartSp, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SkillQueueItem_queue_position(ctx context.Context, field graphql.CollectedField, obj *model.SkillQueueItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SkillQueueItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.QueuePosition, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SkillQueueItem_skill_id(ctx context.Context, field graphql.CollectedField, obj *model.SkillQueueItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SkillQueueItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SkillID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SkillQueueItem_item_type(ctx context.Context, field graphql.CollectedField, obj *model.SkillQueueItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SkillQueueItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ItemType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.ItemType)
+	fc.Result = res
+	return ec.marshalOItem_type2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐItemType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SkillQueueItem_start_date(ctx context.Context, field graphql.CollectedField, obj *model.SkillQueueItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SkillQueueItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StartDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SkillQueueItem_training_start_sp(ctx context.Context, field graphql.CollectedField, obj *model.SkillQueueItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SkillQueueItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TrainingStartSp, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SkillWrapper_skills(ctx context.Context, field graphql.CollectedField, obj *model.SkillWrapper) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SkillWrapper",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Skills, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Skill)
+	fc.Result = res
+	return ec.marshalOSkill2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSkill(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Standing_from_id(ctx context.Context, field graphql.CollectedField, obj *model.Standing) (ret graphql.Marshaler) {
@@ -23304,6 +24611,69 @@ func (ec *executionContext) _Asteroid_belt(ctx context.Context, sel ast.Selectio
 		case "system_id":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Asteroid_belt_system_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var attributesImplementors = []string{"Attributes"}
+
+func (ec *executionContext) _Attributes(ctx context.Context, sel ast.SelectionSet, obj *model.Attributes) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, attributesImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Attributes")
+		case "bonus_remaps":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Attributes_bonus_remaps(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "charisma":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Attributes_charisma(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "intelligence":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Attributes_intelligence(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "memory":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Attributes_memory(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "perception":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Attributes_perception(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "willpower":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Attributes_willpower(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -27566,6 +28936,126 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
+		case "skills_characterAttributesByID":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_skills_characterAttributesByID(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "skills_characterAttributesByName":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_skills_characterAttributesByName(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "skills_QueueByCharacterID":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_skills_QueueByCharacterID(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "skills_QueueByCharacterName":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_skills_QueueByCharacterName(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "skills_ByCharacterID":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_skills_ByCharacterID(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "skills_ByCharacterName":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_skills_ByCharacterName(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "systemById":
 			field := field
 
@@ -27936,6 +29426,174 @@ func (ec *executionContext) _Role(ctx context.Context, sel ast.SelectionSet, obj
 		case "roles_at_other":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Role_roles_at_other(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var skillImplementors = []string{"Skill"}
+
+func (ec *executionContext) _Skill(ctx context.Context, sel ast.SelectionSet, obj *model.Skill) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, skillImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Skill")
+		case "active_skill_level":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Skill_active_skill_level(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "skill_id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Skill_skill_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "item_type":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Skill_item_type(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "skillpoints_in_skill":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Skill_skillpoints_in_skill(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "trained_skill_level":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Skill_trained_skill_level(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var skillQueueItemImplementors = []string{"SkillQueueItem"}
+
+func (ec *executionContext) _SkillQueueItem(ctx context.Context, sel ast.SelectionSet, obj *model.SkillQueueItem) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, skillQueueItemImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SkillQueueItem")
+		case "finish_date":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SkillQueueItem_finish_date(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "finished_level":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SkillQueueItem_finished_level(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "level_end_sp":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SkillQueueItem_level_end_sp(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "level_start_sp":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SkillQueueItem_level_start_sp(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "queue_position":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SkillQueueItem_queue_position(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "skill_id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SkillQueueItem_skill_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "item_type":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SkillQueueItem_item_type(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "start_date":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SkillQueueItem_start_date(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "training_start_sp":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SkillQueueItem_training_start_sp(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var skillWrapperImplementors = []string{"SkillWrapper"}
+
+func (ec *executionContext) _SkillWrapper(ctx context.Context, sel ast.SelectionSet, obj *model.SkillWrapper) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, skillWrapperImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SkillWrapper")
+		case "skills":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SkillWrapper_skills(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -29582,6 +31240,13 @@ func (ec *executionContext) marshalOAsteroid_belt2ᚖgithubᚗcomᚋcryanbrowᚋ
 	return ec._Asteroid_belt(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOAttributes2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐAttributes(ctx context.Context, sel ast.SelectionSet, v *model.Attributes) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Attributes(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOBloodline2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐBloodline(ctx context.Context, sel ast.SelectionSet, v *model.Bloodline) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -31141,6 +32806,109 @@ func (ec *executionContext) marshalOServices2ᚖgithubᚗcomᚋcryanbrowᚋeve�
 		return graphql.Null
 	}
 	return v
+}
+
+func (ec *executionContext) marshalOSkill2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSkill(ctx context.Context, sel ast.SelectionSet, v []*model.Skill) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOSkill2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSkill(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
+func (ec *executionContext) marshalOSkill2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSkill(ctx context.Context, sel ast.SelectionSet, v *model.Skill) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Skill(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSkillQueueItem2ᚕᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSkillQueueItem(ctx context.Context, sel ast.SelectionSet, v []*model.SkillQueueItem) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOSkillQueueItem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSkillQueueItem(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
+func (ec *executionContext) marshalOSkillQueueItem2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSkillQueueItem(ctx context.Context, sel ast.SelectionSet, v *model.SkillQueueItem) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SkillQueueItem(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSkillWrapper2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSkillWrapper(ctx context.Context, sel ast.SelectionSet, v *model.SkillWrapper) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SkillWrapper(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOSpectral_class2ᚖgithubᚗcomᚋcryanbrowᚋeveᚑgraphqlᚑgoᚋgraphᚋgeneratedᚋmodelᚐSpectralClass(ctx context.Context, v interface{}) (*model.SpectralClass, error) {

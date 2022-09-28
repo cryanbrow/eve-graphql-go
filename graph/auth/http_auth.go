@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"crypto/rsa"
 	"encoding/base64"
 	"encoding/json"
@@ -14,6 +15,10 @@ import (
 )
 
 var rsakeys map[string]*rsa.PublicKey
+
+type User struct {
+	JWT string
+}
 
 // Middleware decodes the share session cookie and packs the session into context
 func Middleware() func(http.Handler) http.Handler {
@@ -88,4 +93,9 @@ func GetPublicKeys() {
 			rsakeys[kid] = rsakey
 		}
 	}
+}
+
+func ForContext(ctx context.Context) *User {
+	raw, _ := ctx.Value("JWT").(*User)
+	return raw
 }

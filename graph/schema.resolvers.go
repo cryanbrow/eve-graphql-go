@@ -527,6 +527,30 @@ func (r *queryResolver) OrdersForRegionByName(ctx context.Context, region string
 	return market.OrdersForRegionByName(newCtx, &region, &orderType, typeName, &page)
 }
 
+func (r *queryResolver) SkillsCharacterAttributesByID(ctx context.Context, characterID int) (*model.Attributes, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) SkillsCharacterAttributesByName(ctx context.Context, character string) (*model.Attributes, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) SkillsQueueByCharacterID(ctx context.Context, characterID int) ([]*model.SkillQueueItem, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) SkillsQueueByCharacterName(ctx context.Context, character string) ([]*model.SkillQueueItem, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) SkillsByCharacterID(ctx context.Context, characterID int) (*model.SkillWrapper, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) SkillsByCharacterName(ctx context.Context, character string) (*model.SkillWrapper, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *queryResolver) SystemByID(ctx context.Context, id *int) (*model.System, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "SystemByID")
 	defer span.End()

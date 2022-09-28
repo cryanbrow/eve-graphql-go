@@ -72,6 +72,24 @@ type Query{
 		type_name: String
 		page: Int!
 	): OrderWrapper
+	skills_characterAttributesByID(
+		character_id: Int!
+	): Attributes
+	skills_characterAttributesByName(
+		character: String!
+	): Attributes
+	skills_QueueByCharacterID(
+		character_id: Int!
+	): [SkillQueueItem]
+	skills_QueueByCharacterName(
+		character: String!
+	): [SkillQueueItem]
+	skills_ByCharacterID(
+		character_id: Int!
+	): SkillWrapper
+	skills_ByCharacterName(
+		character: String!
+	): SkillWrapper
 	"""Get information on a solar system."""
 	systemById(id: Int): System
 	"""Get information on a station"""
@@ -90,6 +108,35 @@ type Query{
 		type_id: Int
 	): [OrderHistory]
 	
+}
+type Attributes {
+	bonus_remaps: Int
+	charisma: Int
+	intelligence: Int
+	memory: Int
+	perception: Int
+	willpower: Int
+}
+type SkillQueueItem {
+	finish_date: String
+	finished_level: Int
+	level_end_sp: Int
+	level_start_sp: Int
+	queue_position: Int
+	skill_id: Int
+	item_type: Item_type
+	start_date: String
+	training_start_sp: Int
+}
+type SkillWrapper {
+	skills: [Skill]
+}
+type Skill {
+	active_skill_level: Int
+	skill_id: Int
+	item_type: Item_type
+	skillpoints_in_skill: Int
+	trained_skill_level: Int
 }
 """This is a comment."""
 type Bookmark {

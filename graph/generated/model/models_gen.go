@@ -52,6 +52,15 @@ type AsteroidBelt struct {
 	SystemID *int      `json:"system_id"`
 }
 
+type Attributes struct {
+	BonusRemaps  *int `json:"bonus_remaps"`
+	Charisma     *int `json:"charisma"`
+	Intelligence *int `json:"intelligence"`
+	Memory       *int `json:"memory"`
+	Perception   *int `json:"perception"`
+	Willpower    *int `json:"willpower"`
+}
+
 type Bloodline struct {
 	BloodlineID   *int         `json:"bloodline_id"`
 	Charisma      *int         `json:"charisma"`
@@ -515,6 +524,30 @@ type Role struct {
 	RolesAtBase  []*Roles `json:"roles_at_base"`
 	RolesAtHq    []*Roles `json:"roles_at_hq"`
 	RolesAtOther []*Roles `json:"roles_at_other"`
+}
+
+type Skill struct {
+	ActiveSkillLevel   *int      `json:"active_skill_level"`
+	SkillID            *int      `json:"skill_id"`
+	ItemType           *ItemType `json:"item_type"`
+	SkillpointsInSkill *int      `json:"skillpoints_in_skill"`
+	TrainedSkillLevel  *int      `json:"trained_skill_level"`
+}
+
+type SkillQueueItem struct {
+	FinishDate      *string   `json:"finish_date"`
+	FinishedLevel   *int      `json:"finished_level"`
+	LevelEndSp      *int      `json:"level_end_sp"`
+	LevelStartSp    *int      `json:"level_start_sp"`
+	QueuePosition   *int      `json:"queue_position"`
+	SkillID         *int      `json:"skill_id"`
+	ItemType        *ItemType `json:"item_type"`
+	StartDate       *string   `json:"start_date"`
+	TrainingStartSp *int      `json:"training_start_sp"`
+}
+
+type SkillWrapper struct {
+	Skills []*Skill `json:"skills"`
 }
 
 type Standing struct {
