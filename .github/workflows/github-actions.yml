@@ -20,7 +20,8 @@ jobs:
         args: '-no-fail -fmt sarif -out results.sarif ./...'
 
     - name: Temp sarif workaround
-      shell: |
+      shell: bash
+      run: |
         cat results.sarif | grep -v null > results.sarif
 
     - name: Upload SARIF file
