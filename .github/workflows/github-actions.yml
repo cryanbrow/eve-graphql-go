@@ -22,7 +22,7 @@ jobs:
     - name: Temp sarif workaround
       shell: bash
       run: |
-        cat results.sarif | grep -v null > results.sarif
+        grep "null" -v results.sarif > results.sarif
 
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v2
