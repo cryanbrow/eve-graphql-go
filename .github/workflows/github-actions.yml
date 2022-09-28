@@ -19,6 +19,10 @@ jobs:
         # we let the report trigger content trigger a failure using the GitHub Security features.
         args: '-no-fail -fmt sarif -out results.sarif ./...'
 
+    - name: Temp sarif workaround
+      shell: |
+        cat results.sarif | grep -v null > results.sarif
+
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v2
       with:
