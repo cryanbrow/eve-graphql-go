@@ -19,6 +19,17 @@ jobs:
         # we let the report trigger content trigger a failure using the GitHub Security features.
         args: '-no-fail -fmt sarif -out results.sarif ./...'
 
+    - name: cat results.sarif
+      uses: pCYSl5EDgo/cat@master
+      id: sarif
+      with:
+        path: results.sarif
+
+    - name: echo results.sarif
+      run: echo $TEXT
+      env:
+        TEXT: ${{ steps.sarif.outputs.text }}
+
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v1
       with:
