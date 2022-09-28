@@ -138,7 +138,7 @@ type Skill {
 	skillpoints_in_skill: Int
 	trained_skill_level: Int
 }
-"""This is a comment."""
+"""Bookmark's designate an arbitrary location in space."""
 type Bookmark {
 	bookmark_id: Int
 	coordinates: Position
@@ -153,6 +153,7 @@ type Bookmark {
 	notes: String
 }
 
+"""Item represents an item type"""
 type Item {
 	item_id: Int
 	item_type: Item_type
