@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/go-chi/chi"
 	log "github.com/sirupsen/logrus"
@@ -80,7 +81,13 @@ func main() {
 	http.FileServer(http.FS(res))
 
 	log.Infof("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatalln(http.ListenAndServe(":"+port, router))
+	httpSrv := &http.Server{
+		ReadTimeout:  30 * time.Second,
+		WriteTimeout: 30 * time.Second,
+		Addr:         ":" + port,
+		Handler:      router,
+	}
+	log.Fatalln(httpSrv.ListenAndServe())
 }
 
 func setupDependencies() {
