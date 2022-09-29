@@ -58,8 +58,8 @@ func CorporationsByID(ctx context.Context, id *int) ([]*model.Corporation, error
 		return corporations, err
 	}
 
-	for _, corpID := range corporationIDs {
-		corporation, err := corporation.ByID(newCtx, &corpID)
+	for i, _ := range corporationIDs {
+		corporation, err := corporation.ByID(newCtx, &corporationIDs[i])
 		if err != nil {
 			continue
 		}
