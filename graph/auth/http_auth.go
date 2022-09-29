@@ -81,7 +81,10 @@ func GetPublicKeys() {
 	var body map[string]interface{}
 	uri := "https://login.eveonline.com/oauth/jwks"
 	resp, _ := http.Get(uri)
-	json.NewDecoder(resp.Body).Decode(&body)
+	err := json.NewDecoder(resp.Body).Decode(&body)
+	if err != nil {
+		return
+	}
 	for _, bodykey := range body["keys"].([]interface{}) {
 		key := bodykey.(map[string]interface{})
 		if key["alg"].(string) == "RS256" {
