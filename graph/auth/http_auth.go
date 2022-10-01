@@ -16,7 +16,7 @@ import (
 
 var rsakeys map[string]*rsa.PublicKey
 
-type User struct {
+type EveUser struct {
 	JWT string
 }
 
@@ -32,6 +32,11 @@ func Middleware() func(http.Handler) http.Handler {
 			if shouldReturn {
 				return
 			}
+
+			var eveUser = EveUser{JWT: tokenString}
+			ctx := context.WithValue(r.Context(), "eveUser", eveUser)
+			r = r.WithContext(ctx)
+
 			next.ServeHTTP(w, r)
 		})
 	}
@@ -40,7 +45,7 @@ func Middleware() func(http.Handler) http.Handler {
 func decodeAndValidateJWT(tokenString string, errorMessage string, isValid bool) bool {
 	if strings.HasPrefix(tokenString, "Bearer ") {
 		tokenString = strings.TrimPrefix(tokenString, "Bearer ")
-		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		token, err := jwt.ParseWithClaims(tokenString, &EveCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 			return rsakeys[token.Header["kid"].(string)], nil
 		})
 		if err != nil {
@@ -98,7 +103,7 @@ func GetPublicKeys() {
 	}
 }
 
-func ForContext(ctx context.Context) *User {
-	raw, _ := ctx.Value("JWT").(*User)
+func ForContext(ctx context.Context) *EveUser {
+	raw, _ := ctx.Value("eveUser").(*EveUser)
 	return raw
 }
