@@ -110,10 +110,6 @@ func GetPublicKeys() {
 }
 
 func ForContext(ctxLocal context.Context) *EveUser {
-	//raw, ok := ctxLocal.Value("resolver_context").(*EveUser)
-	raw, ok := ctxLocal.Value(userCtxKey).(*EveUser)
-	if !ok {
-		log.Printf("You say you're fine but everything is not fine.")
-	}
+	raw, _ := ctxLocal.Value(userCtxKey).(*EveUser)
 	return raw
 }

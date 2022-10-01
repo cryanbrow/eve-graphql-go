@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/cryanbrow/eve-graphql-go/graph/auth"
 	"github.com/cryanbrow/eve-graphql-go/graph/caching"
 	"github.com/cryanbrow/eve-graphql-go/graph/configuration"
 	log "github.com/sirupsen/logrus"
@@ -52,6 +53,11 @@ func (r *RestHelperClient) MakeCachingRESTCall(ctx context.Context, baseURL stri
 			log.WithFields(log.Fields{"url": url}).Errorf("Could not build request. : %v", err)
 			return make([]byte, 0), nil, err
 		}
+
+		if user := auth.ForContext(ctx); user != nil && user.JWT != "" {
+			request.Header.Add("Authorization", user.JWT)
+		}
+
 		response, err := Client.Do(request)
 		if err != nil {
 			log.WithFields(log.Fields{"url": url}).Errorf("Could not make request. : %v", err)
