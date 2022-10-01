@@ -523,18 +523,20 @@ func (r *queryResolver) OrdersForRegion(ctx context.Context, regionID int, order
 }
 
 func (r *queryResolver) OrdersForRegionByName(ctx context.Context, region string, orderType model.Ordertype, typeName *string, page int) (*model.OrderWrapper, error) {
-	jwt := auth.ForContext(ctx)
-	fmt.Printf("JWT: %s", jwt)
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ResolverOrdersForRegionByName")
 	defer span.End()
 	return market.OrdersForRegionByName(newCtx, &region, &orderType, typeName, &page)
 }
 
 func (r *queryResolver) SkillsCharacterAttributesByID(ctx context.Context, characterID int) (*model.Attributes, error) {
+	jwt := auth.ForContext(ctx)
+	fmt.Printf("JWT: %v", jwt)
 	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *queryResolver) SkillsCharacterAttributesByName(ctx context.Context, character string) (*model.Attributes, error) {
+	jwt := auth.ForContext(ctx)
+	fmt.Printf("JWT: %v", jwt)
 	panic(fmt.Errorf("not implemented"))
 }
 
