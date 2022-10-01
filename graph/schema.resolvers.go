@@ -7,10 +7,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cryanbrow/eve-graphql-go/graph/auth"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/alliance"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/asset"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/character"
+	characterPackage "github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/character"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/corporation"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/dogma"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/market"
@@ -81,7 +81,7 @@ func (r *characterResolver) Ancestry(ctx context.Context, obj *model.Character) 
 }
 
 func (r *characterResolver) Bloodline(ctx context.Context, obj *model.Character) (*model.Bloodline, error) {
-	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "ChracterBloodline")
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CharacterBloodline")
 	defer span.End()
 	return universe.BloodlineByID(newCtx, obj.BloodlineID)
 }
@@ -125,13 +125,13 @@ func (r *corporationResolver) Alliance(ctx context.Context, obj *model.Corporati
 func (r *corporationResolver) Ceo(ctx context.Context, obj *model.Corporation) (*model.Character, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CorporationCeo")
 	defer span.End()
-	return character.ByID(newCtx, obj.CeoID)
+	return characterPackage.ByID(newCtx, obj.CeoID)
 }
 
 func (r *corporationResolver) Creator(ctx context.Context, obj *model.Corporation) (*model.Character, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CorporationCreator")
 	defer span.End()
-	return character.ByID(newCtx, obj.CreatorID)
+	return characterPackage.ByID(newCtx, obj.CreatorID)
 }
 
 func (r *corporationResolver) Faction(ctx context.Context, obj *model.Corporation) (*model.Faction, error) {
@@ -449,7 +449,7 @@ func (r *queryResolver) CharacterNotificationsByID(ctx context.Context, id *int)
 func (r *queryResolver) CharacterPortraitByID(ctx context.Context, id *int) (*model.CharacterPortrait, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CharacterPortraitByID")
 	defer span.End()
-	return character.PortraitByID(newCtx, id)
+	return characterPackage.PortraitByID(newCtx, id)
 }
 
 func (r *queryResolver) CharacterRoleByID(ctx context.Context, id *int) (*model.Role, error) {
@@ -529,15 +529,15 @@ func (r *queryResolver) OrdersForRegionByName(ctx context.Context, region string
 }
 
 func (r *queryResolver) SkillsCharacterAttributesByID(ctx context.Context, characterID int) (*model.Attributes, error) {
-	jwt := auth.ForContext(ctx)
-	fmt.Printf("JWT: %v", jwt)
-	panic(fmt.Errorf("not implemented"))
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "SkillsCharacterAttributesByID")
+	defer span.End()
+	return characterPackage.AttributesByID(newCtx, &characterID)
 }
 
 func (r *queryResolver) SkillsCharacterAttributesByName(ctx context.Context, character string) (*model.Attributes, error) {
-	jwt := auth.ForContext(ctx)
-	fmt.Printf("JWT: %v", jwt)
-	panic(fmt.Errorf("not implemented"))
+	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "SkillsCharacterAttributesByID")
+	defer span.End()
+	return characterPackage.AttributesByName(newCtx, &character)
 }
 
 func (r *queryResolver) SkillsQueueByCharacterID(ctx context.Context, characterID int) ([]*model.SkillQueueItem, error) {
@@ -583,7 +583,7 @@ func (r *queryResolver) CorporationByID(ctx context.Context, id *int) (*model.Co
 func (r *queryResolver) CorporationHistoryForCharacterID(ctx context.Context, id *int) ([]*model.CorporationHistory, error) {
 	newCtx, span := tracing.TraceProvider.Tracer(tracerName).Start(ctx, "CorporationHistoryForCharacterID")
 	defer span.End()
-	return character.CorporationHistory(newCtx, id)
+	return characterPackage.CorporationHistory(newCtx, id)
 }
 
 func (r *queryResolver) FactionByID(ctx context.Context, id *int) (*model.Faction, error) {
