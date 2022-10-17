@@ -1,4 +1,4 @@
-package character
+package eve_character
 
 import (
 	"bytes"
@@ -11,13 +11,17 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/helpers"
 )
 
-func TestSuccessfulCorporationHistory(t *testing.T) {
-	jsonResponse := `[
-		{
-		  "corporation_id": 1000049,
-		  "record_id": 37797874,
-		  "start_date": "2015-04-14T18:04:00Z"
-		}]`
+func TestSuccessfulByID(t *testing.T) {
+	jsonResponse := `{
+		"birthday": "2008-04-01T10:24:00Z",
+		"bloodline_id": 3,
+		"corporation_id": 1000182,
+		"description": "",
+		"gender": "male",
+		"name": "Gar Orga",
+		"race_id": 2,
+		"security_status": 0
+	  }`
 
 	b := []byte(jsonResponse)
 
@@ -30,24 +34,28 @@ func TestSuccessfulCorporationHistory(t *testing.T) {
 
 	var testID = 1
 
-	resp, err := CorporationHistory(context.Background(), &testID)
+	resp, err := ByID(context.Background(), &testID)
 	if err != nil {
 		t.Errorf("Error was not nil, %v", err)
 	}
-	var responseName = 1000049
-	if *resp[0].CorporationID != responseName {
+	var responseName = "Gar Orga"
+	if *resp.Name != responseName {
 		t.Errorf("Response was not as expected")
 	}
 
 }
 
-func TestFailNilIDCorporationHistory(t *testing.T) {
-	jsonResponse := `[
-		{
-		  "corporation_id": 1000049,
-		  "record_id": 37797874,
-		  "start_date": "2015-04-14T18:04:00Z"
-		}]`
+func TestFailNilIDByID(t *testing.T) {
+	jsonResponse := `{
+		"birthday": "2008-04-01T10:24:00Z",
+		"bloodline_id": 3,
+		"corporation_id": 1000182,
+		"description": "",
+		"gender": "male",
+		"name": "Gar Orga",
+		"race_id": 2,
+		"security_status": 0
+	  }`
 
 	b := []byte(jsonResponse)
 
@@ -60,7 +68,7 @@ func TestFailNilIDCorporationHistory(t *testing.T) {
 
 	var testID *int
 
-	_, err := CorporationHistory(context.Background(), testID)
+	_, err := ByID(context.Background(), testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != helpers.NilID {
@@ -69,7 +77,7 @@ func TestFailNilIDCorporationHistory(t *testing.T) {
 
 }
 
-func TestFailRestCallCorporationHistory(t *testing.T) {
+func TestFailRestCallByID(t *testing.T) {
 	mockRestHelper := &MockRestHelper{
 		CharacterMockMakeCachingRESTCall: func(ctx context.Context, baseURL string, verb string, body bytes.Buffer, additionalQueryParams []configuration.KeyValue, redisQueryKey string) ([]byte, http.Header, error) {
 			return nil, nil, errors.New("failure")
@@ -79,7 +87,7 @@ func TestFailRestCallCorporationHistory(t *testing.T) {
 
 	var testID = 1
 
-	_, err := CorporationHistory(context.Background(), &testID)
+	_, err := ByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	} else if err.Error() != "failure" {
@@ -88,13 +96,17 @@ func TestFailRestCallCorporationHistory(t *testing.T) {
 
 }
 
-func TestFailUnmarshalCorporationHistory(t *testing.T) {
-	jsonResponse := `[
-		{{
-		  "corporation_id": 1000049,
-		  "record_id": 37797874,
-		  "start_date": "2015-04-14T18:04:00Z"
-		}]`
+func TestFailUnmarshalByID(t *testing.T) {
+	jsonResponse := `{{
+		"birthday": "2008-04-01T10:24:00Z",
+		"bloodline_id": 3,
+		"corporation_id": 1000182,
+		"description": "",
+		"gender": "male",
+		"name": "Gar Orga",
+		"race_id": 2,
+		"security_status": 0
+	  }`
 
 	b := []byte(jsonResponse)
 
@@ -107,7 +119,7 @@ func TestFailUnmarshalCorporationHistory(t *testing.T) {
 
 	var testID = 1
 
-	_, err := CorporationHistory(context.Background(), &testID)
+	_, err := ByID(context.Background(), &testID)
 	if err == nil {
 		t.Error(helpers.NilError)
 	}

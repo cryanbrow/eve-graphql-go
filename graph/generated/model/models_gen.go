@@ -91,7 +91,7 @@ type Blueprint struct {
 	TypeID             *int          `json:"type_id"`
 }
 
-// This is a comment.
+// Bookmark's designate an arbitrary location in space.
 type Bookmark struct {
 	BookmarkID  *int       `json:"bookmark_id"`
 	Coordinates *Position  `json:"coordinates"`
@@ -336,6 +336,7 @@ type Implant struct {
 	ID *int `json:"id"`
 }
 
+// Item represents an item type
 type Item struct {
 	ItemID   *int      `json:"item_id"`
 	ItemType *ItemType `json:"item_type"`

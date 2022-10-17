@@ -51,6 +51,10 @@ models:
         resolver: true
       item_type:
         resolver: true
+  SkillQueueItem:
+    fields:
+      item_type:
+        resolver: true
   System_planet:
     fields:
       asteroid_belts_properties:

@@ -20,9 +20,9 @@ import (
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/alliance"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/asset"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/bookmark"
-	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/character"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/corporation"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/dogma"
+	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/eve_character"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/market"
 	"github.com/cryanbrow/eve-graphql-go/graph/data_access/esi/universe"
 	"github.com/cryanbrow/eve-graphql-go/graph/generated"
@@ -96,7 +96,7 @@ func setupDependencies() {
 	auth.GetPublicKeys()
 	bookmark.SetupBookmarkRest()
 	caching.ConfigureCaching()
-	character.SetupCharacterRest()
+	eve_character.SetupCharacterRest()
 	configuration.LoadConfiguration()
 	corporation.SetupCorporationRest()
 	dogma.SetupDogmaRest()
